@@ -3,6 +3,8 @@
 
 This document provides explicit guidelines, environment topology, and command protocols for AI Agents operating on the Satellite Shadow codebase.
 
+**Start here:** game code, UI and balance work continues from [`HANDOFF.md`](HANDOFF.md) (ownership split between agents, commands, rules and tunables, gotchas, open items).
+
 ---
 
 ## 1. System Topology & Available Compute
@@ -40,7 +42,7 @@ Agents have direct access to two computational environments:
 │   ├── LowPoly.gd              # Procedural flat-shaded props (pines, bamboo, brush, hut, tools)
 │   ├── AssetLibrary.gd         # Loads pipeline props from assets/props (falls back to LowPoly)
 │   ├── GameClock.gd            # 14:00 - 20:00 time progression & orbital pass
-│   ├── CameraRig.gd            # Follow camera: zoom (fits plot, then scenic), 90° turns, aim lean
+│   ├── CameraRig.gd            # Follow camera: zoom (fits plot, then scenic), 90° turns
 │   ├── Landscape.gd            # Mountain around the plot: swidden mosaic, forest, haze, mist
 │   ├── SkyCycle.gd             # Afternoon -> blue hour lighting, inversion fog, storm front
 │   ├── WindManager.gd          # Dynamic valley wind vector shifts

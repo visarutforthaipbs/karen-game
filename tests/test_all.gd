@@ -95,6 +95,12 @@ func _run() -> void:
 	var edge_gap = absf(main.landscape.height_at(30.0, 0.0) - (main.fire_grid.get_ground_height_at_world_pos(Vector3(29.5, 0, 0)) - main.landscape.EDGE_DROP))
 	check(edge_gap < 0.01, "landscape meets the plot edge (gap %.3f m)" % edge_gap)
 	check(rig != null and rig.active, "camera rig follows the player")
+	# Regression: a camera leaning toward the aim point moved the cell under a
+	# still mouse, so hold-to-cut never finished and the target drifted out of reach
+	main.player.is_targeting_valid_cell = true
+	main.player.target_cell_pos = main.player.global_position + Vector3(4, 0, -4)
+	var want = rig._desired_focus()
+	check(Vector2(want.x - main.player.global_position.x, want.z - main.player.global_position.z).length() < 0.01, "camera follows the player, not the cursor")
 	root.size = Vector2i(1280, 720) # Headless windows start square
 	await frames(2)
 	rig.zoom_by(500.0)

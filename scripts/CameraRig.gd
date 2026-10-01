@@ -1,9 +1,11 @@
 class_name CameraRig
 extends Node
 
-## Burn-day camera: follows the player at a fixed isometric pitch, leans a little
-## toward the mouse aim so corners can be inspected, zooms (wheel, +/-, R3) and
-## turns in 90-degree steps (Z / C, D-pad down). MainController switches it off
+## Burn-day camera: follows the player at a fixed isometric pitch, zooms
+## (wheel, +/-, R3) and turns in 90-degree steps (Z / C, D-pad down).
+## It never chases the cursor: a camera that leans toward the aim point moves the
+## cell under a still mouse, which broke hold-to-cut firebreaks and pushed the
+## target out of reach. MainController switches it off
 ## for the 20:00 satellite view, which animates the camera itself.
 
 const PITCH_DEG: float = 38.5      # Matches the original Main.tscn framing
@@ -14,7 +16,6 @@ const FIT_MARGIN: float = 0.9      # Overview keeps the plot inside 90% of the s
 const SCENIC_ZOOM: float = 1.9     # Past the plot fit, keep pulling back to see the valley
 const SCENIC_PITCH_DEG: float = 20.0 # ...and lower toward the horizon to show the ridges
 const ZOOM_STEP: float = 5.0
-const AIM_LEAN: float = 0.3         # Share of the way from player to cursor the view drifts
 const FOLLOW_SHARPNESS: float = 5.0
 
 var camera: Camera3D
@@ -49,8 +50,6 @@ func _desired_focus() -> Vector3:
 	if not target:
 		return focus
 	var p = target.global_position
-	if not target.using_gamepad_aim and target.is_targeting_valid_cell:
-		p = p.lerp(target.target_cell_pos, AIM_LEAN)
 	# Zooming out slides the view to the fitted centre, so the widest view frames it all
 	p = p.lerp(_fit_focus, _overview())
 	return _ground_point(p)
