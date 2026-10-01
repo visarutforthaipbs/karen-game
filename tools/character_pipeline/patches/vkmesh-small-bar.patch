@@ -1,0 +1,18 @@
+--- a/tools/vkmesh/vkmesh.c
++++ b/tools/vkmesh/vkmesh.c
+@@ -747,7 +747,14 @@
+         if ((type_bits & (1u << i)) == 0 ||
+             (props.memoryTypes[i].propertyFlags & required_flags) != required_flags) continue;
+         if (fallback == UINT32_MAX) fallback = i;
+-        if ((props.memoryTypes[i].propertyFlags & preferred_flags) == preferred_flags) return i;
++        /* Opt-in for GPUs with a small host-visible BAR heap. Use coherent
++           system memory instead of allocating multi-GB workspaces in 256 MB. */
++        const char * host_memory = getenv("TRELLIS_VKMESH_HOST_MEMORY");
++        if (host_memory != NULL && strcmp(host_memory, "1") == 0 &&
++            (props.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) &&
++            !(props.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)) return i;
++        if ((props.memoryTypes[i].propertyFlags & preferred_flags) == preferred_flags &&
++            !(host_memory != NULL && strcmp(host_memory, "1") == 0)) return i;
+     }
+     return fallback;
+ }

@@ -1,0 +1,143 @@
+[gd_scene load_steps=22 format=3]
+
+[ext_resource type="Script" path="res://scripts/MainController.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/FireGrid.gd" id="2_grid"]
+[ext_resource type="Script" path="res://scripts/GameClock.gd" id="3_clock"]
+[ext_resource type="Script" path="res://scripts/WindManager.gd" id="4_wind"]
+[ext_resource type="Script" path="res://scripts/ForestryDrone.gd" id="5_drone"]
+[ext_resource type="Script" path="res://scripts/SatelliteOverpass.gd" id="6_sat"]
+[ext_resource type="Script" path="res://scripts/PlayerController.gd" id="7_player"]
+[ext_resource type="Script" path="res://scripts/CompanionController.gd" id="8_companion"]
+[ext_resource type="Script" path="res://ui/HUD.gd" id="9_hud"]
+[ext_resource type="PackedScene" path="res://scenes/characters/KhanaeChibi.tscn" id="10_khanae"]
+[ext_resource type="PackedScene" path="res://scenes/characters/TapohChibi.tscn" id="11_tapoh"]
+[ext_resource type="PackedScene" path="res://scenes/characters/MunawChibi.tscn" id="12_munaw"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mountain"]
+sky_top_color = Color(0.24, 0.48, 0.78, 1)
+sky_horizon_color = Color(0.88, 0.76, 0.62, 1)
+ground_bottom_color = Color(0.15, 0.22, 0.18, 1)
+ground_horizon_color = Color(0.72, 0.65, 0.55, 1)
+sun_angle_max = 30.0
+
+[sub_resource type="Sky" id="Sky_mountain"]
+sky_material = SubResource("ProceduralSkyMaterial_mountain")
+
+[sub_resource type="Environment" id="Environment_main"]
+background_mode = 2
+sky = SubResource("Sky_mountain")
+ambient_light_source = 3
+ambient_light_color = Color(0.8, 0.75, 0.7, 1)
+ambient_light_sky_contribution = 0.65
+ambient_light_energy = 0.85
+tonemap_mode = 3
+tonemap_exposure = 1.05
+glow_enabled = true
+glow_intensity = 0.35
+glow_bloom = 0.12
+fog_enabled = true
+fog_light_color = Color(0.78, 0.72, 0.65, 1)
+fog_density = 0.005
+fog_sky_affect = 0.35
+
+[sub_resource type="BoxMesh" id="BoxMesh_body"]
+size = Vector3(0.65, 0.65, 0.52)
+
+[sub_resource type="StandardMaterial3D" id="Mat_indigo_tunic"]
+albedo_color = Color(0.18, 0.28, 0.45, 1)
+roughness = 0.85
+
+[sub_resource type="SphereMesh" id="SphereMesh_chibi_head"]
+radius = 0.35
+height = 0.62
+
+[sub_resource type="StandardMaterial3D" id="Mat_skin"]
+albedo_color = Color(0.92, 0.78, 0.66, 1)
+roughness = 0.7
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_straw_hat"]
+top_radius = 0.04
+bottom_radius = 0.82
+height = 0.32
+
+[sub_resource type="StandardMaterial3D" id="Mat_straw_hat"]
+albedo_color = Color(0.88, 0.76, 0.42, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_elder_tunic"]
+albedo_color = Color(0.85, 0.80, 0.72, 1)
+roughness = 0.9
+
+[sub_resource type="SphereMesh" id="SphereMesh_headwrap"]
+radius = 0.42
+height = 0.52
+
+[sub_resource type="StandardMaterial3D" id="Mat_headwrap"]
+albedo_color = Color(0.82, 0.22, 0.18, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_youth_tunic"]
+albedo_color = Color(0.28, 0.58, 0.32, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="BoxMesh_sprayer_tank"]
+size = Vector3(0.38, 0.52, 0.26)
+
+[sub_resource type="StandardMaterial3D" id="Mat_sprayer_tank"]
+albedo_color = Color(0.72, 0.66, 0.28, 1)
+metallic = 0.5
+roughness = 0.4
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_main")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_main")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.353, 0.353, 0, 0.707, 0.707, -0.5, -0.612, 0.612, 0, 30, 0)
+light_color = Color(1, 0.94, 0.82, 1)
+light_energy = 1.25
+shadow_enabled = true
+shadow_blur = 1.2
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 32, 36, 32)
+projection = 0
+fov = 42.0
+
+[node name="FireGrid" type="Node3D" parent="."]
+script = ExtResource("2_grid")
+
+[node name="GameClock" type="Node" parent="."]
+script = ExtResource("3_clock")
+
+[node name="WindManager" type="Node" parent="."]
+script = ExtResource("4_wind")
+
+[node name="ForestryDrone" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14, 0)
+script = ExtResource("5_drone")
+
+[node name="SatelliteOverpass" type="Node" parent="."]
+script = ExtResource("6_sat")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 14)
+script = ExtResource("7_player")
+
+[node name="KhanaeChibi" parent="Player" instance=ExtResource("10_khanae")]
+
+[node name="Elder" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1.2, 14)
+script = ExtResource("8_companion")
+
+[node name="TapohChibi" parent="Elder" instance=ExtResource("11_tapoh")]
+
+[node name="Youth" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.2, 14)
+script = ExtResource("8_companion")
+
+[node name="MunawChibi" parent="Youth" instance=ExtResource("12_munaw")]
+
+[node name="HUD" type="CanvasLayer" parent="."]
+script = ExtResource("9_hud")

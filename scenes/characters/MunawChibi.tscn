@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ChibiAnimator.gd" id="1_anim"]
+[ext_resource type="PackedScene" path="res://assets/models/munaw_textured.glb" id="2_mesh"]
+
+[node name="MunawChibi" type="Node3D"]
+script = ExtResource("1_anim")
+
+[node name="Model" parent="." instance=ExtResource("2_mesh")]

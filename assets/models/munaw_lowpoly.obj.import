@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://d2tem16yhmben"
+path="res://.godot/imported/munaw_lowpoly.obj-0e7d0932827b32d39bed60025fe00fec.mesh"
+
+[deps]
+
+files=["res://.godot/imported/munaw_lowpoly.obj-0e7d0932827b32d39bed60025fe00fec.mesh"]
+
+source_file="res://assets/models/munaw_lowpoly.obj"
+dest_files=["res://.godot/imported/munaw_lowpoly.obj-0e7d0932827b32d39bed60025fe00fec.mesh", "res://.godot/imported/munaw_lowpoly.obj-0e7d0932827b32d39bed60025fe00fec.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

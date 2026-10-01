@@ -1,0 +1,14 @@
+# Godot 4 cache (re-created on import)
+.godot/
+/android/
+
+# Character pipeline working outputs (1.4 GB of benchmarks/validation; not used by the game)
+artifacts/
+
+# OS / tooling
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+venv/
+.mimocode/

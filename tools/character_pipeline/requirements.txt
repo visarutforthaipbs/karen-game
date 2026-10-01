@@ -1,0 +1,15 @@
+# Satellite Shadow — Character Generation Pipeline (GPU node / local DCC)
+# Install:  pip install -r requirements.txt
+# Also requires the TripoSR repo on PYTHONPATH (default ~/TripoSR):
+#   git clone https://github.com/VAST-AI-Research/TripoSR ~/TripoSR
+
+torch>=2.1
+trimesh>=4.0
+numpy>=1.24
+scipy>=1.10
+matplotlib>=3.7
+Pillow>=10.0
+rembg>=2.0
+onnxruntime>=1.16
+fast_simplification>=0.1.7
+# TripoSR pulls huggingface_hub, einops, etc. via its own requirements
