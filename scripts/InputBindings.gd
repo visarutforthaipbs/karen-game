@@ -9,6 +9,9 @@ extends Node
 ##   Ping companion .. right click .............. LT / X
 ##   Rally whistle ... Space / Q ................ LB / RB
 ##   Tools ........... 1 / 2 / 3 ................ D-pad left / up / right, Y cycles
+##   Hide HUD ........ Tab ...................... Select / Back
+##   Camera zoom ..... wheel / + - .............. R3 cycles
+##   Camera turn ..... Z / C (90 degrees) ....... D-pad down
 
 const STICK_DEADZONE: float = 0.25
 
@@ -31,6 +34,13 @@ func _ready() -> void:
 	_action("tool_blade", [_key(KEY_2), _joy(JOY_BUTTON_DPAD_UP)])
 	_action("tool_sprayer", [_key(KEY_3), _joy(JOY_BUTTON_DPAD_RIGHT)])
 	_action("tool_cycle", [_joy(JOY_BUTTON_Y)])
+	_action("toggle_hud", [_key(KEY_TAB), _joy(JOY_BUTTON_BACK)])
+
+	_action("cam_zoom_in", [_mouse(MOUSE_BUTTON_WHEEL_UP), _key(KEY_EQUAL), _key(KEY_KP_ADD)])
+	_action("cam_zoom_out", [_mouse(MOUSE_BUTTON_WHEEL_DOWN), _key(KEY_MINUS), _key(KEY_KP_SUBTRACT)])
+	_action("cam_zoom_cycle", [_joy(JOY_BUTTON_RIGHT_STICK)])
+	_action("cam_rotate_left", [_key(KEY_Z)])
+	_action("cam_rotate_right", [_key(KEY_C), _joy(JOY_BUTTON_DPAD_DOWN)])
 
 func _action(name: StringName, events: Array) -> void:
 	if not InputMap.has_action(name):

@@ -1,74 +1,236 @@
-# Prop Asset Pipeline
+# Prop asset pipeline v2
 
-Turns a concept image (or any existing model) into a game-ready low-poly prop that the game picks up automatically.
-Characters have their own pipeline in `tools/character_pipeline/`. This one is for everything else in `ASSETS.md`.
+Builds **review candidates** from images or self-contained static GLBs. The
+character pipeline's useful lessons are applied here: prepared references,
+repeatable inference settings, preserved materials, strict geometry validation,
+four-angle renders and installation only after visual review.
 
-```
-concept image ──► TripoSR (gpu01) ──► Blender 4.5 headless cleanup (gpu01) ──► assets/props/<ID>_<name>_<variant>.glb
-existing .glb/.obj/.fbx ─────────────┘                                          └► previews/<...>.png turntable + stats
-                                                                                   └► Godot import + validation (Mac)
-```
+## Required art direction
 
-## Quick start
+**Every route produces stylized low-poly game assets**, including the quality
+route. Follow PRD §9.1: simple angular silhouettes, visible flat-shaded facets,
+broad colour areas, the game's natural palette and restrained painted textures.
+Keep important cultural and structural details in simplified form. Reject
+photorealism, dense wood/thatch/fabric microtexture, noisy normal maps and glossy
+realistic materials. Preserving a source texture does not automatically make it
+appropriate for the game.
+
+Quality means clearer shapes, better proportions and reference fidelity within
+this style. Triangle budgets are ceilings, not detail targets. Before installing,
+compare all four views and a gameplay-distance view with the existing game scene.
+Reject a stylistic mismatch even if geometry validation passes; the validator
+does not measure art style.
+
+## Two routes
+
+| Route | Intended assets | Geometry/material policy |
+|---|---|---|
+| Standard | Heavily instanced vegetation and simple props | Existing small budgets; vegetation uses one vertex-colour surface |
+| Quality | Huts, barrels, prominent structures, surveillance bodies and tank | Explicit per-ID quality budget; UV textures and solid materials preserved |
+
+Quality image builds use the installed native TRELLIS.2 runtime. Standard image
+builds use TripoSR. Thin `proc` assets (bamboo culms, grass, tool handles) require
+`--mesh`; the builder refuses image generation for them. Model their structural
+parts procedurally or by hand. An existing textured mesh can be cleaned directly
+without neural inference. Automatic voxel hole-filling is deliberately **not**
+applied to props: it could close doorways, ladder gaps and hollow structures.
+
+## Build one candidate
 
 ```bash
-# 1. Get the concept-image prompt for an asset ID (IDs are in ASSETS.md)
 ./tools/asset_pipeline/build_asset.sh S1 --prompt
-
-# 2. Generate that image with any image tool (white background, single object, front-right 3/4 view)
-
-# 3. Build the prop (about 40 s)
 ./tools/asset_pipeline/build_asset.sh S1 --image path/to/hut.png
-
-# More variants of the same prop are spread across cells in the game
-./tools/asset_pipeline/build_asset.sh E3 --image brush1.png --variant a
-./tools/asset_pipeline/build_asset.sh E3 --image brush2.png --variant b
-
-# Already have a model (hand-made, TRELLIS, CC0 download)? Run it through the same cleanup:
-./tools/asset_pipeline/build_asset.sh E2 --mesh bamboo_clump.glb
+./tools/asset_pipeline/build_asset.sh S2 --mesh path/to/barrels.glb
+./tools/asset_pipeline/build_asset.sh E3 --mesh path/to/vertex_coloured_brush.glb
 ```
 
-Then start a burn: the game uses `assets/props/*.glb` in place of the procedural mesh for that ID.
-Delete the file to go back to the procedural version.
+The default is quality for IDs with `quality_tris`, standard otherwise. S1 has a
+6,000-triangle quality budget versus its 1,500-triangle standard budget. These
+are explicit ceilings, not a claim that more triangles always improve quality.
+The instanced vegetation budgets remain unchanged.
 
-## What the cleanup does (`gpu/blender_cleanup.py`)
+Quality image generation uses 1024 resolution, 12 source steps, seeds 1/18,
+2K textures and a retained material cache. A separate texture pass uses 24 steps
+and seed 42 on the prepared mesh, followed by size/origin correction. It runs by
+default for TRELLIS image builds. Use `--no-retexture` to inspect the original
+texture first, or when the source texture already meets the reference.
 
-1. Empty scene, imports the mesh, removes helper objects, joins everything into one mesh.
-2. Merges duplicate vertices, makes normals point outward (marching-cubes meshes can be inside-out), drops floating fragments.
-3. Undoes the concept's camera angle (`--view`). **Hard-surface** props also get a few-degree auto-squaring so walls and buildings line up with the grid.
-4. Collapse-decimates to the triangle budget. **Hard-surface** props also get a planar dissolve, so flat faces stay flat.
-5. Colour: one flat colour per face (the faceted low-poly look). Colours are matched to the concept image, because TripoSR washes them out. Then a small saturation lift and a nudge toward the game palette (`palette.json`).
-6. Scales to the spec size. Puts the origin at the base centre (y = 0), +Y up, front facing +Z. Exports a GLB with vertex colours.
-7. Renders four Cycles turntable views (front, 3/4, right, back) into one preview sheet, and writes `stats.json`.
+```bash
+# Reuse a completed source job from an earlier build without repeating generation:
+./tools/asset_pipeline/build_asset.sh S1 --image reference.png \
+  --source-run /absolute/path/source/run.json --no-retexture
 
-`validate_assets.py` then checks: triangle budget, fitted size (±3%), base at y = 0, centred, vertex colours present.
+# Texture-only refinement of a prepared mesh using its prepared reference:
+./tools/asset_pipeline/build_asset.sh S1 --mesh prepared.glb \
+  --retexture --prepared-reference prepared_input.png
+```
 
-## Options
+The source run must match the image hash and have its raw GLB and prepared image
+saved alongside `run.json`. `--prepared-reference` means the image has already
+been background-removed/prepared by generation; it is not an arbitrary photo.
 
-| Option | Meaning |
-|---|---|
-| `--variant a..z` | Variant letter (default `a`) |
-| `--view front \| three-quarter-right \| three-quarter-left` | Camera angle of the concept image (default `three-quarter-right`). TripoSR treats whatever faces the camera as the front, so this undoes that turn |
-| `--mesh-colors linear \| srgb` | Colour encoding of a `--mesh` file. `linear` is right for Blender and most downloads; use `srgb` for files exported by Godot or trimesh |
-| `--skip-import` | Don't run the Godot import (do it later with `godot --headless --editor --quit`) |
-| `--keep-remote` | Keep the gpu01 work folder (`~/asset_pipeline/work/...`) for debugging |
+Other options:
 
-## Files
+- `--variant a` selects the variant; outputs always use a fresh job directory.
+- `--profile standard|quality` selects an existing manifest budget.
+- `--backend triposr|trellis2` selects image inference. Texture-only meshes must
+  use the material-preserving route; vertex-mode inputs need vertex colours.
+  TRELLIS image generation is refused for vertex-only vegetation before it runs.
+- `--view front|three-quarter-right|three-quarter-left` applies an explicit yaw
+  correction of 0/+45/-45 degrees. Default `front` applies no correction. Inspect
+  the doorway/front orientation; do not assume the model inferred it correctly.
+- `--yaw DEGREES` overrides that preset for other orientations (the reviewed S1
+  source required `--yaw -90` to place its doorway at +Z).
+- `--auto-square` opts into footprint alignment; it is no longer automatic.
+- `--mesh-colors linear|srgb` controls vertex-colour decoding for supplied meshes.
+- `--output-dir` must be empty. `--skip-preview` supports a host without Godot/display.
+- Old `--skip-import` / `--keep-remote` are accepted for compatibility: candidates
+  are never installed by the builder, and remote intermediates are always retained.
 
-| File | Role |
-|---|---|
-| `asset_manifest.json` | Per-ID spec: name, route, category (organic/hard), fit axis and size in metres, triangle budget, variants, concept description |
-| `palette.json` | Game colour palette (from `LowPoly.gd` / `FireGrid.gd`) |
-| `gpu/prop_generate.py` | Stage 1 on gpu01: background removal + TripoSR + orientation to game space |
-| `gpu/blender_cleanup.py` | Stage 2 on gpu01: everything in "What the cleanup does" above |
-| `build_asset.sh` | Mac orchestrator: upload, run, download, import, validate |
-| `validate_assets.py` | Standalone checker (`python3 validate_assets.py` checks every prop) |
-| `scripts/AssetLibrary.gd` | Game side: finds `assets/props/<ID>_*.glb`, flattens each into one mesh, falls back to procedural |
+## What is preserved and checked
 
-## Notes and limits
+Blender keeps UVs, textures and per-surface materials in preserve mode. It keeps
+small disconnected parts by default, including stilts and rungs. Vertex mode
+stylizes existing vertex colours; it refuses texture-only input instead of
+turning it grey. Both routes export flat face normals for the game's faceted
+style, clearing imported custom/smooth normals on the game mesh while retaining
+the detailed master. All output is static, Y-up, front +Z, base-centred, and sized
+according to the manifest. Supplied meshes must be self-contained GLBs; pack
+external OBJ/FBX textures first. Rigged/animated inputs are rejected.
 
-- **Thin geometry** (route `proc`: pine, bamboo, grass, tool handles) comes out of TripoSR as blobs. Model those by hand or with a script, then use `--mesh`.
-- **Orientation** was verified with an asymmetric test object: the concept's right side lands on +X and the side facing the camera on +Z. This is the same rotation as the character pipeline.
-- **GPU sharing:** the script needs about 5 GB of free VRAM and refuses to start otherwise (TRELLIS / ollama jobs may be using the 3090).
-- **Requirements on gpu01:** `~/aienv` (TripoSR, rembg, trimesh, PIL), `~/TripoSR`, and Blender 4.5 LTS at `~/apps/blender-4.5.14-linux-x64/`.
-- Uses TripoSR (MIT). Hunyuan3D was deliberately not used (licence excludes the EU, UK and South Korea).
+Before decimation, cleanup splits non-manifold junctions with more than two
+incident faces into separate surface sheets, preserving faces and loop UVs.
+This must happen before the first collapse: repairing after a stalled collapse
+can satisfy a triangle count while leaving distorted geometry. Four-angle visual
+review remains mandatory; this is not a watertightness or collision-mesh guarantee.
+
+The validator walks the active scene hierarchy, applies node transforms, counts
+instances, checks accessor/index bounds and finite geometry, rejects zero-area
+triangles, and checks strict triangle budget, world-space size, ground position,
+centering and material/UV coverage. Vegetation must have vertex colours on every
+surface and only one surface. Other props permit up to eight material surfaces.
+It is a technical gate, **not** a visual quality score.
+
+```bash
+# Full installed set, allowing each ID's explicitly declared quality ceiling:
+python3 tools/asset_pipeline/validate_assets.py --profile quality
+# Check a standard candidate against its tighter budget:
+python3 tools/asset_pipeline/validate_assets.py candidate/E3_brush_a.glb --profile standard
+```
+
+Godot's `AssetLibrary.gd` bakes node transforms while preserving separate surfaces,
+UVs and original materials, and enables vertex-colour albedo when COLOR_0 is
+present without mutating the shared source material. Existing procedural fallbacks and intentional
+ember/ash material overrides remain supported.
+
+`artifacts/.gdignore` excludes build evidence from Godot's resource scan. Every
+new `pipeline_source/` also receives `.gdignore`: historical copies of scripts
+with `class_name` must never shadow the live game classes. Re-index with
+`godot --headless --editor --quit --path .` after adding this protection to an
+existing checkout.
+
+## Review and install
+
+Candidates live under `artifacts/prop_candidates/<unique-job>/`, with source hash,
+script snapshots, manifest/profile, stage status/timing, logs, normalized detailed
+master, budgeted GLB, validation results and `preview.png`. The S1 preview includes
+the current procedural hut. Look at all four sides, structural openings, small
+parts, texture continuity, shading and readability at gameplay distance.
+
+For S1, inspect the candidate in the actual game scene before installation:
+
+```bash
+godot --path . \
+  --script tools/asset_pipeline/preview_hut_in_game.gd -- \
+  /absolute/path/candidate/S1_field_hut_a.glb /absolute/path/game-preview
+```
+
+This renders gameplay and close-up views through `AssetLibrary` without changing
+installed assets. Use `installed` in place of the candidate path for a baseline.
+Previews use the project's configured renderer (currently Forward+), matching the
+game. Do not approve colour fidelity from a forced Compatibility-renderer shot:
+its vertex-colour handling differs from Forward+.
+
+## Cohesive authored set
+
+`gpu/build_cohesive_set.py` is the deterministic Blender source generator for
+three pines, three bamboo clumps, four brush variants, barrels and the drone.
+It reads `palette.json`; sources have flat normals, one matte vertex-colour
+material and no textures. Thin culms and leaves are actual geometry. This route
+uses CPU Blender and does not need neural inference or reserve GPU memory.
+
+Run it in Blender with `--out <empty-folder> --palette <palette.json>`, then pass
+each resulting GLB through `build_asset.sh --mesh`, using the ID, variant and
+profile in the generated `sources.json`. Sources contain 260/360/136 triangles
+per pine/bamboo/brush, 464 for the barrel set, and 428 for the drone body. Keep
+vegetation within its standard budget; S2 uses its explicit quality ceiling.
+V1's motor centers are at X/Z ±0.48 m after normalization to 1.2 m width. Its
+rotors are created and animated by `ForestryDrone.gd`, above the hub tops.
+
+The reviewed set and its source/runtime snapshots are recorded in
+`artifacts/cohesive_props_20261002/`. For a full-set game preview:
+
+```bash
+godot --path . --script tools/asset_pipeline/preview_set_in_game.gd -- \
+  artifacts/cohesive_props_20261002/build_results.json /absolute/path/game-preview
+# Use "installed" instead of build_results.json to check the installed set.
+godot --headless --path . --script tests/test_cohesive_props.gd
+```
+
+## Installation
+
+```bash
+python3 tools/asset_pipeline/install_asset.py /absolute/path/candidate --reviewed
+```
+
+Run this only after that candidate has been visually reviewed. Installation
+rechecks the candidate hash and current manifest, saves a previous-asset backup,
+atomically replaces the GLB, then imports in Godot. Import failure restores the
+previous GLB (or removes a new one) and attempts a recovery import. Errors and
+recovery results are recorded in the candidate's `installation_*` folder.
+The game sees a new asset on restart or `AssetLibrary.reload()`.
+
+Not every manifest ID has placement code yet: E6–E9, S3–S5, T2 and V3 still need
+scene integration. Building those assets does not automatically place them.
+
+## Dependencies and verification
+
+Uses the existing `gpu` SSH host, `~/aienv/bin/python3`, Blender 4.5.14 and the
+native TRELLIS.2 runtime documented in the character pipeline. The runner checks
+GPU health and at least 20,000 MiB free before TRELLIS work, 6,000 before TripoSR.
+This is a start-time check, not a memory reservation: another process starting
+during inference can still cause an out-of-memory failure. Schedule heavy runs
+when the GPU is available; the builder never stops other workloads or silently
+downgrades generation quality. Blender cleanup runs on CPU; Godot renders
+locally. The native source runner retains its runtime hashes and cache locations.
+
+```bash
+python3 -m unittest discover -s tools/asset_pipeline/tests -v
+# Include real Blender preservation checks where Blender is installed:
+BLENDER_BIN=/path/to/blender python3 -m unittest discover -s tools/asset_pipeline/tests -v
+godot --headless --path . --script tests/test_prop_materials.gd
+godot --headless --path . --script tests/test_skeletal_character.gd
+godot --headless --path . --script tests/test_all.gd
+godot --headless --path . --fixed-fps 60 --quit-after 120
+```
+
+The regression suite covers the previous wrong-scale/degenerate-face false
+passes, hierarchy/instances, invalid indices, missing colours, strict budgets,
+review/hash gates, import rollback, UV texture retention, and preservation of
+small disconnected geometry. Test cubes are fixtures, not finished game props.
+
+The first S1 quality benchmark is recorded in
+`artifacts/asset_pipeline_v2/hut_source/`: its 1024 source run failed in shape
+decoding with GPU out-of-memory after another workload started. It produced no
+candidate GLB and nothing was installed. Texture-preserving mesh and vertex-colour
+routes passed end-to-end fixture builds; the new hut's visual quality and the
+prop-specific fresh-texture route still need a completed GPU benchmark.
+
+The retry in `artifacts/asset_pipeline_v2/hut_lowpoly_v2/source/` completed on a
+clear GPU using the stricter low-poly reference. Its reviewed derivative is
+`hut_lowpoly_6000_repaired/`: 5,845 triangles, 3.3 m height, one textured surface,
+flat normals, and a -90-degree front correction. The native texture was accepted
+after four-angle and in-game review. The 1,500-triangle attempt remained over
+budget and was rejected. This run also exposed the need to split non-manifold
+junctions before decimation. No prop-specific fresh-texture benchmark was needed
+for this accepted source texture; that optional route is still unverified here.

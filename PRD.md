@@ -204,6 +204,8 @@ Between burning days, the game transitions to the **Village Hearth screen**:
 
 ### 9.1 Visual Direction
 * **Style:** Faceted Low-Poly 3D with un-smoothed normals, stylized gradient textures, and bold silhouettes.
+* **Asset acceptance rule (all pipelines):** Characters, props and environments must read as one stylized low-poly game at gameplay distance. Use simple angular forms, visible facets, broad colour areas and restrained painted details. Preserve culturally meaningful clothing patterns and construction details in simplified form. Reject photorealistic surfaces, dense microtexture, noisy normal maps and glossy realism.
+* **Quality upgrades:** Improve silhouette, proportions, structure and reference fidelity within this art direction. Higher generation resolution, texture resolution or triangle ceilings do not relax the low-poly requirement. Review every candidate beside the existing scene before installation; a technical validation pass alone cannot approve its style.
 * **Palette:**
   * Daytime: Lush mountain emerald green, bamboo straw yellow, terracotta clay soil.
   * Evening: Heavy ochre/sepia inversion haze, charcoal ash black, glowing ruby/amber embers.
@@ -258,12 +260,15 @@ Godot integration. Technical mesh validity alone is not visual acceptance.
 
 - [x] Kha-nae refined textured candidate: 39,799 triangles, 2K textures.
 - [x] Kha-nae initial 19-bone skeleton and weighted skin; rigid head/hat.
-- [x] Idle, in-place Walk and generic ToolUse clips; runtime transitions and hand tool attachment.
+- [x] Idle, in-place Walk/Run and legacy ToolUse clips; runtime transitions and hand tool attachment.
+- [x] Semantic work state, aim-facing while moving, smoke reaction, interruption handling and successful-action feedback.
 - [ ] Separate rake, ignition and spraying motions with convincing hand/tool contact.
 - [ ] Terrain foot placement and walk stride/speed polish.
-- [ ] Calibrated rigs and animation review for Ta-poh and Mu-naw.
+- [x] Calibrated rigs and animation review for Ta-poh and Mu-naw.
 - [ ] Facial/finger animation if required by future close-up scenes.
 
 The first gameplay rig is not a claim of finished animation quality or automatic
 rigging for arbitrary generated characters. Evidence and known limits are kept
-under `artifacts/khanae_rigging/`.
+under `artifacts/khanae_rigging/` and `artifacts/character_motion_20261002/`.
+Distinct runtime tool poses and bounded foot correction are implemented; the
+remaining contact/stride items are visual polish, not missing companion skeletons.

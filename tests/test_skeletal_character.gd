@@ -78,7 +78,7 @@ func run() -> void:
 	var actor = game.get_node("Player")
 	check(actor._tool_prop.get_parent() == actor.animator.get_hand_socket(), "Actual player tool is not hand-attached")
 	actor._swing()
-	check(actor.animator._action_playing, "Actual tool use did not trigger skeletal action")
+	check(actor.animator.work_active and actor.animator.work_kind == &"ignite", "Actual tool use did not trigger semantic ignition")
 	print("PASS: actual player scene routes tool attachment and action to skeleton")
 	game.queue_free()
 	await process_frame

@@ -1,0 +1,95 @@
+{
+  "name": "munaw",
+  "height": 1.1,
+  "source_sha256": [
+    "a444553c6931d212317e3d18cc899426f18f75b9af6f4e2ff4e4a2fa5103f097"
+  ],
+  "coordinates": "Godot Y up, front +Z; metres",
+  "landmarks": {
+    "hips": [
+      0,
+      0.3,
+      0
+    ],
+    "spine": [
+      0,
+      0.42,
+      0
+    ],
+    "chest": [
+      0,
+      0.6,
+      0
+    ],
+    "neck": [
+      0,
+      0.71,
+      0
+    ],
+    "head": [
+      0,
+      0.76,
+      0
+    ],
+    "head_tip": [
+      0,
+      0.98,
+      0
+    ],
+    "shoulder": [
+      0.13,
+      0.68,
+      0
+    ],
+    "elbow": [
+      0.19,
+      0.54,
+      0.07
+    ],
+    "wrist": [
+      0.14,
+      0.48,
+      0.16
+    ],
+    "hand_tip": [
+      0.12,
+      0.45,
+      0.18
+    ],
+    "hip": [
+      0.075,
+      0.3,
+      0
+    ],
+    "knee": [
+      0.075,
+      0.16,
+      0
+    ],
+    "ankle": [
+      0.075,
+      0.045,
+      0
+    ],
+    "toe": [
+      0.075,
+      0.02,
+      0.08
+    ],
+    "bag": [
+      0,
+      0.44,
+      -0.1
+    ],
+    "bag_tip": [
+      0,
+      0.55,
+      -0.1
+    ]
+  },
+  "weight_mode": "munaw",
+  "arm_rest_degrees": 0,
+  "locked_carry": true,
+  "calibration_notes": "Anatomical midline is X=-0.075m, offset from the mesh bounds by the projecting sprayer. Weight and mirror limbs around this line. No geometry removal. Preserve authored two-hand hold.",
+  "body_center_x": -0.075
+}

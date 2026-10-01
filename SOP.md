@@ -2,7 +2,7 @@
 ## Character production — refined mesh, rig, animation and Godot
 
 **Project:** Satellite Shadow (เงาเมฆา / ไร่หมุนเวียน)  
-**Version:** 2.0 — 2026-10-01
+**Version:** 3.0 — 2026-10-02
 
 ## 1. Current production route
 
@@ -16,13 +16,33 @@ remains a prototype option, not the quality route for the current characters.
 
 Current character status:
 
-- **Kha-nae:** refined 39,799-triangle mesh with 2K textures; calibrated 19-bone
-  skeleton, Idle / Walk / ToolUse clips, hand-attached tool, and skeletal animator.
-- **Ta-poh and Mu-naw:** textured models with existing whole-model procedural
-  animation. They still need their own rig profiles and deformation reviews.
+- **Kha-nae:** refined 39,799-triangle mesh; calibrated 19-bone skeleton,
+  Idle / Walk / Run / legacy ToolUse clips and hand/chest sockets. Gameplay uses
+  separate ignition, two-hand rake and spray poses layered over locomotion.
+- **Ta-poh:** calibrated 19-bone rig with gait, clearing-blade action, smoke
+  response and a left-hand wand/back tank when borrowing the sprayer.
+- **Mu-naw:** calibrated 19-bone rig with gait and spray/cough torso layers.
+  His authored two-hand wand/hose hold stays intact during locomotion.
+
+All three character scenes use `SkeletalChibiAnimator.gd`. The generic ToolUse
+clip remains for compatibility/inspection; successful tool ticks no longer
+replace locomotion with that full-body clip. See the
+[implementation notes](tools/character_pipeline/gameplay_motion.md) for the
+runtime contract, evidence, calibration findings and remaining visual limits.
+The [original audit](tools/character_pipeline/gameplay_animation_audit.md) is a
+historical record of the gaps before this implementation.
 
 A successful technical check does not establish visual likeness. Keep source
 images, settings, intermediate outputs, previews and validation reports.
+
+**Mandatory low-poly style gate — both character and prop pipelines:** Follow
+PRD §9.1. References and finished assets must use simple angular silhouettes,
+visible faceted shading, broad colour areas and restrained painted details.
+Simplify cultural patterns without losing their identity. Reject photorealistic
+surfaces, dense microtexture and glossy realism. Compare four-angle previews and
+the in-game view with the existing cast, props and terrain before installation.
+Higher resolution or a larger triangle ceiling never waives this style review;
+surface smoothing for repair must not erase the intended faceted appearance.
 
 ## 2. Prepare and generate the character
 
@@ -67,15 +87,17 @@ it does not run another neural generation or upload to an external rigging site.
 
 The Kha-nae profile checks the exact input hash. For a new mesh or character,
 review joint landmarks and anatomical weight regions before making a new
-profile. Merely adding another hash is not calibration. The current skinning
-rules are Kha-nae-specific; this is not a universal automatic rigging service.
+profile. Merely adding another hash is not calibration. Each profile selects character-specific anatomical regions. Mu-naw’s body
+midline is offset from the mesh bounds by his projecting equipment. Inspect the
+body, not just the bounding box; this is not a universal automatic rigging service.
 
 See [rigging guide](tools/character_pipeline/rigging_guide.md) for bones, skinning,
 accessories and animation limits.
 
 ## 4. Animation and deformation review
 
-Required initial clips: Idle, Walk and ToolUse. Review each from four angles,
+Required baked clips: Idle, Walk, Run and legacy ToolUse. Gameplay work poses
+are runtime layers and must be tested separately from the exported clips. Review each from four angles,
 including maximum arm and leg bends. Verify:
 
 - Normalized weights, at most four influences, no unweighted vertices.
@@ -85,21 +107,31 @@ including maximum arm and leg bends. Verify:
 - Feet remain grounded, loops repeat, and in-place clips do not move the actor.
 - UV textures survive skinning/export; accessories follow their attachment bones.
 
-The first Kha-nae clips are a gameplay foundation, not a finished animation
-library: fingers and face are not rigged; separate rake/ignition/spray actions,
-terrain foot IK and locomotion stride tuning remain polish work.
+The cast now has tool-specific runtime poses, target-facing, movement during
+work and bounded foot correction. Finger closure and facial animation remain
+optional for the current camera. Review stride/contact at gameplay speed and
+terrace edges: the presence of IK or a Run clip alone does not prove perfect feet.
+
+To mark a character gameplay-ready, review its role-specific motions in the
+actual game: stationary and moving tool use, target turns, slopes, smoke slowdown,
+companion task interruption and end-of-day stopping. Match tool contact/effects
+to the action without silently changing gameplay reach, cadence or balance.
+Review two-hand tool grips and rigid accessory attachment at maximum bends.
+Keep the accepted low-poly silhouette, faceted surfaces and cultural details.
 
 ## 5. Install and connect in Godot
 
 Keep the previous scene/model for rollback. Install reviewed GLBs under
 `assets/models/<name>_rigged.glb` and instance them in the character scene.
-Kha-nae uses `scripts/SkeletalChibiAnimator.gd`; other characters continue using
-`ChibiAnimator.gd`. Both expose `update_animation()` and `trigger_action()`.
+All three scenes use `scripts/SkeletalChibiAnimator.gd` with their own
+`character_profile`. The legacy `ChibiAnimator.gd` remains a fallback.
 
-The skeletal controller crossfades Idle/Walk, plays ToolUse once, ignores repeated
-triggers until it finishes, and creates Hand.R and Chest attachment sockets.
-`PlayerController.gd` attaches the tool and tank to those sockets for rigged
-characters. It retains the old tool behavior for procedural characters.
+Controllers send `set_work(kind, active)`, `set_environment(grid, coughing)` and
+`update_animation(delta, velocity, face_dir)`. The animator manually advances
+locomotion, resets bone poses before layering and keeps work separate from gait.
+`cancel_work()` handles new orders, rally, tool changes and the satellite stop.
+Effects are emitted only when the game successfully changes a cell; their visual
+nodes never consume water or change fire simulation state.
 
 Reimport and run the relevant checks after integration:
 
@@ -107,6 +139,8 @@ Reimport and run the relevant checks after integration:
 godot --headless --editor --quit --path .
 godot --headless --path . --script tests/test_skeletal_character.gd
 godot --headless --path . --script tests/test_character_materials.gd
+godot --headless --path . --script tests/test_gameplay_motion.gd
+godot --path . --script tests/test_motion_deformation.gd
 godot --headless --path . --script tests/test_all.gd
 godot --headless --path . --fixed-fps 60 --quit-after 120
 ```
@@ -114,7 +148,7 @@ godot --headless --path . --fixed-fps 60 --quit-after 120
 Capture the installed character, animations and hand-held tool in the real scene:
 
 ```bash
-godot --path . --rendering-method gl_compatibility \
+godot --path . \
   --script tools/character_pipeline/preview_rig_in_game.gd -- \
   /absolute/path/to/new_demo_frames
 ```
@@ -122,3 +156,17 @@ godot --path . --rendering-method gl_compatibility \
 The preview runs in-place Idle, Walk and ToolUse on the real player model. It
 is a visual animation check, not a substitute for testing movement, targeting
 and tool gameplay. Keep acceptance notes with the render and test logs.
+Use the project's default renderer for appearance acceptance so material and
+colour handling match the shipped scene.
+
+For the current cast and runtime layers, also capture:
+
+```bash
+godot --path . --script tools/character_pipeline/review_gameplay_motion.gd -- \
+  /absolute/path/to/new_motion_review
+```
+
+The deformation test needs a real renderer to bake the current skinned pose;
+headless rendering cannot provide that mesh. It samples runtime work and moving
+work, complementing Blender's baked-clip checks. Keep rejected candidates and
+never weaken the stretch threshold merely to make a pose pass.

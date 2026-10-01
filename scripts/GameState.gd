@@ -4,6 +4,11 @@ static var instance: Node
 
 const PLOTS_PER_YEAR: int = 5
 const FAMINE_THRESHOLD: float = 20.0
+# Scrutiny relief (balance pass 2026-10-02, campaign Monte Carlo): attention drifts
+# after every plot, faster after a clean one, and the monsoon washes more away
+const PLOT_SCRUTINY_DECAY: int = 10
+const CLEAN_BURN_BONUS: int = 10
+const MONSOON_SCRUTINY_RELIEF: int = 45
 const UPGRADE_RICE_COST: float = 10.0
 
 # Granary rations (PRD §7.2): rice spent on the crew before a burn
@@ -42,6 +47,13 @@ var pending_harvest: Dictionary = {}    # Filled when a year completes; shown by
 var last_burn_yield: float = 0.0
 var last_burn_hotspots: int = 0
 var last_burn_escaped: bool = false
+var last_rice_change: float = 0.0
+var last_barn_target: float = 75.0
+## Scrutiny the rangers let go after the last plot (shown in the report)
+var last_scrutiny_relief: int = 0
+
+# The how-to-play card opens by itself once per session on a fresh campaign
+var seen_how_to_play: bool = false
 
 func _init() -> void:
 	instance = self
@@ -81,15 +93,27 @@ func record_plot_results(burn_yield: float, hotspots: int, escaped: bool, scruti
 	last_burn_escaped = escaped
 	season_yields.append(burn_yield)
 
+	# Read before favours clear: indigenous seeds change both numbers
+	last_barn_target = barn_target()
+	last_rice_change = rice_change_for_yield(burn_yield)
 	state_scrutiny = min(100, state_scrutiny + scrutiny_gain)
-	rice_barn = clampf(rice_barn + rice_change_for_yield(burn_yield), 0.0, 100.0)
+	# A crackdown stands; otherwise the rangers' attention drifts to other villages
+	last_scrutiny_relief = 0
+	if state_scrutiny < 100:
+		var relief = PLOT_SCRUTINY_DECAY + (CLEAN_BURN_BONUS if scrutiny_gain == 0 else 0)
+		last_scrutiny_relief = mini(relief, state_scrutiny)
+		state_scrutiny -= last_scrutiny_relief
+	rice_barn = clampf(rice_barn + last_rice_change, 0.0, 100.0)
 	favours.clear()
+
+## Ash-bed share that fills the barn (indigenous seeds lower it)
+func barn_target() -> float:
+	return 65.0 if has_favour(Favour.SEEDS) else 75.0
 
 ## Good ash beds feed the barn; poor ones mean hunger. Indigenous seeds lower the bar.
 func rice_change_for_yield(burn_yield: float) -> float:
 	var seeds = has_favour(Favour.SEEDS)
-	var good_threshold = 65.0 if seeds else 75.0
-	if burn_yield >= good_threshold:
+	if burn_yield >= barn_target():
 		return 15.0 if seeds else 10.0
 	elif burn_yield < 60.0:
 		return -25.0
@@ -121,9 +145,9 @@ func _complete_year() -> void:
 		total += y
 	var avg = total / maxf(1.0, float(season_yields.size()))
 	var rice_delta = 15.0 if avg >= 70.0 else (5.0 if avg >= 50.0 else -10.0)
-	var relief = mini(35, state_scrutiny)
+	var relief = mini(MONSOON_SCRUTINY_RELIEF, state_scrutiny)
 	rice_barn = clampf(rice_barn + rice_delta, 0.0, 100.0)
-	state_scrutiny = maxi(0, state_scrutiny - 35)
+	state_scrutiny = maxi(0, state_scrutiny - MONSOON_SCRUTINY_RELIEF)
 
 	pending_harvest = {
 		"year": current_year,

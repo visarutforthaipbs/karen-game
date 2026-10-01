@@ -9,7 +9,7 @@ class YearRules:
 	var drone_speed_mult: float = 1.0    # Year 4+: high-speed quadcopters
 	var spread_mult: float = 1.0         # Regional drought makes fire run faster
 	var satellite_threshold: float = 35.0 # VIIRS detection threshold (thermal units)
-	var hotspot_penalty: int = 15        # Scrutiny per detected hotspot
+	var hotspot_penalty: int = 15        # Scrutiny when the satellite detects the burn (up to 2x for many hot cells)
 	var ground_cameras: int = 0          # Thermal cameras along the National Park boundary
 	var checkpoints: bool = false        # Military roadblocks slow mutual-aid travel
 	var curfew: bool = false             # Zero-tolerance nighttime curfew
@@ -33,7 +33,7 @@ class YearRules:
 		if checkpoints:
 			lines.append("ด่านทหารบนถนน: ไปเอาแรงต้องใช้เวลามากขึ้น")
 		if curfew:
-			lines.append("เคอร์ฟิวไม่ผ่อนผัน: จุดความร้อนแต่ละจุดเพิ่มความเพ่งเล็ง %d" % hotspot_penalty)
+			lines.append("เคอร์ฟิวไม่ผ่อนผัน: ถ้าดาวเทียมจับได้ ความเพ่งเล็งเพิ่ม %d–%d" % [hotspot_penalty, hotspot_penalty * 2])
 		if penalty_mult < 1.0:
 			lines.append("ปีนี้เจ้าหน้าที่ยังผ่อนปรนอยู่")
 		return lines
@@ -46,8 +46,9 @@ static func rules_for_year(year: int) -> YearRules:
 			# Baseline VIIRS pass, lenient rangers, standard rainfall
 			r.penalty_mult = 0.75
 		2:
-			# Single daytime drone, drought speeds fire by 25%
+			# Single daytime drone, drought speeds fire by 25%; rangers still a little lenient
 			r.drone_count = 1
+			r.penalty_mult = 0.9
 			r.spread_mult = 1.25
 			r.humidity_pct = 18
 		3:

@@ -4,7 +4,7 @@ extends RefCounted
 ## Drop-in props from tools/asset_pipeline. A file named assets/props/<ID>_<name>_<variant>.glb
 ## (IDs from ASSETS.md) replaces the procedural LowPoly mesh for that ID; several variants
 ## (_a, _b, ...) are spread across cells. With no file, callers keep the procedural fallback.
-## Each GLB is flattened into one vertex-coloured ArrayMesh so it can be MultiMesh-instanced.
+## Static GLBs are flattened with UVs and per-surface materials preserved.
 
 const PROPS_DIR = "res://assets/props/"
 
@@ -72,17 +72,14 @@ static func _build_index() -> void:
 ## Merge every MeshInstance3D in the imported scene into a single mesh (node transforms baked in)
 static func _flatten(scene: PackedScene) -> ArrayMesh:
 	var root = scene.instantiate()
-	var st = SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var found = _append_meshes(root, Transform3D.IDENTITY, st)
+	var mesh := ArrayMesh.new()
+	var found = _append_meshes(root, Transform3D.IDENTITY, mesh)
 	root.free()
 	if not found:
 		return null
-	var mesh = st.commit()
-	mesh.surface_set_material(0, LowPoly.vertex_color_material())
 	return mesh
 
-static func _append_meshes(node: Node, parent_xf: Transform3D, st: SurfaceTool) -> bool:
+static func _append_meshes(node: Node, parent_xf: Transform3D, target: ArrayMesh) -> bool:
 	var xf = parent_xf
 	if node is Node3D:
 		xf = parent_xf * (node as Node3D).transform
@@ -90,8 +87,19 @@ static func _append_meshes(node: Node, parent_xf: Transform3D, st: SurfaceTool) 
 	if node is MeshInstance3D and (node as MeshInstance3D).mesh:
 		var mesh: Mesh = (node as MeshInstance3D).mesh
 		for s in mesh.get_surface_count():
+			var st := SurfaceTool.new()
+			st.begin(Mesh.PRIMITIVE_TRIANGLES)
 			st.append_from(mesh, s, xf)
+			var material := (node as MeshInstance3D).get_active_material(s)
+			var surface_colors = mesh.surface_get_arrays(s)[Mesh.ARRAY_COLOR]
+			# Runtime GLTFDocument loading can leave this disabled even with COLOR_0.
+			# glTF vertex colours multiply the base colour/texture; retain both.
+			if material is BaseMaterial3D and surface_colors != null and not surface_colors.is_empty():
+				material = material.duplicate()
+				(material as BaseMaterial3D).vertex_color_use_as_albedo = true
+			st.set_material(material if material != null else LowPoly.vertex_color_material())
+			st.commit(target)
 			found = true
 	for child in node.get_children():
-		found = _append_meshes(child, xf, st) or found
+		found = _append_meshes(child, xf, target) or found
 	return found

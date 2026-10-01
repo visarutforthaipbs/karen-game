@@ -53,6 +53,10 @@ var refill_point: Vector3 = Vector3.INF
 var _empty_warned: bool = false
 ## Sharper knives clear brush faster
 var blade_cooldown_multiplier: float = 1.0
+## Cutting a firebreak cell down to mineral soil takes a held half-second of work
+const CLEAR_SECONDS: float = 0.5
+var _clear_cell: Vector2i = Vector2i(-1, -1)
+var _clear_progress: float = 0.0
 
 # Gamepad aim: a virtual cursor offset around the player's screen position
 const GAMEPAD_AIM_SPEED: float = 650.0
@@ -119,6 +123,8 @@ func _create_tool_rig() -> void:
 
 func _select_tool(tool: ToolType) -> void:
 	current_tool = tool
+	if animator and animator.has_method("cancel_work"):
+		animator.cancel_work()
 	match tool:
 		ToolType.DRIP_TORCH:
 			_tool_prop.mesh = AssetLibrary.mesh_or("T1", LowPoly.tool_mesh("torch"))
@@ -133,6 +139,8 @@ func _select_tool(tool: ToolType) -> void:
 	tool_changed.emit(TOOL_LABELS[tool])
 
 func _physics_process(delta: float) -> void:
+	if animator and animator.has_method("set_environment"):
+		animator.set_environment(fire_grid, smoke_exposure >= SMOKE_COUGH_THRESHOLD)
 	_update_smoke_and_stamina(delta)
 	_update_refill(delta)
 	if not input_enabled:
@@ -144,9 +152,12 @@ func _physics_process(delta: float) -> void:
 	_update_gamepad_aim(delta)
 	_update_mouse_targeting()
 	_handle_button_actions()
+	_update_work_animation()
 	_handle_held_actions(delta)
 	if animator:
-		animator.update_animation(delta, velocity)
+		var facing := target_cell_pos - global_position if is_targeting_valid_cell and Input.is_action_pressed("use_tool") and not _pointer_over_gui() else Vector3.ZERO
+		facing.y = 0
+		animator.update_animation(delta, velocity, facing)
 
 func _update_smoke_and_stamina(delta: float) -> void:
 	if not fire_grid:
@@ -197,9 +208,17 @@ func _handle_movement(delta: float) -> void:
 	if smoke_exposure >= SMOKE_COUGH_THRESHOLD or current_stamina <= 10.0:
 		effective_speed *= 0.60
 
-	# Isometric angle rotation (approx 45 degrees camera)
+	# Screen-relative movement: follows the camera when it is turned
 	var forward = Vector3(1, 0, 1).normalized()
 	var right = Vector3(1, 0, -1).normalized()
+	var cam = get_viewport().get_camera_3d()
+	if cam:
+		var b = cam.global_basis
+		var flat_right = Vector3(b.x.x, 0.0, b.x.z)
+		var flat_down = Vector3(b.z.x, 0.0, b.z.z)
+		if flat_right.length() > 0.01 and flat_down.length() > 0.01:
+			right = flat_right.normalized()
+			forward = flat_down.normalized()
 	var move_vector = (right * input_dir.x + forward * input_dir.y)
 	if move_vector.length() > 1.0:
 		move_vector = move_vector.normalized()
@@ -270,6 +289,8 @@ func _update_mouse_targeting() -> void:
 
 func set_input_enabled(enabled: bool) -> void:
 	input_enabled = enabled
+	if not enabled and animator and animator.has_method("cancel_work"):
+		animator.cancel_work()
 	if not enabled and target_indicator:
 		target_indicator.visible = false
 
@@ -308,11 +329,27 @@ func _handle_held_actions(delta: float) -> void:
 
 	if Input.is_action_pressed("use_tool") and is_targeting_valid_cell and not _pointer_over_gui():
 		if _flat_distance_to(target_cell_pos) <= interaction_range:
-			_apply_tool_to_cell(target_cell_coord)
-			var cooldown = tool_cooldown
 			if current_tool == ToolType.FIREBREAK_BLADE:
-				cooldown *= blade_cooldown_multiplier
-			_tool_cooldown_left = cooldown
+				_cut_firebreak(target_cell_coord, delta)
+				return
+			_apply_tool_to_cell(target_cell_coord)
+			_tool_cooldown_left = tool_cooldown
+			return
+	_clear_progress = 0.0
+
+## Hold on a cell to rake it down to bare soil; moving to another cell restarts the work
+func _cut_firebreak(coord: Vector2i, delta: float) -> void:
+	if coord != _clear_cell:
+		_clear_cell = coord
+		_clear_progress = 0.0
+	var before = _clear_progress
+	_clear_progress += delta / (CLEAR_SECONDS * blade_cooldown_multiplier)
+	if fmod(before, 0.5) > fmod(_clear_progress, 0.5):
+		_swing()
+	if _clear_progress >= 1.0:
+		_apply_tool_to_cell(coord)
+		_clear_progress = 0.0
+		_clear_cell = Vector2i(-1, -1)
 
 func _apply_tool_to_cell(coord: Vector2i) -> void:
 	if not fire_grid:
@@ -322,9 +359,11 @@ func _apply_tool_to_cell(coord: Vector2i) -> void:
 		ToolType.DRIP_TORCH:
 			if fire_grid.ignite_cell(coord.x, coord.y):
 				_swing()
+				_show_tool_feedback(coord)
 		ToolType.FIREBREAK_BLADE:
 			if fire_grid.clear_firebreak(coord.x, coord.y):
 				_swing()
+				_show_tool_feedback(coord)
 		ToolType.WATER_SPRAYER:
 			if water < water_per_douse:
 				if not _empty_warned:
@@ -333,16 +372,43 @@ func _apply_tool_to_cell(coord: Vector2i) -> void:
 				return
 			if fire_grid.douse_cell(coord.x, coord.y):
 				_swing()
+				_show_tool_feedback(coord)
 				water = maxf(0.0, water - water_per_douse)
 				water_changed.emit(water, water_capacity)
 				if AudioManager.instance:
 					AudioManager.instance.play_water_spray()
 
+func _work_kind() -> StringName:
+	return [&"ignite", &"rake", &"spray"][int(current_tool)]
+
+func _can_animate_work() -> bool:
+	if not input_enabled or not fire_grid or not is_targeting_valid_cell or not Input.is_action_pressed("use_tool") or _pointer_over_gui():
+		return false
+	if _flat_distance_to(target_cell_pos) > interaction_range or not fire_grid.is_valid_coord(target_cell_coord.x, target_cell_coord.y):
+		return false
+	var type: int = fire_grid.cell_types[fire_grid._coord_to_index(target_cell_coord.x, target_cell_coord.y)]
+	if current_tool == ToolType.WATER_SPRAYER:
+		return water >= water_per_douse and type in [FireGrid.CellType.BURNING, FireGrid.CellType.SMOLDERING]
+	return type in [FireGrid.CellType.VEGETATION, FireGrid.CellType.BAMBOO]
+
+func _update_work_animation() -> void:
+	if animator and animator.has_method("set_work"):
+		animator.set_work(_work_kind(), _can_animate_work())
+
 func _swing() -> void:
 	if animator:
-		animator.trigger_action()
+		if animator.has_method("set_work"):
+			animator.set_work(_work_kind(), true)
+		else:
+			animator.trigger_action()
 		if animator.has_method("get_hand_socket"):
 			return # The hand bone drives the tool; avoid a second unrelated swing.
 	var tween = _tool_prop.create_tween()
 	tween.tween_property(_tool_prop, "rotation:x", 0.9, 0.08)
 	tween.tween_property(_tool_prop, "rotation:x", 0.0, 0.14)
+
+func _show_tool_feedback(coord: Vector2i) -> void:
+	var origin := _tool_prop.global_position
+	if current_tool == ToolType.WATER_SPRAYER:
+		origin = _tool_prop.to_global(Vector3(0, 0.68, 0))
+	load("res://scripts/CharacterToolFeedback.gd").spawn(get_parent(), origin, fire_grid.get_cell_world_pos(coord.x, coord.y), _work_kind())

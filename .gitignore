@@ -3,7 +3,8 @@
 /android/
 
 # Character pipeline working outputs (1.4 GB of benchmarks/validation; not used by the game)
-artifacts/
+artifacts/*
+!artifacts/.gdignore
 
 # OS / tooling
 .DS_Store

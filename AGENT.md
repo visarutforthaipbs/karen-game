@@ -40,6 +40,8 @@ Agents have direct access to two computational environments:
 │   ├── LowPoly.gd              # Procedural flat-shaded props (pines, bamboo, brush, hut, tools)
 │   ├── AssetLibrary.gd         # Loads pipeline props from assets/props (falls back to LowPoly)
 │   ├── GameClock.gd            # 14:00 - 20:00 time progression & orbital pass
+│   ├── CameraRig.gd            # Follow camera: zoom (fits plot, then scenic), 90° turns, aim lean
+│   ├── Landscape.gd            # Mountain around the plot: swidden mosaic, forest, haze, mist
 │   ├── SkyCycle.gd             # Afternoon -> blue hour lighting, inversion fog, storm front
 │   ├── WindManager.gd          # Dynamic valley wind vector shifts
 │   ├── ForestryDrone.gd        # Daylight quadcopter patrol & photo detection
@@ -57,7 +59,8 @@ Agents have direct access to two computational environments:
     ├── SegmentBar.gd           # Slanted segment meter with threshold markers
     ├── WindCompass.gd          # Screen-space wind arrow for the isometric camera
     ├── HearthBackdrop.gd       # Low-poly night ridges behind the Village Hearth
-    └── HUD.gd                  # Burn-day HUD, banners, satellite pass, report
+    ├── HowToPlay.gd            # Rules card: two goals, ember-cooling rule, plan, controls
+    └── HUD.gd                  # Burn-day HUD, goal checklist, banners, satellite pass, report
 ```
 
 ---
@@ -100,12 +103,13 @@ python3 tools/character_pipeline/run_refined_character.py --image <image_path> -
 ---
 
 ### 3.5 Prop Asset Pipeline Protocol (non-character assets)
-Concept image (or existing mesh) -> TripoSR -> headless Blender 4.5 cleanup on the GPU node -> `assets/props/<ID>_<name>_<variant>.glb`, which the game loads automatically (`scripts/AssetLibrary.gd`, procedural fallback).
+Concept image or static GLB -> isolated candidate -> technical and visual review -> explicit installation. Quality image props use TRELLIS.2 and preserved textures; instanced vegetation keeps small vertex-colour budgets. Thin procedural assets require a supplied mesh. Do not automatically apply character voxel hole-filling to props.
 ```bash
 ./tools/asset_pipeline/build_asset.sh <ID> --prompt              # concept-image prompt for an ASSETS.md ID
-./tools/asset_pipeline/build_asset.sh <ID> --image concept.png   # build (about 40 s)
-./tools/asset_pipeline/build_asset.sh <ID> --mesh model.glb      # clean up an existing model
-python3 tools/asset_pipeline/validate_assets.py                  # check every prop
+./tools/asset_pipeline/build_asset.sh <ID> --image concept.png   # build a review candidate
+./tools/asset_pipeline/build_asset.sh <ID> --mesh model.glb      # preserve UVs/materials on supplied meshes
+python3 tools/asset_pipeline/install_asset.py <candidate-dir> --reviewed # after visual review
+python3 tools/asset_pipeline/validate_assets.py --profile quality # validate declared per-ID ceilings
 ```
 Specs live in `tools/asset_pipeline/asset_manifest.json`; details in `tools/asset_pipeline/README.md`.
 
@@ -127,6 +131,8 @@ Whenever GDScript or `.tscn` files are modified:
 ---
 
 ## 5. Cultural & Mechanical Integrity
+
+**Art direction is mandatory for both asset pipelines:** Satellite Shadow is a stylized low-poly game. Keep simple angular silhouettes, faceted shading, broad colour areas and restrained painted details. Higher-quality generation must stay within this style. Reject photorealistic/noisy surfaces and compare candidates with the existing game scene before installation, even when technical checks pass. Follow PRD §9.1 and ASSETS.md.
 
 1. **Rai Mun Wian (ไร่หมุนเวียน):** Preserve the authentic representation of rotational upland farming—not destructive slash-and-burn, but sustainable traditional agroecology.
 2. **Mutual Aid (เอาแรง):** The player should never be forced to micromanage every click. Companions must maintain helpful role autonomy (Elder raking firebreaks, Youth dousing hotspots).

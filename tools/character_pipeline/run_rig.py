@@ -60,7 +60,7 @@ def main():
                    stdout=log, stderr=subprocess.STDOUT)
         subprocess.run(['scp', '-q', '-r', f'{args.host}:{remote_out}/.', str(out)], check=True)
         manifest['status'] = 'awaiting_visual_review'
-        print(f'Rig candidate: {out / "khanae_rigged.glb"}')
+        print(f'Rig candidate: {out / (profile["name"] + "_rigged.glb")}')
     except Exception as exc:
         manifest.update(status='failed', error=str(exc))
         if remote_out:

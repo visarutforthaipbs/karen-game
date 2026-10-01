@@ -1,0 +1,94 @@
+{
+  "name": "tapoh",
+  "height": 1.15,
+  "source_sha256": [
+    "b4e6f001a4b28fce2dcee02b006d63a0fe89ee9bb0e194f5d1db3b2fbc9b3105"
+  ],
+  "coordinates": "Godot Y up, front +Z; metres",
+  "landmarks": {
+    "hips": [
+      0,
+      0.28,
+      0
+    ],
+    "spine": [
+      0,
+      0.37,
+      0
+    ],
+    "chest": [
+      0,
+      0.48,
+      0
+    ],
+    "neck": [
+      0,
+      0.58,
+      0
+    ],
+    "head": [
+      0,
+      0.65,
+      0
+    ],
+    "head_tip": [
+      0,
+      0.96,
+      0
+    ],
+    "shoulder": [
+      0.135,
+      0.51,
+      0
+    ],
+    "elbow": [
+      0.205,
+      0.445,
+      0.01
+    ],
+    "wrist": [
+      0.26,
+      0.385,
+      0.025
+    ],
+    "hand_tip": [
+      0.285,
+      0.36,
+      0.04
+    ],
+    "hip": [
+      0.075,
+      0.28,
+      0
+    ],
+    "knee": [
+      0.08,
+      0.15,
+      0.005
+    ],
+    "ankle": [
+      0.08,
+      0.045,
+      0
+    ],
+    "toe": [
+      0.08,
+      0.025,
+      0.085
+    ],
+    "bag": [
+      0,
+      0.44,
+      -0.1
+    ],
+    "bag_tip": [
+      0,
+      0.55,
+      -0.1
+    ]
+  },
+  "weight_mode": "tapoh",
+  "arm_rest_degrees": 0,
+  "locked_carry": false,
+  "calibration_notes": "Authored-scale front/side/back inspection in artifacts/character_motion_20261002. Preserve embedded gear; review candidate bends before installation."
+}

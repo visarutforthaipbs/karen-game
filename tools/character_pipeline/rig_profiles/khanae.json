@@ -1,16 +1,93 @@
 {
   "name": "khanae",
   "height": 1.2,
-  "source_sha256": ["a23f7392729c07ad4d8814c5226621d3a4b3ddd937dab7e62fe23462dd71df98", "e590f77cbf4b6680a9738f44f1a8d3eb09095ac4a0ebbe98ea5b8f4dd7dc7b93"],
+  "source_sha256": [
+    "a23f7392729c07ad4d8814c5226621d3a4b3ddd937dab7e62fe23462dd71df98",
+    "e590f77cbf4b6680a9738f44f1a8d3eb09095ac4a0ebbe98ea5b8f4dd7dc7b93"
+  ],
   "coordinates": "Godot Y up, front +Z; metres",
   "landmarks": {
-    "hips": [0, 0.33, -0.005], "spine": [0, 0.44, 0],
-    "chest": [0, 0.57, 0], "neck": [0, 0.655, 0],
-    "head": [0, 0.71, 0], "head_tip": [0, 0.97, 0],
-    "shoulder": [0.14, 0.59, 0], "elbow": [0.245, 0.505, 0],
-    "wrist": [0.325, 0.435, 0.005], "hand_tip": [0.373, 0.398, 0.01],
-    "hip": [0.075, 0.325, -0.005], "knee": [0.09, 0.19, 0.006],
-    "ankle": [0.087, 0.065, -0.016], "toe": [0.087, 0.035, 0.09],
-    "bag": [0.20, 0.35, 0.025], "bag_tip": [0.20, 0.25, 0.025]
-  }
+    "hips": [
+      0,
+      0.33,
+      -0.005
+    ],
+    "spine": [
+      0,
+      0.44,
+      0
+    ],
+    "chest": [
+      0,
+      0.57,
+      0
+    ],
+    "neck": [
+      0,
+      0.655,
+      0
+    ],
+    "head": [
+      0,
+      0.71,
+      0
+    ],
+    "head_tip": [
+      0,
+      0.97,
+      0
+    ],
+    "shoulder": [
+      0.14,
+      0.59,
+      0
+    ],
+    "elbow": [
+      0.245,
+      0.505,
+      0
+    ],
+    "wrist": [
+      0.325,
+      0.435,
+      0.005
+    ],
+    "hand_tip": [
+      0.373,
+      0.398,
+      0.01
+    ],
+    "hip": [
+      0.075,
+      0.325,
+      -0.005
+    ],
+    "knee": [
+      0.09,
+      0.19,
+      0.006
+    ],
+    "ankle": [
+      0.087,
+      0.065,
+      -0.016
+    ],
+    "toe": [
+      0.087,
+      0.035,
+      0.09
+    ],
+    "bag": [
+      0.2,
+      0.35,
+      0.025
+    ],
+    "bag_tip": [
+      0.2,
+      0.25,
+      0.025
+    ]
+  },
+  "sleeve_weight_smoothing": 24,
+  "calibration_notes": "Left sleeve/basket attachment has a sloped anatomical envelope and localized surface-neighbour weight smoothing. Validate actual two-hand work poses, not only small baked swings."
 }

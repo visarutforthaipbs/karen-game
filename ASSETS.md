@@ -1,37 +1,46 @@
 # Satellite Shadow — Asset List
 
-Every in-game asset today is generated in code: props come from `scripts/LowPoly.gd`, and particles and UI come from `FireGrid.gd` / `HUD.gd`. All audio comes from `scripts/AudioManager.gd`. This list covers what real assets would replace, and which pipeline route fits each one.
+Characters now use textured generated models, with a skeletal rig for Kha-nae. Props have procedural fallbacks in `scripts/LowPoly.gd`; reviewed generated props can replace them. Particles and UI come from `FireGrid.gd` / `HUD.gd`, and audio from `scripts/AudioManager.gd`. This list tracks asset roles and routes; current build settings are in each pipeline's manifest.
 
-**Building a 3D prop:** `./tools/asset_pipeline/build_asset.sh <ID> --prompt` prints the concept-image prompt. `--image <png>` builds the prop, and the game uses it automatically. See `tools/asset_pipeline/README.md`.
+**Building a 3D prop:** `./tools/asset_pipeline/build_asset.sh <ID> --prompt` prints a reference prompt. `--image <png>` or `--mesh <glb>` creates an isolated review candidate. After visual review, `install_asset.py <candidate-dir> --reviewed` validates and installs it. See `tools/asset_pipeline/README.md`.
 
 **Routes**
-- **IMG→3D**: the existing character pipeline (`tools/character_pipeline/`, TripoSR on gpu01). Best for solid, chunky shapes. Poor for thin parts (handles, culms, needles), which come out as blobs.
+- **IMG→3D**: TRELLIS.2 for textured quality props, TripoSR for standard vertex-colour props. Thin handles, culms and open structures need special review; procedural modelling is often more reliable for those parts.
 - **PROC**: keep it procedural, or model it by hand or with a Blender script. Best for thin or repeating geometry.
 - **IMG2D**: 2D image generation (ComfyUI on gpu01) plus background removal, exported as PNG with alpha.
 - **AUDIO**: recording, a CC0 library, or TTS (OmniVoice-Thai on gpu01). For music, use ACE-Step (MIT), not MusicGen (CC-BY-NC; see the licence note in project memory).
 
 **3D spec (all models)**
+- **Required art direction:** stylized low-poly, simple angular silhouettes, visible faceted shading, broad colour areas and restrained painted textures. Characters, props and terrain must look consistent at gameplay distance. Preserve cultural patterns in simplified form; reject photorealistic materials, dense surface noise and glossy realism. See PRD §9.1.
+- Both standard and quality routes follow this same style. Quality budgets are ceilings, not detail targets. Visual review must compare the candidate with the existing game scene before installation.
 - glTF `.glb`, 1 unit = 1 m, +Y up.
 - Origin at the base centre (y = 0 is the ground). The front faces +Z.
-- Vertex colours rather than textures, flat-shaded.
+- Instanced vegetation: one vertex-colour surface. Prominent props: preserve UV textures and solid materials, at most eight surfaces.
 - Triangle budgets matter: brush, bamboo and pines are instanced up to about 1,600 times per plot.
+- Prop tables below retain standard budgets. Explicit quality budgets (for example S1: 6,000 triangles) are in `asset_manifest.json`; they do not raise vegetation budgets.
+
+**Installed prop progress — 2026-10-02:** 6 of 22 prop types now have reviewed
+pipeline models, across 13 GLBs: E1 (3), E2 (3), E3 (4), S1 (1), S2 (1), V1 (1).
+The latest 12-model set uses the shared palette, matte vertex colours and flat
+normals. Evidence: `artifacts/cohesive_props_20261002/`. Sixteen prop types remain
+for creation or upgrade; existing procedural fallbacks continue to work.
 
 ## 1. Characters (already in the character pipeline)
 
 | ID | Asset | Size | Tris | Route | Status / notes |
 |---|---|---|---|---|---|
-| C1 | Kha-nae (player) | 1.2 m | ≤2,500 | IMG→3D | Model exists; colours washed out; no rig yet |
-| C2 | Ta-poh (elder) | 1.15 m | ≤2,500 | IMG→3D | The hoe in the concept art fuses into the mesh |
-| C3 | Mu-naw (youth) | 1.1 m | ≤2,500 | IMG→3D | The backpack and hose fuse into the mesh |
-| C4 | Rig + animations: idle, walk, run, action (rake/torch/spray), cough | — | — | AccuRig / Mixamo (SOP step 4) | Not started. `ChibiAnimator.gd` fakes motion until then |
+| C1 | Kha-nae (player) | 1.2 m | 39,799 | Refined TRELLIS.2 | Textured model installed with 19-bone rig |
+| C2 | Ta-poh (elder) | 1.15 m | 11,940 | TRELLIS.2 | Textured; procedural animation |
+| C3 | Mu-naw (youth) | 1.1 m | 39,779 | TRELLIS.2 + repair | Textured; procedural animation |
+| C4 | Rig + animations | — | — | Calibrated Blender rig | Kha-nae: Idle/Walk/generic ToolUse implemented; other rigs and specialised actions remain |
 
 ## 2. Hillside environment
 
 | ID | Asset | Size | Tris | Route | Used for |
 |---|---|---|---|---|---|
-| E1 | Pine tree (3 variants) | 4.2 m tall, Ø 2.7 m | ≤300 | PROC | Conservation-forest border (300–600 instances) |
-| E2 | Bamboo clump (3 variants) | 3.3 m tall, Ø 1 m | ≤400 | PROC | Bamboo cells; hides the crew from drones |
-| E3 | Upland brush / fallow scrub (4 variants) | 0.8 m tall, Ø 1 m | ≤150 | IMG→3D or PROC | Most plot cells (up to 1,100 instances) |
+| E1 | Pine tree (3 variants) | 4.2 m tall | ≤300 | PROC | Installed: 3 palette-matched GLBs, 260 triangles each; conservation-forest border |
+| E2 | Bamboo clump (3 variants) | 3.3 m tall | ≤400 | PROC | Installed: 3 five-culm clumps with lance leaves, 360 triangles each; bamboo cover |
+| E3 | Upland brush / fallow scrub (4 variants) | 0.8 m tall | ≤150 | PROC | Installed: 4 green/dry/mixed variants, 136 triangles each; most plot cells |
 | E4 | Charred bamboo stump | 0.4 m | ≤80 | IMG→3D | Smoldering / ash cells (glow and charcoal tints are applied by the game) |
 | E5 | Burnt brush root collar | 0.3 m | ≤80 | IMG→3D | Smoldering / ash cells |
 | E6 | Rocks / boulders (4 variants) | 0.3–1.2 m | ≤150 | IMG→3D | New set dressing on terraces and the border |
@@ -43,8 +52,8 @@ Every in-game asset today is generated in code: props come from `scripts/LowPoly
 
 | ID | Asset | Size | Tris | Route | Used for |
 |---|---|---|---|---|---|
-| S1 | Karen field hut on stilts, thatch roof | 2.6×2.2 m footprint, 3.3 m tall | ≤1,500 | IMG→3D | Crew spawn point on the south edge |
-| S2 | Water barrels / bamboo water tubes | 0.9 m | ≤300 | IMG→3D | Sprayer refill point by the hut |
+| S1 | Karen field hut on stilts, thatch roof | 3.3 m tall; installed bounds 3.11×3.49 m | ≤1,500 standard / ≤6,000 quality | IMG→3D | Crew spawn point; reviewed 5,845-triangle low-poly textured hut installed 2026-10-02 |
+| S2 | Water barrels / bamboo water tubes | 0.9 m | ≤300 standard / ≤1,500 quality | PROC | Installed: two blue barrels and bamboo tubes, 464 triangles; sprayer refill point |
 | S3 | Rice granary (ยุ้งข้าว) | 3 m | ≤1,500 | IMG→3D | Hearth art / future 3D Hearth |
 | S4 | Village house (2 variants) | 4 m | ≤2,000 | IMG→3D | Hearth backdrop |
 | S5 | Military checkpoint roadblock | 3 m | ≤800 | IMG→3D | Year 4+ flavour (Hearth art / future cutscene) |
@@ -53,7 +62,7 @@ Every in-game asset today is generated in code: props come from `scripts/LowPoly
 
 | ID | Asset | Size | Tris | Route | Used for |
 |---|---|---|---|---|---|
-| V1 | Forestry quadcopter drone | 1.2×0.3×1.2 m | ≤800 | IMG→3D (body); rotor discs stay in code | Drone patrols. Rotors spin in code, so keep them as separate meshes or leave them out |
+| V1 | Forestry quadcopter drone | 1.2×0.37×1.2 m | ≤800 | PROC body; rotor discs stay in code | Installed: 428-triangle body and camera; separate rotors aligned to motor centers at X/Z ±0.48 m |
 | V2 | Ground thermal camera post | 2.9 m pole + housing | ≤300 | PROC (pole) + IMG→3D (housing) | Year 3+ park-boundary cameras |
 | V3 | Polar-orbit satellite | — | ≤1,000 | IMG→3D | Optional: 20:00 overpass cinematic |
 
@@ -94,9 +103,9 @@ Every in-game asset today is generated in code: props come from `scripts/LowPoly
 
 | ID | Asset | Route | Notes |
 |---|---|---|---|
-| A1 | Ta-poh wind warning, 2–3 Thai / S'gaw Karen lines | AUDIO (OmniVoice) | Save as `assets/audio/tapoh_wind_warning.wav`; the game picks it up automatically |
+| A1 | Ta-poh wind warning, 2–3 Thai / S'gaw Karen lines | AUDIO (OmniVoice) | **Done** — 3 recorded variants `assets/audio/tapoh_wind_warning*.wav` (OmniVoice-Thai "Pop" on gpu01; manifest in `artifacts/tts_batch/`) |
 | A2 | Crew barks: whistle reply, coughing, "embers!" | AUDIO (OmniVoice) | |
-| A3 | Ranger radio chatter (Thai) | AUDIO (TTS + radio filter) | Hearth forestry channel |
+| A3 | Ranger radio chatter (Thai) | AUDIO (TTS + radio filter) | **Done** — 8 decree/chatter lines `radio_ch1_*.wav` (FM 88.5) + 6 forecast lines `radio_ch2_*.wav` (FM 94.2); played over static through the band-limited `RadioVoice` bus |
 | A4 | Bamboo culm PANG, fire crackle loop, water hiss | AUDIO (record / CC0) | |
 | A5 | Drone rotor loop, siren loop, thunder | AUDIO (CC0) | |
 | A6 | Forest ambience: cicadas, birds, wind in bamboo | AUDIO (CC0) | Missing entirely today |

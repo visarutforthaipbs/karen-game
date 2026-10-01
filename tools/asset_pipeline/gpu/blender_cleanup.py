@@ -1,10 +1,10 @@
 """Satellite Shadow prop pipeline, stage 2 (runs inside headless Blender 4.5 on gpu01).
 
-Raw high-res mesh (TripoSR output, or any .glb/.obj you supply) -> game-ready low-poly prop:
-  clean scene -> join -> drop floating islands -> collapse-decimate to the triangle budget
-  -> (hard-surface) planar dissolve so flat faces stay flat -> faceted per-face colours,
-  saturation lift + nudge toward the game palette -> flat shading
-  -> scale to spec size, origin at base centre (y = 0), front facing +Z -> GLB + stats + turntable views.
+Raw high-resolution mesh -> normalized master -> budgeted static prop.
+Preserve mode retains UVs and materials. Vertex mode requires vertex colours and
+applies the legacy palette/flat-shading treatment. Small disconnected parts are
+kept unless island removal is explicitly requested. Output is Y-up and grounded;
+front orientation is controlled by the caller's yaw correction.
 
 Usage:
   blender -b --factory-startup --python blender_cleanup.py -- \
@@ -19,6 +19,7 @@ import os
 import sys
 
 import bpy
+import bmesh
 import numpy as np
 from mathutils import Matrix, Vector
 
@@ -28,6 +29,8 @@ def parse_args():
     ap = argparse.ArgumentParser()
     ap.add_argument("--in", dest="inp", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--master", default="", help="Preserved detailed master before decimation")
+    ap.add_argument("--material-mode", choices=["preserve", "vertex"], default="preserve")
     ap.add_argument("--tris", type=int, required=True)
     ap.add_argument("--category", choices=["organic", "hard"], default="organic")
     ap.add_argument("--fit", choices=["height", "width", "max"], default="height")
@@ -42,10 +45,13 @@ def parse_args():
     ap.add_argument("--yaw", type=float, default=0.0, help="degrees about the up axis (45 = concept was a front-right 3/4 view)")
     ap.add_argument("--auto-square", action="store_true", help="fine-tune yaw (+-15 deg) to square the footprint (hard-surface)")
     ap.add_argument("--planar-angle", type=float, default=5.0, help="degrees, hard-surface only")
-    ap.add_argument("--min-island", type=float, default=0.03, help="drop loose parts smaller than this share of the largest part")
+    ap.add_argument("--min-island", type=float, default=0.0, help="Opt-in loose-fragment removal; default keeps stilts, rungs and handles")
     ap.add_argument("--stats", default="")
     ap.add_argument("--views", default="", help="directory for turntable renders")
-    return ap.parse_args(argv)
+    args = ap.parse_args(argv)
+    if args.tris < 4 or not math.isfinite(args.meters) or args.meters <= 0:
+        ap.error('Positive size and triangle budget >= 4 required')
+    return args
 
 
 # ---------------------------------------------------------------------------
@@ -138,6 +144,24 @@ def collapse_to(obj, target: int) -> None:
         mod.use_collapse_triangulate = True
         mod.ratio = max(0.001, (target / t) * 0.98)
         apply_modifier(obj, mod)
+
+
+def split_nonmanifold_junctions(obj) -> int:
+    """Separate touching surface sheets that prevent Blender collapse.
+
+    Keep every face and its loop UVs; do not delete small parts or fill openings.
+    Run before decimation: a collapse attempt on these junctions can distort
+    geometry, even if splitting them afterwards would satisfy the triangle cap.
+    """
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    junctions = [e for e in bm.edges if len(e.link_faces) > 2]
+    count = len(junctions)
+    if junctions:
+        bmesh.ops.split_edges(bm, edges=junctions)
+        bm.to_mesh(obj.data)
+    bm.free()
+    return count
 
 
 def planar_dissolve(obj, angle_deg: float) -> None:
@@ -295,6 +319,8 @@ def write_face_colors(obj, face_rgb) -> None:
     bsdf.inputs["Roughness"].default_value = 0.85
     me.materials.clear()
     me.materials.append(mat)
+    for poly in me.polygons:
+        poly.material_index = 0
 
 
 # ---------------------------------------------------------------------------
@@ -330,7 +356,7 @@ def export_glb(obj, path: str) -> None:
     obj.select_set(True)
     bpy.context.view_layer.objects.active = obj
     kw = dict(filepath=path, export_format="GLB", use_selection=True, export_apply=True,
-              export_yup=True, export_normals=True, export_texcoords=False, export_materials="EXPORT")
+              export_yup=True, export_normals=True, export_texcoords=True, export_materials="EXPORT")
     try:
         bpy.ops.export_scene.gltf(**kw, export_vertex_color="ACTIVE")
     except TypeError:
@@ -397,17 +423,42 @@ def main() -> None:
     rotate_yaw(obj, args.yaw)
     squared = auto_square(obj) if args.auto_square else 0.0
 
-    if args.category == "hard":
+    if args.master:
+        normalize(obj, args.fit, args.meters)
+        export_glb(obj, args.master)
+
+    split_junctions = split_nonmanifold_junctions(obj)
+    if args.category == "hard" and args.material_mode == "vertex":
         collapse_to(obj, args.tris * 2)
         planar_dissolve(obj, args.planar_angle)
     collapse_to(obj, args.tris)
-
-    face_rgb, had_color = source_colors(obj, args.input_colors)
-    if args.ref_image and had_color and os.path.exists(args.ref_image):
-        face_rgb = match_reference(obj, face_rgb, reference_lab_stats(args.ref_image))
-    face_rgb, usage = stylize_colors(face_rgb, palette, args.palette_strength, args.saturation)
-    write_face_colors(obj, face_rgb)
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    degenerate = [f for f in bm.faces if f.calc_area() <= 1e-12]
+    if degenerate:
+        bmesh.ops.delete(bm, geom=degenerate, context='FACES')
+    bm.to_mesh(obj.data); bm.free()
+    if not 0 < tri_count(obj) <= args.tris:
+        raise ValueError(f'Cannot satisfy strict triangle budget {args.tris}: {tri_count(obj)}')
+    usage = {}
+    had_color = bool(obj.data.color_attributes)
+    if args.material_mode == 'vertex':
+        face_rgb, had_color = source_colors(obj, args.input_colors)
+        if not had_color:
+            raise ValueError('Vertex route requires source vertex colours; textures must be preserved or explicitly baked first')
+        if args.ref_image and os.path.exists(args.ref_image):
+            face_rgb = match_reference(obj, face_rgb, reference_lab_stats(args.ref_image))
+        face_rgb, usage = stylize_colors(face_rgb, palette, args.palette_strength, args.saturation)
+        write_face_colors(obj, face_rgb)
     dims = normalize(obj, args.fit, args.meters)
+    # All game props share the PRD's faceted low-poly shading, including textured ones.
+    # Preserve the detailed master above, but do not inherit smooth/custom normals
+    # from the neural mesh into the game export.
+    if obj.data.has_custom_normals:
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.mesh.customdata_custom_splitnormals_clear()
+    for poly in obj.data.polygons:
+        poly.use_smooth = False
     export_glb(obj, args.out)
 
     stats = {
@@ -420,6 +471,10 @@ def main() -> None:
         "meters": args.meters,
         "dims_m": dims,
         "had_vertex_colors": had_color,
+        "material_mode": args.material_mode,
+        "shading": "flat",
+        "split_nonmanifold_junctions": split_junctions,
+        "removed_zero_area_faces": len(degenerate),
         "colour_reference": bool(args.ref_image and os.path.exists(args.ref_image)),
         "yaw_deg": args.yaw + squared,
         "palette_usage": dict(sorted(usage.items(), key=lambda kv: -kv[1])[:8]),

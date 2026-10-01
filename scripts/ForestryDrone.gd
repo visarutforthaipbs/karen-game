@@ -4,6 +4,18 @@ extends Node3D
 signal drone_spotted_target(world_pos: Vector3, is_flame: bool)
 signal drone_patrol_started()
 signal drone_patrol_ended()
+## Battery-limited sweeps: over the plot for a while, then away to swap batteries
+signal sweep_started(drone: ForestryDrone)
+signal sweep_ended(drone: ForestryDrone)
+
+const SWEEP_SECONDS: float = 45.0
+const AWAY_SECONDS_MIN: float = 50.0
+const AWAY_SECONDS_MAX: float = 70.0
+## Over the plot right now (between battery swaps it is away and blind)
+var on_station: bool = false
+var _phase_left: float = 0.0
+## One photo per sweep: the drone hovers, shoots, then finishes its pass
+var _photo_taken: bool = false
 
 @export var flight_altitude: float = 12.0
 @export var patrol_speed: float = 7.0
@@ -57,7 +69,8 @@ func _build_drone_visuals() -> void:
 	body_box.material = body_mat
 	# Pipeline asset V1 (body only, 1.2 m wide) replaces the box; rotor discs stay procedural
 	drone_body.mesh = AssetLibrary.mesh_or("V1", body_box)
-	if drone_body.mesh != body_box:
+	var has_pipeline_body: bool = drone_body.mesh != body_box
+	if has_pipeline_body:
 		drone_body.position = Vector3(0, -0.15, 0)
 	add_child(drone_body)
 
@@ -65,11 +78,16 @@ func _build_drone_visuals() -> void:
 	var rotor_mat = StandardMaterial3D.new()
 	rotor_mat.albedo_color = Color(0.15, 0.15, 0.18, 0.6)
 	rotor_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	for offset in [Vector3(0.8, 0.15, 0.8), Vector3(-0.8, 0.15, 0.8), Vector3(0.8, 0.15, -0.8), Vector3(-0.8, 0.15, -0.8)]:
+	# V1's 1.2 m body has motor centers at +/-0.48 m. Keep discs attached
+	# to those motors; the legacy box used wider, floating rotor positions.
+	var rotor_span := 0.48 if has_pipeline_body else 0.8
+	var rotor_height: float = drone_body.mesh.get_aabb().end.y + 0.015 if has_pipeline_body else 0.15
+	for corner in [Vector2(1, 1), Vector2(-1, 1), Vector2(1, -1), Vector2(-1, -1)]:
+		var offset := Vector3(corner.x * rotor_span, rotor_height, corner.y * rotor_span)
 		var rotor = MeshInstance3D.new()
 		var disc = CylinderMesh.new()
-		disc.top_radius = 0.45
-		disc.bottom_radius = 0.45
+		disc.top_radius = 0.30 if has_pipeline_body else 0.45
+		disc.bottom_radius = disc.top_radius
 		disc.height = 0.03
 		disc.radial_segments = 3
 		disc.material = rotor_mat
@@ -112,25 +130,48 @@ func _generate_patrol_route() -> void:
 
 func start_patrol() -> void:
 	is_active_patrol = true
-	visible = true
-	global_position = waypoints[0]
-	current_waypoint_idx = 1
 	drone_patrol_started.emit()
+	_begin_sweep()
 
 func end_patrol() -> void:
 	is_active_patrol = false
+	on_station = false
 	visible = false
 	drone_patrol_ended.emit()
 
+func _begin_sweep() -> void:
+	on_station = true
+	visible = true
+	global_position = waypoints[0]
+	current_waypoint_idx = 1
+	_phase_left = SWEEP_SECONDS
+	_photo_taken = false
+	is_hovering = false
+	sweep_started.emit(self)
+
+func _leave_for_battery() -> void:
+	on_station = false
+	visible = false
+	_phase_left = randf_range(AWAY_SECONDS_MIN, AWAY_SECONDS_MAX)
+	sweep_ended.emit(self)
+
 ## 0..1 loudness of the rotor hum heard by the player
 func get_hum_level(listener: Vector3) -> float:
-	if not is_active_patrol:
+	if not is_active_patrol or not on_station:
 		return 0.0
 	var d = Vector2(global_position.x - listener.x, global_position.z - listener.z).length()
 	return clampf(1.0 - (d - search_radius) / 30.0, 0.0, 1.0)
 
 func _physics_process(delta: float) -> void:
 	if not is_active_patrol:
+		return
+	_phase_left -= delta
+	if not on_station:
+		if _phase_left <= 0.0:
+			_begin_sweep()
+		return
+	if _phase_left <= 0.0 and not is_hovering:
+		_leave_for_battery()
 		return
 
 	for r in _rotors:
@@ -164,7 +205,7 @@ func _move_along_patrol(delta: float) -> void:
 		look_at(target, Vector3.UP)
 
 func _scan_ground_area() -> void:
-	if not fire_grid or detection_cooldown > 0.0:
+	if not fire_grid or detection_cooldown > 0.0 or _photo_taken:
 		return
 
 	var ground_pos = Vector3(global_position.x, 0.0, global_position.z)
@@ -196,13 +237,22 @@ func _scan_ground_area() -> void:
 		var p_coord = fire_grid.get_cell_coord_at_world_pos(person.global_position)
 		if fire_grid.is_valid_coord(p_coord.x, p_coord.y):
 			var p_type = fire_grid.cell_types[fire_grid._coord_to_index(p_coord.x, p_coord.y)]
-			# Under a bamboo grove or forest canopy, the crew is camouflaged
-			if p_type != FireGrid.CellType.BAMBOO and p_type != FireGrid.CellType.FOREST_BORDER:
+			# Under a bamboo grove or forest canopy, the crew is camouflaged; farmers
+			# in a field are only evidence when caught beside open flames
+			if p_type != FireGrid.CellType.BAMBOO and p_type != FireGrid.CellType.FOREST_BORDER and _flames_near(p_coord, 2):
 				_trigger_spot(person.global_position, false)
 				return
 
+func _flames_near(c: Vector2i, r: int) -> bool:
+	for dy in range(-r, r + 1):
+		for dx in range(-r, r + 1):
+			if fire_grid.is_valid_coord(c.x + dx, c.y + dy) and fire_grid.cell_types[fire_grid._coord_to_index(c.x + dx, c.y + dy)] == FireGrid.CellType.BURNING:
+				return true
+	return false
+
 func _trigger_spot(spot_pos: Vector3, is_flame: bool) -> void:
 	detection_cooldown = 12.0 # Don't spam alert
+	_photo_taken = true
 	is_hovering = true
 	hover_timer = 3.5 # Drone hovers and snaps photos
 	drone_spotted_target.emit(spot_pos, is_flame)

@@ -27,6 +27,14 @@ var _scan_line: MeshInstance3D
 var _markers_shown: int = 0
 var _marker_mesh: Mesh
 
+## A VIIRS pixel (~375 m) is wider than the whole plot, so the satellite logs a
+## detection, not a count of embers: the base penalty for being seen, a little
+## more for every extra hot cell (stronger signal), capped at twice the base.
+static func scrutiny_for(hot_cells: int, penalty: int) -> int:
+	if hot_cells <= 0:
+		return 0
+	return mini(penalty * 2, penalty + hot_cells - 1)
+
 func trigger_orbital_pass() -> void:
 	if is_sweeping: return
 	is_sweeping = true
@@ -87,7 +95,7 @@ func _process(delta: float) -> void:
 		if _scan_line:
 			_scan_line.queue_free()
 			_scan_line = null
-		sweep_completed.emit(detected_hotspots, detected_hotspots * hotspot_penalty)
+		sweep_completed.emit(detected_hotspots, scrutiny_for(detected_hotspots, hotspot_penalty))
 
 func _advance_scan_line() -> void:
 	if not fire_grid or not _scan_line:

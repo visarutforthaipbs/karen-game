@@ -8,6 +8,8 @@ signal rice_yield_changed(new_yield_pct: float)
 signal hotspot_count_changed(count: int)
 signal bamboo_exploded(cell_coord: Vector2i, world_pos: Vector3, landing_coord: Vector2i)
 signal ember_jumped(from_coord: Vector2i, landing_coord: Vector2i)
+## A spark caught in the protected forest: douse it before it becomes an escape
+signal spot_fire_started(coord: Vector2i)
 
 enum CellType {
 	VEGETATION,      # Unburned upland brush
@@ -26,13 +28,15 @@ enum CellType {
 
 # Simulation Parameters
 @export var simulation_tick_rate: float = 0.5
-@export var base_spread_chance: float = 0.28
+@export var base_spread_chance: float = 0.07
 @export var wind_direction: Vector2 = Vector2(0.707, -0.707).normalized()
 @export var wind_speed_multiplier: float = 1.3
 @export var slope_intensity: float = 1.5
 @export var bamboo_ratio: float = 0.22
 ## Regional drought (PRD §8.2): multiplies every spread roll
 @export var spread_multiplier: float = 1.0
+## Fuel dryness over the afternoon (dryness_at_minute); MainController updates it
+var fuel_dryness: float = 1.0
 
 ## Ticks a smoldering root collar stays hot before it cools to ash on its own.
 ## 480 ticks = 240 real s = 2h40m in-game, so anything that burns after ~17:15
@@ -65,6 +69,27 @@ const MAX_SLOPE_FACTOR: float = 2.5
 # Ember jumping (PRD §4.2): high wind throws embers across a 1-cell firebreak
 const EMBER_JUMP_WIND: float = 1.5
 const EMBER_JUMP_DISTANCE: float = 2.0
+
+# Fire behaviour balance (checked with a headless strategy simulation):
+# a plot takes roughly an hour to burn through, steered by wind, slope and
+# torch lines, and sparks in the park are spot fires that can still be caught.
+const BAMBOO_BURST_CHANCE: float = 0.3   # Not every culm bursts
+const BORDER_CATCH_CHANCE: float = 0.5   # Green forest edge resists flying embers
+const BORDER_SPREAD_FACTOR: float = 0.5  # ...and creeping ground fire
+const BORDER_BURN_TICKS: int = 30        # Forest burns longer than brush
+const ESCAPE_TICKS: int = 16             # 8 s real to douse a spot fire before it is an escape
+const ESCAPE_SPREAD_CELLS: int = 6       # ...or once this many separate spots are alight
+
+## Afternoon fuel dryness: dew-damp at 14:00, driest 15:30-17:00, evening dew
+## and the inversion damp it again. Multiplies every spread and spark roll.
+static func dryness_at_minute(minute: float) -> float:
+	var keys = [[14 * 60, 0.35], [15 * 60, 0.7], [15 * 60 + 30, 0.95], [16 * 60 + 30, 1.0], [17 * 60 + 30, 0.85], [18 * 60 + 30, 0.55], [20 * 60, 0.4]]
+	if minute <= keys[0][0]:
+		return keys[0][1]
+	for i in keys.size() - 1:
+		if minute <= keys[i + 1][0]:
+			return lerpf(keys[i][1], keys[i + 1][1], (minute - keys[i][0]) / float(keys[i + 1][0] - keys[i][0]))
+	return keys[keys.size() - 1][1]
 
 # Grid Data Structures
 var cell_types: Array = []
@@ -101,6 +126,8 @@ var prop_transforms: Array[Transform3D] = []
 var tick_accumulator: float = 0.0
 var simulation_paused: bool = false
 var has_escaped: bool = false
+## Park cells alight right now (spot fires)
+var burning_border_cells: int = 0
 var thermal_view: bool = false
 var thermal_threshold: float = 35.0
 
@@ -501,6 +528,8 @@ func _simulation_step() -> void:
 	active_hotspot_count = 0
 	cooled_ash_cells = 0
 	active_burning_indices.clear()
+	var border_alight = 0
+	var spot_burned_long = false
 
 	for y in range(grid_height):
 		for x in range(grid_width):
@@ -517,10 +546,15 @@ func _simulation_step() -> void:
 					_attempt_spread_to_neighbors(x, y, next_types, next_heat)
 					_attempt_ember_jump(x, y, next_types, next_heat)
 
-					if cell_was_bamboo[idx] and next_timers[idx] == 5:
+					if cell_was_bamboo[idx] and next_timers[idx] == 5 and randf() < BAMBOO_BURST_CHANCE * fuel_dryness:
 						_trigger_bamboo_explosion(x, y, next_types, next_heat)
 
-					if next_timers[idx] >= BURN_DURATION_TICKS:
+					if is_border_coord(x, y):
+						border_alight += 1
+						if next_timers[idx] >= ESCAPE_TICKS:
+							spot_burned_long = true
+
+					if next_timers[idx] >= _burn_duration(x, y):
 						next_types[idx] = CellType.SMOLDERING
 						next_timers[idx] = 0
 						next_heat[idx] = SMOLDER_START_HEAT
@@ -545,6 +579,11 @@ func _simulation_step() -> void:
 	cell_types = next_types
 	cell_heat = next_heat
 	cell_timers = next_timers
+
+	# A spot fire left burning, or spreading through the park, is an escape
+	burning_border_cells = border_alight
+	if spot_burned_long or border_alight >= ESCAPE_SPREAD_CELLS:
+		_notify_escape()
 
 	if total_cultivable_cells > 0:
 		var current_yield = (float(cooled_ash_cells) / float(total_cultivable_cells)) * 100.0
@@ -571,7 +610,9 @@ func _trigger_bamboo_explosion(from_x: int, from_y: int, next_types: Array, next
 func _attempt_ember_jump(from_x: int, from_y: int, next_types: Array, next_heat: Array) -> void:
 	if wind_speed_multiplier <= EMBER_JUMP_WIND:
 		return
-	var chance = clampf((wind_speed_multiplier - EMBER_JUMP_WIND) * 0.25, 0.0, 0.12) * spread_multiplier
+	if is_border_coord(from_x, from_y) and cell_timers[_coord_to_index(from_x, from_y)] < ESCAPE_TICKS:
+		return
+	var chance = clampf((wind_speed_multiplier - EMBER_JUMP_WIND) * 0.25, 0.0, 0.12) * spread_multiplier * fuel_dryness
 	if randf() >= chance:
 		return
 	var jump = wind_direction.rotated(randf_range(-0.4, 0.4)) * EMBER_JUMP_DISTANCE
@@ -590,15 +631,27 @@ func _ignite_landing(landing_x: int, landing_y: int, next_types: Array, next_hea
 		next_types[target_idx] = CellType.BURNING
 		next_heat[target_idx] = 100.0
 		return true
-	elif target_type == CellType.FOREST_BORDER:
-		next_types[target_idx] = CellType.BURNING
-		next_heat[target_idx] = 100.0
-		_notify_escape()
+	elif target_type == CellType.FOREST_BORDER and randf() < BORDER_CATCH_CHANCE:
+		_ignite_border(target_idx, next_types, next_heat)
 		return true
 	return false
 
+## A forest cell catches: a spot fire the crew can still put out
+func _ignite_border(idx: int, next_types: Array, next_heat: Array) -> void:
+	next_types[idx] = CellType.BURNING
+	next_heat[idx] = 100.0
+	if burning_border_cells == 0 and not has_escaped:
+		burning_border_cells = 1
+		spot_fire_started.emit(_index_to_coord(idx))
+
+func _burn_duration(x: int, y: int) -> int:
+	return BORDER_BURN_TICKS if is_border_coord(x, y) else BURN_DURATION_TICKS
+
 func _attempt_spread_to_neighbors(from_x: int, from_y: int, next_types: Array, next_heat: Array) -> void:
 	var from_idx = _coord_to_index(from_x, from_y)
+	# A spark in the park smoulders before it takes off: it only spreads once established
+	if is_border_coord(from_x, from_y) and cell_timers[from_idx] < ESCAPE_TICKS:
+		return
 	var from_elev = cell_elevation[from_idx]
 
 	for dy in [-1, 0, 1]:
@@ -628,15 +681,19 @@ func _attempt_spread_to_neighbors(from_x: int, from_y: int, next_types: Array, n
 			var wind_factor = max(0.2, 1.0 + (wind_alignment * wind_speed_multiplier))
 			var dist_factor = 1.0 if is_orthogonal else 0.707
 
-			var final_chance = base_spread_chance * slope_factor * wind_factor * dist_factor * spread_multiplier
+			var final_chance = base_spread_chance * slope_factor * wind_factor * dist_factor * spread_multiplier * fuel_dryness
+			if n_type == CellType.FOREST_BORDER:
+				final_chance *= BORDER_SPREAD_FACTOR
 
 			if randf() < final_chance:
-				next_types[n_idx] = CellType.BURNING
-				next_heat[n_idx] = 100.0
 				if n_type == CellType.FOREST_BORDER:
-					_notify_escape()
+					_ignite_border(n_idx, next_types, next_heat)
+				else:
+					next_types[n_idx] = CellType.BURNING
+					next_heat[n_idx] = 100.0
 
-## The escape penalty applies once per burn, not once per forest cell that catches
+## The escape penalty applies once per burn, not once per forest cell that catches.
+## It fires when a spot fire burns too long or spreads, not on the first spark.
 func _notify_escape() -> void:
 	if has_escaped:
 		return
@@ -917,7 +974,13 @@ func douse_cell(gx: int, gy: int) -> bool:
 	var idx = _coord_to_index(gx, gy)
 	match cell_types[idx]:
 		CellType.BURNING:
-			if cell_timers[idx] * 2 < BURN_DURATION_TICKS:
+			var x = idx % grid_width
+			var y = idx / grid_width
+			if is_border_coord(x, y) and cell_timers[idx] < ESCAPE_TICKS:
+				# Caught in time: the forest is only scorched
+				cell_types[idx] = CellType.FOREST_BORDER
+				cell_heat[idx] = 0.0
+			elif cell_timers[idx] * 2 < _burn_duration(x, y):
 				cell_types[idx] = CellType.BAMBOO if cell_was_bamboo[idx] else CellType.VEGETATION
 				cell_heat[idx] = 0.0
 			else:

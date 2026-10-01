@@ -42,6 +42,35 @@ var _eye_timer: float = 0.0
 var auto_search_timer: float = 0.0
 var animator: Node3D
 var status_text: String = ""
+var _borrowed_equipment: Node3D
+var _borrowed_wand: MeshInstance3D
+
+func configure_borrowed_sprayer(enabled: bool) -> void:
+	can_douse = enabled
+	if not animator or not animator.has_method("get_hand_socket"):
+		return
+	if _borrowed_equipment:
+		_borrowed_equipment.queue_free()
+		_borrowed_wand.queue_free()
+		_borrowed_equipment = null
+		_borrowed_wand = null
+	if not enabled:
+		return
+	var tank := MeshInstance3D.new()
+	tank.mesh = AssetLibrary.mesh_or("T4", LowPoly.sprayer_tank())
+	animator.get_back_socket().add_child(tank)
+	tank.scale = Vector3.ONE / animator.base_scale
+	_borrowed_equipment = tank
+	_borrowed_wand = MeshInstance3D.new()
+	_borrowed_wand.mesh = AssetLibrary.mesh_or("T5", LowPoly.tool_mesh("wand"))
+	animator.get_left_hand_socket().add_child(_borrowed_wand)
+	_borrowed_wand.scale = Vector3.ONE / animator.base_scale
+	_borrowed_wand.visible = false
+
+func cancel_animation_work() -> void:
+	if animator and animator.has_method("cancel_work"):
+		animator.cancel_work()
+
 
 func _ready() -> void:
 	for child in get_children():
@@ -80,7 +109,21 @@ func _physics_process(delta: float) -> void:
 		_update_thermal_eye(delta)
 	_follow_terrain(delta)
 	if animator:
-		animator.update_animation(delta, velocity)
+		var facing := Vector3.ZERO
+		if animator.has_method("set_work"):
+			var working := current_state == State.PERFORMING_TASK and fire_grid != null and fire_grid.is_valid_coord(target_coord.x, target_coord.y)
+			var kind: StringName = &"spray"
+			if working:
+				var type: int = fire_grid.cell_types[fire_grid._coord_to_index(target_coord.x, target_coord.y)]
+				kind = &"rake" if type in [FireGrid.CellType.VEGETATION, FireGrid.CellType.BAMBOO] else &"spray"
+				working = type in [FireGrid.CellType.VEGETATION, FireGrid.CellType.BAMBOO, FireGrid.CellType.BURNING, FireGrid.CellType.SMOLDERING]
+				facing = target_world_pos - global_position
+				facing.y = 0
+			animator.set_work(kind, working)
+			animator.set_environment(fire_grid, is_coughing)
+			if _borrowed_wand:
+				_borrowed_wand.visible = working and kind == &"spray"
+		animator.update_animation(delta, velocity, facing)
 
 func _effective_speed() -> float:
 	return move_speed * speed_multiplier * (0.6 if is_coughing else 1.0)
@@ -117,6 +160,7 @@ func _update_smoke(delta: float) -> void:
 		_start_flee()
 
 func _start_flee() -> void:
+	cancel_animation_work()
 	var here = fire_grid.get_cell_coord_at_world_pos(global_position)
 	var best = Vector2i(-1, -1)
 	var best_score = INF
@@ -165,9 +209,9 @@ func _process_idle_follow(delta: float) -> void:
 		velocity = Vector3.ZERO
 	_set_status("กำลังไอ" if is_coughing else "เดินตาม")
 
-	# Periodic autonomous behavior when near player
+	# Periodic autonomous behavior when near player (Mu-naw watches for spot fires every second)
 	auto_search_timer += delta
-	if auto_search_timer >= 2.0:
+	if auto_search_timer >= (1.0 if role == Role.YOUTH else 2.0):
 		auto_search_timer = 0.0
 		_find_autonomous_task()
 
@@ -184,7 +228,12 @@ func _find_autonomous_task() -> void:
 			if ember.x >= 0:
 				_assign_task(ember)
 	elif role == Role.YOUTH:
-		# Embers near Mu-naw first, then anywhere around the player
+		# A spot fire in the park comes first: it becomes an escape within seconds
+		var spot = _nearest_spot_fire(16)
+		if spot.x >= 0:
+			_assign_task(spot)
+			return
+		# Then embers near Mu-naw, then anywhere around the player
 		var ember = _nearest_cell_of(FireGrid.CellType.SMOLDERING, global_position, 6)
 		if ember.x < 0 and player:
 			ember = _nearest_cell_of(FireGrid.CellType.SMOLDERING, player.global_position, 10)
@@ -235,6 +284,23 @@ func _best_elder_firebreak() -> Vector2i:
 				best = c
 	return best
 
+## Burning park cell near Mu-naw (spot fires are always on the plot edge)
+func _nearest_spot_fire(radius: int) -> Vector2i:
+	var here = fire_grid.get_cell_coord_at_world_pos(global_position)
+	var best = Vector2i(-1, -1)
+	var best_d = INF
+	for dy in range(-radius, radius + 1):
+		for dx in range(-radius, radius + 1):
+			var c = here + Vector2i(dx, dy)
+			if not fire_grid.is_valid_coord(c.x, c.y) or not fire_grid.is_border_coord(c.x, c.y):
+				continue
+			if fire_grid.cell_types[fire_grid._coord_to_index(c.x, c.y)] == FireGrid.CellType.BURNING:
+				var d = dx * dx + dy * dy
+				if d < best_d:
+					best_d = d
+					best = c
+	return best
+
 func _is_adjacent_to_border(cx: int, cy: int) -> bool:
 	for dy in [-1, 0, 1]:
 		for dx in [-1, 0, 1]:
@@ -283,11 +349,12 @@ func _process_autonomous_work(delta: float) -> void:
 		current_state = State.IDLE_FOLLOW
 		return
 	_move_towards(target_world_pos, delta)
-	# Break off the patrol as soon as an ember shows up nearby
+	# Break off the patrol as soon as a spot fire or an ember shows up nearby
 	auto_search_timer += delta
 	if auto_search_timer >= 1.0:
 		auto_search_timer = 0.0
-		var ember = _nearest_cell_of(FireGrid.CellType.SMOLDERING, global_position, 6)
+		var spot = _nearest_spot_fire(16)
+		var ember = spot if spot.x >= 0 else _nearest_cell_of(FireGrid.CellType.SMOLDERING, global_position, 6)
 		if ember.x >= 0:
 			_assign_task(ember)
 
@@ -373,24 +440,37 @@ func _process_perform_task(delta: float) -> void:
 	var clearing = type == FireGrid.CellType.VEGETATION or type == FireGrid.CellType.BAMBOO
 	_set_status("ถางแนวกันไฟ" if clearing else "ฉีดน้ำดับถ่าน")
 
-	if animator and fmod(task_progress, 0.4) < delta:
+	if animator and not animator.has_method("set_work") and fmod(task_progress, 0.4) < delta:
 		animator.trigger_action()
 
 	task_progress += delta * work_efficiency * (0.6 if is_coughing else 1.0)
 	if task_progress >= REQUIRED_TASK_WORK:
 		if clearing:
-			fire_grid.clear_firebreak(target_coord.x, target_coord.y)
+			if fire_grid.clear_firebreak(target_coord.x, target_coord.y):
+				_show_tool_feedback(&"rake")
 		elif type == FireGrid.CellType.SMOLDERING or type == FireGrid.CellType.BURNING:
-			if fire_grid.douse_cell(target_coord.x, target_coord.y) and AudioManager.instance:
-				AudioManager.instance.play_water_spray()
+			if fire_grid.douse_cell(target_coord.x, target_coord.y):
+				_show_tool_feedback(&"spray")
+				if AudioManager.instance:
+					AudioManager.instance.play_water_spray()
 
 		current_state = State.IDLE_FOLLOW
 
 func receive_ping_order(coord: Vector2i, world_pos: Vector3) -> void:
+	cancel_animation_work()
 	target_coord = coord
 	target_world_pos = world_pos
 	current_state = State.MOVING_TO_TASK
 
 func rally_to_player() -> void:
+	cancel_animation_work()
 	target_coord = Vector2i(-1, -1)
 	current_state = State.IDLE_FOLLOW
+
+func _show_tool_feedback(kind: StringName) -> void:
+	var origin := global_position + Vector3.UP * 0.7
+	if role == Role.YOUTH:
+		origin = animator.to_global(Vector3(0.29, 0.67, 0.15))
+	elif _borrowed_wand and kind == &"spray":
+		origin = _borrowed_wand.to_global(Vector3(0, 0.68, 0))
+	load("res://scripts/CharacterToolFeedback.gd").spawn(get_parent(), origin, target_world_pos, kind)

@@ -6,11 +6,27 @@ extends Control
 
 var wind: Vector2 = Vector2.RIGHT
 var strong: bool = false
+## The burn camera; the arrow turns with it. Without one, the default isometric view.
+var camera: Camera3D
+var _last_yaw: float = 0.0
 
-## Grid (+x east, +y south) to screen for the Main.tscn camera, which looks
-## down the world -X/-Z diagonal: screen right = (x - y), screen down = (x + y).
-static func grid_to_screen(v: Vector2) -> Vector2:
+## Grid (+x east, +y south, world X/Z) to screen direction for the current camera.
+## Default view looks down the world -X/-Z diagonal: right = (x - y), down = (x + y).
+func grid_to_screen(v: Vector2) -> Vector2:
+	if camera:
+		var b = camera.global_basis
+		var right = Vector2(b.x.x, b.x.z)
+		var down = Vector2(b.z.x, b.z.z)
+		if right.length() > 0.01 and down.length() > 0.01:
+			return Vector2(v.dot(right.normalized()), v.dot(down.normalized())).normalized()
 	return Vector2(v.x - v.y, v.x + v.y).normalized()
+
+func _process(_delta: float) -> void:
+	if camera:
+		var yaw = camera.global_rotation.y
+		if absf(angle_difference(yaw, _last_yaw)) > 0.002:
+			_last_yaw = yaw
+			queue_redraw()
 
 func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE

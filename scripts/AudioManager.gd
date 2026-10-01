@@ -11,12 +11,24 @@ const SFX_VOICES: int = 8
 const MUSIC_LOOP_SECONDS: float = 16.0
 const SILENT_DB: float = -60.0
 
-## Optional recorded voice line; falls back to a synthesized call if missing
+## Optional recorded voice lines (OmniVoice-Thai, see ASSETS.md A1–A3).
+## Drop-in wavs; every missing file falls back to synthesis.
+##   tapoh_wind_warning.wav, tapoh_wind_warning_2.wav, ...  Ta-poh wind warnings
+##   radio_ch1_NN.wav ...   FM 88.5 forestry / ranger chatter
+##   radio_ch2_NN.wav ...   FM 94.2 hill weather forecast
+const AUDIO_DIR := "res://assets/audio"
 const TAPOH_VOICE_PATH = "res://assets/audio/tapoh_wind_warning.wav"
+const RADIO_VOICE_BUS := "RadioVoice"
 
 var _sfx: Array[AudioStreamPlayer] = []
 var _sfx_next: int = 0
 var _cache: Dictionary = {}
+
+# Recorded voice pools loaded from AUDIO_DIR at startup (empty = pure synthesis)
+var _tapoh_voices: Array = []
+var _radio_voices: Dictionary = {} # channel -> Array[AudioStream]
+var _voice_last: Dictionary = {}   # pool key -> last index played
+var radio_player: AudioStreamPlayer
 
 # Loop players and their target linear volumes
 var crackle_player: AudioStreamPlayer
@@ -48,6 +60,11 @@ func _ready() -> void:
 	hum_player = _make_loop_player(_drone_hum_loop())
 	siren_player = _make_loop_player(_siren_loop())
 	static_player = _make_loop_player(_radio_static_loop())
+	_ensure_radio_bus()
+	radio_player = AudioStreamPlayer.new()
+	radio_player.bus = RADIO_VOICE_BUS
+	add_child(radio_player)
+	_load_recorded_voices()
 	for i in 3:
 		var mp = AudioStreamPlayer.new()
 		mp.volume_db = SILENT_DB
@@ -58,12 +75,16 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	# Release playbacks so nothing is left referenced at shutdown
-	for p in _sfx + music_players:
+	for p in _sfx + music_players + [radio_player]:
 		p.stop()
 		p.stream = null
 	for p in _targets.keys():
 		p.stop()
 		p.stream = null
+	_cache.clear()
+	_tapoh_voices.clear()
+	_radio_voices.clear()
+	_voice_last.clear()
 
 func _make_loop_player(stream: AudioStreamWAV) -> AudioStreamPlayer:
 	var p = AudioStreamPlayer.new()
@@ -132,6 +153,64 @@ func stop_all_loops() -> void:
 	_music_layer_targets = [0.0, 0.0, 0.0]
 
 # ---------------------------------------------------------------------------
+# Recorded voices (drop-in wavs in assets/audio/, OmniVoice-Thai)
+# ---------------------------------------------------------------------------
+
+## Band-limited "radio speaker" bus so broadcast lines sit under the static
+func _ensure_radio_bus() -> void:
+	if AudioServer.get_bus_index(RADIO_VOICE_BUS) != -1:
+		return
+	AudioServer.add_bus()
+	var idx := AudioServer.bus_count - 1
+	AudioServer.set_bus_name(idx, RADIO_VOICE_BUS)
+	var hp := AudioEffectHighPassFilter.new()
+	hp.cutoff_hz = 420.0
+	AudioServer.add_bus_effect(idx, hp)
+	var lp := AudioEffectLowPassFilter.new()
+	lp.cutoff_hz = 3200.0
+	AudioServer.add_bus_effect(idx, lp)
+
+## Scans AUDIO_DIR once at startup; missing files simply leave pools empty
+func _load_recorded_voices() -> void:
+	var dir := DirAccess.open(AUDIO_DIR)
+	if dir == null:
+		return
+	for f in dir.get_files():
+		if not f.ends_with(".wav"):
+			continue
+		var stream = ResourceLoader.load(AUDIO_DIR + "/" + f, "", ResourceLoader.CACHE_MODE_IGNORE)
+		if stream == null:
+			continue
+		if f.begins_with("tapoh_wind_warning"):
+			_tapoh_voices.append(stream)
+		elif f.begins_with("radio_ch"):
+			var channel := int(f.get_slice("_", 1).trim_prefix("ch"))
+			if channel > 0:
+				if not _radio_voices.has(channel):
+					_radio_voices[channel] = []
+				_radio_voices[channel].append(stream)
+
+func has_radio_voice(channel: int) -> bool:
+	return _radio_voices.has(channel) and not _radio_voices[channel].is_empty()
+
+## Plays a random recorded broadcast line for a radio channel (skips the last one)
+func play_radio_voice(channel: int) -> void:
+	if not has_radio_voice(channel):
+		return
+	var pool: Array = _radio_voices[channel]
+	var pick := _pick_voice("ch%d" % channel, pool.size())
+	radio_player.stream = pool[pick]
+	radio_player.pitch_scale = randf_range(0.98, 1.02)
+	radio_player.play()
+
+func _pick_voice(key: String, size: int) -> int:
+	var pick := randi() % size
+	if size > 1 and pick == _voice_last.get(key, -1):
+		pick = (pick + 1) % size
+	_voice_last[key] = pick
+	return pick
+
+# ---------------------------------------------------------------------------
 # One-shot SFX
 # ---------------------------------------------------------------------------
 
@@ -164,10 +243,9 @@ func play_wind_gust() -> void:
 	_play("gust", _wind_gust, randf_range(0.9, 1.1), -3.0)
 
 func play_tapoh_warning() -> void:
-	if ResourceLoader.exists(TAPOH_VOICE_PATH):
-		if not _cache.has("tapoh_voice"):
-			_cache["tapoh_voice"] = load(TAPOH_VOICE_PATH)
-		_play("tapoh_voice", func(): return _cache["tapoh_voice"])
+	if not _tapoh_voices.is_empty():
+		var pick := _pick_voice("tapoh", _tapoh_voices.size())
+		_play("tapoh_voice_%d" % pick, func(): return _tapoh_voices[pick])
 	else:
 		_play("tapoh_call", _tapoh_call)
 

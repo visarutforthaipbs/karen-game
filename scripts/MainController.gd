@@ -14,7 +14,7 @@ extends Node3D
 @onready var sun: DirectionalLight3D = $DirectionalLight3D
 @onready var world_environment: WorldEnvironment = $WorldEnvironment
 
-const ESCAPE_BASE_PENALTY: float = 40.0
+const ESCAPE_BASE_PENALTY: float = 30.0
 const CAMERA_BASE_PENALTY: float = 10.0
 
 # In-game minutes since midnight for scheduled events (PRD §3.1, §6.2)
@@ -26,8 +26,8 @@ const COUNTDOWN_MINUTE: int = 19 * 60 + 45
 const PASS_MINUTE: int = 20 * 60
 
 const PHASES = [
-	{"start": 14 * 60, "title": "ระยะ 1 · ถางแนวกันไฟ (14:00–15:30)", "goal": "ถางแนวกันไฟรอบแปลง อ่านทิศลม แล้วจุดไฟย้อนลมเป็นแนวกันชน"},
-	{"start": 15 * 60 + 30, "title": "ระยะ 2 · เผาใหญ่ (15:30–18:00)", "goal": "จุดไฟหัว คุมไฟที่วิ่งขึ้นเนิน ตบลูกไฟ และหลบโดรน"},
+	{"start": 14 * 60, "title": "ระยะ 1 · ถางแนวกันไฟ (14:00–15:30)", "goal": "เชื้อไฟยังชื้น: ถางแนวกันไฟรอบแปลง (กดค้างทีละช่อง) อ่านทิศลมก่อนจุด"},
+	{"start": 15 * 60 + 30, "title": "ระยะ 2 · เผาใหญ่ (15:30–18:00)", "goal": "เชื้อไฟแห้งสุด: จุดไฟเป็นแนวที่ตีนเนิน ดับลูกไฟที่ตกในป่า และหลบโดรน"},
 	{"start": 18 * 60, "title": "ระยะ 3 · อากาศผกผัน เร่งดับถ่านคุ (18:00–19:45)", "goal": "ฉีดน้ำดับตอไผ่และโคนรากที่ยังคุแดง"},
 	{"start": 19 * 60 + 45, "title": "ระยะ 4 · นับถอยหลังดาวเทียม (19:45–20:00)", "goal": "ตามดับทุกจุดที่ร้อนตั้งแต่ %d TU ขึ้นไป!"},
 ]
@@ -52,6 +52,8 @@ var pass_started: bool = false
 var current_phase: int = -1
 
 var sky: SkyCycle
+var cam_rig: CameraRig
+var landscape: Landscape
 var _inversion_level: float = 0.0
 var _last_burning_count: int = 0
 var _ember_alert_cooldown: float = 0.0
@@ -82,6 +84,11 @@ func _ready() -> void:
 	park_strictness = plot_cfg.national_park_strictness
 
 	fire_grid.configure_plot(plot_cfg)
+	# The mountain, neighbouring swiddens and haze around this plot
+	landscape = Landscape.new()
+	landscape.fire_grid = fire_grid
+	landscape.world_environment = world_environment
+	add_child(landscape)
 	_build_field_hut()
 	_place_crew_at_hut()
 	wind_manager.configure(state.forecast_wind_direction(), plot_cfg.wind_base_speed, plot_cfg.wind_shift_interval)
@@ -105,12 +112,24 @@ func _ready() -> void:
 	sky.inversion_ceiling = fire_grid.max_elevation * 0.5 + 2.0
 	add_child(sky)
 
+	# Player-following camera with zoom and quarter turns
+	cam_rig = CameraRig.new()
+	cam_rig.camera = camera
+	cam_rig.target = player
+	cam_rig.bounds = fire_grid.grid_width * fire_grid.cell_size * 0.5
+	for c in [Vector2i(0, 0), Vector2i(fire_grid.grid_width - 1, 0), Vector2i(0, fire_grid.grid_height - 1), Vector2i(fire_grid.grid_width - 1, fire_grid.grid_height - 1)]:
+		var corner = fire_grid.get_cell_world_pos(c.x, c.y)
+		cam_rig.plot_points.append(corner)
+		cam_rig.plot_points.append(corner + Vector3.UP * 3.0) # Treetops
+	add_child(cam_rig)
+
 	# Connect FireGrid signals
 	fire_grid.rice_yield_changed.connect(_on_rice_yield_changed)
 	fire_grid.hotspot_count_changed.connect(_on_hotspot_count_changed)
 	fire_grid.fire_escaped_to_forest.connect(_on_forest_escape)
 	fire_grid.bamboo_exploded.connect(_on_bamboo_exploded)
 	fire_grid.ember_jumped.connect(_on_ember_jumped)
+	fire_grid.spot_fire_started.connect(_on_spot_fire)
 
 	# Connect GameClock signals
 	game_clock.time_ticked.connect(_on_clock_ticked)
@@ -142,11 +161,14 @@ func _ready() -> void:
 	hud.update_scrutiny(get_current_scrutiny())
 	hud.update_tool(PlayerController.TOOL_LABELS[player.current_tool])
 	hud.update_water(player.water, player.water_capacity)
+	hud.set_self_cool_minute(self_cool_deadline_minute())
+	hud.track(camera, player)
 	hud.update_crew_status("ตาโพ", "เดินตาม")
 	hud.update_crew_status("มูนอ", "เดินตาม")
 	sky.apply_time(game_clock.get_hours())
 
-	var intro = "%s · ปีที่ %d" % [plot_cfg.name, state.current_year]
+	# The status card shows only the phase title, so the first objective is announced here
+	var intro = "%s · ปีที่ %d\n%s" % [plot_cfg.name, state.current_year, PHASES[0].goal]
 	if delay > 0:
 		intro += "\nเช้านี้ทีมไปเอาแรงช่วยหมู่บ้านอื่น เริ่มเผาช้าไป %d นาที" % delay
 	hud.show_alert(intro, 5.0)
@@ -163,7 +185,7 @@ func _apply_crew_preparation(state: Node) -> void:
 
 	var capacity = 15.0 + (10.0 if state.has_favour(GameState.Favour.WATER) else 0.0)
 	player.set_water_capacity(capacity)
-	elder.can_douse = state.has_favour(GameState.Favour.SPRAYER)
+	elder.configure_borrowed_sprayer(state.has_favour(GameState.Favour.SPRAYER))
 
 	match state.ration_level:
 		GameState.Ration.LEAN:
@@ -232,6 +254,8 @@ func _setup_drones() -> void:
 		d.crew = crew
 		d.configure(fire_grid.max_elevation + 8.0, rules.drone_speed_mult, i % 2)
 		d.drone_spotted_target.connect(_on_drone_spotted)
+		d.sweep_started.connect(_on_drone_sweep_started)
+		d.sweep_ended.connect(_on_drone_sweep_ended)
 	if not plot_has_drone:
 		drone.visible = false
 		drone.set_physics_process(false)
@@ -250,6 +274,13 @@ func _setup_thermal_cameras() -> void:
 		cam.global_position = fire_grid.get_cell_world_pos(x, row) + Vector3(0, FireGrid.GROUND_TOP_OFFSET, 0)
 		cam.heat_detected.connect(_on_camera_heat)
 		thermal_cameras.append(cam)
+
+## Last in-game minute a cell can catch fire and still cool to ash on its own
+## before the 20:00 pass (burn, then smolder, at the fire grid's tick rate)
+func self_cool_deadline_minute() -> int:
+	var real_seconds = (fire_grid.smolder_duration_ticks + FireGrid.BURN_DURATION_TICKS) * fire_grid.simulation_tick_rate
+	var game_minutes = ceili(real_seconds * 60.0 / game_clock.real_seconds_per_hour)
+	return PASS_MINUTE - game_minutes
 
 func get_current_scrutiny() -> int:
 	return min(100, starting_scrutiny + plot_scrutiny_gain)
@@ -301,13 +332,14 @@ func _on_clock_ticked(time_str: String, hour: int, minute: int) -> void:
 	hud.update_clock(time_str)
 	var now = hour * 60 + minute
 	_update_phase(now)
+	# Damp at 14:00, driest 15:30-17:00, dew again toward evening
+	fire_grid.fuel_dryness = FireGrid.dryness_at_minute(now)
+	hud.update_fuel(fire_grid.fuel_dryness)
 
 	# Drone patrols 15:00 - 18:00 (PRD §6.2), staggered launches for multiple drones
 	while drones_launched < plot_cfg.drone_count and now >= DRONE_LAUNCH_MINUTE + drones_launched * DRONE_STAGGER_MINUTES and now < DRONE_RETURN_MINUTE:
 		drones[drones_launched].start_patrol()
 		drones_launched += 1
-		var which = "" if plot_cfg.drone_count == 1 else " ลำที่ %d" % drones_launched
-		hud.show_drone_alert("โดรนป่าไม้%s ขึ้นบินแล้ว — หลบใต้ร่มไผ่ หรือดับเปลวไฟที่สูง!" % which, false)
 
 	# Drones return as the light goes
 	if now >= DRONE_RETURN_MINUTE:
@@ -348,8 +380,17 @@ func _update_phase(now: int) -> void:
 	if AudioManager.instance:
 		AudioManager.instance.set_music_intensity(idx)
 
+func _on_drone_sweep_started(_d: ForestryDrone) -> void:
+	if not pass_started:
+		hud.show_drone_alert("โดรนป่าไม้บินเข้ามาสำรวจ (~45 วิ) — หลบใต้ร่มไผ่ หรือดับเปลวไฟที่สูง!", false)
+
+func _on_drone_sweep_ended(_d: ForestryDrone) -> void:
+	if not pass_started and game_clock.get_hours() < DRONE_RETURN_MINUTE / 60.0:
+		hud.show_drone_alert("โดรนกลับไปเปลี่ยนแบตเตอรี่ (~1 นาที) — จุดไฟตอนนี้!", false)
+
 func _on_drone_spotted(_world_pos: Vector3, is_flame: bool) -> void:
-	var penalty = _penalty(20.0 if is_flame else 15.0)
+	# Flames are evidence of burning; a crew in the open is only suspicious
+	var penalty = _penalty(15.0 if is_flame else 10.0)
 	_add_scrutiny(penalty)
 
 	var msg = "แฟลชโดรน! ถ่ายภาพเปลวไฟได้ · ความเพ่งเล็ง +%d" % penalty if is_flame else "แฟลชโดรน! ถ่ายภาพทีมกลางที่โล่งได้ · ความเพ่งเล็ง +%d" % penalty
@@ -380,6 +421,12 @@ func _on_bamboo_exploded(_coord: Vector2i, _world_pos: Vector3, _landing: Vector
 		AudioManager.instance.play_bamboo_pop()
 	hud.show_alert("ปล้องไผ่ระเบิด! แรงไอน้ำดีดลูกไฟไปตามลม", 3.5)
 
+## A spark caught in the protected forest: a few seconds to douse it
+func _on_spot_fire(_coord: Vector2i) -> void:
+	hud.show_alert("ลูกไฟตกในป่าอุทยาน! รีบฉีดน้ำดับภายใน 8 วินาที ก่อนไฟลาม", 5.0)
+	if AudioManager.instance:
+		AudioManager.instance.play_camera_alarm()
+
 func _on_ember_jumped(_from: Vector2i, _landing: Vector2i) -> void:
 	if _ember_alert_cooldown > 0.0:
 		return
@@ -399,6 +446,8 @@ func _on_satellite_pass() -> void:
 	fire_grid.simulation_paused = true
 	wind_manager.set_process(false)
 	player.set_input_enabled(false)
+	elder.cancel_animation_work()
+	youth.cancel_animation_work()
 	elder.set_physics_process(false)
 	youth.set_physics_process(false)
 	for d in drones:
@@ -414,6 +463,8 @@ func _on_satellite_pass() -> void:
 	world_environment.environment.glow_enabled = false
 	hud.update_phase("ระยะ 5 · ดาวเทียมโคจรผ่าน (20:00)", "VIIRS กำลังสแกนความร้อนทั้งแปลง")
 	hud.show_satellite_sweep_ui(rules.satellite_threshold)
+	cam_rig.set_active(false) # The orbital view animates the camera itself
+	landscape.set_thermal(true)
 	satellite.trigger_orbital_pass()
 
 func _on_satellite_sweep_completed(detected_hotspots: int, scrutiny_increase: int) -> void:
@@ -424,7 +475,7 @@ func _on_satellite_sweep_completed(detected_hotspots: int, scrutiny_increase: in
 	state.log_hotspots(satellite.detected_cells, satellite.detected_heat)
 	state.record_plot_results(latest_rice_yield, detected_hotspots, escaped_to_forest, plot_scrutiny_gain)
 	hud.update_scrutiny(state.state_scrutiny)
-	hud.show_resolution_report(latest_rice_yield, detected_hotspots, escaped_to_forest, state, rules.hotspot_penalty, _gis_lines(state))
+	hud.show_resolution_report(latest_rice_yield, detected_hotspots, escaped_to_forest, state, scrutiny_increase, _gis_lines(state))
 
 ## GISTDA-style hotspot log lines for this plot's detections
 func _gis_lines(state: Node) -> PackedStringArray:

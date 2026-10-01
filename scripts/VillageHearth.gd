@@ -34,6 +34,7 @@ var scrutiny_value: Label
 var scrutiny_bar: SegmentBar
 var radio_text: Label
 var radio_buttons: Array[Button] = []
+var chatter_timer: Timer
 var plot_title_label: Label
 var plot_desc_label: Label
 var plot_stats: GridContainer
@@ -49,6 +50,8 @@ var launch_button: Button
 
 var current_radio_channel: int = 1
 var _harvest_modal: Control
+var help_button: Button
+var how_to_play: HowToPlay
 
 func _ready() -> void:
 	theme = UITheme.get_theme()
@@ -59,8 +62,21 @@ func _ready() -> void:
 	# Gamepad / Steam Deck: start with focus on the main action
 	launch_button.grab_focus()
 
-	if not GameState.instance.pending_harvest.is_empty():
-		_show_harvest(GameState.instance.pending_harvest)
+	var state = GameState.instance
+	if not state.pending_harvest.is_empty():
+		_show_harvest(state.pending_harvest)
+	elif not state.seen_how_to_play and state.current_year == 1 and state.current_plot_index == 1:
+		show_how_to_play()
+
+func show_how_to_play() -> void:
+	GameState.instance.seen_how_to_play = true
+	if how_to_play:
+		return
+	how_to_play = HowToPlay.new()
+	how_to_play.closed.connect(func():
+		how_to_play = null
+		launch_button.grab_focus())
+	add_child(how_to_play)
 
 # ---------------------------------------------------------------------------
 # Build
@@ -158,6 +174,13 @@ func _build_header() -> Control:
 	scrutiny_value = watch[1]
 	scrutiny_bar = watch[2]
 	scrutiny_bar.set_markers([{"at": 75.0, "color": UITheme.RUBY}])
+
+	help_button = _button("วิธีเล่น")
+	help_button.custom_minimum_size = Vector2(110, 0)
+	help_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	help_button.add_theme_font_size_override("font_size", 17)
+	help_button.pressed.connect(show_how_to_play)
+	row.add_child(help_button)
 	return row
 
 func _header_stat(kind: String, title: String, tint: Color, seed_value: int) -> Array:
@@ -330,7 +353,7 @@ func _refresh() -> void:
 	_stat("โดรนลาดตระเวน", drones, cfg.drone_count > 0)
 	_stat("กล้องความร้อนภาคพื้น", "%d ตัวที่แนวเขตอุทยาน" % rules.ground_cameras if rules.ground_cameras > 0 else "ไม่มี", rules.ground_cameras > 0)
 	_stat("ความเข้มงวดของป่าอนุรักษ์", "×%.1f" % cfg.national_park_strictness, cfg.national_park_strictness > 1.5)
-	_stat("เกณฑ์ดาวเทียม VIIRS", "%d TU · เพ่งเล็ง +%d ต่อจุด" % [roundi(rules.satellite_threshold), rules.hotspot_penalty])
+	_stat("เกณฑ์ดาวเทียม VIIRS", "%d TU · ถูกจับได้ เพ่งเล็ง +%d–%d" % [roundi(rules.satellite_threshold), rules.hotspot_penalty, rules.hotspot_penalty * 2])
 	_stat("ภัยแล้งเร่งไฟ", "+%d%%" % roundi((rules.spread_mult - 1.0) * 100.0), rules.spread_mult > 1.0)
 
 	for c in goal_rows.get_children():
@@ -391,6 +414,7 @@ func _tune_radio(channel: int, with_sound: bool = true) -> void:
 			AudioManager.instance.play_radio_tune()
 		AudioManager.instance.play_hearth_music(channel == 3)
 		AudioManager.instance.set_radio_static(0.15 if channel == 3 else 0.45)
+	_start_chatter()
 
 	match channel:
 		1:
@@ -413,6 +437,32 @@ func _tune_radio(channel: int, with_sound: bool = true) -> void:
 		3:
 			radio_text.text = """[FM 101.0 MHz · เตหน่ากูและเพลงพื้นบ้านปกาเกอะญอ]
 “...(เสียงเตหน่ากูเจ็ดสายกับแคนไม้ไผ่ดังก้องในกระท่อม)... ผู้เฒ่าเตือนเราว่า: %s”""" % PROVERBS[(state.current_year + state.current_plot_index) % PROVERBS.size()]
+
+## Recorded broadcast lines over the static: one when tuning, then while listening.
+## Channel 3 is music and stays voiceless.
+func _start_chatter() -> void:
+	if chatter_timer == null:
+		chatter_timer = Timer.new()
+		chatter_timer.one_shot = true
+		chatter_timer.timeout.connect(_on_chatter_timeout)
+		add_child(chatter_timer)
+	chatter_timer.stop()
+	if _can_chatter():
+		chatter_timer.start(randf_range(0.6, 1.2))
+
+func _can_chatter() -> bool:
+	return AudioManager.instance != null and current_radio_channel != 3 \
+		and AudioManager.instance.has_radio_voice(current_radio_channel)
+
+func _on_chatter_timeout() -> void:
+	if not _can_chatter() or chatter_timer == null:
+		return
+	var am = AudioManager.instance
+	if am.radio_player != null and am.radio_player.playing:
+		chatter_timer.start(randf_range(8.0, 14.0)) # line still going, wait it out
+		return
+	am.play_radio_voice(current_radio_channel)
+	chatter_timer.start(randf_range(24.0, 40.0))
 
 # ---------------------------------------------------------------------------
 # Choices

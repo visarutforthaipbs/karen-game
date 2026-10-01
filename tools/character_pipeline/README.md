@@ -2,8 +2,9 @@
 
 After visual review, follow [SOP](../../SOP.md) and the
 [rigging guide](rigging_guide.md) for skeleton, skin and game integration.
-`run_rig.py` now implements the calibrated Kha-nae rig; generation outputs alone
-remain unrigged.
+`run_rig.py` builds calibrated Kha-nae, Ta-poh and Mu-naw rigs; generation
+outputs alone remain unrigged. See [gameplay motion](gameplay_motion.md) for
+work layers, calibration findings and current limits.
 
 The legacy TripoSR route is a fast vertex-colour prototype generator. Its successful
 mesh validation does **not** establish facial likeness or visual quality. The

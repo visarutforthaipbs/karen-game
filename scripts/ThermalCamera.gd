@@ -11,6 +11,8 @@ signal heat_detected(camera: ThermalCamera, world_pos: Vector3)
 @export var rearm_seconds: float = 20.0
 
 var active: bool = true
+## Each post logs the burn once: after that it has its evidence
+var tripped: bool = false
 var _cooldown: float = 0.0
 var _scan_timer: float = 0.0
 var _blink: float = 0.0
@@ -88,17 +90,18 @@ func _process(delta: float) -> void:
 	_cooldown = maxf(0.0, _cooldown - delta)
 	# Slow standby blink; fast strobe right after a detection
 	var rate = 8.0 if _cooldown > rearm_seconds - 3.0 else 1.0
-	var on = fmod(_blink * rate, 1.0) < 0.2
+	var on = fmod(_blink * rate, 1.0) < 0.2 or (tripped and _cooldown <= rearm_seconds - 3.0)
 	_lamp.light_energy = 2.5 if on else 0.0
 	_lens_mat.emission_energy_multiplier = 3.0 if on else 0.6
 
 	_scan_timer += delta
-	if _scan_timer < 1.0 or _cooldown > 0.0 or not fire_grid:
+	if _scan_timer < 1.0 or _cooldown > 0.0 or tripped or not fire_grid:
 		return
 	_scan_timer = 0.0
 	var hot = find_heat_in_view()
 	if hot != Vector3.INF:
 		_cooldown = rearm_seconds
+		tripped = true
 		heat_detected.emit(self, hot)
 
 ## World position of a burning / smoldering cell inside the watched radius, or Vector3.INF

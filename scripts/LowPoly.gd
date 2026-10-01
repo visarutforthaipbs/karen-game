@@ -211,8 +211,8 @@ static func tool_mesh(tool_name: String) -> ArrayMesh:
 	else:
 		# Sprayer wand
 		parts = [
-			[_cyl(0.02, 0.02, 0.8, 5), _at(Vector3(0, 0.25, 0), Vector3(0.6, 0, 0)), Color(0.3, 0.32, 0.3)],
-			[_cyl(0.035, 0.02, 0.1, 5), _at(Vector3(0, 0.58, 0.38), Vector3(0.6, 0, 0)), Color(0.75, 0.75, 0.2)],
+			[_cyl(0.02, 0.02, 0.8, 5), _at(Vector3(0, 0.25, 0)), Color(0.3, 0.32, 0.3)],
+			[_cyl(0.035, 0.02, 0.1, 5), _at(Vector3(0, 0.68, 0)), Color(0.75, 0.75, 0.2)],
 		]
 	var mesh = compose(parts)
 	mesh.surface_set_material(0, vertex_color_material())

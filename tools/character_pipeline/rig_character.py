@@ -29,7 +29,11 @@ def weights(x, y, z):
     bag = (smooth(.14, .18, x) * (1-smooth(.245, .275, x))
            * smooth(.205, .24, y) * (1-smooth(.39, .43, y)))
     head = smooth(.635, .705, y)
-    arm = smooth(.13, .205, abs(x)) * smooth(.30, .365, y) * (1-head)
+    # The basket rim at X≈.21/Y≈.40 is clothing, not the inner arm.
+    # Follow the sloping A-pose underside so two-hand work cannot drag the bag.
+    reach = smooth(.20, .30, abs(x))
+    arm_floor = smooth(.43-.13*reach, .54-.175*reach, y) if x > 0 else smooth(.30, .365, y)
+    arm = smooth(.13, .205, abs(x)) * arm_floor * (1-head)
     crotch_support = 1-smooth(.22, .26, y)*(1-smooth(.005, .055, abs(x)))
     leg = (1-smooth(.27, .36, y)) * (1-head-arm) * crotch_support
     torso = max(0, 1-head-arm-leg)
@@ -51,6 +55,49 @@ def weights(x, y, z):
     largest = sorted(((n, w) for n, w in result.items() if w > 1e-6), key=lambda p: -p[1])[:4]
     total = sum(w for _, w in largest)
     return {n: w/total for n, w in largest}
+
+
+def companion_weights(x, y, z, profile):
+    """Reviewed anatomical envelopes in metres; equipment stays on its carrier.
+
+    Mu-naw is authored holding a fused wand with both hands. His arm chains are
+    weighted, but locked in carry pose by the clips/runtime to preserve that grip.
+    """
+    youth = profile['weight_mode'] == 'munaw'
+    head = smooth(.70, .755, y) if youth else smooth(.54, .66, y)
+    # Elder beard projects forward below the neck; preserve its attachment.
+    if not youth and z > .07:
+        head = max(head, smooth(.50, .56, y) * smooth(.065, .105, z))
+    leg = (1-smooth(.245 if youth else .23, .325 if youth else .30, y)) * (1-head)
+    # Keep the joined tunic/fringe centre on pelvis rather than splitting it.
+    leg *= 1-smooth(.17 if youth else .20, .24 if youth else .29, y)*(1-smooth(.015, .055, abs(x)))
+    if youth:
+        # The hanging hose reaches below the tunic hem, beside the right thigh.
+        # Keep all projecting equipment on the chest with a feathered attachment.
+        equipment = max(smooth(.10, .15, -z), smooth(.09, .14, z) * smooth(.12, .18, abs(x))) * smooth(.24, .29, y)
+        leg *= 1-equipment
+    else:
+        equipment = 0.0
+    arm = smooth(.125, .195, abs(x)) * smooth(.30, .365, y) * (1-head-leg)
+    if youth:
+        # Tank at the back and wand/hose in front move rigidly with the chest.
+        arm *= (1-smooth(.09, .14, -z)) * (1-smooth(.11, .16, z))
+    torso = max(0, 1-head-leg-arm)
+    chest = max(smooth(.34, .45, y), equipment)
+    side = 'L' if x > 0 else 'R'
+    hand = smooth(.23, .265, abs(x))
+    if not youth and x < -.23 and .30 < y < .49:
+        hand = 1.0  # existing clearing blade follows the gripping hand
+    forearm = smooth(.18, .23, abs(x))*(1-hand)
+    foot = 1-smooth(.04, .085, y)
+    shin = (1-smooth(.125, .19, y))*(1-foot)
+    result = {'Head':head, 'Chest':torso*chest, 'Hips':torso*(1-chest),
+              f'UpperArm.{side}':arm*(1-hand-forearm), f'Forearm.{side}':arm*forearm,
+              f'Hand.{side}':arm*hand, f'Thigh.{side}':leg*(1-foot-shin),
+              f'Shin.{side}':leg*shin, f'Foot.{side}':leg*foot}
+    top = sorted(((n,w) for n,w in result.items() if w>1e-6), key=lambda p:-p[1])[:4]
+    total = sum(w for _,w in top)
+    return {n:w/total for n,w in top}
 
 
 def main():
@@ -75,14 +122,16 @@ def main():
     mesh = objects[0]
     bpy.context.view_layer.objects.active = mesh
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-    mesh.name = 'KhanaeMesh'
+    character_name = profile['name']
+    mesh.name = character_name.title() + 'Mesh'
+    removed_bridge_faces = 0
     original = [v.co.copy() for v in mesh.data.vertices]
     original_array = np.array(original)
     edges = np.array([tuple(edge.vertices) for edge in mesh.data.edges])
     edge_lengths = np.linalg.norm(original_array[edges[:, 0]] - original_array[edges[:, 1]], axis=1)
     long_edges = edge_lengths > .003
-    armature = bpy.data.armatures.new('KhanaeSkeleton')
-    rig = bpy.data.objects.new('KhanaeRig', armature)
+    armature = bpy.data.armatures.new(character_name.title() + 'Skeleton')
+    rig = bpy.data.objects.new(character_name.title() + 'Rig', armature)
     bpy.context.collection.objects.link(rig)
     bpy.context.view_layer.objects.active = rig
     rig.select_set(True)
@@ -90,7 +139,7 @@ def main():
     landmarks = profile['landmarks']
 
     def point(name, sign=1):
-        p = list(landmarks[name]); p[0] *= sign
+        p = list(landmarks[name]); p[0] = p[0] * sign + profile.get("body_center_x", 0.0)
         return blender_point(p)
 
     def bone(name, head, tail, parent=None):
@@ -113,15 +162,43 @@ def main():
             bone(f'{name}.{side}', point(start, sign), point(end, sign), parent)
     bpy.ops.object.mode_set(mode='OBJECT')
     groups = {b.name: mesh.vertex_groups.new(name=b.name) for b in armature.bones}
+    names = list(groups)
+    weights_array = np.zeros((len(mesh.data.vertices), len(names)))
+    for v in mesh.data.vertices:
+        x, z, y = v.co
+        assigned = companion_weights(x-profile.get("body_center_x", 0.0), y, -z, profile) if profile.get("weight_mode") else weights(x, y, -z)
+        for name, weight in assigned.items():
+            weights_array[v.index, names.index(name)] = weight
+    # Smooth the fused left sleeve/basket attachment over surface neighbours.
+    # This adjusts skin only: geometry, UVs and the rigid basket core stay intact.
+    iterations = profile.get('sleeve_weight_smoothing', 0)
+    if iterations:
+        coords = original_array
+        mask = np.array([smooth(.35,.40,v[2])*(1-smooth(.52,.58,v[2]))
+                         *smooth(.13,.17,v[0])*(1-smooth(.285,.305,v[0])) for v in coords])
+        first, second = edges[:,0], edges[:,1]
+        degree = np.bincount(np.concatenate([first,second]), minlength=len(coords)) + 2
+        for _ in range(iterations):
+            total = weights_array * 2
+            np.add.at(total, first, weights_array[second])
+            np.add.at(total, second, weights_array[first])
+            averaged = total / degree[:,None]
+            weights_array = weights_array*(1-mask[:,None]) + averaged*mask[:,None]
     max_error = 0.0
     rigid_head_vertices = 0
     for v in mesh.data.vertices:
         x, z, y = v.co
-        assigned = weights(x, y, -z)
-        if abs(x) > .305 and .365 < y < .5:
+        row = weights_array[v.index]
+        keep = np.argsort(row)[-4:]
+        total = sum(row[i] for i in keep)
+        assigned = {names[i]:float(row[i]/total) for i in keep if row[i] > 1e-6}
+        # Normalize again after pruning negligible influences.
+        total = sum(assigned.values())
+        assigned = {name:weight/total for name,weight in assigned.items()}
+        if not profile.get("weight_mode") and abs(x) > .305 and .365 < y < .5:
             assert all(n.startswith(('Hand.', 'Forearm.', 'UpperArm.')) for n in assigned), 'Hand anchored to torso'
         max_error = max(max_error, abs(sum(assigned.values())-1))
-        if y >= .705:
+        if y >= (.755 if profile.get("weight_mode") == "munaw" else .705):
             assert assigned == {'Head': 1.0}, 'Head/hat must be rigid'
             rigid_head_vertices += 1
         for name, weight in assigned.items():
@@ -140,13 +217,14 @@ def main():
         q = Quaternion(blender_point(axis).normalized(), math.radians(degrees))
         rig.pose.bones[name].rotation_quaternion = basis.inverted() @ q @ basis
 
-    for clip, duration in [('Idle', 2.4), ('Walk', .8), ('ToolUse', .7)]:
+    for clip, duration in [('Idle', 2.4), ('Walk', .8), ('Run', .65), ('ToolUse', .7)]:
         frames = round(duration*30)
         action = bpy.data.actions.new(clip)
         rig.animation_data.action = action
         minimum, maximum = 1e9, -1e9
         max_displacement = 0.0
         max_edge_stretch = 0.0
+        worst_edge = None
         for frame in range(frames+1):
             scene.frame_set(frame)
             phase = 2*math.pi*frame/frames
@@ -155,22 +233,22 @@ def main():
                 b.rotation_quaternion = Quaternion()
                 b.location = (0, 0, 0)
             for side, sign in [('L', 1), ('R', -1)]:
-                rotate(f'UpperArm.{side}', (0, 0, 1), -sign*22)
-                if clip == 'Walk':
+                rotate(f'UpperArm.{side}', (0, 0, 1), -sign*profile.get("arm_rest_degrees", 22))
+                if clip in ('Walk', 'Run'):
                     step = math.sin(phase)*sign
-                    rotate(f'Thigh.{side}', (1, 0, 0), step*23)
-                    bend = max(0, -step)*28
+                    rotate(f'Thigh.{side}', (1, 0, 0), step*(30 if clip == 'Run' else 23))
+                    bend = max(0, -step)*(35 if clip == 'Run' else 28)
                     rotate(f'Shin.{side}', (1, 0, 0), bend)
-                    rotate(f'Foot.{side}', (1, 0, 0), -step*23-bend)
+                    rotate(f'Foot.{side}', (1, 0, 0), -step*(30 if clip == 'Run' else 23)-bend)
                     base = rig.pose.bones[f'UpperArm.{side}'].rotation_quaternion.copy()
-                    rotate(f'UpperArm.{side}', (1, 0, 0), -step*14)
+                    rotate(f'UpperArm.{side}', (1, 0, 0), 0 if profile.get('locked_carry') else -step*10)
                     rig.pose.bones[f'UpperArm.{side}'].rotation_quaternion @= base
                 elif clip == 'ToolUse':
                     swing = math.sin(math.pi*frame/frames)**2
                     base = rig.pose.bones[f'UpperArm.{side}'].rotation_quaternion.copy()
-                    rotate(f'UpperArm.{side}', (1, 0, 0), (-45 if side == 'R' else -15)*swing)
+                    rotate(f'UpperArm.{side}', (1, 0, 0), 0 if profile.get('locked_carry') else (-30 if side == 'R' else -10)*swing)
                     rig.pose.bones[f'UpperArm.{side}'].rotation_quaternion @= base
-                    rotate(f'Forearm.{side}', (1, 0, 0), -18*swing)
+                    rotate(f'Forearm.{side}', (1, 0, 0), 0 if profile.get('locked_carry') else -12*swing)
             if clip == 'Idle':
                 rotate('Chest', (1, 0, 0), math.sin(phase)*1.3)
                 rotate('Head', (0, 1, 0), math.sin(phase)*2)
@@ -181,7 +259,12 @@ def main():
             evaluated = mesh.evaluated_get(bpy.context.evaluated_depsgraph_get())
             posed = np.array([tuple(v.co) for v in evaluated.data.vertices])
             lengths = np.linalg.norm(posed[edges[:, 0]] - posed[edges[:, 1]], axis=1)
-            max_edge_stretch = max(max_edge_stretch, float(np.max(lengths[long_edges] / edge_lengths[long_edges])))
+            ratios = lengths[long_edges] / edge_lengths[long_edges]
+            if float(np.max(ratios)) > max_edge_stretch:
+                max_edge_stretch = float(np.max(ratios))
+                pair = edges[long_edges][int(np.argmax(ratios))]
+                worst_edge = {'original': original_array[pair].tolist(), 'posed':posed[pair].tolist(),
+                              'groups':[{mesh.vertex_groups[g.group].name:g.weight for g in mesh.data.vertices[int(i)].groups} for i in pair]}
             floor = min(v.co.z for v in evaluated.data.vertices)
             rig.pose.bones['Root'].location = armature.bones['Root'].matrix_local.to_3x3().inverted() @ Vector((0, 0, -floor))
             bpy.context.view_layer.update()
@@ -198,9 +281,9 @@ def main():
         clip_metrics[clip] = {'seconds': duration, 'frames': frames+1,
                               'ground_min': minimum, 'height_max': maximum,
                               'max_vertex_displacement': max_displacement,
-                              'max_edge_stretch_over_3mm': max_edge_stretch}
+                              'max_edge_stretch_over_3mm': max_edge_stretch, 'worst_edge': worst_edge}
         if abs(minimum) > .001 or max_displacement > .4 or max_edge_stretch > 3.5:
-            raise ValueError(f'{clip}: deformation/grounding outside calibrated limits')
+            raise ValueError(f'{clip}: deformation/grounding outside calibrated limits: {clip_metrics[clip]}')
         rig.animation_data.action = None
         track = rig.animation_data.nla_tracks.new()
         track.name = clip
@@ -210,8 +293,8 @@ def main():
     scene.frame_set(0)
     for b in rig.pose.bones:
         b.rotation_quaternion = Quaternion(); b.location = (0, 0, 0)
-    bpy.ops.wm.save_as_mainfile(filepath=str(out / 'khanae_rig.blend'))
-    bpy.ops.export_scene.gltf(filepath=str(out / 'khanae_rigged.glb'), export_format='GLB',
+    bpy.ops.wm.save_as_mainfile(filepath=str(out / f'{character_name}_rig.blend'))
+    bpy.ops.export_scene.gltf(filepath=str(out / f'{character_name}_rigged.glb'), export_format='GLB',
         export_animations=True, export_animation_mode='ACTIONS', export_skins=True,
         export_yup=True, export_force_sampling=True, export_anim_slide_to_zero=True)
     metrics = {'profile': profile, 'source_sha256': source_hash,
@@ -219,7 +302,7 @@ def main():
                'bones': len(armature.bones),
                'vertices': len(mesh.data.vertices), 'weight_sum_max_error': max_error,
                'rigid_head_vertices': rigid_head_vertices, 'clips': clip_metrics,
-               'rigged': True, 'visual_review': 'required', 'finger_rig': False}
+               'removed_bridge_faces': removed_bridge_faces, 'rigged': True, 'visual_review': 'required', 'finger_rig': False}
     (out / 'rig_report.json').write_text(json.dumps(metrics, indent=2))
     print(json.dumps(metrics, indent=2))
 
