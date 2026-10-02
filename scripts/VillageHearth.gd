@@ -27,6 +27,7 @@ const PROVERBS = [
 	"เผาเมื่อลมหลับ นอนเมื่อถ่านดับ",
 ]
 
+const ENDING_SCENE = "res://scenes/Ending.tscn"
 var header_label: Label
 var barn_value: Label
 var barn_bar: SegmentBar
@@ -53,6 +54,7 @@ var current_radio_channel: int = 1
 var _harvest_modal: Control
 var help_button: Button
 var settings_button: Button
+var harvest_button: Button
 var settings_panel: SettingsPanel
 var how_to_play: HowToPlay
 
@@ -68,6 +70,9 @@ func _ready() -> void:
 	var state = GameState.instance
 	if not state.pending_harvest.is_empty():
 		_show_harvest(state.pending_harvest)
+	elif state.is_game_over():
+		# Never sit at the Hearth with a finished campaign (it cannot be saved)
+		_end_campaign.call_deferred()
 	elif not state.seen_how_to_play and state.current_year == 1 and state.current_plot_index == 1:
 		show_how_to_play()
 
@@ -568,8 +573,11 @@ func _show_harvest(h: Dictionary) -> void:
 	var box = UITheme.vbox(12)
 	card.add_child(box)
 
+	# A poor harvest can tip the barn into famine: the campaign ends here, it does
+	# not carry on unsaved (audit finding 1)
+	var over = GameState.instance.is_game_over()
 	box.add_child(UITheme.header("rice", "เก็บเกี่ยวหน้ามรสุม · ปีที่ %d" % h.year, UITheme.EMERALD))
-	var title = UITheme.wrap(UITheme.label("ฝนมาแล้ว ข้าวไร่งอกงามในแปลงเถ้า", "Title"))
+	var title = UITheme.wrap(UITheme.label("ฝนมาแล้ว แต่ข้าวที่ได้ไม่พอกินถึงปีหน้า" if over else "ฝนมาแล้ว ข้าวไร่งอกงามในแปลงเถ้า", "Title"))
 	title.add_theme_font_size_override("font_size", 26)
 	box.add_child(title)
 
@@ -594,28 +602,34 @@ func _show_harvest(h: Dictionary) -> void:
 		news.append("· " + l)
 	var state_card = UITheme.card(UITheme.STATE_DEEP, UITheme.STATE, 320)
 	state_card.padding = Vector4(14, 10, 14, 12)
+	state_card.visible = not over # No next year to announce
 	box.add_child(state_card)
 	var sb = UITheme.vbox(4)
 	state_card.add_child(sb)
 	sb.add_child(UITheme.header("eye", "ปีที่ %d · สิ่งที่รัฐจะนำมา" % h.next_year, UITheme.STATE))
 	sb.add_child(UITheme.wrap(UITheme.label("\n".join(news), "Small", UITheme.CREAM)))
 
+	if over:
+		var famine = GameState.instance.end_cause() == "famine"
+		var warn = UITheme.wrap(UITheme.label(("ข้าวในยุ้งเหลือ %.0f%% หลังเก็บเกี่ยว ต่ำกว่า %.0f%% · หมู่บ้านอดอยาก" % [GameState.instance.rice_barn, GameState.FAMINE_THRESHOLD]) if famine else "ความเพ่งเล็งถึง 100 · รัฐบุกหมู่บ้าน", "Title", UITheme.RUBY))
+		warn.add_theme_font_size_override("font_size", 20)
+		box.add_child(warn)
 	var close = Button.new()
 	close.theme_type_variation = "PrimaryButton"
-	close.text = "เริ่มปีที่ %d" % h.next_year
+	close.text = "ดูบทสรุปของหมู่บ้าน" if over else "เริ่มปีที่ %d" % h.next_year
 	close.custom_minimum_size = Vector2(0, 50)
-	close.pressed.connect(_close_harvest)
+	close.pressed.connect(_end_campaign if over else _close_harvest)
+	harvest_button = close
 	box.add_child(close)
 	close.grab_focus()
 
-	if AudioManager.instance:
-		var gsx = GameState.instance
-		if gsx.rice_barn < GameState.FAMINE_THRESHOLD:
-			AudioManager.instance.play_ending_stinger("famine")
-		elif gsx.state_scrutiny >= 100:
-			AudioManager.instance.play_ending_stinger("crackdown")
-		else:
-			AudioManager.instance.play_harvest_chime()
+	# On a campaign end the Ending scene plays the stinger; the card stays quiet
+	if AudioManager.instance and not over:
+		AudioManager.instance.play_harvest_chime()
+
+func _end_campaign() -> void:
+	GameState.instance.pending_harvest = {}
+	get_tree().change_scene_to_file(ENDING_SCENE)
 
 func _close_harvest() -> void:
 	GameState.instance.pending_harvest = {}

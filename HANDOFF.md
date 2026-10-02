@@ -270,6 +270,10 @@ P1-2 to P1-6 are built (§3.8). What remains:
      ScrollContainer so the launch button is always on screen; at 1280×720
      everything fits without scrolling.
 6. **Translation review** by a native Thai and ideally Pgakenyaw speaker.
+6a. **Audit fixes (beta blockers), 2026-10-02:** AUDIT_BRIEF items 1, 3, 4 and 5
+   are fixed with tests (see the status note there). Rule change for players:
+   a clean burn now needs ≥60% ash; bamboo **and** forest edge hide the crew
+   from drones and rangers alike.
 6b. **Graphics pass assets** (ASSET_REQUESTS_v1.2) delivered and integrated
    (§3.8). Optional mist/ash sprites were not made; they would need a small hook.
 7. **P2 polish:** see PRD_UPDATE_v1.1 §4.

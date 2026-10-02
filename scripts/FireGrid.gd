@@ -1077,6 +1077,11 @@ func raycast_cell(ray_origin: Vector3, ray_dir: Vector3) -> Vector2i:
 		t += step
 	return miss
 
+## One cover rule for every watcher (drone, ranger): a crew member under a bamboo
+## grove or the forest canopy at the plot edge cannot be picked out ("two skies")
+static func is_cover(type: int) -> bool:
+	return type == CellType.BAMBOO or type == CellType.FOREST_BORDER
+
 func get_cell_world_pos(gx: int, gy: int) -> Vector3:
 	var idx = _coord_to_index(gx, gy)
 	var origin_x = - (grid_width * cell_size) * 0.5

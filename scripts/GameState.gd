@@ -8,6 +8,9 @@ const FAMINE_THRESHOLD: float = 20.0
 # after every plot, faster after a clean one, and the monsoon washes more away
 const PLOT_SCRUTINY_DECAY: int = 10
 const CLEAN_BURN_BONUS: int = 10
+## A clean burn must be a real burn: giving up a plot unburned (or barely lit)
+## is not "unseen", it is a lost field (audit finding 4)
+const CLEAN_BURN_MIN_YIELD: float = 60.0
 const MONSOON_SCRUTINY_RELIEF: int = 45
 const UPGRADE_RICE_COST: float = 10.0
 
@@ -132,7 +135,8 @@ func record_plot_results(burn_yield: float, hotspots: int, escaped: bool, scruti
 	# A crackdown stands; otherwise the rangers' attention drifts to other villages
 	last_scrutiny_relief = 0
 	if state_scrutiny < 100:
-		var relief = PLOT_SCRUTINY_DECAY + (CLEAN_BURN_BONUS if scrutiny_gain == 0 else 0)
+		var clean = scrutiny_gain == 0 and burn_yield >= CLEAN_BURN_MIN_YIELD
+		var relief = PLOT_SCRUTINY_DECAY + (CLEAN_BURN_BONUS if clean else 0)
 		last_scrutiny_relief = mini(relief, state_scrutiny)
 		state_scrutiny -= last_scrutiny_relief
 	rice_barn = clampf(rice_barn + last_rice_change, 0.0, 100.0)

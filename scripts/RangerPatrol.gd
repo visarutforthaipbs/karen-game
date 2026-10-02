@@ -200,7 +200,8 @@ func _scan() -> void:
 		if not fire_grid.is_valid_coord(pc.x, pc.y):
 			continue
 		var t = fire_grid.cell_types[fire_grid._coord_to_index(pc.x, pc.y)]
-		if t != FireGrid.CellType.BAMBOO and _flames_near(pc, 2):
+		# Same cover rule as the drone: bamboo or forest canopy hides the crew
+		if not FireGrid.is_cover(t) and _flames_near(pc, 2):
 			_log(person.global_position, false)
 			return
 

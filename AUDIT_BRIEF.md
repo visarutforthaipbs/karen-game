@@ -17,6 +17,14 @@ Audit the commit tagged `audit-baseline-1` (the commit that adds this file). Unc
 - Tunables are tabulated in `HANDOFF.md` §4; they match the code.
 
 ## Findings to verify and triage
+
+> **Status 2026-10-02 (GAME):** 1, 3, 4 and 5 are **fixed** with tests in
+> `tests/test_all.gd`. 1: a famine harvest card leads to the ending. 3: atomic
+> save with a `.bak` fallback, and `SaveGame.valid_campaign` checks every field
+> before `from_dict`. 4: the clean-burn bonus needs ≥60% ash
+> (`GameState.CLEAN_BURN_MIN_YIELD`). 5: `FireGrid.is_cover()` is used by the
+> drone and the ranger. The Hearth audio card in 9 was removed earlier.
+> 2 (mid-burn quit replays the burn) is still accepted.
 1. **Year-end famine is not terminal.** `GameState._complete_year()` can apply −10 rice and leave rice ≤ 20. `VillageHearth` never checks `is_game_over()`, and `SaveGame.save` refuses to write in that state. Play continues until the next burn resolves; quitting loses the progress.
 2. **Mid-burn quit replays the burn.** Quit-to-title, a force-quit mid-burn, or a force-quit on the fatal report reloads the pre-burn autosave. Known and accepted in `HANDOFF.md`. `EndingScene` is the only place that deletes the save.
 3. **Save robustness.** Single slot, written non-atomically on every Hearth refresh. `SaveGame.load_into` only checks for a dictionary with a `campaign` key; `GameState.from_dict` indexes untrusted fields directly (`e.year`, `e.cell[0]`), so malformed-but-valid JSON would error instead of returning "corrupt", leaving the singleton half-loaded.

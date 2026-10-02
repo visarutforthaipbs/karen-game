@@ -449,7 +449,7 @@ func _update_phase(now: int) -> void:
 
 func _on_drone_sweep_started(_d: ForestryDrone) -> void:
 	if not pass_started:
-		hud.show_drone_alert("โดรนป่าไม้บินเข้ามาสำรวจ (~45 วิ) — หลบใต้ร่มไผ่ หรือดับเปลวไฟที่สูง!", false)
+		hud.show_drone_alert("โดรนป่าไม้บินเข้ามาสำรวจ (~45 วิ) — หลบใต้ร่มไผ่หรือชายป่า หรือดับเปลวไฟที่สูง!", false)
 
 func _on_drone_sweep_ended(_d: ForestryDrone) -> void:
 	if not pass_started and game_clock.get_hours() < DRONE_RETURN_MINUTE / 60.0:

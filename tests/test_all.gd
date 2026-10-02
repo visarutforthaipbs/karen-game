@@ -391,7 +391,9 @@ func _run() -> void:
 	gs.log_hotspots([Vector2i(3, 4)], [44.0])
 	gs.record_plot_results(80.0, 1, false, 16, {"drone_photos": 2, "camera_trips": 1, "spot_fires": 3, "spot_fires_doused": 2})
 	var before = gs.to_dict()
+	SaveGame.delete()
 	check(SaveGame.save(gs) and SaveGame.exists(), "campaign autosave written")
+	check(not FileAccess.file_exists(SaveGame.dir.path_join(SaveGame.CAMPAIGN_FILE) + ".tmp"), "atomic save leaves no temp file behind")
 	gs.reset_campaign()
 	check(SaveGame.load_into(gs) == "", "campaign save loads")
 	var after = gs.to_dict()
@@ -401,6 +403,24 @@ func _run() -> void:
 	bad.store_string("{not json")
 	bad.close()
 	check(SaveGame.load_into(gs) == "corrupt", "a corrupt save is rejected, not loaded")
+	# Audit 3: a second save keeps the first as a backup; a damaged main file falls back to it
+	gs.reset_campaign()
+	SaveGame.delete()
+	gs.from_dict(before)
+	SaveGame.save(gs)
+	SaveGame.save(gs)
+	bad = FileAccess.open(SaveGame.dir.path_join(SaveGame.CAMPAIGN_FILE), FileAccess.WRITE)
+	bad.store_string("{\"version\": 1, \"campa")
+	bad.close()
+	gs.reset_campaign()
+	check(SaveGame.load_into(gs) == "" and gs.current_year == 2 and gs.current_plot_index == 4, "a damaged save falls back to the backup copy")
+	# Valid JSON with the wrong shape is "corrupt", and the live state is untouched
+	SaveGame.delete()
+	bad = FileAccess.open(SaveGame.dir.path_join(SaveGame.CAMPAIGN_FILE), FileAccess.WRITE)
+	bad.store_string(JSON.stringify({"version": SaveGame.VERSION, "campaign": {"current_year": 3, "hotspot_log": [{"year": 1}]}}))
+	bad.close()
+	gs.reset_campaign()
+	check(SaveGame.load_into(gs) == "corrupt" and gs.current_year == 1, "a malformed save is rejected before it half-loads the campaign")
 	gs.state_scrutiny = 100
 	check(not SaveGame.save(gs), "a finished (game-over) campaign is not autosaved")
 	SaveGame.delete()
@@ -419,6 +439,10 @@ func _run() -> void:
 	check(gs.state_scrutiny == 10, "a clean burn lets 20 scrutiny drift away (%d)" % gs.state_scrutiny)
 	gs.record_plot_results(80.0, 0, false, 15)
 	check(gs.state_scrutiny == 15, "a detected burn only gets the 10-point drift (%d)" % gs.state_scrutiny)
+	gs.state_scrutiny = 30
+	gs.record_plot_results(0.0, 0, false, 0)
+	check(gs.state_scrutiny == 20, "giving up a plot unburned is not a clean burn: drift only (%d)" % gs.state_scrutiny)
+	gs.state_scrutiny = 15
 	gs.state_scrutiny = 90
 	gs.record_plot_results(80.0, 3, true, 30)
 	check(gs.is_crackdown(), "reaching 100 is a crackdown; the drift cannot undo it")
@@ -438,11 +462,31 @@ func _run() -> void:
 	current_scene._close_harvest()
 	check(gs.pending_harvest.is_empty(), "harvest screen dismissed")
 
+	# Audit 1: a harvest that tips the barn into famine ends the campaign
+	gs.reset_campaign()
+	gs.current_plot_index = 5
+	gs.rice_barn = 25.0
+	gs.season_yields.assign([40.0, 35.0, 45.0, 30.0])
+	gs.record_plot_results(62.0, 0, false, 0)
+	gs.advance_to_next_plot()
+	check(gs.is_famine() and not gs.pending_harvest.is_empty(), "a poor monsoon harvest can leave the village in famine (%.0f%%)" % gs.rice_barn)
+	change_scene_to_file("res://scenes/VillageHearth.tscn")
+	await process_frame
+	await process_frame
+	check(current_scene.harvest_button.text.contains("บทสรุป"), "famine harvest card leads to the ending, not to next year")
+	current_scene.harvest_button.pressed.emit()
+	await process_frame
+	await process_frame
+	check(current_scene.scene_file_path == "res://scenes/Ending.tscn", "famine at year end goes to the ending scene")
+
 	# ---- Music rendered on the worker thread
 	for i in 600:
 		if am.music_ready: break
 		await process_frame
 	check(am.music_ready, "procedural Tena harp / khaen music rendered")
+
+	# ---- Audit 5: one cover rule for drone and ranger
+	check(FireGrid.is_cover(FireGrid.CellType.BAMBOO) and FireGrid.is_cover(FireGrid.CellType.FOREST_BORDER) and not FireGrid.is_cover(FireGrid.CellType.VEGETATION) and not FireGrid.is_cover(FireGrid.CellType.ASH), "bamboo and forest edge hide the crew from every watcher")
 
 	# ---- Asset drop-in hooks (ASSET_REQUESTS_v1.2.md)
 	var sat = load("res://scripts/SatelliteModel.gd")

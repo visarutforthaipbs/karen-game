@@ -251,7 +251,7 @@ func _scan_ground_area() -> void:
 			var p_type = fire_grid.cell_types[fire_grid._coord_to_index(p_coord.x, p_coord.y)]
 			# Under a bamboo grove or forest canopy, the crew is camouflaged; farmers
 			# in a field are only evidence when caught beside open flames
-			if p_type != FireGrid.CellType.BAMBOO and p_type != FireGrid.CellType.FOREST_BORDER and _flames_near(p_coord, 2):
+			if not FireGrid.is_cover(p_type) and _flames_near(p_coord, 2):
 				_trigger_spot(person.global_position, false)
 				return
 
