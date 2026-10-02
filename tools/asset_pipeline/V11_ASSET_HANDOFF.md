@@ -29,14 +29,15 @@ the Ranger rig through AssetLibrary.
 ## UI art and audio
 
 Portraits in `assets/ui/portraits/` are transparent 256 × 256 renders of the
-actual installed rigs, not newly generated faces. Kha-nae, Ta-poh, Mu-naw and
-Mae-Lu are available. Ranger portrait follows the accepted C5 rig.
+actual installed rigs, not newly generated faces. Kha-nae, Ta-poh, Mu-naw,
+Mae-Lu and Ranger are available.
 `tools/character_pipeline/render_portraits.gd` is the reproducible renderer.
 
-Title artwork: `assets/ui/title/satellite_shadow_blue_hour_v01.png`.
+Title artwork: `assets/ui/title/satellite_shadow_blue_hour_1920x1080.png`.
 Faceted blue-hour hillside, crew at lower right, satellite streak, no baked text.
-The generator returned a 1672 × 941 source. It has not passed the PRD's exact
-1920 × 1080 export requirement. GAME owns title placement and the README image.
+The generator's 1672 × 941 original is preserved as `satellite_shadow_blue_hour_v01.png`;
+the production file is a 1920 × 1080 canvas export through Godot
+(`export_title_canvas.gd`). GAME owns title placement and the README image.
 
 Four A2 spoken candidates are in `assets/audio/v11_candidates/`: Mu-naw's
 spot-fire/out calls, Ta-poh's whistle reply and a Ranger patrol report. They are

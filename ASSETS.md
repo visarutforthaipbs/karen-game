@@ -104,10 +104,10 @@ The v3.1 replacement is installed; source/rig evidence and remaining cultural-re
 |---|---|---|---|---|
 | U1 | Tool icons: torch, knife, sprayer | 128 px | IMG2D | HUD tool slot |
 | U2 | HUD icons: clock, wind arrow, hotspot, rice, scrutiny eye, breath, water drop | 64 px | IMG2D | Top and bottom bars |
-| U3 | Crew + Ranger portraits | 256 px RGBA | Actual GLB renders | Four crew portraits delivered; Ranger follows accepted rig. HUD/radio integration by GAME |
+| U3 | Crew + Ranger portraits | 256 px RGBA | Actual GLB renders | Five portraits delivered from the four crew and C5. HUD/radio integration by GAME |
 | U4 | Hearth background painting (night hut, fire, radio) | 1920×1080 | IMG2D | Village Hearth screen |
 | U5 | Hearth panel art: radio, granary, workbench, mutual aid | 512 px | IMG2D | Hearth panels |
-| U6 | Blue-hour title artwork | Target 1920×1080 | IMG2D | Native 1672×941 candidate delivered; exact-size export and GAME title/README placement pending. Text stays in UI |
+| U6 | Blue-hour title artwork | Target 1920×1080 | IMG2D | 1920×1080 canvas export delivered, generated original preserved; GAME title/README placement pending. Text stays in UI |
 | U7 | Font with Thai + emoji coverage (e.g. Noto Sans Thai / Sarabun, OFL) | .ttf | Download | Some emoji (🤝) currently don't render |
 
 ## 8. Audio (everything is synthesized today; real audio is an upgrade)
@@ -115,7 +115,7 @@ The v3.1 replacement is installed; source/rig evidence and remaining cultural-re
 | ID | Asset | Route | Notes |
 |---|---|---|---|
 | A1 | Ta-poh wind warning, 2–3 Thai / S'gaw Karen lines | AUDIO (OmniVoice) | **Done** — 3 recorded variants `assets/audio/tapoh_wind_warning*.wav` (OmniVoice-Thai "Pop" on gpu01; manifest in `artifacts/tts_batch/`) |
-| A2 | Crew barks: whistle reply, coughing, "embers!" | AUDIO (OmniVoice) | Four spoken candidates generated and ASR checked; listening review, cough recordings and GAME hooks pending. See v1.1 handoff |
+| A2 | Crew barks: whistle reply, coughing, "embers!" | AUDIO (OmniVoice) | Four spoken candidates generated and ASR checked; five synthetic cough candidates added; listening review and GAME hooks pending. See v1.1 handoff |
 | A3 | Ranger radio chatter (Thai) | AUDIO (TTS + radio filter) | **Done** — 8 decree/chatter lines `radio_ch1_*.wav` (FM 88.5) + 6 forecast lines `radio_ch2_*.wav` (FM 94.2); played over static through the band-limited `RadioVoice` bus |
 | A4 | Bamboo culm PANG, fire crackle loop, water hiss | AUDIO (record / CC0) | |
 | A5 | Drone rotor loop, siren loop, thunder | AUDIO (CC0) | |

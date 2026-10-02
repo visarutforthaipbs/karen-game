@@ -16,7 +16,7 @@ func _ready() -> void:
 	var flashlight_basis:=Basis(Vector3.RIGHT,Vector3(0,0,1),Vector3.DOWN)
 	_flashlight=_attach("Hand.L","T6",flashlight_basis,Vector3(0,-.06,.03),Vector3(0,.08,0))
 	var tablet_basis:=Basis(Vector3.LEFT,Vector3(0,0,1),Vector3.UP)
-	_tablet=_attach("Hand.R","T7",tablet_basis,Vector3(0,-.035,.03),Vector3(0,.07,0))
+	_tablet=_attach("Hand.R","T7",tablet_basis,Vector3(0,-.035,.03),Vector3(.08,.02,0))
 	_tablet.visible=false
 	_flashlight.visible=show_equipment
 	if autoplay_idle: play_clip("Idle",0)
