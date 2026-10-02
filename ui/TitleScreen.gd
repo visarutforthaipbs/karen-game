@@ -301,6 +301,8 @@ func _build_menu() -> void:
 	board = UITheme.vbox(2)
 	add_child(board)
 	_fill_board()
+	if OnlineBoard.enabled():
+		OnlineBoard.fetch_top(self, 5, _fill_online_board)
 	board.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
 	board.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	board.grow_vertical = Control.GROW_DIRECTION_BEGIN
@@ -334,6 +336,20 @@ func _fill_board() -> void:
 	for i in mini(5, rows.size()):
 		var r = rows[i]
 		var line = UITheme.outlined(UITheme.label("%d. %s · %d แปลง · ปีที่ %d · เถ้า %.0f%%" % [i + 1, r.name, int(r.plots), int(r.year), float(r.avg_ash)], "Small", UITheme.MUTED), 4)
+		line.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		board.add_child(line)
+
+## Appends the opt-in online top 5 under the local board (async, silent on failure)
+func _fill_online_board(rows: Array) -> void:
+	if not is_instance_valid(board) or rows.is_empty():
+		return
+	var head = UITheme.outlined(UITheme.label("กระดานออนไลน์ (เบตา)", "Kicker", UITheme.MUTED), 4)
+	head.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	board.add_child(head)
+	for r in rows.slice(0, 5):
+		if not (r is Dictionary):
+			continue
+		var line = UITheme.outlined(UITheme.label("%d. %s · %d แปลง · ปีที่ %d · เถ้า %.0f%%" % [int(r.get("rank", 0)), SaveGame.sanitize_name(r.get("name", "")), int(r.get("plots", 0)), int(r.get("year", 0)), float(r.get("avg_ash", 0))], "Small", UITheme.MUTED), 4)
 		line.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		board.add_child(line)
 

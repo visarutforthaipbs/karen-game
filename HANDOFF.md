@@ -244,6 +244,48 @@ is the real check.
 
 ## 6. Open items / next steps
 
+### Next session: start here (stopped 2026-10-02, after commit d31126e)
+
+The game is renamed **Under Two Skies** and is heading to the Thai beta in
+`SKU_PLAN.md` §6. The four beta-blocking audit items are fixed (6a below). The
+owner stopped work here; these are the remaining steps before testers get a
+build, in order:
+
+1. **CI covers every suite** (audit 7). `.github/workflows/test.yml` runs only
+   `tests/test_all.gd` and the smoke run. Add `test_equipment_motion`,
+   `test_gameplay_motion`, `test_skeletal_character`, `test_v31_assets` and
+   `test_ranger_assets`. Each prints its own result line; fail the job on any
+   failure.
+2. **Fresh builds.** `tools/build.sh` (outputs to `build/<date>-<commit>/`). The
+   last export, `20261002-e6aea1f`, predates the rename, the Meshy cast and
+   these fixes. Launch the Mac app locally; someone on another PC must try the
+   Windows build.
+3. **Thai tester post** for the indie group, in the §6 format: short
+   description, what the build lets testers do, a bug warning, the numbered
+   feedback questions from §6, an honest line about AI tools (Meshy models,
+   generated voices), and download steps. **Mac:** "right-click → Open" no
+   longer works on macOS 15+; use System Settings → Privacy & Security →
+   "Open Anyway" (confirm the wording with one Mac tester). **Windows:** "More
+   info → Run anyway". Testers send `playtest_log.csv` (Settings → logs button
+   opens its folder).
+4. After the beta, from the plan: English/Thai translation (`tr()`),
+   Pgakenyaw consultation, then the free itch.io demo with the Prachatai
+   story, then Steam. Owner decisions still open: price, licence, revenue
+   share, role of the Pgakenyaw contact.
+
+Smaller open items:
+- **Balance:** audit 4 made clean burns need ≥60% ash. Not re-simulated; read
+  the playtest logs.
+- **Borrowed sprayer hose:** Mu-naw has no hose when she borrows the sprayer
+  (the player has one, `scripts/SprayerHose.gd`).
+- **Daylight flames:** they look gold-brown in bright daylight (FireGrid
+  `flame_ramp`, not the art).
+- **Music layers:** need shared-bar stems and phase-locked playback (AUDIO).
+- **Meshy:** MCP registered in `~/.claude.json`; key also in `~/.meshy_env`
+  (outside the repo; the owner will rotate it). Balance about 1,500 credits.
+  Confirm the cost before any paid call. AI 3D can't spell, so keep
+  lettering engine-made.
+
 The full plan is [`PRD_UPDATE_v1.1.md`](PRD_UPDATE_v1.1.md). Game-side P0 and
 P1-2 to P1-6 are built (§3.8). What remains:
 
@@ -358,3 +400,15 @@ editable in Settings and on the run summary, which also shows the run's rank).
 The Title screen shows the top 5 ("กระดานเกียรติยศหมู่บ้าน"). Design and the
 planned opt-in online board (Cloudflare Worker + D1): `LEADERBOARD_PLAN.md`.
 Suite: 141 checks.
+
+## Online board (beta, opt-in) — 2026-10-02
+
+Server: Cloudflare Worker `undertwoskies-board` + D1 `undertwoskies-leaderboard`
+(source in `server/leaderboard/`, deploy with `npx wrangler deploy` there).
+Live at https://undertwoskies-board.undertwoskies-game.workers.dev (health: /v1/health).
+Client: `scripts/OnlineBoard.gd`, OFF by default (`GameSettings.online_board`),
+anonymous id+secret in settings.cfg [online]; consent text and a delete-my-scores
+button in Settings; online rank on the run summary; online top 5 on the Title.
+All failures silent. NOTE: HTTPRequest.timeout counts engine seconds, so headless
+probes must run WITHOUT --fixed-fps or network calls time out early (found the
+hard way). Suite: 148 checks.

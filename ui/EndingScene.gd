@@ -446,6 +446,16 @@ func show_summary() -> void:
 				break
 	rank_label.text = "ติดอันดับที่ %d ของหมู่บ้าน" % rank if rank > 0 else ""
 	rank_label.visible = rank > 0
+	var online_label = UITheme.label("", "Small", UITheme.STATE)
+	online_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	online_label.visible = false
+	box.add_child(online_label)
+	if OnlineBoard.enabled():
+		OnlineBoard.ensure_identity()
+		OnlineBoard.submit(self, state, func(online_rank):
+			if is_instance_valid(online_label):
+				online_label.text = "อันดับออนไลน์ #%d (เบตา)" % online_rank
+				online_label.visible = true)
 	name_edit.text_changed.connect(func(t: String):
 		GameSettings.player_name = SaveGame.sanitize_name(t)
 		GameSettings.save_settings()

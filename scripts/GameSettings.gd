@@ -27,6 +27,10 @@ static var landscape_detail: String = "high"
 static var debug_tools: bool = false
 ## Name shown on the village board (records.json rows)
 static var player_name: String = "ขะแน"
+## Opt-in online board (beta): off by default; anonymous id + secret
+static var online_board: bool = false
+static var client_id: String = ""
+static var client_secret: String = ""
 static var _loaded: bool = false
 
 static func _path() -> String:
@@ -55,6 +59,9 @@ static func load_settings() -> void:
 	first_burn_tips = bool(cfg.get_value("gameplay", "first_burn_tips", true))
 	debug_tools = bool(cfg.get_value("debug", "tools", false))
 	player_name = SaveGame.sanitize_name(cfg.get_value("player", "name", SaveGame.DEFAULT_NAME))
+	online_board = bool(cfg.get_value("online", "board", false))
+	client_id = str(cfg.get_value("online", "client_id", ""))
+	client_secret = str(cfg.get_value("online", "client_secret", ""))
 
 static func save_settings() -> void:
 	var cfg = ConfigFile.new()
@@ -68,6 +75,9 @@ static func save_settings() -> void:
 	cfg.set_value("gameplay", "first_burn_tips", first_burn_tips)
 	cfg.set_value("debug", "tools", debug_tools)
 	cfg.set_value("player", "name", SaveGame.sanitize_name(player_name))
+	cfg.set_value("online", "board", online_board)
+	cfg.set_value("online", "client_id", client_id)
+	cfg.set_value("online", "client_secret", client_secret)
 	cfg.save(_path())
 
 ## Push the current values to the mixer, window and UI scale

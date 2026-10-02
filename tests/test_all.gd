@@ -473,6 +473,38 @@ func _run() -> void:
 	v1.store_string(JSON.stringify({"plots_completed": 5, "year": 3, "avg_ash": 61.0, "cause": "famine", "date": "2026-09-01"}))
 	v1.close()
 	check(SaveGame.runs().size() == 1 and SaveGame.runs()[0].plots == 5 and SaveGame.best_record().plots_completed == 5, "a v1 records file migrates to the v2 board")
+	# Online board (opt-in; no network in tests)
+	check(GameSettings.online_board == false, "online board is opt-in (off by default)")
+	gs.reset_campaign()
+	gs.stats.plots_completed = 4
+	gs.stats.ash_sum = 200.0
+	gs.stats.hotspots_detected = 1
+	gs.stats.drone_photos = 2
+	gs.stats.camera_trips = 3
+	gs.stats.ranger_sightings = 4
+	GameSettings.player_name = "ชาวดอย"
+	var payload = OnlineBoard.build_payload(gs)
+	check(payload.plots == 4 and is_equal_approx(payload.avg_ash, 50.0) and payload.detections == 10, "online payload: plots, avg_ash, detections")
+	check(payload.name == "ชาวดอย" and payload.mode == "endless" and payload.week == "" and payload.version == OnlineBoard.GAME_VERSION and payload.year == gs.current_year, "online payload: name, mode, week, version, year")
+	GameSettings.player_name = "ขะแน"
+	GameSettings.client_id = ""
+	GameSettings.client_secret = ""
+	OnlineBoard.ensure_identity()
+	var cid = GameSettings.client_id
+	var csec = GameSettings.client_secret
+	var id_re = RegEx.create_from_string("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+	check(id_re.search(cid) != null and cid.length() == 36, "online client_id is 36-char hex-dash (%s)" % cid)
+	check(csec.length() == 32 and csec.is_valid_hex_number(false), "online secret is 32 hex chars")
+	OnlineBoard.ensure_identity()
+	check(GameSettings.client_id == cid and GameSettings.client_secret == csec, "online identity is stable")
+	GameSettings.client_id = ""
+	GameSettings.client_secret = ""
+	GameSettings.load_settings()
+	check(GameSettings.client_id == cid and GameSettings.client_secret == csec and GameSettings.online_board == false, "online identity persists through settings.cfg")
+	GameSettings.online_board = false
+	GameSettings.client_id = ""
+	GameSettings.client_secret = ""
+	GameSettings.save_settings()
 	# Player name persists through settings.cfg
 	GameSettings.player_name = "ชาวดอย"
 	GameSettings.save_settings()

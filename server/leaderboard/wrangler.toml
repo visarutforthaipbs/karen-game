@@ -1,0 +1,10 @@
+name = "undertwoskies-board"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+account_id = "37985e3dbd0d5cc809f4740dec81dbfc"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "undertwoskies-leaderboard"
+database_id = "398ff51e-24a0-4595-8f13-2a980fc008e2"

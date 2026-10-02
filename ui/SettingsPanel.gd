@@ -84,6 +84,20 @@ func _ready() -> void:
 	howto.pressed.connect(func(): how_to_play_requested.emit())
 	right.add_child(howto)
 
+	right.add_child(UITheme.header("satellite", "กระดานออนไลน์ (เบตา)", UITheme.MUTED))
+	right.add_child(_toggle_row("ส่งผลการเล่นขึ้นกระดานออนไลน์", GameSettings.online_board, func(on):
+		GameSettings.online_board = on
+		if on:
+			OnlineBoard.ensure_identity()))
+	var online_note = UITheme.label("ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ", "Small", UITheme.MUTED)
+	online_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	right.add_child(online_note)
+	var wipe = Button.new()
+	wipe.text = "ลบคะแนนของฉันออกจากกระดานออนไลน์"
+	wipe.disabled = GameSettings.client_id == ""
+	wipe.pressed.connect(func(): OnlineBoard.delete_my_scores(self))
+	right.add_child(wipe)
+
 	right.add_child(UITheme.header("hammer", "สำหรับผู้ทดสอบ", UITheme.MUTED))
 	right.add_child(_toggle_row("เครื่องมือทดสอบ (F3 ข้อมูล · F5–F10 ข้ามเวลา/บังคับเหตุการณ์)", GameSettings.debug_tools, func(on):
 		GameSettings.debug_tools = on))
