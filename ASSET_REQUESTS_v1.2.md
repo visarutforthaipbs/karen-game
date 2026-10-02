@@ -82,8 +82,9 @@ the plot and its shadow and thermal scan sweep the fields. A procedural placehol
 is in `scripts/SatelliteModel.gd`; your model replaces it via `mesh_or("V3")`.
 
 - **Orientation is critical:** wings/solar panels along **local X**, flight
-  direction **+Z**, the radiometer/scanner looking **down (-Y)**, origin at the
-  body centre (an exception to base-centred, since it flies).
+  direction **+Z**, the radiometer/scanner looking **down (-Y)**. The origin can
+  stay **base-centred like every other prop**: the title screen re-centres the
+  mesh on its bounding box (`TitleScreen`), so no pipeline change is needed.
 - **Scale:** any size. The game fits its X span to the staged ~16 m wingspan
   (`SatelliteModel.fit_scale`), so the manifest's 2 m is fine.
 - Budget: quality route, ≤4,000 tris. It fills about a third of the frame, so

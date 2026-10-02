@@ -18,10 +18,12 @@ func _ready() -> void:
 	character.rotation.y = -0.15
 	var camera := Camera3D.new()
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = 1.8
+	# Waist-up framing: at 110 px a full-body shot shrank the Meshy face to a few
+	# pixels, so the new model looked like the old one. Arms stay in for Granary.
+	camera.size = 0.95
 	view.add_child(camera)
-	camera.position = Vector3(0, 0.90, 3)
-	camera.look_at(Vector3(0, 0.80, 0))
+	camera.position = Vector3(0, 0.98, 3)
+	camera.look_at(Vector3(0, 0.96, 0))
 	var light := DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-30, -25, 0)
 	light.light_energy = 1.0

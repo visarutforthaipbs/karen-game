@@ -32,6 +32,7 @@ var _satellite: Node3D
 var _shadow: Decal
 var _strobe: OmniLight3D
 var _pass_t: float = 2.0
+var _logo: TitleLogo
 var _scan_tick: float = 0.0
 var _pinged: bool = false
 var _was_scanning: bool = false
@@ -145,7 +146,20 @@ func _build_satellite(vp: SubViewport) -> void:
 	body.scale = Vector3.ONE * MODEL_SCALE * SatelliteModel.fit_scale(body.mesh)
 	# Wings along the flight path so the full span reads as it crosses the frame
 	body.rotation.y = PI * 0.5
+	# Tip the flat solar wings toward the camera so they read as panels, not lines
+	body.rotate_object_local(Vector3.RIGHT, 0.55)
+	# Centre on the mesh's bounds, so a ground-centred pipeline V3 flies like the placeholder
+	body.position = -(body.transform.basis * body.mesh.get_aabb().get_center())
 	_satellite.add_child(body)
+	# Cool fill from the camera side, on its own render layer: the warm backlit haze
+	# otherwise flattens the gold foil and blue panels to one brown silhouette
+	body.layers = 2
+	var fill = DirectionalLight3D.new()
+	fill.light_cull_mask = 2
+	fill.light_color = Color(0.85, 0.9, 1.0)
+	fill.light_energy = 1.4
+	vp.add_child(fill)
+	fill.look_at_from_position(CAM_POS, PASS_CENTER + Vector3(0, SAT_ALTITUDE + 4.0, 0), Vector3.UP)
 	_strobe = OmniLight3D.new()
 	_strobe.light_color = Color(1.0, 0.2, 0.15)
 	_strobe.omni_range = 6.0
@@ -177,7 +191,7 @@ func _build_satellite(vp: SubViewport) -> void:
 	swath_node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_satellite.add_child(swath_node)
 
-	# The Satellite Shadow: a crisp cold silhouette projected onto the hillside
+	# The satellite's shadow: a crisp cold silhouette projected onto the hillside
 	_shadow = Decal.new()
 	_shadow.texture_albedo = SatelliteModel.shadow_texture()
 	_shadow.modulate = Color(0.01, 0.03, 0.1, 0.88)
@@ -189,6 +203,8 @@ func _build_satellite(vp: SubViewport) -> void:
 
 func _update_satellite(delta: float) -> void:
 	_pass_t = fmod(_pass_t + delta, PASS_CYCLE)
+	if _logo:
+		_logo.phase = _pass_t / PASS_CYCLE # The title's own satellite glides with the pass
 	var u = _pass_t / PASS_SECONDS
 	var flying = u <= 1.0
 	_satellite.visible = flying
@@ -245,8 +261,8 @@ func _build_menu() -> void:
 	var margin = MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
 	margin.add_theme_constant_override("margin_left", 72)
-	margin.add_theme_constant_override("margin_top", 64)
-	margin.add_theme_constant_override("margin_bottom", 48)
+	margin.add_theme_constant_override("margin_top", 16)
+	margin.add_theme_constant_override("margin_bottom", 24)
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(margin)
 	var col = UITheme.vbox(10)
@@ -255,19 +271,18 @@ func _build_menu() -> void:
 	col.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	margin.add_child(col)
 
-	var title = UITheme.outlined(UITheme.label("เงาเมฆา", "Title", UITheme.STRAW), 8)
-	title.add_theme_font_override("font", UITheme.font("bold"))
-	title.add_theme_font_size_override("font_size", 84)
-	col.add_child(title)
-	var sub = UITheme.outlined(UITheme.label("SATELLITE SHADOW · ไร่หมุนเวียนใต้เงาดาวเทียม", "Kicker", UITheme.CREAM), 4)
-	sub.add_theme_font_size_override("font_size", 16)
-	col.add_child(sub)
+	_logo = TitleLogo.new()
+	_logo.size_px = 74.0
+	col.add_child(_logo)
+	var logo_gap = Control.new()
+	logo_gap.custom_minimum_size = Vector2(0, 0)
+	col.add_child(logo_gap)
 	var lead = UITheme.wrap(UITheme.outlined(UITheme.label("เผาไร่ให้เป็นเถ้าระหว่าง 14:00–20:00 แล้วดับถ่านให้หมด ก่อนดาวเทียมโคจรผ่าน", "Body", UITheme.CREAM), 4))
-	lead.custom_minimum_size = Vector2(440, 0)
+	lead.custom_minimum_size = Vector2(560, 0)
 	col.add_child(lead)
 
 	var gap = Control.new()
-	gap.custom_minimum_size = Vector2(0, 18)
+	gap.custom_minimum_size = Vector2(0, 8)
 	col.add_child(gap)
 
 	_menu = UITheme.vbox(10)
@@ -282,8 +297,15 @@ func _build_menu() -> void:
 	notice_label = UITheme.wrap(UITheme.outlined(UITheme.label("", "Small", UITheme.EMBER), 4))
 	notice_label.custom_minimum_size = Vector2(440, 0)
 	col.add_child(notice_label)
+	# Best run sits in the bottom-right corner, out of the menu column
 	record_label = UITheme.outlined(UITheme.label(_record_text(), "Small", UITheme.MUTED), 4)
-	col.add_child(record_label)
+	record_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	add_child(record_label)
+	record_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	record_label.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	record_label.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	record_label.offset_right = -24.0
+	record_label.offset_bottom = -16.0
 
 	(continue_button if continue_button.visible else new_button).grab_focus()
 

@@ -70,6 +70,8 @@ func configure_borrowed_sprayer(enabled: bool) -> void:
 	if animator.get("separate_equipment"):
 		tank.mesh = load("res://scripts/CharacterEquipment.gd").sprayer_tank()
 		tank.position = Vector3(0,-0.03,-0.04)
+	elif AssetLibrary.has_asset("T4"):
+		tank.position.y = -0.23 / animator.base_scale # Base-centred pipeline tank (V12 handoff)
 	animator.get_back_socket().add_child(tank)
 	tank.scale = Vector3.ONE / animator.base_scale
 	_borrowed_equipment = tank
@@ -77,6 +79,8 @@ func configure_borrowed_sprayer(enabled: bool) -> void:
 	_borrowed_wand.mesh = AssetLibrary.mesh_or("T5", LowPoly.tool_mesh("wand"))
 	animator.get_left_hand_socket().add_child(_borrowed_wand)
 	_borrowed_wand.scale = Vector3.ONE / animator.base_scale
+	# Same grip convention as the player's hand tools: the handle sits 0.22 m up
+	_borrowed_wand.position.y = -0.22 if AssetLibrary.has_asset("T5") else 0.0
 	_borrowed_wand.visible = false
 
 func cancel_animation_work() -> void:

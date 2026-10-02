@@ -14,10 +14,11 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="Satellite Shadow"
+config/name="Under Two Skies"
 config/description="Isometric Tactical Survival & Systemic Stealth Sim"
 run/main_scene="res://scenes/Title.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
+config/icon="res://assets/ui/logo/under_two_skies_icon.png"
 
 [autoload]
 

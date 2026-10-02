@@ -155,7 +155,7 @@ static func villager_node(index: int, cloth: Color) -> Node3D:
 	if AssetLibrary.has_asset("S7"):
 		var bundle = MeshInstance3D.new()
 		bundle.mesh = AssetLibrary.mesh_or("S7", null)
-		bundle.position = Vector3(0, 0.72, -0.2)
+		bundle.position = Vector3(0, 0.40, -0.2) # Reviewed on all four C6 variants (V12 handoff)
 		v.add_child(bundle)
 	return v
 

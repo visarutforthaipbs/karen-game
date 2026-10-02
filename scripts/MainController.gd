@@ -362,10 +362,14 @@ func _process(delta: float) -> void:
 
 	if AudioManager.instance:
 		AudioManager.instance.set_fire_intensity(_last_burning_count / 60.0)
-		var hum = 0.0
-		for d in drones:
-			hum = maxf(hum, d.get_hum_level(player.global_position))
-		AudioManager.instance.set_drone_proximity(hum)
+		# Bamboo canopy hides the crew: muffle the drones while the player is under it
+		var under_canopy := false
+		if player and fire_grid:
+			var pc = fire_grid.get_cell_coord_at_world_pos(player.global_position)
+			if fire_grid.is_valid_coord(pc.x, pc.y) \
+					and fire_grid.cell_types[fire_grid._coord_to_index(pc.x, pc.y)] == FireGrid.CellType.BAMBOO:
+				under_canopy = true
+		AudioManager.instance.set_canopy_occlusion(1.0 if under_canopy else 0.0)
 		# Ambience bed: cicadas thin out through dusk; inversion muffles the bed
 		var cicada = 1.0 if hours < 17.0 else clampf((18.5 - hours) / 1.5, 0.0, 1.0)
 		AudioManager.instance.set_ambience(0.45, cicada * 0.7, _inversion_level)
@@ -461,7 +465,7 @@ func _on_drone_spotted(_world_pos: Vector3, is_flame: bool) -> void:
 	var msg = "แฟลชโดรน! ถ่ายภาพเปลวไฟได้ · ความเพ่งเล็ง +%d" % penalty if is_flame else "แฟลชโดรน! ถ่ายภาพทีมกลางที่โล่งได้ · ความเพ่งเล็ง +%d" % penalty
 	hud.show_drone_alert(msg, true)
 	if AudioManager.instance:
-		AudioManager.instance.play_camera_shutter()
+		AudioManager.instance.play_shutter_at(_world_pos)
 		AudioManager.instance.play_camera_alarm()
 
 func _on_camera_heat(_cam: ThermalCamera, _world_pos: Vector3) -> void:
@@ -486,14 +490,19 @@ func _on_wind_shifted(direction: Vector2, speed: float) -> void:
 
 func _on_bamboo_exploded(_coord: Vector2i, _world_pos: Vector3, _landing: Vector2i) -> void:
 	if AudioManager.instance:
-		AudioManager.instance.play_bamboo_pop()
-		get_tree().create_timer(randf_range(0.45, 0.75)).timeout.connect(_on_ember_landed)
+		AudioManager.instance.play_bamboo_pop_at(_world_pos)
+		AudioManager.instance.play_bark("embers")
+		get_tree().create_timer(randf_range(0.45, 0.75)).timeout.connect(
+			_on_ember_landed.bind(fire_grid.get_cell_world_pos(_landing.x, _landing.y)))
 	hud.show_alert("ปล้องไผ่ระเบิด! แรงไอน้ำดีดลูกไฟไปตามลม", 3.5)
 
 ## A flying spark settling after its arc
-func _on_ember_landed() -> void:
+func _on_ember_landed(pos: Vector3 = Vector3.ZERO) -> void:
 	if AudioManager.instance:
-		AudioManager.instance.play_ember_landing()
+		if pos != Vector3.ZERO:
+			AudioManager.instance.play_ember_landing_at(pos)
+		else:
+			AudioManager.instance.play_ember_landing()
 
 ## A spark caught in the protected forest: a few seconds to douse it
 func _on_spot_fire(_coord: Vector2i) -> void:
@@ -508,7 +517,9 @@ func _on_ember_jumped(_from: Vector2i, _landing: Vector2i) -> void:
 	hud.show_alert("ลมแรง — ลูกไฟกระโดดข้ามแนวกันไฟ!", 3.0)
 	if AudioManager.instance:
 		AudioManager.instance.play_ember_jump()
-		get_tree().create_timer(randf_range(0.5, 0.8)).timeout.connect(_on_ember_landed)
+		AudioManager.instance.play_bark("embers")
+		get_tree().create_timer(randf_range(0.5, 0.8)).timeout.connect(
+			_on_ember_landed.bind(fire_grid.get_cell_world_pos(_landing.x, _landing.y)))
 
 func _on_satellite_closing(mins_remaining: int) -> void:
 	if mins_remaining % 10 == 0 or mins_remaining <= 5:
@@ -604,7 +615,7 @@ func _on_tank_empty() -> void:
 
 func _on_companion_coughing(who: CompanionController) -> void:
 	if AudioManager.instance:
-		AudioManager.instance.play_cough()
+		AudioManager.instance.play_cough_at(who.global_position)
 	hud.show_alert("%s สำลักควัน! เป่านกหวีดเรียกกลับมา" % who.display_name(), 3.0)
 
 func _on_stamina_changed(curr: float, max_val: float) -> void:
@@ -619,6 +630,9 @@ func _on_smoke_exposure_changed(exposure: float) -> void:
 func _on_whistle_blown() -> void:
 	if AudioManager.instance:
 		AudioManager.instance.play_whistle()
+		get_tree().create_timer(0.45).timeout.connect(func():
+			if AudioManager.instance:
+				AudioManager.instance.play_bark("rally_reply"))
 	elder.rally_to_player()
 	youth.rally_to_player()
 	hud.show_alert("เป่านกหวีด — เรียกทีมมารวมที่ตัวเรา!", 2.5)

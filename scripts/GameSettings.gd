@@ -28,6 +28,7 @@ static var debug_tools: bool = false
 static var _loaded: bool = false
 
 static func _path() -> String:
+	SaveGame.migrate_old_user_dir()
 	return dir.path_join(FILE)
 
 static func ensure_loaded() -> void:

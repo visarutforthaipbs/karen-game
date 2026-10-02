@@ -1,5 +1,25 @@
 # HANDOFF — Game code, UI and balance
 
+> **Renamed 2026-10-02:** the game is now **Under Two Skies** (subtitle
+> ไร่หมุนเวียนใต้เงาดาวเทียม), per `SKU_PLAN.md` §0. Changed: `project.godot`
+> name, title screen, Hearth header, README, export presets (product name,
+> file names, bundle id `io.github.visarutforthaipbs.undertwoskies`) and
+> `tools/build.sh`. Godot's user:// folder follows the project name, so
+> `SaveGame.migrate_old_user_dir()` copies saves/settings/records/playtest log
+> from the old "Satellite Shadow" folder once. **Logo:** `ui/TitleLogo.gd` is a live
+> 3D title: faceted TextMesh letters (coarse curves, flat facets, straw-to-clay
+> gradient) under a floating hill island (`assets/ui/logo/island.glb`, made with
+> Meshy: swidden plots, field hut, bamboo, pines). The V3 satellite glides over
+> the island with the title-screen pass (`phase`) and its real shadow sweeps the
+> fields. `compact` shows the exported wordmark PNG (Hearth header). PNGs (logo,
+> dark logo, wordmark, island icon = app icon) are in `assets/ui/logo/`; regenerate
+> them with `tools/export_logo.gd` after any change. **V3 satellite is now a Meshy
+> model** (5,335 tris, centred origin, wings ±X, lens −Y; the title pass tips it
+> 0.55 rad so the flat wings read). The asset agent's old V3 is in
+> `artifacts/logo_meshy/rollback/`; concepts and raw downloads are in
+> `artifacts/logo_meshy/`. Meshy spend: 87 credits (balance 1,506). Internal pipeline comments and
+> asset file names (e.g. `satellite_shadow_blue_hour_*.png`) keep the old name.
+
 Last updated: 2026-10-02. Read this after `AGENT.md` and `PRD.md` when picking up
 game-code work. Character/asset work has its own docs (`SOP.md`, `ASSETS.md`,
 `tools/character_pipeline/`, `tools/asset_pipeline/`).
@@ -158,8 +178,24 @@ files blocked every headless import because Blender isn't installed on this Mac.
      set dressing (`Landscape._scatter_set_dressing` / `_scatter_terraces`),
      C6 villagers (`EndingScene.villager_node`), U4 Hearth painting
      (`HearthBackdrop.PAINTING`), V3 scale fit (`SatelliteModel.fit_scale`).
-     Each one is a no-op until its file exists. After CHAR delivers, take
-     screenshots and tune placement.
+     Each one is a no-op until its file exists.
+   - **v1.2 assets delivered and integrated** (all 29 files; CHAR's notes in
+     `tools/asset_pipeline/V12_ASSET_HANDOFF.md`). GAME follow-ups applied: S7
+     bundle on C6 at (0, 0.40, -0.2); pipeline T4 tank lowered (-0.23/base_scale
+     on the back socket, 0.62 on the root fallback); T5 -0.22 and T2 -0.07 grip
+     offsets for companions (`SkeletalChibiAnimator`, `CompanionController`).
+     Mu-naw keeps the authored `CharacterEquipment` tank. Set dressing is
+     oversized like the trees (rocks 1.1-2.4, grass 1.5-2.6 within 150 m,
+     terrace walls 1.5 in 110 contour runs) so it reads from the game camera.
+     The title satellite is on render layer 2 with its own cool fill light.
+   - **Meshy cast (CHAR, `tools/character_pipeline/MESHY_CAST_HANDOFF.md`)
+     reviewed in game.** One GAME fix in the CHAR-owned
+     `SkeletalChibiAnimator._apply_motion_layers`: the idle/walk carry pose set
+     the hand socket from the hand bone's *rest* basis, which tipped every tool
+     sideways because the Meshy rigs rest in a T-pose. It now uses the current
+     hand pose with an upright carry (slight forward lean; Ta-poh's knife still
+     blade-down). Work poses are unchanged. Before/after screenshots:
+     `artifacts/game_review_meshy/crew_*` and `fix_*`.
 
 ## 4. Rules and tunables (where to change them)
 
@@ -229,13 +265,13 @@ P1-2 to P1-6 are built (§3.8). What remains:
    - Quitting to the title mid-burn and continuing replays that burn from the
      Hearth (pre-burn autosave). It's a mild re-roll exploit; accepted for the
      playtest.
-   - The Hearth has its own 3-slider audio card (from the audio work) next to
-     the full Settings panel. It doesn't persist, so merge it into
-     `GameSettings` later.
+   - (Fixed) The Hearth's non-persistent audio card is gone; a "ตั้งค่า" header
+     button opens the shared SettingsPanel. The Hearth's card columns sit in a
+     ScrollContainer so the launch button is always on screen; at 1280×720
+     everything fits without scrolling.
 6. **Translation review** by a native Thai and ideally Pgakenyaw speaker.
-6b. **Graphics pass assets** requested from CHAR in
-   [`ASSET_REQUESTS_v1.2.md`](ASSET_REQUESTS_v1.2.md) (VFX, set dressing, V3,
-   C6, U4, stumps, tools, V2). The hooks are in; review them once delivered.
+6b. **Graphics pass assets** (ASSET_REQUESTS_v1.2) delivered and integrated
+   (§3.8). Optional mist/ash sprites were not made; they would need a small hook.
 7. **P2 polish:** see PRD_UPDATE_v1.1 §4.
 
 ## Character v3.1 installation handoff — 2026-10-02

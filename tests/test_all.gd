@@ -578,7 +578,9 @@ func _fire_balance_checks() -> void:
 	fg.cell_heat = nh
 	for i in 6: fg._simulation_step()
 	check(spots[0] == 1 and not fg.has_escaped, "a spark in the park is a spot fire, not yet an escape")
+	var bursts_before = fg.get_children().filter(func(n): return n.name.begins_with("DouseBurst")).size()
 	fg.douse_cell(20, 0)
+	check(fg.get_children().filter(func(n): return n.name.begins_with("DouseBurst")).size() > bursts_before, "dousing a fire puffs steam (mist VFX)")
 	for i in 30: fg._simulation_step()
 	check(fg.cell_types[fg._coord_to_index(20, 0)] == FireGrid.CellType.FOREST_BORDER and not fg.has_escaped, "spot fire doused in time: forest only scorched, no escape")
 	nb.assign(fg.cell_types)

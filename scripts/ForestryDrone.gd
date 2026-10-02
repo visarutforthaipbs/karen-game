@@ -41,11 +41,20 @@ var hover_timer: float = 0.0
 var searchlight_mesh: MeshInstance3D
 var drone_body: MeshInstance3D
 var _rotors: Array[MeshInstance3D] = []
+# Positional rotor hum (pan + distance from the engine; occlusion via the Drones bus)
+var _hum3d: AudioStreamPlayer3D
 
 func _ready() -> void:
 	visible = false
 	_build_drone_visuals()
 	_generate_patrol_route()
+	_hum3d = AudioStreamPlayer3D.new()
+	_hum3d.bus = "Drones"
+	_hum3d.unit_size = 10.0
+	_hum3d.max_distance = 90.0
+	if AudioManager.instance and AudioManager.instance.drone_hum_stream:
+		_hum3d.stream = AudioManager.instance.drone_hum_stream
+	add_child(_hum3d)
 
 ## Fly high enough to clear this hillside, at this year's speed, on this route
 func configure(altitude: float, speed_mult: float, variant: int) -> void:
@@ -137,11 +146,13 @@ func end_patrol() -> void:
 	is_active_patrol = false
 	on_station = false
 	visible = false
+	_hum3d.stop()
 	drone_patrol_ended.emit()
 
 func _begin_sweep() -> void:
 	on_station = true
 	visible = true
+	_hum3d.play()
 	global_position = waypoints[0]
 	current_waypoint_idx = 1
 	_phase_left = SWEEP_SECONDS
@@ -152,6 +163,7 @@ func _begin_sweep() -> void:
 func _leave_for_battery() -> void:
 	on_station = false
 	visible = false
+	_hum3d.stop()
 	_phase_left = randf_range(AWAY_SECONDS_MIN, AWAY_SECONDS_MAX)
 	sweep_ended.emit(self)
 

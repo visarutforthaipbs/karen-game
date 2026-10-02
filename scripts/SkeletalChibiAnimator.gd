@@ -53,6 +53,11 @@ func _setup_separate_equipment() -> void:
 	_carried_tool.mesh = AssetLibrary.mesh_or("T5", LowPoly.tool_mesh("wand")) if character_profile == "munaw" else AssetLibrary.mesh_or("T2", _clearing_blade())
 	hand_socket.add_child(_carried_tool)
 	_carried_tool.scale = Vector3.ONE / base_scale
+	# Pipeline grips: T5 handle at 0.22 m, T2 grip at 0.07 m (same convention as the player)
+	if character_profile == "munaw" and AssetLibrary.has_asset("T5"):
+		_carried_tool.position.y = -0.22
+	elif character_profile == "tapoh" and AssetLibrary.has_asset("T2"):
+		_carried_tool.position.y = -0.07
 	if character_profile == "munaw":
 		var tank := MeshInstance3D.new()
 		tank.mesh = load("res://scripts/CharacterEquipment.gd").sprayer_tank()
@@ -207,9 +212,14 @@ func _apply_motion_layers(velocity: Vector3) -> void:
 		for bone in [&"UpperArm.L", &"UpperArm.R", &"Forearm.L", &"Forearm.R"]:
 			skeleton.set_bone_pose_rotation(_bone_ids[bone], skeleton.get_bone_rest(_bone_ids[bone]).basis.get_rotation_quaternion())
 	if work_blend <= 0.001:
-		hand_socket.basis = skeleton.get_bone_global_rest(_bone_ids[&"Hand.R"]).basis.inverse()
+		# Carry the tool upright (slight forward lean) from the hand's current pose.
+		# The Meshy rigs rest in a T-pose, so the old rest-basis inverse tipped every
+		# carried tool sideways once Idle/Walk lowered the arms (GAME review 2026-10-02).
+		var hand := skeleton.get_bone_global_pose(_bone_ids[&"Hand.R"])
+		var carry := Quaternion(Vector3.UP, Vector3(0, 1, 0.2).normalized())
 		if separate_equipment and character_profile == "tapoh":
-			hand_socket.basis *= Basis(Quaternion(Vector3.UP,Vector3.DOWN))
+			carry = carry * Quaternion(Vector3.UP, Vector3.DOWN)
+		hand_socket.basis = Basis(hand.basis.get_rotation_quaternion().inverse() * carry)
 	if work_blend > 0.001:
 		_apply_work_pose()
 	if coughing:

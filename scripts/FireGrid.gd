@@ -404,9 +404,27 @@ static func soft_sprite() -> ImageTexture:
 		_soft_sprite = ImageTexture.create_from_image(img)
 	return _soft_sprite
 
+## Ash flake: a hard little triangle shard
+static var _ash_sprite: ImageTexture
+
+static func ash_sprite() -> ImageTexture:
+	if not _ash_sprite:
+		var size = 32
+		var img = Image.create(size, size, false, Image.FORMAT_RGBA8)
+		img.fill(Color(1, 1, 1, 0))
+		var tri = PackedVector2Array([Vector2(4, 6), Vector2(28, 11), Vector2(12, 27)])
+		for y in size:
+			for x in size:
+				if Geometry2D.is_point_in_polygon(Vector2(x + 0.5, y + 0.5), tri):
+					img.set_pixel(x, y, Color(1, 1, 1, 1))
+		img.generate_mipmaps()
+		_ash_sprite = ImageTexture.create_from_image(img)
+	return _ash_sprite
+
 ## Smoke plumes and flame tongues emitted from the burning cells
 func _setup_particles() -> void:
 	smoke_particles = CPUParticles3D.new()
+	smoke_particles.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	smoke_particles.amount = 320
 	smoke_particles.lifetime = 7.0
 	smoke_particles.emission_shape = CPUParticles3D.EMISSION_SHAPE_POINTS
@@ -441,6 +459,7 @@ func _setup_particles() -> void:
 	add_child(smoke_particles)
 
 	flame_particles = CPUParticles3D.new()
+	flame_particles.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	flame_particles.amount = 180
 	flame_particles.lifetime = 0.8
 	flame_particles.emission_shape = CPUParticles3D.EMISSION_SHAPE_POINTS
@@ -481,6 +500,8 @@ func _setup_particles() -> void:
 const VFX_FLAME = "res://assets/vfx/flame_sheet.png"   # 4x4 frames, greyscale + alpha (flame_ramp colours it)
 const VFX_SMOKE = "res://assets/vfx/smoke_sheet.png"   # 2x2 puff variants, white + alpha (game tints)
 const VFX_EMBER = "res://assets/vfx/ember.png"         # single spark, white-hot + alpha
+const VFX_MIST = "res://assets/vfx/mist_sheet.png"     # optional 2x2 steam puffs, white + alpha
+const VFX_ASH = "res://assets/vfx/ash_flake.png"       # optional single flake, white + alpha
 
 ## Swap a particle material's soft dot for a sprite sheet if the file exists
 static func apply_sprite_sheet(mat: StandardMaterial3D, particles: CPUParticles3D, path: String, h: int, v: int, animated: bool) -> bool:
@@ -760,10 +781,94 @@ func _spawn_spark_burst(world_pos: Vector3, direction_2d: Vector2) -> void:
 	mat.albedo_texture = load(VFX_EMBER) if ResourceLoader.exists(VFX_EMBER) else soft_sprite()
 	quad.material = mat
 	burst.mesh = quad
+	burst.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(burst)
 	burst.global_position = world_pos + Vector3(0, 1.5, 0)
 	burst.emitting = true
 	get_tree().create_timer(2.0).timeout.connect(burst.queue_free)
+
+## Water hitting fire: a hiss of steam, plus ash kicked up when embers die.
+## One-shot, freed after it plays. Used by the player and the crew (douse_cell).
+func _spawn_douse_burst(world_pos: Vector3, ash: bool) -> void:
+	if thermal_view or not is_inside_tree():
+		return
+	var steam = _burst_particles(22, 1.8, VFX_MIST, soft_sprite(), 2, 2, Color(0.95, 0.96, 0.98), BaseMaterial3D.BLEND_MODE_MIX)
+	steam.direction = Vector3.UP
+	steam.spread = 30.0
+	steam.initial_velocity_min = 1.0
+	steam.initial_velocity_max = 2.4
+	steam.gravity = Vector3(0, 0.6, 0)
+	steam.damping_min = 0.8
+	steam.damping_max = 1.4
+	steam.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
+	steam.emission_box_extents = Vector3(cell_size * 0.4, 0.1, cell_size * 0.4)
+	steam.scale_amount_min = 0.8
+	steam.scale_amount_max = 1.4
+	var grow = Curve.new()
+	grow.add_point(Vector2(0, 0.4))
+	grow.add_point(Vector2(1, 1.6))
+	steam.scale_amount_curve = grow
+	var fade = Gradient.new()
+	fade.set_color(0, Color(1, 1, 1, 0.75))
+	fade.set_color(1, Color(1, 1, 1, 0.0))
+	steam.color_ramp = fade
+	_launch_burst(steam, world_pos + Vector3(0, 0.3, 0))
+	if not ash:
+		return
+	# Light wood-ash grey, small and fading: dark opaque flakes read as black shards
+	var flakes = _burst_particles(12, 2.0, VFX_ASH, ash_sprite(), 1, 1, Color(0.72, 0.7, 0.66), BaseMaterial3D.BLEND_MODE_MIX, 0.12)
+	flakes.direction = Vector3.UP
+	flakes.spread = 55.0
+	flakes.initial_velocity_min = 1.5
+	flakes.initial_velocity_max = 3.2
+	flakes.gravity = Vector3(0, -1.6, 0)
+	flakes.damping_min = 1.0
+	flakes.damping_max = 2.0
+	flakes.angle_min = 0.0
+	flakes.angle_max = 360.0
+	flakes.angular_velocity_min = -240.0
+	flakes.angular_velocity_max = 240.0
+	flakes.scale_amount_min = 0.6
+	flakes.scale_amount_max = 1.0
+	var ash_fade = Gradient.new()
+	ash_fade.set_color(0, Color(1, 1, 1, 0.85))
+	ash_fade.set_color(1, Color(1, 1, 1, 0.0))
+	flakes.color_ramp = ash_fade
+	_launch_burst(flakes, world_pos + Vector3(0, 0.25, 0))
+
+## A configured but not yet emitting one-shot burst; finish setting it up, then
+## _launch_burst() it (emitting before setup spawned flakes at full 1 m size)
+func _burst_particles(amount: int, life: float, path: String, fallback: Texture2D, h: int, v: int, tint: Color, blend: int, quad_size: float = 1.0) -> CPUParticles3D:
+	var p = CPUParticles3D.new()
+	p.one_shot = true
+	p.explosiveness = 0.85
+	p.amount = amount
+	p.lifetime = life
+	var quad = QuadMesh.new()
+	quad.size = Vector2(quad_size, quad_size)
+	var mat = StandardMaterial3D.new()
+	mat.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.blend_mode = blend
+	mat.vertex_color_use_as_albedo = true
+	mat.albedo_color = tint
+	mat.albedo_texture = fallback
+	quad.material = mat
+	p.mesh = quad
+	if ResourceLoader.exists(path):
+		apply_sprite_sheet(mat, p, path, h, v, false)
+	p.name = "DouseBurst"
+	# Effects never cast shadows: under the low evening sun even tiny flakes threw
+	# long dark triangles across the cells
+	p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	return p
+
+func _launch_burst(p: CPUParticles3D, at: Vector3) -> void:
+	p.position = at
+	add_child(p)
+	p.emitting = true
+	get_tree().create_timer(p.lifetime + 0.6).timeout.connect(p.queue_free)
 
 ## Update Colors and 3D Props per Cell
 func _update_visuals() -> void:
@@ -1014,6 +1119,7 @@ func clear_firebreak(gx: int, gy: int) -> bool:
 func douse_cell(gx: int, gy: int) -> bool:
 	if not is_valid_coord(gx, gy): return false
 	var idx = _coord_to_index(gx, gy)
+	var was = cell_types[idx]
 	match cell_types[idx]:
 		CellType.BURNING:
 			var x = idx % grid_width
@@ -1037,6 +1143,8 @@ func douse_cell(gx: int, gy: int) -> bool:
 	cell_timers[idx] = 0
 	highlight_until.erase(idx)
 	_update_visuals()
+	# Steam always; ash kicks up when embers are knocked down to ash or smoulder
+	_spawn_douse_burst(get_cell_world_pos(gx, gy), was == CellType.SMOLDERING or cell_types[idx] == CellType.SMOLDERING)
 	return true
 
 func _coord_to_index(x: int, y: int) -> int:

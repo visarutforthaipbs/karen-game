@@ -4,7 +4,7 @@ extends RefCounted
 ## Polar-orbiting VIIRS satellite (asset V3). A faceted low-poly placeholder
 ## built in code; a pipeline model at assets/props/V3_*.glb replaces it through
 ## AssetLibrary.mesh_or("V3", ...). Staged large (about 16 m wingspan) for the
-## title screen and the 20:00 pass: the game's "Satellite Shadow" made literal.
+## title screen and the 20:00 pass: the satellite's shadow made literal.
 ## Wings span local X, the satellite flies along local +Z, the scanner looks down.
 
 const FOIL = Color(0.86, 0.66, 0.26)

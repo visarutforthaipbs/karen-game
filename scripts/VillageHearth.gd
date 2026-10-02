@@ -52,6 +52,8 @@ var launch_button: Button
 var current_radio_channel: int = 1
 var _harvest_modal: Control
 var help_button: Button
+var settings_button: Button
+var settings_panel: SettingsPanel
 var how_to_play: HowToPlay
 
 func _ready() -> void:
@@ -79,6 +81,18 @@ func show_how_to_play() -> void:
 		launch_button.grab_focus())
 	add_child(how_to_play)
 
+func show_settings() -> void:
+	if settings_panel:
+		return
+	settings_panel = SettingsPanel.new()
+	settings_panel.closed.connect(func():
+		settings_panel = null
+		launch_button.grab_focus())
+	settings_panel.how_to_play_requested.connect(func():
+		settings_panel.close()
+		show_how_to_play())
+	add_child(settings_panel)
+
 # ---------------------------------------------------------------------------
 # Build
 # ---------------------------------------------------------------------------
@@ -92,17 +106,23 @@ func _build() -> void:
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right"]:
 		margin.add_theme_constant_override("margin_" + side, 20)
-	margin.add_theme_constant_override("margin_top", 14)
-	margin.add_theme_constant_override("margin_bottom", 18)
+	margin.add_theme_constant_override("margin_top", 10)
+	margin.add_theme_constant_override("margin_bottom", 12)
 	add_child(margin)
-	var page = UITheme.vbox(12)
+	var page = UITheme.vbox(8)
 	margin.add_child(page)
 
 	page.add_child(_build_header())
 
+	# The cards scroll when the window is short; the launch button below stays pinned
+	var scroll = ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	page.add_child(scroll)
 	var columns = UITheme.hbox(12)
+	columns.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	page.add_child(columns)
+	scroll.add_child(columns)
 
 	var left = UITheme.vbox(12)
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -120,14 +140,13 @@ func _build() -> void:
 	columns.add_child(right)
 	right.add_child(_build_workshop())
 	right.add_child(_build_exchange())
-	right.add_child(_build_audio_settings())
 
 	var launch_row = UITheme.hbox(0)
 	launch_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	page.add_child(launch_row)
 	launch_button = Button.new()
 	launch_button.theme_type_variation = "PrimaryButton"
-	launch_button.custom_minimum_size = Vector2(560, 54)
+	launch_button.custom_minimum_size = Vector2(560, 48)
 	launch_button.pressed.connect(_on_launch_pressed)
 	launch_row.add_child(launch_button)
 
@@ -161,11 +180,11 @@ func _build_header() -> Control:
 	row.add_child(titles)
 	var name_row = UITheme.hbox(12)
 	titles.add_child(name_row)
-	var game_title = UITheme.label("เงาเมฆา", "Title", UITheme.STRAW)
-	game_title.add_theme_font_override("font", UITheme.font("bold"))
-	game_title.add_theme_font_size_override("font_size", 34)
+	var game_title = TitleLogo.new()
+	game_title.compact = true
+	game_title.size_px = 36.0
 	name_row.add_child(game_title)
-	var tag = UITheme.label("ข้างเตาไฟยามค่ำ · SATELLITE SHADOW", "Kicker", UITheme.MUTED)
+	var tag = UITheme.label("ข้างเตาไฟยามค่ำ", "Kicker", UITheme.MUTED)
 	tag.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	name_row.add_child(tag)
 	header_label = UITheme.label("", "Body", UITheme.CREAM)
@@ -189,6 +208,14 @@ func _build_header() -> Control:
 	help_button.add_theme_font_size_override("font_size", 17)
 	help_button.pressed.connect(show_how_to_play)
 	row.add_child(help_button)
+
+	# Volume and the rest live in the shared, saved Settings panel
+	settings_button = _button("ตั้งค่า")
+	settings_button.custom_minimum_size = Vector2(96, 0)
+	settings_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	settings_button.add_theme_font_size_override("font_size", 17)
+	settings_button.pressed.connect(show_settings)
+	row.add_child(settings_button)
 	return row
 
 func _header_stat(kind: String, title: String, tint: Color, seed_value: int) -> Array:
@@ -250,7 +277,7 @@ func _build_plot_brief() -> Control:
 	plot_stats = GridContainer.new()
 	plot_stats.columns = 2
 	plot_stats.add_theme_constant_override("h_separation", 14)
-	plot_stats.add_theme_constant_override("v_separation", 7)
+	plot_stats.add_theme_constant_override("v_separation", 2)
 	box.add_child(plot_stats)
 
 	var spacer = Control.new()
@@ -262,7 +289,7 @@ func _build_plot_brief() -> Control:
 	var gb = UITheme.vbox(6)
 	goals.add_child(gb)
 	gb.add_child(UITheme.label("เป้าหมายพรุ่งนี้", "Kicker"))
-	goal_rows = UITheme.vbox(5)
+	goal_rows = UITheme.vbox(2)
 	gb.add_child(goal_rows)
 	return box.get_parent()
 
@@ -292,29 +319,6 @@ func _build_workshop() -> Control:
 	seal_button = _button("เปลี่ยนซีลถังพ่นน้ำ · ใช้ข้าว 10%")
 	seal_button.pressed.connect(_on_seal_pressed)
 	box.add_child(seal_button)
-	return box.get_parent()
-
-## User audio control (game-audio standard): Master / Music / SFX volume sliders
-func _build_audio_settings() -> Control:
-	var box = _card("radio", "ระดับเสียง", UITheme.MUTED, 253, false)
-	for row_def in [["เสียงรวม", "Master"], ["ดนตรี", "Music"], ["เสียงเอฟเฟกต์", "SFX"]]:
-		var row = UITheme.hbox(8)
-		box.add_child(row)
-		var lbl = UITheme.label(row_def[0], "Small", UITheme.CREAM)
-		lbl.custom_minimum_size = Vector2(110, 0)
-		row.add_child(lbl)
-		var slider = HSlider.new()
-		slider.min_value = 0.0
-		slider.max_value = 1.0
-		slider.step = 0.05
-		slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		slider.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		slider.value = 1.0
-		var bus: String = row_def[1]
-		slider.value_changed.connect(func(v: float):
-			if AudioManager.instance:
-				AudioManager.instance.set_bus_volume(bus, v))
-		row.add_child(slider)
 	return box.get_parent()
 
 func _build_granary() -> Control:

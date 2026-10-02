@@ -17,6 +17,7 @@ const COLUMNS = [
 static var dir: String = "user://"
 
 static func path() -> String:
+	SaveGame.migrate_old_user_dir()
 	return dir.path_join(FILE)
 
 ## `row` maps column names to values; missing columns are left empty

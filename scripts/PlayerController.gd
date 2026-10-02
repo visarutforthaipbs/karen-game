@@ -107,7 +107,9 @@ func _create_tool_rig() -> void:
 	add_child(_tool_rig)
 	var tank = MeshInstance3D.new()
 	tank.mesh = AssetLibrary.mesh_or("T4", LowPoly.sprayer_tank())
-	tank.position = Vector3(0, 0.85, -0.3)
+	# The pipeline T4 is base-centred; lower it so it sits on the back, not the head
+	var t4 = AssetLibrary.has_asset("T4")
+	tank.position = Vector3(0, 0.62 if t4 else 0.85, -0.3)
 	_tool_rig.add_child(tank)
 	_tool_prop = MeshInstance3D.new()
 	_tool_prop.position = Vector3(0.38, 0.45, 0.18)
@@ -125,7 +127,7 @@ func _create_tool_rig() -> void:
 		_torch_light.reparent(_tool_prop, false)
 		_torch_light.position = Vector3(0, 0.9, 0)
 		tank.reparent(animator.get_back_socket(), false)
-		tank.position = Vector3.ZERO
+		tank.position = Vector3(0, -0.23 / animator.base_scale if t4 else 0.0, 0)
 		tank.scale = Vector3.ONE / animator.base_scale
 
 var _step_accum: float = 0.0

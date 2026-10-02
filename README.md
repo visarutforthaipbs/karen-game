@@ -1,6 +1,10 @@
-# เงาเมฆา · Satellite Shadow
+<p align="center"><img src="assets/ui/logo/under_two_skies_logo_dark.png" alt="Under Two Skies · ไร่หมุนเวียนใต้เงาดาวเทียม" width="640"></p>
 
-![Satellite Shadow: a Pgakenyaw rotational-farming hillside at blue hour, a satellite passing overhead](assets/ui/title/satellite_shadow_blue_hour_1920x1080.png)
+# Under Two Skies · ไร่หมุนเวียนใต้เงาดาวเทียม
+
+*(formerly "Satellite Shadow" / เงาเมฆา)*
+
+![Under Two Skies: a Pgakenyaw rotational-farming hillside at blue hour, a satellite passing overhead](assets/ui/title/satellite_shadow_blue_hour_1920x1080.png)
 
 A low-poly tactical survival game about **ไร่หมุนเวียน (Rai Mun Wian)**,
 the rotational upland farming of Pgakenyaw (Karen) communities in Northern
@@ -37,7 +41,7 @@ tools/build.sh Linux      # one platform
 These need Godot 4.7.2 export templates (Editor → Manage Export Templates).
 The macOS build is ad-hoc signed, not notarised. On first launch, right-click
 the app and choose **Open**, or run
-`xattr -dr com.apple.quarantine "Satellite Shadow.app"`.
+`xattr -dr com.apple.quarantine "Under Two Skies.app"`.
 
 Testers' play is logged to `playtest_log.csv` in the game's user folder
 (Settings → เปิดโฟลเดอร์บันทึกการเล่น). Tester tools (F3 info, F5–F10 time skips
