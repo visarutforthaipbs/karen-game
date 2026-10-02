@@ -22,7 +22,22 @@ func _process(delta: float) -> void:
 	if Engine.get_process_frames() % 6 == 0:
 		queue_redraw()
 
+## Painted Hearth background (ASSET_REQUESTS_v1.2.md U4), used when installed
+const PAINTING = "res://assets/ui/hearth/hearth_night_1920x1080.png"
+var _painting: Texture2D
+
 func _draw() -> void:
+	if _painting == null and ResourceLoader.exists(PAINTING):
+		_painting = load(PAINTING)
+	if _painting:
+		# Cover the screen, cropping the painting's edges if the aspect differs
+		var ts = _painting.get_size()
+		var k = maxf(size.x / ts.x, size.y / ts.y)
+		var draw_size = ts * k
+		draw_texture_rect(_painting, Rect2((size - draw_size) * 0.5, draw_size), false)
+		var glow = 0.5 + 0.5 * sin(_time * 1.3)
+		draw_rect(Rect2(Vector2(0, size.y * 0.8), Vector2(size.x, size.y * 0.2)), Color(UITheme.EMBER, 0.04 + 0.03 * glow))
+		return
 	var w = size.x
 	var h = size.y
 	var rng = RandomNumberGenerator.new()

@@ -292,6 +292,7 @@ func _setup_rangers() -> void:
 		r.landscape = landscape
 		r.crew = crew
 		r.direction = 1 if i % 2 == 0 else -1
+		r.slate = i % 2 == 1
 		r.start_fraction = 0.12 + 0.5 * i
 		add_child(r)
 		r.spotted.connect(_on_ranger_spotted)
@@ -304,7 +305,7 @@ func _on_ranger_spotted(_pos: Vector3, is_flame: bool) -> void:
 	_add_scrutiny(penalty)
 	breakdown.ranger += penalty
 	breakdown.ranger_sightings += 1
-	hud.show_drone_alert(("เจ้าหน้าที่เดินตรวจเห็นเปลวไฟ! วิทยุแจ้งศูนย์ · ความเพ่งเล็ง +%d" if is_flame else "เจ้าหน้าที่เห็นทีมอยู่ข้างกองไฟ! · ความเพ่งเล็ง +%d") % penalty, true)
+	hud.show_drone_alert(("เจ้าหน้าที่เดินตรวจเห็นเปลวไฟ! วิทยุแจ้งศูนย์ · ความเพ่งเล็ง +%d" if is_flame else "เจ้าหน้าที่เห็นทีมอยู่ข้างกองไฟ! · ความเพ่งเล็ง +%d") % penalty, true, true)
 	if AudioManager.instance:
 		AudioManager.instance.play_camera_alarm()
 
@@ -408,7 +409,7 @@ func _on_clock_ticked(time_str: String, hour: int, minute: int) -> void:
 		var on_duty = now >= RANGER_START_MINUTE and now < RANGER_END_MINUTE
 		if on_duty and not r.active:
 			r.start()
-			hud.show_drone_alert("เจ้าหน้าที่ป่าไม้เดินตรวจแนวป่ารอบแปลง (ถึง 18:30) — อย่าให้เขาเห็นเปลวไฟ", false)
+			hud.show_drone_alert("เจ้าหน้าที่ป่าไม้เดินตรวจแนวป่ารอบแปลง (ถึง 18:30) — อย่าให้เขาเห็นเปลวไฟ", false, true)
 		elif not on_duty and r.active:
 			r.stop()
 

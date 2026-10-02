@@ -8,6 +8,7 @@ extends RefCounted
 ## use RangerFigure.create().
 
 const SCENE = "res://scenes/characters/RangerChibi.tscn"
+const SCENE_SLATE = "res://scenes/characters/RangerSlateChibi.tscn" # Cold grey-green variant
 const UNIFORM = Color(0.33, 0.38, 0.34)
 const UNIFORM_DARK = Color(0.2, 0.24, 0.22)
 const REFLECTIVE = Color(0.86, 0.94, 1.0)
@@ -16,11 +17,13 @@ const SKIN = Color(0.78, 0.6, 0.46)
 static func has_model() -> bool:
 	return ResourceLoader.exists(SCENE)
 
-## A ranger node (model or placeholder). `flashlight` adds a cold-white torch beam.
-static func create(flashlight: bool = false) -> Node3D:
+## A ranger node (model or placeholder). `flashlight` adds a cold-white torch beam
+## (the model's rig moves it onto its flashlight lens); `slate` picks the variant.
+static func create(flashlight: bool = false, slate: bool = false) -> Node3D:
 	var root: Node3D
 	if has_model():
-		root = (load(SCENE) as PackedScene).instantiate()
+		var path = SCENE_SLATE if slate and ResourceLoader.exists(SCENE_SLATE) else SCENE
+		root = (load(path) as PackedScene).instantiate()
 	else:
 		root = Node3D.new()
 		var body = MeshInstance3D.new()
@@ -38,6 +41,11 @@ static func create(flashlight: bool = false) -> Node3D:
 		beam.rotation_degrees = Vector3(-12, 180, 0) # Points along +Z (the figure's front)
 		root.add_child(beam)
 	return root
+
+## Authored gesture on the model: Scan, Photograph, Point, RadioTalk, Escort
+static func gesture(ranger: Node3D, clip: String) -> void:
+	if ranger.has_method("play_clip"):
+		ranger.play_clip(clip)
 
 ## Drive the model's animator when one exists (same API as the crew's chibis)
 static func animate(ranger: Node3D, delta: float, velocity: Vector3, face: Vector3 = Vector3.ZERO) -> void:

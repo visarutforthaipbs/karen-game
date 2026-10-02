@@ -19,6 +19,8 @@ var _camera: Camera3D
 var _vp: SubViewport
 var _crew: Array[Node3D] = []
 var _barrier: Node3D
+var _guard: Node3D
+var _cued: Dictionary = {}
 
 func _ready() -> void:
 	theme = UITheme.get_theme()
@@ -85,24 +87,27 @@ func _build_stage() -> void:
 		tree.scale = Vector3.ONE * rng.randf_range(1.3, 2.0)
 		_vp.add_child(tree)
 
-	# Roadblock (asset S5 placeholder): striped barrier, sandbags, guard booth
+	# Roadblock: the S5 asset (sign and sandbags) at the roadside, or the procedural
+	# booth; the lifting arm across the road is always the animated one below
 	var block = MeshInstance3D.new()
 	block.mesh = AssetLibrary.mesh_or("S5", roadblock_mesh())
+	if AssetLibrary.has_asset("S5"):
+		block.position = Vector3(4.2, 0, -0.4)
+		block.rotation.y = -PI * 0.5
 	_vp.add_child(block)
 	_barrier = MeshInstance3D.new()
 	_barrier.mesh = barrier_arm_mesh()
 	_barrier.position = Vector3(-1.9, 1.0, 0.0)
 	_vp.add_child(_barrier)
-	var guard = RangerFigure.create(false)
-	guard.position = Vector3(2.6, 0, 0.8)
-	guard.rotation.y = PI * 0.5 + 0.4
-	_vp.add_child(guard)
+	_guard = RangerFigure.create(false, true)
+	_guard.position = Vector3(2.6, 0, 0.8)
+	_guard.rotation.y = PI * 0.5 + 0.4
+	_vp.add_child(_guard)
 
 	# The crew walking up the road from the village
 	var cloths = [Color(0.2, 0.3, 0.5), Color(0.86, 0.82, 0.74), Color(0.25, 0.42, 0.3)]
 	for i in 3:
-		var v = MeshInstance3D.new()
-		v.mesh = EndingScene.villager_mesh(cloths[i])
+		var v = EndingScene.villager_node(i, cloths[i])
 		v.position = Vector3(-0.4 + i * 0.6, 0, -9.0 - i * 1.2)
 		_vp.add_child(v)
 		_crew.append(v)
@@ -196,6 +201,11 @@ func _process(delta: float) -> void:
 		elif _t > 6.6:
 			v.position.z += delta * 2.4
 	_barrier.rotation.z = lerp_angle(_barrier.rotation.z, deg_to_rad(80.0) if _t > 6.0 else 0.0, delta * 3.0)
+	# The guard scans the crew, then waves them through (C5 gestures)
+	for cue in [[2.6, "Scan"], [5.6, "Point"]]:
+		if _t >= cue[0] and not _cued.has(cue[1]):
+			_cued[cue[1]] = true
+			RangerFigure.gesture(_guard, cue[1])
 	if _t >= LENGTH:
 		finish()
 

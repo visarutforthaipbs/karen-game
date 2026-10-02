@@ -444,6 +444,12 @@ func _run() -> void:
 		await process_frame
 	check(am.music_ready, "procedural Tena harp / khaen music rendered")
 
+	# ---- Asset drop-in hooks (ASSET_REQUESTS_v1.2.md)
+	var sat = load("res://scripts/SatelliteModel.gd")
+	var small_sat = BoxMesh.new()
+	small_sat.size = Vector3(2.0, 0.5, 1.0)
+	check(is_equal_approx(sat.fit_scale(sat.procedural()), 1.0) and absf(sat.fit_scale(small_sat) * 2.0 - sat.procedural().get_aabb().size.x) < 0.01, "V3 satellite asset of any size is fitted to the staged wingspan")
+
 	await _flow_checks(gs)
 	await _fire_balance_checks()
 

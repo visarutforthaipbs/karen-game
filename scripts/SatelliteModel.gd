@@ -20,6 +20,12 @@ static var _shadow: ImageTexture
 static func mesh() -> Mesh:
 	return AssetLibrary.mesh_or("V3", procedural())
 
+## Uniform scale that gives `m` the placeholder's wingspan (about 16 m), so a
+## metre-scale V3 asset of any size stages the same as the placeholder
+static func fit_scale(m: Mesh) -> float:
+	var span = m.get_aabb().size.x if m else 0.0
+	return procedural().get_aabb().size.x / span if span > 0.01 else 1.0
+
 static func procedural() -> ArrayMesh:
 	if _mesh:
 		return _mesh

@@ -1,5 +1,7 @@
 # เงาเมฆา · Satellite Shadow
 
+![Satellite Shadow: a Pgakenyaw rotational-farming hillside at blue hour, a satellite passing overhead](assets/ui/title/satellite_shadow_blue_hour_1920x1080.png)
+
 A low-poly tactical survival game about **ไร่หมุนเวียน (Rai Mun Wian)**,
 the rotational upland farming of Pgakenyaw (Karen) communities in Northern
 Thailand.

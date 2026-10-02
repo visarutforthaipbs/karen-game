@@ -142,7 +142,7 @@ func _build_satellite(vp: SubViewport) -> void:
 	vp.add_child(_satellite)
 	var body = MeshInstance3D.new()
 	body.mesh = SatelliteModel.mesh()
-	body.scale = Vector3.ONE * MODEL_SCALE
+	body.scale = Vector3.ONE * MODEL_SCALE * SatelliteModel.fit_scale(body.mesh)
 	# Wings along the flight path so the full span reads as it crosses the frame
 	body.rotation.y = PI * 0.5
 	_satellite.add_child(body)

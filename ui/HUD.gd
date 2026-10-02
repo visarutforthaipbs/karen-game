@@ -90,6 +90,7 @@ var elder_warning_text: Label
 var drone_banner: FacetCard
 var drone_text: Label
 var _drone_icon: LowPolyIcon
+var _ranger_face: Control
 
 # 20:00 satellite pass
 var satellite_thermal_screen: Control
@@ -455,7 +456,7 @@ func _crew_card(who: String) -> Label:
 	crew_row.add_child(card)
 	var row = UITheme.hbox(6)
 	card.add_child(row)
-	var ic = UITheme.icon("crew", tint, 14.0)
+	var ic = UITheme.portrait(UITheme.portrait_id(who), 26.0, tint)
 	ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(ic)
 	var name = _small(who, tint)
@@ -508,6 +509,9 @@ func _build_banners() -> void:
 	banner_stack.add_child(elder_warning_banner)
 	var er = UITheme.hbox(8)
 	elder_warning_banner.add_child(er)
+	var face = UITheme.portrait("tapoh", 34.0)
+	face.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	er.add_child(face)
 	var wi = UITheme.icon("wind", UITheme.STRAW, 20.0)
 	wi.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	er.add_child(wi)
@@ -524,6 +528,10 @@ func _build_banners() -> void:
 	_drone_icon = UITheme.icon("drone", UITheme.STATE, 20.0)
 	_drone_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	dr.add_child(_drone_icon)
+	_ranger_face = UITheme.portrait("ranger", 30.0, UITheme.STATE)
+	_ranger_face.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_ranger_face.visible = false
+	dr.add_child(_ranger_face)
 	drone_text = UITheme.wrap(UITheme.label("", "StateText"))
 	drone_text.add_theme_font_size_override("font_size", 14)
 	drone_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -767,9 +775,12 @@ func show_elder_wind_warning(new_dir: Vector2, speed: float) -> void:
 	await get_tree().create_timer(7.0).timeout
 	elder_warning_banner.visible = false
 
-func show_drone_alert(message: String, is_danger: bool = false) -> void:
+## `from_ranger` shows the ranger's portrait instead of the drone icon
+func show_drone_alert(message: String, is_danger: bool = false, from_ranger: bool = false) -> void:
 	drone_banner.visible = true
 	drone_text.text = message
+	_drone_icon.visible = not from_ranger
+	_ranger_face.visible = from_ranger
 	var c = UITheme.RUBY if is_danger else UITheme.STATE
 	drone_text.add_theme_color_override("font_color", c)
 	drone_banner.accent = c

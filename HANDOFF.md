@@ -146,6 +146,20 @@ files blocked every headless import because Blender isn't installed on this Mac.
    - **Year 4+ checkpoint** (`scenes/Checkpoint.tscn`, `ui/CheckpointScene.gd`):
      plays between the Hearth and the burn. Uses `AssetLibrary` "S5" with a
      procedural fallback.
+   - **v1.1 assets integrated (GAME side):** S3 granary (famine), S5 at the
+     checkpoint roadside, S6 truck and T2 knife (crackdown), slate ranger
+     variant (`RangerFigure.create(flashlight, slate)`, patrols alternate),
+     authored gestures via `RangerFigure.gesture(node, clip)`: the crackdown
+     cues in `EndingScene._cues`, the checkpoint guard, RadioTalk when a patrol
+     logs. Portraits via `UITheme.portrait(id, size)` in the HUD crew chips,
+     the elder banner and ranger alerts (`show_drone_alert(msg, danger, from_ranger)`).
+   - **v1.2 asset hooks, pre-wired (see [`ASSET_REQUESTS_v1.2.md`](ASSET_REQUESTS_v1.2.md)):**
+     fire VFX sheets (`FireGrid.apply_sprite_sheet`, `assets/vfx/`), E6/E7/E8/E9
+     set dressing (`Landscape._scatter_set_dressing` / `_scatter_terraces`),
+     C6 villagers (`EndingScene.villager_node`), U4 Hearth painting
+     (`HearthBackdrop.PAINTING`), V3 scale fit (`SatelliteModel.fit_scale`).
+     Each one is a no-op until its file exists. After CHAR delivers, take
+     screenshots and tune placement.
 
 ## 4. Rules and tunables (where to change them)
 
@@ -219,6 +233,9 @@ P1-2 to P1-6 are built (§3.8). What remains:
      the full Settings panel. It doesn't persist, so merge it into
      `GameSettings` later.
 6. **Translation review** by a native Thai and ideally Pgakenyaw speaker.
+6b. **Graphics pass assets** requested from CHAR in
+   [`ASSET_REQUESTS_v1.2.md`](ASSET_REQUESTS_v1.2.md) (VFX, set dressing, V3,
+   C6, U4, stumps, tools, V2). The hooks are in; review them once delivered.
 7. **P2 polish:** see PRD_UPDATE_v1.1 §4.
 
 ## Character v3.1 installation handoff — 2026-10-02

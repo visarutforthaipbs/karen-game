@@ -23,6 +23,7 @@ var fire_grid: FireGrid
 var landscape: Landscape
 var crew: Array[Node3D] = []
 var direction: int = 1              # 1 = anticlockwise, -1 = clockwise
+var slate: bool = false             # Second ranger wears the slate uniform
 var start_fraction: float = 0.0     # Where on the loop this ranger starts (0..1)
 var active: bool = false
 
@@ -38,7 +39,7 @@ var _half: float = 34.5
 
 func _ready() -> void:
 	visible = false
-	figure = RangerFigure.create(true)
+	figure = RangerFigure.create(true, slate)
 	add_child(figure)
 	_build_cone()
 	if fire_grid:
@@ -211,4 +212,5 @@ func _flames_near(c: Vector2i, r: int) -> bool:
 func _log(pos: Vector3, is_flame: bool) -> void:
 	_lap_logged = true
 	_radio_left = RADIO_SECONDS
+	RangerFigure.gesture(figure, "RadioTalk")
 	spotted.emit(pos, is_flame)

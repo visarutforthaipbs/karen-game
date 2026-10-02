@@ -178,6 +178,25 @@ static func icon(kind: String, color: Color, size: float = 24.0) -> LowPolyIcon:
 	i.custom_minimum_size = Vector2(size, size)
 	return i
 
+## Character portrait from assets/ui/portraits/<id>_256.png (rendered from the
+## installed rigs), or a crew icon when it is missing.
+## ids: khanae, tapoh, munaw, maelu, ranger
+static func portrait(id: String, size: float, fallback_tint: Color = STRAW) -> Control:
+	var path = "res://assets/ui/portraits/%s_256.png" % id
+	if not ResourceLoader.exists(path):
+		return icon("crew", fallback_tint, size * 0.7)
+	var t = TextureRect.new()
+	t.texture = load(path)
+	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	t.custom_minimum_size = Vector2(size, size)
+	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return t
+
+## Thai crew name -> portrait id
+static func portrait_id(name_th: String) -> String:
+	return {"ขะแน": "khanae", "ตาโพ": "tapoh", "มูนอ": "munaw", "แม่ลู": "maelu"}.get(name_th, "")
+
 ## Icon + kicker label row used as card headers
 static func header(kind: String, text: String, color: Color = STRAW) -> HBoxContainer:
 	var row = HBoxContainer.new()

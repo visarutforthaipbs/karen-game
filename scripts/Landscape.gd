@@ -467,6 +467,54 @@ func _build_vegetation() -> void:
 	_multimesh(lean_stump(), charred, false, Color(0.1, 0.09, 0.09), 260.0)
 	_multimesh(lean_stump(), cut, false, Color(0.55, 0.42, 0.26), 260.0)
 	_multimesh(lean_broadleaf(), far_trees, false)
+	_scatter_set_dressing()
+
+## Rocks (E6), fallen logs (E8), grass tufts (E9) and terrace walls (E7) from the
+## asset pipeline, when installed (ASSET_REQUESTS_v1.2.md). Each variant gets its
+## own chunked MultiMesh. Spec: id, count, patches, scale range, draw range, shadows.
+func _scatter_set_dressing() -> void:
+	for spec in [["E6", 520, [Patch.FALLOW_YOUNG, Patch.SLASHED, Patch.BURNED, Patch.FOREST_DRY], 0.8, 1.6, 300.0, true],
+			["E8", 260, [Patch.SLASHED, Patch.FOREST, Patch.FALLOW_OLD], 0.9, 1.3, 300.0, true],
+			["E9", 1600, [Patch.FALLOW_YOUNG, Patch.FALLOW_MID, Patch.SLASHED], 0.8, 1.5, 110.0, false]]:
+		var variants: Array = AssetLibrary.meshes(spec[0])
+		if variants.is_empty() or (spec[0] == "E9" and GameSettings.landscape_detail == "low"):
+			continue
+		var per_variant: Array = []
+		for v in variants:
+			per_variant.append([])
+		for i in spec[1]:
+			var a = _rng.randf() * TAU
+			var r = _rng.randf_range(PLOT_HALF + 3.0, FARM_RADIUS)
+			var p = Vector2(cos(a), sin(a)) * r
+			if spec[2].has(patch_at(p.x, p.y, 0.3)):
+				per_variant[i % variants.size()].append(_place(p.x, p.y, spec[3], spec[4]))
+		for k in variants.size():
+			_multimesh(variants[k], per_variant[k], spec[6], null, spec[5])
+	_scatter_terraces()
+
+## Old terrace walls (E7) in short runs along the contour of the fallows: each
+## segment faces the plot (local +Z inward), runs follow a ring around it.
+func _scatter_terraces() -> void:
+	var variants: Array = AssetLibrary.meshes("E7")
+	if variants.is_empty():
+		return
+	var per_variant: Array = []
+	for v in variants:
+		per_variant.append([])
+	for run in 46:
+		var r = _rng.randf_range(PLOT_HALF + 8.0, FARM_RADIUS * 0.8)
+		var a = _rng.randf() * TAU
+		var step = 1.45 / r # Segments are about 1.5 m wide
+		for k in _rng.randi_range(3, 7):
+			var ak = a + k * step
+			var p = Vector2(cos(ak), sin(ak)) * r
+			if not [Patch.FALLOW_MID, Patch.FALLOW_OLD, Patch.FALLOW_YOUNG].has(patch_at(p.x, p.y, 0.3)):
+				break
+			var inward = -Vector3(p.x, 0, p.y).normalized()
+			var xf = Transform3D(Basis.looking_at(-inward, Vector3.UP), Vector3(p.x, surface_at(p.x, p.y) - 0.1, p.y))
+			per_variant[(run + k) % variants.size()].append(xf)
+	for k in variants.size():
+		_multimesh(variants[k], per_variant[k], true, null, 220.0)
 
 # ---------------------------------------------------------------------------
 # Field huts, a ridge village and neighbours' burns

@@ -22,6 +22,7 @@ var _t: float = 0.0
 var _beats: Array = []      # [[time, caption]]
 var _actors: Array = []     # [{node, from, to, start, end}]
 var _taken: Array = []      # tools carried off in the raid
+var _cues: Array = []       # [[time, node, clip]] ranger gestures, played once
 var _length: float = 20.0
 var _finished: bool = false
 
@@ -142,6 +143,22 @@ static func truck_mesh() -> ArrayMesh:
 	mesh.surface_set_material(0, LowPoly.vertex_color_material())
 	return mesh
 
+## A villager: the C6 crowd asset when installed (with an S7 travel bundle on the
+## back), otherwise the faceted placeholder that already carries a bundle
+static func villager_node(index: int, cloth: Color) -> Node3D:
+	var variants = AssetLibrary.meshes("C6")
+	var v = MeshInstance3D.new()
+	if variants.is_empty():
+		v.mesh = villager_mesh(cloth)
+		return v
+	v.mesh = variants[index % variants.size()]
+	if AssetLibrary.has_asset("S7"):
+		var bundle = MeshInstance3D.new()
+		bundle.mesh = AssetLibrary.mesh_or("S7", null)
+		bundle.position = Vector3(0, 0.72, -0.2)
+		v.add_child(bundle)
+	return v
+
 static func villager_mesh(cloth: Color) -> ArrayMesh:
 	var body = CylinderMesh.new()
 	body.top_radius = 0.18
@@ -191,12 +208,13 @@ func _stage_crackdown() -> void:
 	_vp.add_child(fire)
 
 	# The crew's tools by the hut, carried off in the raid
-	for t in [[LowPoly.tool_mesh("rake"), Vector3(-0.3, 0.05, -0.4)], [LowPoly.tool_mesh("torch"), Vector3(0.2, 0.05, -0.1)], [LowPoly.sprayer_tank(), Vector3(-0.8, 0.0, 0.1)]]:
+	var knife = AssetLibrary.mesh_or("T2", LowPoly.tool_mesh("torch"))
+	for t in [[AssetLibrary.mesh_or("T3", LowPoly.tool_mesh("rake")), Vector3(-0.3, 0.05, -0.4)], [knife, Vector3(0.2, 0.05, -0.1)], [LowPoly.sprayer_tank(), Vector3(-0.8, 0.0, 0.1)]]:
 		var tool = _prop(t[0], t[1], randf() * TAU)
 		tool.rotation.z = PI * 0.5 if t[0] != LowPoly.sprayer_tank() else 0.0
 		_taken.append(tool)
 
-	var truck = _prop(truck_mesh(), Vector3(9.0, 0, 6.0), -PI * 0.75)
+	var truck = _prop(AssetLibrary.mesh_or("S6", truck_mesh()), Vector3(9.0, 0, 6.0), -PI * 0.75)
 	for x in [-0.6, 0.6]:
 		var head = SpotLight3D.new()
 		head.light_color = Color(0.92, 0.96, 1.0)
@@ -212,7 +230,7 @@ func _stage_crackdown() -> void:
 	tapoh.rotation.y = PI * 0.8
 	# Rangers walk in from the truck, then two lead Ta-poh back to it
 	var r1 = RangerFigure.create(true)
-	var r2 = RangerFigure.create(true)
+	var r2 = RangerFigure.create(true, true)
 	var r3 = RangerFigure.create(true)
 	_actor(r1, Vector3(7.5, 0, 4.5), Vector3(0.6, 0, 1.6), 2.0, 7.5)
 	_actor(r2, Vector3(8.5, 0, 3.6), Vector3(-0.2, 0, -0.9), 2.4, 8.0)
@@ -220,6 +238,8 @@ func _stage_crackdown() -> void:
 	_actors.append({"node": tapoh, "from": Vector3(-1.0, 0, 0.6), "to": Vector3(7.0, 0, 4.6), "start": 13.0, "end": 19.5})
 	_actors.append({"node": r1, "from": Vector3(0.6, 0, 1.6), "to": Vector3(7.6, 0, 5.4), "start": 13.0, "end": 19.5})
 	_actors.append({"node": r3, "from": Vector3(1.4, 0, 0.2), "to": Vector3(8.0, 0, 4.0), "start": 13.3, "end": 19.8})
+	# Authored gestures (C5 rig): order the search, photograph the evidence, escort
+	_cues = [[7.8, r1, "Point"], [8.4, r2, "Photograph"], [8.9, r3, "Scan"], [11.0, r2, "RadioTalk"], [13.0, r1, "Escort"], [13.3, r3, "Escort"]]
 
 	_camera.position = Vector3(-7.5, 3.4, 9.0)
 	_camera.look_at(Vector3(1.5, 0.9, 1.0), Vector3.UP)
@@ -252,12 +272,11 @@ func _stage_famine() -> void:
 	road_node.position = Vector3(0, 0.02, 26.0)
 	_vp.add_child(road_node)
 	_prop(AssetLibrary.mesh_or("S1", LowPoly.field_hut()), Vector3(-5.2, 0, -3.0), 0.6, 1.1)
-	_prop(LowPoly.field_hut(), Vector3(5.4, 0, -2.0), -0.5, 0.9) # The empty granary
+	_prop(AssetLibrary.mesh_or("S3", LowPoly.field_hut()), Vector3(5.4, 0, -2.0), -0.5, 0.9 if not AssetLibrary.has_asset("S3") else 1.0) # The empty granary
 	# Families walk down the road with what they can carry
 	var cloths = [Color(0.2, 0.3, 0.5), Color(0.85, 0.82, 0.76), Color(0.55, 0.2, 0.18), Color(0.25, 0.42, 0.3), Color(0.82, 0.8, 0.72)]
 	for i in cloths.size():
-		var v = MeshInstance3D.new()
-		v.mesh = villager_mesh(cloths[i])
+		var v = villager_node(i, cloths[i])
 		var from = Vector3(-0.9 + (i % 3) * 0.8, 0, 1.0 + i * 1.1)
 		_actor(v, from, from + Vector3(0.0, 0, 24.0), 1.5 + i * 0.5, 17.0 + i * 0.4)
 		v.rotation.y = 0.0
@@ -312,6 +331,10 @@ func _process(delta: float) -> void:
 		if _t >= b[0]:
 			text = b[1]
 	_caption.text = text
+	for c in _cues:
+		if c.size() == 3 and _t >= c[0]:
+			RangerFigure.gesture(c[1], c[2])
+			c.append(true) # Played
 	for a in _actors:
 		var node: Node3D = a.node
 		var u = 0.0 if a.end <= a.start else clampf((_t - a.start) / (a.end - a.start), 0.0, 1.0)

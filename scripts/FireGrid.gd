@@ -472,7 +472,29 @@ func _setup_particles() -> void:
 	flame_particles.mesh = flame_quad
 	flame_particles.emitting = false
 	add_child(flame_particles)
+	# Painted sprite sheets replace the soft dots when the asset pipeline ships
+	# them (ASSET_REQUESTS_v1.2.md X1/X2): flames animate, smoke picks a puff
+	apply_sprite_sheet(flame_mat, flame_particles, VFX_FLAME, 4, 4, true)
+	apply_sprite_sheet(smoke_mat, smoke_particles, VFX_SMOKE, 2, 2, false)
 	_apply_smoke_regime()
+
+const VFX_FLAME = "res://assets/vfx/flame_sheet.png"   # 4x4 frames, greyscale + alpha (flame_ramp colours it)
+const VFX_SMOKE = "res://assets/vfx/smoke_sheet.png"   # 2x2 puff variants, white + alpha (game tints)
+const VFX_EMBER = "res://assets/vfx/ember.png"         # single spark, white-hot + alpha
+
+## Swap a particle material's soft dot for a sprite sheet if the file exists
+static func apply_sprite_sheet(mat: StandardMaterial3D, particles: CPUParticles3D, path: String, h: int, v: int, animated: bool) -> bool:
+	if not ResourceLoader.exists(path):
+		return false
+	mat.albedo_texture = load(path)
+	mat.particles_anim_h_frames = h
+	mat.particles_anim_v_frames = v
+	mat.particles_anim_loop = animated
+	particles.anim_speed_min = 1.0 if animated else 0.0
+	particles.anim_speed_max = 1.0 if animated else 0.0
+	particles.anim_offset_min = 0.0
+	particles.anim_offset_max = 1.0
+	return true
 
 ## Day plumes rise and drift downwind; under the 18:00 inversion they pool at ground level
 func _apply_smoke_regime() -> void:
@@ -735,7 +757,7 @@ func _spawn_spark_burst(world_pos: Vector3, direction_2d: Vector2) -> void:
 	mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.albedo_color = Color(1.0, 0.7, 0.25)
-	mat.albedo_texture = soft_sprite()
+	mat.albedo_texture = load(VFX_EMBER) if ResourceLoader.exists(VFX_EMBER) else soft_sprite()
 	quad.material = mat
 	burst.mesh = quad
 	add_child(burst)
