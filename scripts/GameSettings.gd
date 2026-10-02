@@ -25,6 +25,8 @@ static var first_burn_tips: bool = true
 static var landscape_detail: String = "high"
 ## Tester tools (F3 overlay, F5-F10 cheats); always on in debug builds
 static var debug_tools: bool = false
+## Name shown on the village board (records.json rows)
+static var player_name: String = "ขะแน"
 static var _loaded: bool = false
 
 static func _path() -> String:
@@ -52,6 +54,7 @@ static func load_settings() -> void:
 	show_hints = bool(cfg.get_value("gameplay", "show_hints", true))
 	first_burn_tips = bool(cfg.get_value("gameplay", "first_burn_tips", true))
 	debug_tools = bool(cfg.get_value("debug", "tools", false))
+	player_name = SaveGame.sanitize_name(cfg.get_value("player", "name", SaveGame.DEFAULT_NAME))
 
 static func save_settings() -> void:
 	var cfg = ConfigFile.new()
@@ -64,6 +67,7 @@ static func save_settings() -> void:
 	cfg.set_value("gameplay", "show_hints", show_hints)
 	cfg.set_value("gameplay", "first_burn_tips", first_burn_tips)
 	cfg.set_value("debug", "tools", debug_tools)
+	cfg.set_value("player", "name", SaveGame.sanitize_name(player_name))
 	cfg.save(_path())
 
 ## Push the current values to the mixer, window and UI scale

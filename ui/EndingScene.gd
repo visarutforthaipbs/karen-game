@@ -422,6 +422,35 @@ func show_summary() -> void:
 	var rec_text = "สถิติใหม่! รอดได้นานที่สุดเท่าที่เคยเล่นมา" if new_record else ("สถิติดีที่สุด: รอด %d แปลง (ถึงปีที่ %d)" % [int(best.get("plots_completed", 0)), int(best.get("year", 1))] if not best.is_empty() else "")
 	box.add_child(UITheme.label(rec_text, "Kicker", UITheme.EMERALD if new_record else UITheme.MUTED))
 
+	# Name on the village board, and where this run landed on it
+	var campaign_id = str(st.get("campaign_id", ""))
+	var name_row = UITheme.hbox(10)
+	name_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.add_child(name_row)
+	name_row.add_child(UITheme.label("ชื่อบนกระดานหมู่บ้าน:", "Small", UITheme.CREAM))
+	var name_edit = LineEdit.new()
+	name_edit.text = GameSettings.player_name
+	name_edit.max_length = SaveGame.NAME_MAX
+	name_edit.custom_minimum_size = Vector2(260, 40)
+	name_edit.focus_mode = Control.FOCUS_ALL
+	name_row.add_child(name_edit)
+	var rank_label = UITheme.label("", "Small", UITheme.STRAW)
+	rank_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	box.add_child(rank_label)
+	var rank = 0
+	if campaign_id != "":
+		var rows = SaveGame.runs()
+		for i in rows.size():
+			if rows[i].campaign_id == campaign_id:
+				rank = i + 1
+				break
+	rank_label.text = "ติดอันดับที่ %d ของหมู่บ้าน" % rank if rank > 0 else ""
+	rank_label.visible = rank > 0
+	name_edit.text_changed.connect(func(t: String):
+		GameSettings.player_name = SaveGame.sanitize_name(t)
+		GameSettings.save_settings()
+		SaveGame.rename_run(campaign_id, t))
+
 	var row = UITheme.hbox(10)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	box.add_child(row)

@@ -152,28 +152,130 @@ static func delete() -> void:
 			DirAccess.remove_absolute(ProjectSettings.globalize_path(p))
 
 # ---------------------------------------------------------------------------
-# Best run
+# Village board: records.json v2, a top-10 table of finished runs
 # ---------------------------------------------------------------------------
 
-static func best_record() -> Dictionary:
+const RECORDS_VERSION: int = 2
+const BOARD_SIZE: int = 10
+const NAME_MAX: int = 24
+const DEFAULT_NAME = "ขะแน"
+
+## Trim, cap at 24 characters, fall back to the default when nothing is left
+static func sanitize_name(raw) -> String:
+	var n = str(raw).strip_edges()
+	if n.length() > NAME_MAX:
+		n = n.substr(0, NAME_MAX).strip_edges()
+	return n if n != "" else DEFAULT_NAME
+
+## True when row `a` ranks strictly above row `b`: plots DESC, avg_ash DESC, detections ASC
+static func _outranks(a: Dictionary, b: Dictionary) -> bool:
+	if int(a.plots) != int(b.plots):
+		return int(a.plots) > int(b.plots)
+	if not is_equal_approx(float(a.avg_ash), float(b.avg_ash)):
+		return float(a.avg_ash) > float(b.avg_ash)
+	return int(a.detections) < int(b.detections)
+
+static func _clean_row(r) -> Dictionary:
+	if typeof(r) != TYPE_DICTIONARY or not _num(r.get("plots")):
+		return {}
+	return {
+		"name": sanitize_name(r.get("name", DEFAULT_NAME)),
+		"plots": int(r.plots),
+		"year": int(r.get("year", 1)) if _num(r.get("year", 1)) else 1,
+		"avg_ash": float(r.get("avg_ash", 0.0)) if _num(r.get("avg_ash", 0.0)) else 0.0,
+		"detections": int(r.get("detections", 0)) if _num(r.get("detections", 0)) else 0,
+		"cause": str(r.get("cause", "")),
+		"date": str(r.get("date", "")),
+		"campaign_id": str(r.get("campaign_id", "")),
+	}
+
+## Insert keeping the table sorted; equal rows keep the older one first
+static func _insert_sorted(rows: Array, row: Dictionary) -> void:
+	var at = rows.size()
+	for i in rows.size():
+		if _outranks(row, rows[i]):
+			at = i
+			break
+	rows.insert(at, row)
+
+static func _write_runs(rows: Array) -> bool:
+	return write_atomic(_path(RECORDS_FILE), JSON.stringify({"version": RECORDS_VERSION, "runs": rows}, "\t"))
+
+## The sorted board (best first). A v1 file (one bare best-run dict) is migrated
+## to a one-row v2 table on first read. A missing or malformed file gives [].
+static func runs() -> Array:
 	var p = _path(RECORDS_FILE)
 	if not FileAccess.file_exists(p):
-		return {}
+		return []
 	var data = JSON.parse_string(FileAccess.get_file_as_string(p))
-	return data if typeof(data) == TYPE_DICTIONARY else {}
+	if typeof(data) != TYPE_DICTIONARY:
+		return []
+	var rows: Array = []
+	if data.has("runs"):
+		if typeof(data.runs) != TYPE_ARRAY:
+			return []
+		for r in data.runs:
+			var c = _clean_row(r)
+			if not c.is_empty():
+				_insert_sorted(rows, c)
+		return rows.slice(0, BOARD_SIZE)
+	if data.has("plots_completed") and _num(data.plots_completed):
+		rows.append(_clean_row({
+			"name": DEFAULT_NAME,
+			"plots": data.plots_completed,
+			"year": data.get("year", 1),
+			"avg_ash": data.get("avg_ash", 0.0),
+			"detections": 0,
+			"cause": data.get("cause", ""),
+			"date": data.get("date", ""),
+			"campaign_id": "",
+		}))
+		_write_runs(rows)
+	return rows
 
-## Stores this campaign if it survived more plots than the best so far.
-## Returns true when it is a new record.
+## Best run in the v1 shape (TitleScreen and old tests read these keys); {} when empty
+static func best_record() -> Dictionary:
+	var rows = runs()
+	if rows.is_empty():
+		return {}
+	var top = rows[0]
+	return {
+		"plots_completed": top.plots,
+		"year": top.year,
+		"avg_ash": top.avg_ash,
+		"cause": top.cause,
+		"date": top.date,
+	}
+
+## Adds this campaign to the board (top 10 kept). Returns true when it has
+## strictly more plots than the previous best, i.e. a new record.
 static func submit_record(state: Node) -> bool:
-	var plots = int(state.stats.get("plots_completed", 0))
-	var best = best_record()
-	if not best.is_empty() and plots <= int(best.get("plots_completed", 0)):
-		return false
-	var rec = {
-		"plots_completed": plots,
-		"year": state.current_year,
-		"avg_ash": state.stats.ash_sum / maxf(1.0, plots),
+	GameSettings.ensure_loaded()
+	var st: Dictionary = state.stats
+	var plots = int(st.get("plots_completed", 0))
+	var rows = runs()
+	var is_record = rows.is_empty() or plots > int(rows[0].plots)
+	var row = {
+		"name": sanitize_name(GameSettings.player_name),
+		"plots": plots,
+		"year": int(state.current_year),
+		"avg_ash": float(st.get("ash_sum", 0.0)) / maxf(1.0, plots),
+		"detections": int(st.get("hotspots_detected", 0)) + int(st.get("drone_photos", 0)) + int(st.get("camera_trips", 0)) + int(st.get("ranger_sightings", 0)),
 		"cause": state.end_cause(),
 		"date": Time.get_date_string_from_system(),
+		"campaign_id": str(st.get("campaign_id", "")),
 	}
-	return write_atomic(_path(RECORDS_FILE), JSON.stringify(rec, "\t"))
+	_insert_sorted(rows, row)
+	_write_runs(rows.slice(0, BOARD_SIZE))
+	return is_record
+
+## Renames this campaign's row, if it is still on the board
+static func rename_run(campaign_id: String, name: String) -> void:
+	if campaign_id == "":
+		return
+	var rows = runs()
+	for r in rows:
+		if r.campaign_id == campaign_id:
+			r.name = sanitize_name(name)
+			_write_runs(rows)
+			return

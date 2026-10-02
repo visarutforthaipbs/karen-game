@@ -348,3 +348,13 @@ hold and Ta-poh's belt knife. Runtime changes are in `PlayerController.gd`,
 for clearing. No model regeneration or gameplay-rule change. Full suite and
 focused motion checks pass. Review images, measured contact and limitations:
 [Equipment motion handoff](tools/character_pipeline/EQUIPMENT_MOTION_HANDOFF_20261002.md).
+
+## Village board (local leaderboard) — 2026-10-02
+
+`records.json` is now a v2 top-10 table (`SaveGame.runs()`, sorted plots desc →
+avg ash desc → detections asc; v1 files migrate on first read). The player's
+board name lives in `GameSettings.player_name` (`settings.cfg [player] name`,
+editable in Settings and on the run summary, which also shows the run's rank).
+The Title screen shows the top 5 ("กระดานเกียรติยศหมู่บ้าน"). Design and the
+planned opt-in online board (Cloudflare Worker + D1): `LEADERBOARD_PLAN.md`.
+Suite: 141 checks.

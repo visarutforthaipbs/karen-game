@@ -10,7 +10,7 @@ const HEARTH_SCENE = "res://scenes/VillageHearth.tscn"
 var continue_button: Button
 var new_button: Button
 var notice_label: Label
-var record_label: Label
+var board: VBoxContainer
 var _menu: VBoxContainer
 var _camera: Camera3D
 var _orbit: float = 0.6
@@ -297,15 +297,15 @@ func _build_menu() -> void:
 	notice_label = UITheme.wrap(UITheme.outlined(UITheme.label("", "Small", UITheme.EMBER), 4))
 	notice_label.custom_minimum_size = Vector2(440, 0)
 	col.add_child(notice_label)
-	# Best run sits in the bottom-right corner, out of the menu column
-	record_label = UITheme.outlined(UITheme.label(_record_text(), "Small", UITheme.MUTED), 4)
-	record_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	add_child(record_label)
-	record_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
-	record_label.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	record_label.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	record_label.offset_right = -24.0
-	record_label.offset_bottom = -16.0
+	# Village board (top 5) sits in the bottom-right corner, out of the menu column
+	board = UITheme.vbox(2)
+	add_child(board)
+	_fill_board()
+	board.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	board.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	board.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	board.offset_right = -24.0
+	board.offset_bottom = -16.0
 
 	(continue_button if continue_button.visible else new_button).grab_focus()
 
@@ -323,11 +323,19 @@ func _menu_button(text: String, action: Callable, variation: String = "Button") 
 	_menu.add_child(b)
 	return b
 
-func _record_text() -> String:
-	var best = SaveGame.best_record()
-	if best.is_empty():
-		return ""
-	return "สถิติดีที่สุด: รอด %d แปลง (ถึงปีที่ %d) · เถ้าเฉลี่ย %.0f%%" % [int(best.plots_completed), int(best.year), float(best.avg_ash)]
+## Header plus one line per run for the top 5; an empty board shows nothing
+func _fill_board() -> void:
+	var rows = SaveGame.runs()
+	if rows.is_empty():
+		return
+	var head = UITheme.outlined(UITheme.label("กระดานเกียรติยศหมู่บ้าน", "Kicker", UITheme.MUTED), 4)
+	head.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	board.add_child(head)
+	for i in mini(5, rows.size()):
+		var r = rows[i]
+		var line = UITheme.outlined(UITheme.label("%d. %s · %d แปลง · ปีที่ %d · เถ้า %.0f%%" % [i + 1, r.name, int(r.plots), int(r.year), float(r.avg_ash)], "Small", UITheme.MUTED), 4)
+		line.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		board.add_child(line)
 
 func _on_continue() -> void:
 	var why = SaveGame.load_into(GameState.instance)

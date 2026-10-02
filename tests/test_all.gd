@@ -431,6 +431,58 @@ func _run() -> void:
 	check(SaveGame.submit_record(gs) and SaveGame.best_record().plots_completed == 7, "best run recorded")
 	gs.stats.plots_completed = 3
 	check(not SaveGame.submit_record(gs), "a shorter run does not replace the record")
+	check(SaveGame.runs().size() == 2 and SaveGame.runs()[0].plots == 7, "a shorter run is still kept on the board")
+	# Tiebreak: equal plots, higher average ash first (then fewer detections)
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveGame.dir.path_join(SaveGame.RECORDS_FILE)))
+	gs.reset_campaign()
+	gs.stats.plots_completed = 5
+	gs.stats.ash_sum = 300.0
+	gs.stats.campaign_id = "lo"
+	SaveGame.submit_record(gs)
+	gs.stats.ash_sum = 400.0
+	gs.stats.campaign_id = "hi"
+	SaveGame.submit_record(gs)
+	check(SaveGame.runs()[0].campaign_id == "hi" and SaveGame.runs()[1].campaign_id == "lo", "equal plots: higher average ash ranks first")
+	gs.stats.campaign_id = "quiet"
+	gs.stats.camera_trips = 0
+	SaveGame.submit_record(gs)
+	gs.stats.campaign_id = "loud"
+	gs.stats.camera_trips = 4
+	SaveGame.submit_record(gs)
+	var order = SaveGame.runs().map(func(r): return r.campaign_id)
+	check(order.find("quiet") < order.find("loud") and SaveGame.runs()[order.find("loud")].detections == 4, "equal plots and ash: fewer detections ranks first")
+	# Trim to the top 10
+	gs.stats.camera_trips = 0
+	for i in 12:
+		gs.stats.plots_completed = i + 1
+		gs.stats.campaign_id = "t%d" % i
+		SaveGame.submit_record(gs)
+	check(SaveGame.runs().size() == 10 and SaveGame.runs()[0].plots == 12, "the board keeps only the top 10 (%d)" % SaveGame.runs().size())
+	# Rename + sanitation
+	SaveGame.rename_run("t11", "  ชาวบ้าน  ")
+	check(SaveGame.runs()[0].name == "ชาวบ้าน", "rename_run changes the row's name (trimmed)")
+	SaveGame.rename_run("t11", "ก".repeat(40))
+	check(SaveGame.runs()[0].name.length() == 24 and SaveGame.sanitize_name("   ") == "ขะแน", "names are cut to 24 characters and never empty")
+	# A malformed records file never crashes the board
+	var junk = FileAccess.open(SaveGame.dir.path_join(SaveGame.RECORDS_FILE), FileAccess.WRITE)
+	junk.store_string("{not json")
+	junk.close()
+	check(SaveGame.runs().is_empty() and SaveGame.best_record().is_empty(), "a malformed records file reads as an empty board")
+	# v1 file (one bare best-run dict) migrates to a one-row table
+	var v1 = FileAccess.open(SaveGame.dir.path_join(SaveGame.RECORDS_FILE), FileAccess.WRITE)
+	v1.store_string(JSON.stringify({"plots_completed": 5, "year": 3, "avg_ash": 61.0, "cause": "famine", "date": "2026-09-01"}))
+	v1.close()
+	check(SaveGame.runs().size() == 1 and SaveGame.runs()[0].plots == 5 and SaveGame.best_record().plots_completed == 5, "a v1 records file migrates to the v2 board")
+	# Player name persists through settings.cfg
+	GameSettings.player_name = "ชาวดอย"
+	GameSettings.save_settings()
+	GameSettings.player_name = "ขะแน"
+	GameSettings.load_settings()
+	check(GameSettings.player_name == "ชาวดอย", "player name persists in settings.cfg")
+	GameSettings.player_name = "ขะแน"
+	GameSettings.save_settings()
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveGame.dir.path_join(SaveGame.RECORDS_FILE)))
+	gs.reset_campaign()
 
 	# ---- Scrutiny relief between plots (campaign balance)
 	gs.reset_campaign()

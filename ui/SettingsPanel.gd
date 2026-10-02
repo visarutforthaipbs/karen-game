@@ -67,6 +67,18 @@ func _ready() -> void:
 		GameSettings.show_hints = on))
 	right.add_child(_toggle_row("เคล็ดลับระหว่างเผาครั้งแรก", GameSettings.first_burn_tips, func(on):
 		GameSettings.first_burn_tips = on))
+	var name_row = UITheme.hbox(10)
+	var name_label = UITheme.label("ชื่อบนกระดาน", "Small", UITheme.CREAM)
+	name_label.custom_minimum_size = Vector2(170, 0)
+	name_row.add_child(name_label)
+	var name_edit = LineEdit.new()
+	name_edit.text = GameSettings.player_name
+	name_edit.max_length = SaveGame.NAME_MAX
+	name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_edit.focus_mode = Control.FOCUS_ALL
+	name_edit.text_changed.connect(func(t: String): GameSettings.player_name = t)
+	name_row.add_child(name_edit)
+	right.add_child(name_row)
 	var howto = Button.new()
 	howto.text = "แสดงวิธีเล่นอีกครั้ง"
 	howto.pressed.connect(func(): how_to_play_requested.emit())
