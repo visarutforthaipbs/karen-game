@@ -71,6 +71,10 @@ func _run() -> void:
 	# ---- Recorded voices (OmniVoice drop-ins in assets/audio)
 	check(am._tapoh_voices.size() >= 3, "Ta-poh recorded warning variants loaded")
 	check(am.has_radio_voice(1) and am.has_radio_voice(2), "recorded radio voice clips loaded")
+	# Regression (beta 1): an exported build lists "x.wav.import", never "x.wav"
+	var exported_listing = am.wav_names(PackedStringArray(["radio_ch1_01.wav.import", "bark_maelu_1.wav.import", "notes.txt", "sfx_pop.wav.remap"]))
+	var editor_listing = am.wav_names(PackedStringArray(["radio_ch1_01.wav", "radio_ch1_01.wav.import"]))
+	check(exported_listing == ["bark_maelu_1.wav", "radio_ch1_01.wav", "sfx_pop.wav"] and editor_listing == ["radio_ch1_01.wav"], "voice loader finds clips in exported builds (.import listing) without duplicates")
 	hearth._tune_radio(1)
 	hearth._on_chatter_timeout()
 	check(am.radio_player.playing, "tuning the radio plays a recorded broadcast line")

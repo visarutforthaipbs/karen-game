@@ -329,9 +329,7 @@ func _load_recorded_voices() -> void:
 	var dir := DirAccess.open(AUDIO_DIR)
 	if dir == null:
 		return
-	for f in dir.get_files():
-		if not f.ends_with(".wav"):
-			continue
+	for f in wav_names(dir.get_files()):
 		var stream = ResourceLoader.load(AUDIO_DIR + "/" + f, "", ResourceLoader.CACHE_MODE_IGNORE)
 		if stream == null:
 			continue
@@ -351,6 +349,23 @@ func _load_recorded_voices() -> void:
 			if kind.length() > 2 and kind[kind.length() - 2] == "_" and kind[kind.length() - 1].is_valid_int():
 				kind = kind.substr(0, kind.length() - 2)
 			_add_bark(kind, stream)
+	var radio_lines := 0
+	for ch in _radio_voices:
+		radio_lines += _radio_voices[ch].size()
+	print_verbose("AudioManager voices: tapoh=%d radio=%d barks=%s" % [_tapoh_voices.size(), radio_lines, str(_bark_voices.keys())])
+
+## Exported builds don't ship the source .wav files: the folder lists only
+## "x.wav.import" (sometimes ".remap"); the audio lives in the pack under the
+## original path. Normalise and de-duplicate, as AssetLibrary does. (Beta 1
+## shipped with no voices because the loader only accepted bare ".wav" names.)
+static func wav_names(files: PackedStringArray) -> Array[String]:
+	var names: Array[String] = []
+	for raw in files:
+		var f: String = raw.trim_suffix(".import").trim_suffix(".remap")
+		if f.ends_with(".wav") and not names.has(f):
+			names.append(f)
+	names.sort()
+	return names
 
 func _add_bark(kind: String, stream: AudioStream) -> void:
 	if not _bark_voices.has(kind):
