@@ -77,6 +77,7 @@ var animator: Node3D
 var _tool_rig: Node3D
 var _tool_prop: MeshInstance3D
 var _torch_light: OmniLight3D
+var _sprayer_hose: MeshInstance3D
 
 func _ready() -> void:
 	for child in get_children():
@@ -129,6 +130,16 @@ func _create_tool_rig() -> void:
 		tank.reparent(animator.get_back_socket(), false)
 		tank.position = Vector3(0, -0.23 / animator.base_scale if t4 else 0.0, 0)
 		tank.scale = Vector3.ONE / animator.base_scale
+	_sprayer_hose = MeshInstance3D.new()
+	_sprayer_hose.name = "SprayerHose"
+	_sprayer_hose.set_script(load("res://scripts/SprayerHose.gd"))
+	_tool_rig.add_child(_sprayer_hose)
+	_sprayer_hose.tank = tank
+	_sprayer_hose.wand = _tool_prop
+	if not t4:
+		_sprayer_hose.tank_outlet = Vector3(0.12, -0.15, 0)
+	if not AssetLibrary.has_asset("T5"):
+		_sprayer_hose.wand_inlet = Vector3.ZERO
 
 var _step_accum: float = 0.0
 
@@ -153,7 +164,9 @@ func _select_tool(tool: ToolType) -> void:
 	_torch_light.visible = tool == ToolType.DRIP_TORCH
 	if animator and animator.has_method("get_hand_socket"):
 		# Pipeline tools are grounded at their base; move the handle grip to the palm.
-		_tool_prop.position.y = -0.22 if AssetLibrary.has_asset(["T1", "T3", "T5"][int(tool)]) else 0.0
+		_tool_prop.position.y = -0.22 / animator.base_scale if AssetLibrary.has_asset(["T1", "T3", "T5"][int(tool)]) else 0.0
+	_sprayer_hose.active = tool == ToolType.WATER_SPRAYER
+	_sprayer_hose.update_hose()
 	tool_changed.emit(TOOL_LABELS[tool])
 
 func _physics_process(delta: float) -> void:

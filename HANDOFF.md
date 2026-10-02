@@ -328,3 +328,14 @@ title contract); five skin-region regression tests pass; `test_all.gd` reports
 zero failures; the 120-frame smoke run exits cleanly. `test_all.gd` still reports
 its existing two exit-time ObjectDB leaks, plus the intentional corrupt-save JSON
 parse diagnostic. No whole-PRD completion is claimed.
+
+
+### Character equipment follow-up — 2026-10-02
+
+At the user's request, CHAR fixed the player T4→T5 hose, Kha-nae's crossed rake
+hold and Ta-poh's belt knife. Runtime changes are in `PlayerController.gd`,
+`SkeletalChibiAnimator.gd`, and new `SprayerHose.gd`. Keep the player's corrected
+`-0.22 / animator.base_scale` handle offset. Ta-poh draws his belted knife only
+for clearing. No model regeneration or gameplay-rule change. Full suite and
+focused motion checks pass. Review images, measured contact and limitations:
+[Equipment motion handoff](tools/character_pipeline/EQUIPMENT_MOTION_HANDOFF_20261002.md).

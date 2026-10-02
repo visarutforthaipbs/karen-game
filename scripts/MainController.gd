@@ -307,7 +307,7 @@ func _on_ranger_spotted(_pos: Vector3, is_flame: bool) -> void:
 	breakdown.ranger_sightings += 1
 	hud.show_drone_alert(("เจ้าหน้าที่เดินตรวจเห็นเปลวไฟ! วิทยุแจ้งศูนย์ · ความเพ่งเล็ง +%d" if is_flame else "เจ้าหน้าที่เห็นทีมอยู่ข้างกองไฟ! · ความเพ่งเล็ง +%d") % penalty, true, true)
 	if AudioManager.instance:
-		AudioManager.instance.play_camera_alarm()
+		AudioManager.instance.play_ranger_report_at(_pos, is_flame)
 
 func _setup_thermal_cameras() -> void:
 	if rules.ground_cameras <= 0:

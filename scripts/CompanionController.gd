@@ -111,6 +111,8 @@ func display_name() -> String:
 func _physics_process(delta: float) -> void:
 	_update_smoke(delta)
 	_check_cover(delta)
+	if AudioManager.instance:
+		AudioManager.instance.step_at("crew_%d" % get_instance_id(), global_position)
 	match current_state:
 		State.IDLE_FOLLOW:
 			_process_idle_follow(delta)

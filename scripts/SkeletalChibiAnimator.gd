@@ -10,6 +10,8 @@ var left_hand_socket: Node3D
 @export var separate_equipment := false
 var _carried_tool: MeshInstance3D
 var _hose: MeshInstance3D
+var belt_socket: Node3D
+var _knife_sheathed := false
 var _action_playing := false
 var work_kind: StringName = &""
 var work_active := false
@@ -58,6 +60,21 @@ func _setup_separate_equipment() -> void:
 		_carried_tool.position.y = -0.22
 	elif character_profile == "tapoh" and AssetLibrary.has_asset("T2"):
 		_carried_tool.position.y = -0.07
+	if character_profile == "tapoh":
+		belt_socket = _make_socket("Hips", "KnifeBelt", Vector3(-0.22, 0.05, 0.02))
+		var sheath := MeshInstance3D.new()
+		sheath.name = "KnifeSheath"
+		var shape := BoxMesh.new()
+		shape.size = Vector3(0.078, 0.405, 0.033)
+		sheath.mesh = shape
+		var leather := StandardMaterial3D.new()
+		leather.albedo_color = Color(0.20, 0.105, 0.045)
+		leather.roughness = 0.95
+		sheath.material_override = leather
+		belt_socket.add_child(sheath)
+		sheath.scale = Vector3.ONE / base_scale
+		sheath.position = Vector3(-0.005, -0.225, 0) / base_scale
+		_update_knife_carry()
 	if character_profile == "munaw":
 		var tank := MeshInstance3D.new()
 		tank.mesh = load("res://scripts/CharacterEquipment.gd").sprayer_tank()
@@ -71,6 +88,20 @@ func _setup_separate_equipment() -> void:
 		rubber.roughness = 0.95
 		_hose.material_override = rubber
 		add_child(_hose)
+
+func _update_knife_carry() -> void:
+	if belt_socket == null or _carried_tool == null:
+		return
+	# Ta-poh draws the knife only while clearing; walking/running/spraying is sheathed.
+	var draw := work_kind == &"rake" and (work_active or _work_hold > 0 or work_blend > 0.05)
+	var destination := hand_socket if draw else belt_socket
+	if _carried_tool.get_parent() != destination:
+		_carried_tool.reparent(destination, false)
+	_carried_tool.scale = Vector3.ONE / base_scale
+	_carried_tool.rotation = Vector3.ZERO if draw else Vector3(0, 0, PI)
+	var grip := 0.07 if AssetLibrary.has_asset("T2") else 0.015
+	_carried_tool.position = Vector3(0, -grip if draw else grip, 0) / base_scale
+	_knife_sheathed = not draw
 
 func _clearing_blade() -> ArrayMesh:
 	var handle := BoxMesh.new()
@@ -158,6 +189,7 @@ func cancel_work() -> void:
 	animation_player.play("Idle", 0)
 	skeleton.reset_bone_poses()
 	animation_player.advance(0)
+	_update_knife_carry()
 
 func set_environment(grid: Node3D, smoke: bool) -> void:
 	terrain = grid
@@ -229,6 +261,7 @@ func _apply_motion_layers(velocity: Vector3) -> void:
 	skeleton.force_update_all_bone_transforms()
 	_place_feet()
 	_update_hose()
+	_update_knife_carry()
 
 func _apply_work_pose() -> void:
 	var cycle := sin(work_phase * TAU / 0.8)
@@ -257,7 +290,7 @@ func _apply_work_pose() -> void:
 	match work_kind:
 		&"rake":
 			right = Vector3(0.0, 0.52 + 0.006 * cycle, 0.025 + 0.018 * cycle)
-			direction = Vector3(0.02, -0.60, 0.80).normalized()
+			direction = Vector3(0.70, -0.30, 0.64).normalized()
 		&"spray":
 			right = Vector3(-0.22, 0.50, 0.22)
 			direction = Vector3(0, -0.10, 1).normalized()
@@ -269,22 +302,43 @@ func _apply_work_pose() -> void:
 		var chest := skeleton.get_bone_global_rest(_bone_ids[&"Chest"]).origin
 		right.y += chest.y - 0.57
 		if work_kind == &"rake":
-			right.x = -0.10
+			right.x = -0.07
+			right.y += 0.03
 			right.z = 0.12 + 0.018 * cycle
 		if character_profile == "munaw":
 			right.x = -0.21
 	# Carry the grip with the baked gait grounding offset, not a fixed world height.
 	var root_id: int = _bone_ids[&"Root"]
 	right += skeleton.get_bone_global_pose(root_id).origin - skeleton.get_bone_global_rest(root_id).origin
-	_solve_chain(&"UpperArm.R", &"Forearm.R", &"Hand.R", right, work_blend)
+	if work_kind == &"rake":
+		_solve_hand_grip("R", right, work_blend)
+	else:
+		_solve_chain(&"UpperArm.R", &"Forearm.R", &"Hand.R", right, work_blend)
 	skeleton.force_update_all_bone_transforms()
 	# Align tool +Y to its working direction in character space, independent of wrist rest basis.
 	var hand: Transform3D = skeleton.get_bone_global_pose(_bone_ids[&"Hand.R"])
 	var desired := Quaternion(Vector3.UP, direction)
 	hand_socket.basis = Basis(hand.basis.get_rotation_quaternion().inverse() * desired)
 	if work_kind == &"rake":
-		var grip: Vector3 = (hand * hand_socket.position) + direction * (0.14 / base_scale) - Vector3(0.023, -0.017, 0.015)
-		_solve_chain(&"UpperArm.L", &"Forearm.L", &"Hand.L", grip, work_blend)
+		# Left palm sits further along the diagonal shaft, on its own side of the body.
+		var grip: Vector3 = (hand * hand_socket.position) + direction * (0.25 / base_scale)
+		_solve_hand_grip("L", grip, work_blend)
+
+func _palm_offset(side: String) -> Vector3:
+	var id: int = _bone_ids[StringName("Hand."+side)]
+	var rest_offset := Vector3(-0.023 if side == "R" else 0.023, -0.017, 0.015)
+	return skeleton.get_bone_global_rest(id).basis.inverse() * rest_offset
+
+func _solve_hand_grip(side: String, target: Vector3, amount: float) -> void:
+	var name := StringName("Hand."+side)
+	var id: int = _bone_ids[name]
+	var offset := _palm_offset(side)
+	var pose := skeleton.get_bone_global_pose(id)
+	var goal := (pose * offset).lerp(target, amount)
+	# Solve the palm centre, not the wrist joint. Recompute its offset after bending.
+	for iteration in 3:
+		pose = skeleton.get_bone_global_pose(id)
+		_solve_chain(StringName("UpperArm."+side), StringName("Forearm."+side), name, goal-pose.basis*offset, 1.0)
 
 ## Two joint CCD in skeleton coordinates. Targets are clamped by chain geometry.
 func _solve_chain(upper: StringName, lower: StringName, end: StringName, target: Vector3, amount: float) -> void:

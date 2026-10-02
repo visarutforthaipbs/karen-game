@@ -346,7 +346,11 @@ func _load_recorded_voices() -> void:
 		elif f.begins_with("ta_poh_call"):
 			_add_bark("tapoh", stream)
 		elif f.begins_with("bark_"):
-			_add_bark(f.trim_prefix("bark_").get_slice(".", 0), stream)
+			var kind := f.trim_prefix("bark_").get_slice(".", 0)
+			# bark_maelu_2.wav -> "maelu": strip trailing _<digit> so variants pool
+			if kind.length() > 2 and kind[kind.length() - 2] == "_" and kind[kind.length() - 1].is_valid_int():
+				kind = kind.substr(0, kind.length() - 2)
+			_add_bark(kind, stream)
 
 func _add_bark(kind: String, stream: AudioStream) -> void:
 	if not _bark_voices.has(kind):
@@ -358,12 +362,15 @@ func has_radio_voice(channel: int) -> bool:
 
 ## Crew bark (recorded drop-in: ta_poh_call*.wav or bark_<kind>*.wav).
 ## Kinds: "tapoh", "embers", "rally_reply", "cough". Silent if no recording.
-func play_bark(kind: String, volume_db: float = -2.0) -> void:
+func play_bark(kind: String, volume_db: float = -2.0, pos: Vector3 = Vector3.INF) -> void:
 	if not _bark_voices.has(kind) or _bark_voices[kind].is_empty():
 		return
 	var pool: Array = _bark_voices[kind]
 	var pick := _pick_voice("bark_" + kind, pool.size())
-	_play("bark_" + kind + "_%d" % pick, func(): return pool[pick], 1.0, volume_db, SFX_BUS, 350, 2)
+	if pos != Vector3.INF:
+		_play_at("bark_" + kind + "_%d" % pick, func(): return pool[pick], pos, 1.0, volume_db, 350)
+	else:
+		_play("bark_" + kind + "_%d" % pick, func(): return pool[pick], 1.0, volume_db, SFX_BUS, 350, 2)
 
 func has_bark(kind: String) -> bool:
 	return _bark_voices.has(kind) and not _bark_voices[kind].is_empty()
@@ -512,12 +519,12 @@ func play_ending_stinger(kind: String) -> void:
 # Positional (3D) one-shots — world events carry their position
 # ---------------------------------------------------------------------------
 
-func _play_at(key: String, builder: Callable, pos: Vector3, pitch: float, volume_db: float, min_interval_ms: int = 90) -> void:
+func _play_at(key: String, builder: Callable, pos: Vector3, pitch: float, volume_db: float, min_interval_ms: int = 90, stream_key: String = "") -> void:
 	var now := Time.get_ticks_msec()
 	if now - int(_last_played.get(key, -100000)) < min_interval_ms:
 		return
 	_last_played[key] = now
-	var stream := _stream_for(key, builder)
+	var stream := _stream_for(stream_key if stream_key != "" else key, builder)
 	# prefer a free 3D voice; else steal the oldest (these are short one-shots)
 	var slot := 0
 	for i in _sfx3d.size():
@@ -545,6 +552,50 @@ func play_cough_at(pos: Vector3) -> void:
 
 func play_shutter_at(pos: Vector3) -> void:
 	_play_at("shutter", _shutter, pos, randf_range(0.95, 1.07), -3.0, 120)
+
+## Ranger radios a sighting in from where he stands: squelch opens, then the report
+func play_ranger_report_at(pos: Vector3, is_flame: bool) -> void:
+	_play_at("squelch", _squelch, pos, 1.0, -4.0, 250)
+	var say := func(): play_bark("report_flame" if is_flame else "report_crew", -2.0, pos)
+	var tree := get_tree()
+	if tree:
+		tree.create_timer(0.3).timeout.connect(say)
+	else:
+		say.call()
+
+## Mae-Lu at the granary
+func play_maelu_line() -> void:
+	play_bark("maelu", -3.0)
+
+## Per-actor footstep cadence by distance travelled (fits any gait or speed)
+var _step_pos: Dictionary = {}
+var _step_dist: Dictionary = {}
+func step_at(actor: String, pos: Vector3, ash: bool = false) -> void:
+	if not _step_pos.has(actor):
+		_step_pos[actor] = pos
+		_step_dist[actor] = 0.0
+	_step_dist[actor] += pos.distance_to(_step_pos[actor])
+	_step_pos[actor] = pos
+	if _step_dist[actor] < 0.85:
+		return
+	_step_dist[actor] = 0.0
+	if ash:
+		_play_at("step_ash_" + actor, _step_ash, pos, randf_range(0.9, 1.15), -7.0, 150, "step_ash")
+	else:
+		_play_at("step_brush_" + actor, _step_brush, pos, randf_range(0.88, 1.16), -6.0, 150, "step_brush")
+
+## Walkie-talkie squelch (drop-in: sfx_squelch.wav)
+func _squelch() -> AudioStreamWAV:
+	var b = _buffer(0.45)
+	for i in b.size():
+		var t = float(i) / RATE
+		var v := 0.0
+		if t < 0.22:
+			v = randf_range(-1.0, 1.0) * exp(-t * 14.0) * 0.5
+		elif t > 0.26 and t < 0.42:
+			v = sin(TAU * 1180.0 * (t - 0.26)) * 0.5 * (1.0 - (t - 0.26) / 0.16)
+		b[i] = v
+	return _to_wav(_normalize(b, 0.5))
 
 # ---------------------------------------------------------------------------
 # Loudness metering (the mix pass is verified with numbers, not vibes)

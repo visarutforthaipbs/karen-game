@@ -5,6 +5,10 @@ asset audit. This pass preserves the approved cast: all six rigged GLB SHA256
 hashes match the pre-pass snapshot. No gameplay scripts, UI scripts, character
 scenes, animation clips, audio or `tests/test_all.gd` were edited.
 
+**Follow-up resolved:** the player hose, Kha-nae rake palm contact and Ta-poh belt
+knife are now implemented. See [equipment/motion handoff](../character_pipeline/EQUIPMENT_MOTION_HANDOFF_20261002.md).
+The original remaining-work notes below describe the earlier asset-only delivery.
+
 Evidence root **P**: `artifacts/asset_polish_20261002/`. Current installed meshes,
 triangle counts, dimensions and SHA256 hashes: `P/installed_props.json`.
 Previous production files: `P/rollback/`; individual model installation records

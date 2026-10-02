@@ -41,6 +41,9 @@ func _ready() -> void:
 	_build_overlay()
 	if AudioManager.instance:
 		AudioManager.instance.stop_all_loops()
+		# The vignette gets its own sound: the ending stinger + quiet air
+		AudioManager.instance.play_ending_stinger(cause)
+		AudioManager.instance.set_ambience(0.35, 0.15 if cause == "famine" else 0.0, 0.0)
 
 # ---------------------------------------------------------------------------
 # Stage

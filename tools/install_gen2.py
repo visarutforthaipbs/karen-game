@@ -29,6 +29,10 @@ JOBS = {
     # TTS barks (no de-hiss; tighter tails)
     "bark_embers": (0.65, 0.20, 0, 0), "bark_rally_reply": (0.65, 0.20, 0, 0),
     "ta_poh_call": (0.65, 0.25, 0, 0),
+    # Ranger pack (paid-plan batch)
+    "bark_report_flame": (0.75, 0.15, 0, 0), "bark_report_crew": (0.75, 0.15, 0, 0),
+    "bark_maelu_1": (0.75, 0.15, 0, 0), "bark_maelu_2": (0.75, 0.15, 0, 0),
+    "sfx_squelch": (0.55, 0.20, 0, 0),
 }
 
 def load(mp3):

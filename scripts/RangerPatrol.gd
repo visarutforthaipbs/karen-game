@@ -132,6 +132,8 @@ func _process(delta: float) -> void:
 	else:
 		_radio_left -= delta
 	_place(delta)
+	if moving and AudioManager.instance:
+		AudioManager.instance.step_at("ranger_%d" % get_instance_id(), global_position)
 	var vel = Vector3.ZERO
 	if moving:
 		var ahead = loop_point(_s + direction)

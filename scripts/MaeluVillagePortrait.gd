@@ -37,3 +37,5 @@ func _ready() -> void:
 
 func granary_gesture() -> void:
 	if character: character.gesture("Granary")
+	if AudioManager.instance:
+		AudioManager.instance.play_maelu_line()
