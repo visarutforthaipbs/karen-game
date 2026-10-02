@@ -22,8 +22,9 @@ Installed v3.1 character status (2026-10-02):
 | Ta-poh | 19,900 triangles, 19 bones | Idle, Walk, Run, ToolUse; separate one-hand clearing blade and borrowed sprayer |
 | Mu-naw | 13,957 triangles, 21 bones | Idle, Walk, Run, ToolUse; free arms, dress controls, separate faceted tank, wand and flexible hose |
 | Mae-Lu | 19,900 triangles, 21 bones | Idle, Walk, Run, ToolUse, Talk, Granary; live village granary portrait with ration-selection gesture |
+| Ranger C5 | 19,800 triangles, 19 bones; olive and cold grey-green textures | Idle, Walk, Run, Scan, Photograph, Point, RadioTalk, Escort; separate flashlight/tablet. Asset scenes delivered; event calls remain GAME work |
 
-Use `rig_profiles/<name>_v31.json` for these meshes. Legacy profiles describe
+Use `rig_profiles/<name>_v31.json` for the four crew and `rig_profiles/ranger_v11.json` for C5. Legacy profiles describe
 older geometry and remain for rollback. All new rigs preserve the selected
 geometry, UVs and materials, with four normalized influences per vertex.
 The generic ToolUse clip is an inspection/backwards-compatibility clip; gameplay
@@ -197,3 +198,16 @@ The deformation test needs a real renderer to bake the current skinned pose;
 headless rendering cannot provide that mesh. It samples runtime work and moving
 work, complementing Blender's baked-clip checks. Keep rejected candidates and
 never weaken the stretch threshold merely to make a pose pass.
+
+
+## C5 texture variants and export timing
+
+The Ranger v1.1 pass found that Blender re-import/export can resample clips at
+its default scene frame rate. A texture variant must not silently alter geometry,
+skinning or animation timing. `preserve_rig_texture_variant.py` appends the reviewed
+baked albedo to the original GLB and redirects only the image bufferView; original
+mesh/skin/animation bytes stay unchanged. Validate the resulting GLB in Godot.
+`check_ranger_rig.gd` samples all eight exported clips and checks finite vertices,
+edge stretch and grounding independently of Blender. The asset contract test
+also checks identical clip lengths for both palettes. See the v1.1 asset handoff
+for evidence and remaining grip/contact limitations.

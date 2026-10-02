@@ -19,6 +19,12 @@ func _ready() -> void:
 	_tablet=_attach("Hand.R","T7",tablet_basis,Vector3(0,-.035,.03),Vector3(.08,.02,0))
 	_tablet.visible=false
 	_flashlight.visible=show_equipment
+	# RangerFigure may supply a beam before this asset enters the scene tree.
+	var supplied_beam:=get_node_or_null("Flashlight")
+	if supplied_beam is SpotLight3D:
+		supplied_beam.reparent(_flashlight,false)
+		supplied_beam.position=Vector3(0,.224,0)
+		supplied_beam.rotation_degrees=Vector3(90,0,0)
 	if autoplay_idle: play_clip("Idle",0)
 
 func _attach(bone: String,id: String,basis: Basis,palm_offset: Vector3,grip: Vector3) -> Node3D:
@@ -39,3 +45,14 @@ func play_clip(clip: String,blend: float=.15) -> void:
 	_tablet.visible=show_equipment and clip=="Photograph"
 	_flashlight.visible=show_equipment and clip!="Photograph" and clip!="RadioTalk"
 	animation_player.play(clip,blend)
+
+## Existing RangerFigure entry point: choose asset locomotion without moving AI.
+func update_animation(_delta: float,velocity: Vector3,_face: Vector3=Vector3.ZERO) -> void:
+	if animation_player==null: return
+	var current:=animation_player.current_animation
+	var speed:=Vector2(velocity.x,velocity.z).length()
+	if current in ["Photograph","Point","RadioTalk"] and animation_player.is_playing(): return
+	if current=="Escort" and speed>.05: return
+	if current=="Scan" and speed<=.05: return
+	var next: String="Run" if speed>3.0 else ("Walk" if speed>.05 else "Idle")
+	if current!=next: play_clip(next)

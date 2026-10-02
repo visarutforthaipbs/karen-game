@@ -131,6 +131,18 @@ files blocked every headless import because Blender isn't installed on this Mac.
      ranger within 14 m, but always break cover for a spot fire.
    - **Cut progress disc** (`PlayerController._show_cut_progress`) and
      **first-burn tips** (`scripts/FirstBurnTips.gd`, `HUD.show_tip`).
+   - **Title "Satellite Shadow" pass** (`ui/TitleScreen.gd`,
+     `scripts/SatelliteModel.gd`): a large low-poly VIIRS satellite (asset V3).
+     It's procedural; a pipeline model at `assets/props/V3_*.glb` replaces it via
+     `AssetLibrary.mesh_or("V3")`. It crosses the plot every 16 s with a projected
+     cold shadow (Decal from `SatelliteModel.shadow_texture()`) and a VIIRS
+     swath. Inside the swath the plot shows thermal colours with props hidden
+     (`FireGrid.scan_active / scan_center / scan_half / scan_heading`, usable
+     elsewhere, e.g. a 20:00 pass cinematic). The camera is fixed with a gentle
+     drift, the plot sits right of the menu, and the pass runs left to right
+     over the fire line.
+   - **Ranger model:** CHAR installed `scenes/characters/RangerChibi.tscn`.
+     `RangerFigure.create()` now uses it in the patrol and the crackdown ending.
    - **Year 4+ checkpoint** (`scenes/Checkpoint.tscn`, `ui/CheckpointScene.gd`):
      plays between the Hearth and the burn. Uses `AssetLibrary` "S5" with a
      procedural fallback.
@@ -193,11 +205,12 @@ P1-2 to P1-6 are built (§3.8). What remains:
    detail "low" if fps < 40.
 3. **LICENSE:** the repo stays public; the licence terms are still the user's
    call. README says "all rights reserved until decided".
-4. **CHAR assets that plug straight in:**
-   - the Ranger C5 (`scenes/characters/RangerChibi.tscn`);
-   - the S5 roadblock (asset ID "S5");
-   - the T2 knife on Kha-nae's belt (tool label "มีดพร้าและคราด": rake only so far);
-   - portraits U3, title art U6, crew barks A2.
+4. **CHAR v1.1 assets delivered:** C5 Ranger (two palettes, eight clips), S5
+   checkpoint, T2 knife, S3 granary, S6 pickup, S7 travel bundle, T6 flashlight,
+   T7 tablet, five U3 portraits and U6 title art. RangerFigure and the S5 lookup
+   resolve the new assets automatically. GAME still owns remaining attachment,
+   ending/UI placement and authored action calls. Nine A2 audio files are
+   listening-review candidates. See the asset handoff below.
 5. **Known issues:**
    - Quitting to the title mid-burn and continuing replays that burn from the
      Hearth (pre-burn autosave). It's a mild re-roll exploit; accepted for the
@@ -225,3 +238,40 @@ smoke run pass. Runtime deformation uses role-appropriate actions for all four;
 checker. Evidence, rejected builds, hashes and rollback are under
 `artifacts/character_rigs_v31/`. Existing exit-time ObjectDB leak warnings remain.
 See `tools/character_pipeline/CAST_V31_STATUS.md` for reference/animation limits.
+
+
+## v1.1 asset delivery — 2026-10-02
+
+Asset-only pass: no controller, patrol rule, UI flow or balance edits. Full paths,
+metrics and attachment contracts are in
+[`tools/asset_pipeline/V11_ASSET_HANDOFF.md`](tools/asset_pipeline/V11_ASSET_HANDOFF.md).
+
+C5 is installed at `scenes/characters/RangerChibi.tscn`; the alternate cold
+uniform is `RangerSlateChibi.tscn`. Each has 19,800 triangles, 19 bones and
+Idle/Walk/Run/Scan/Photograph/Point/RadioTalk/Escort. The asset helper exposes
+`update_animation(delta, velocity, face)` and `play_clip(name)`. It accepts the
+existing RangerFigure flashlight and attaches the beam to the held lens.
+GAME should call the authored action clips at patrol/ending events and may pick
+the slate scene for crowd variety. Fingers and close-up contact are not fully rigged.
+
+Seven reviewed props are installed (T2/S3/S5/S6/S7/T6/T7). The S6 truck is
+1.96 × 1.89 × 3.5355 m; its earlier undersized candidate was replaced. T2 grip
+is local Y 0.07. The source models, rejected candidates and installation hashes
+are in `artifacts/asset_update_v11/`.
+
+Five transparent 256 px portraits live in `assets/ui/portraits/`; the source
+manifest records actual installed model hashes. The 1920 × 1080 title image is
+`assets/ui/title/satellite_shadow_blue_hour_1920x1080.png`. Its generated original
+is retained. UI/README placement remains GAME work.
+
+`assets/audio/v11_candidates/` has four spoken Thai barks (exact ASR matches) and
+five synthetic cough cues. Listening/acting review remains open; they are not
+activated in AudioManager. Keep the existing fallbacks.
+
+Validation: all seven props pass dimensions/triangle/material checks; both final
+Ranger variants pass eight exported Godot clips, with unchanged animation timing
+across palettes. `tests/test_ranger_assets.gd` passes (scene/API/gear/lens/portraits/
+title contract); five skin-region regression tests pass; `test_all.gd` reports
+zero failures; the 120-frame smoke run exits cleanly. `test_all.gd` still reports
+its existing two exit-time ObjectDB leaks, plus the intentional corrupt-save JSON
+parse diagnostic. No whole-PRD completion is claimed.

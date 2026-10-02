@@ -1062,6 +1062,11 @@ func _job_encode(layer: int) -> void:
 
 func _job_publish() -> void:
 	for i in 3:
-		music_players[i].stream = _music_streams[i]
+		music_players[i].stream = _music_stream(i)
 	_music_layers.clear()
 	music_ready = true
+
+## Music layers honour sfxloop_music<0|1|2>.wav drop-ins (recorded loops from
+## ElevenLabs); synthesized layers remain the fallback
+func _music_stream(i: int) -> AudioStreamWAV:
+	return _loop_stream("music%d" % i, func(): return _music_streams[i])

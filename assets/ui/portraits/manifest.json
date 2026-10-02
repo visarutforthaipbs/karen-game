@@ -1,0 +1,46 @@
+{
+  "renderer": "tools/character_pipeline/render_portraits.gd",
+  "format": "256x256 RGBA, actual installed rig geometry and materials",
+  "records": [
+    {
+      "path": "assets/models/khanae_rigged.glb",
+      "y": 0.91,
+      "size": 0.7,
+      "output": "assets/ui/portraits/khanae_256.png",
+      "source_sha256": "9d361fadcce1e501ad5e63f666434dce46adb9e86c3f65cd51fc4c09679cbba1",
+      "image_sha256": "0e39a4a25186f6c29234b6d367528f32cf213de0ef8308ead313bcbf4668ef9f"
+    },
+    {
+      "path": "assets/models/tapoh_rigged.glb",
+      "y": 0.9,
+      "size": 0.6,
+      "output": "assets/ui/portraits/tapoh_256.png",
+      "source_sha256": "fc6607a96c3775fe09aa2b1db2ca197198bdfe7f917978324e7ed5bae2e42c17",
+      "image_sha256": "f6b0495238313344555e5bde7a9f3799822635bf907d82d3d0af3a16528e264e"
+    },
+    {
+      "path": "assets/models/munaw_rigged.glb",
+      "y": 0.84,
+      "size": 0.58,
+      "output": "assets/ui/portraits/munaw_256.png",
+      "source_sha256": "466698f339614cdf119db15ff457d5b7eef703b8f4a7bef7f22a3b452a59288e",
+      "image_sha256": "e776f495f1346a469e69f187a03c2943754f821f1ce818c83404dfdda0a48df1"
+    },
+    {
+      "path": "assets/models/maelu_rigged.glb",
+      "y": 0.91,
+      "size": 0.6,
+      "output": "assets/ui/portraits/maelu_256.png",
+      "source_sha256": "43551c865a6d1839947d463e1d65199671e0312f697f286af4ff9724efa4d453",
+      "image_sha256": "695a09ab283b87fa7c95acfc1894917c2d68ad1d125291e5d083b5c253877086"
+    },
+    {
+      "path": "assets/models/ranger_rigged.glb",
+      "output": "assets/ui/portraits/ranger_256.png",
+      "y": 0.98,
+      "size": 0.6,
+      "source_sha256": "6b6a2ae9b5c238aa559ab33bb14474b85e5030e19738a4dd1c59eda25a4f717b",
+      "image_sha256": "c0fc1e6d0c98a8a6a9f74f3b53fa7ea1c9d4eb30a959f470c20038bda3294a3f"
+    }
+  ]
+}

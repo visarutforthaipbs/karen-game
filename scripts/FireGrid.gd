@@ -132,6 +132,13 @@ var burning_border_cells: int = 0
 var spot_fires_started: int = 0
 var spot_fires_doused: int = 0
 var thermal_view: bool = false
+## A moving satellite footprint (title screen / pass cinematic): cells inside it
+## show thermal colours and lose their props, as if seen by the satellite.
+## Rotated rectangle in world x/z: centre, half extents, heading (radians about Y).
+var scan_active: bool = false
+var scan_center: Vector2 = Vector2.ZERO
+var scan_half: Vector2 = Vector2(8.0, 2.6)
+var scan_heading: float = 0.0
 var thermal_threshold: float = 35.0
 
 # Stats
@@ -756,8 +763,12 @@ func _update_visuals() -> void:
 
 		# Ground Color
 		var g_color = COLOR_TERRACE_GRASS
-		if thermal_view:
+		var scanned = scan_active and in_scan(prop_xf.origin.x, prop_xf.origin.z)
+		if thermal_view or scanned:
 			g_color = _thermal_color(cell_heat[i], cell_elevation[i])
+			if scanned and not thermal_view:
+				# Lit by the scene's sun, so push the false colour to glow
+				g_color = Color(g_color.r * 1.8, g_color.g * 1.8, g_color.b * 1.8)
 		else:
 			match type:
 				CellType.VEGETATION:
@@ -777,7 +788,7 @@ func _update_visuals() -> void:
 		mm_ground.set_instance_color(i, g_color)
 
 		# 3D Vegetation Props
-		var visible_props = show_props and not excluded
+		var visible_props = show_props and not excluded and not scanned
 		_set_prop(pine_layers, i, prop_xf, visible_props and type == CellType.FOREST_BORDER, zero_transform)
 		_set_prop(bamboo_layers, i, prop_xf, visible_props and type == CellType.BAMBOO, zero_transform)
 		_set_prop(brush_layers, i, prop_xf, visible_props and type == CellType.VEGETATION, zero_transform)
@@ -792,6 +803,11 @@ func _update_visuals() -> void:
 		mm_eye.set_instance_transform(i, eye_xf if visible_props and highlighted else zero_transform)
 
 	_update_fire_effects()
+
+## Is a world point inside the satellite footprint?
+func in_scan(x: float, z: float) -> bool:
+	var local = Vector2(x - scan_center.x, z - scan_center.y).rotated(scan_heading)
+	return absf(local.x) <= scan_half.x and absf(local.y) <= scan_half.y
 
 ## Fire lights and particle emitters follow the current burning / smoldering cells
 func _update_fire_effects() -> void:

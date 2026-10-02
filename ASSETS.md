@@ -33,7 +33,7 @@ for exact paths, dimensions, attachment notes and integration status.
 | C2 | Ta-poh (elder) | 1.15 m | 19,900 | Refined TRELLIS.2 | v3.1 installed, 19 bones |
 | C3 | Mu-naw (young forest guardian) | 1.1 m | 13,957 | Refined TRELLIS.2 | v3.1 white-dress young woman installed, 21 bones including dress controls; separate sprayer |
 | C4 | Crew rigs + animations | — | — | Calibrated Blender rig | Four v3.1 crew: Idle/Walk/Run/ToolUse; Mae-Lu also Talk/Granary. Finger closure and contact polish remain |
-| C5 | Fictional forest ranger | 1.25 m | 19,800 | Refined TRELLIS.2 + exterior repair | C5 model and rig in final asset review; see v1.1 handoff. Neutral unarmed character, plain cap/radio, no real insignia |
+| C5 | Fictional forest ranger | 1.25 m | 19,800 | Refined TRELLIS.2 + exterior repair | Installed: two uniform palettes, 19 bones, eight clips, flashlight/tablet attachments. RangerFigure scene contract supplied; see v1.1 handoff. No real insignia |
 | C6 | Checkpoint soldier | — | — | Optional | Use C5 instead; no separate soldier commissioned |
 | C7 | Mae-Lu (headwoman / granary keeper) | 1.15 m | 19,900 | Refined TRELLIS.2 | v3.1 installed, 21 bones; village gestures and portrait |
 
