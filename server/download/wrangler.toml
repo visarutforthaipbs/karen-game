@@ -1,0 +1,9 @@
+name = "undertwoskies-download"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+account_id = "37985e3dbd0d5cc809f4740dec81dbfc"
+workers_dev = true
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "undertwoskies-beta"
