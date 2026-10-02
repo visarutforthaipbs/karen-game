@@ -46,6 +46,13 @@ var _inversion: float = 0.0
 var _static_level: float = 0.0
 var _siren_on: bool = false
 
+# Spatial audio: shared drone-hum loop stream, canopy occlusion, 3D one-shot pool
+var drone_hum_stream: AudioStreamWAV
+var _drone_lpf: AudioEffectLowPassFilter
+var _occlusion: float = 0.0
+var _sfx3d: Array[AudioStreamPlayer3D] = []
+const SFX3D_VOICES: int = 6
+
 # Recorded voice pools loaded from AUDIO_DIR at startup (empty = pure synthesis)
 var _tapoh_voices: Array = []
 var _radio_voices: Dictionary = {}
@@ -55,7 +62,6 @@ var radio_player: AudioStreamPlayer
 
 # Loop players and their target linear volumes
 var crackle_player: AudioStreamPlayer
-var hum_player: AudioStreamPlayer
 var siren_player: AudioStreamPlayer
 var static_player: AudioStreamPlayer
 var music_players: Array[AudioStreamPlayer] = []
@@ -82,9 +88,17 @@ func _ready() -> void:
 		_sfx.append(p)
 		_voice_priority.append(0)
 		_voice_started.append(0)
+	for i in SFX3D_VOICES:
+		var p3 = AudioStreamPlayer3D.new()
+		p3.bus = SFX_BUS
+		p3.max_distance = 80.0
+		p3.unit_size = 8.0
+		p3.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+		add_child(p3)
+		_sfx3d.append(p3)
 
 	crackle_player = _make_loop_player(_loop_stream("crackle", _crackle_loop), AMBIENCE_BUS)
-	hum_player = _make_loop_player(_loop_stream("drone_hum", _drone_hum_loop), SFX_BUS)
+	drone_hum_stream = _loop_stream("drone_hum", _drone_hum_loop)
 	siren_player = _make_loop_player(_loop_stream("siren", _siren_loop), SFX_BUS)
 	static_player = _make_loop_player(_loop_stream("static", _radio_static_loop), AMBIENCE_BUS)
 	ambience_players["wind"] = _make_loop_player(_loop_stream("wind", _wind_bed_loop), AMBIENCE_BUS)
@@ -146,6 +160,13 @@ func _process(delta: float) -> void:
 		_fade_player(ambience_players[key], _ambience_targets.get(key, 0.0), delta)
 	if _ambience_lpf:
 		_ambience_lpf.cutoff_hz = lerpf(20000.0, 1400.0, _inversion)
+	# Canopy occlusion: hiding under bamboo muffles the drones (LPF + level duck)
+	_occlusion = move_toward(_occlusion, _occlusion_target, delta * 3.0)
+	if _drone_lpf:
+		_drone_lpf.cutoff_hz = lerpf(20000.0, 700.0, _occlusion)
+		var bus := AudioServer.get_bus_index("Drones")
+		if bus != -1:
+			AudioServer.set_bus_volume_db(bus, linear_to_db(lerpf(1.0, 0.35, _occlusion)))
 
 ## Fades a looping player toward a linear volume, starting / stopping it as needed
 func _fade_player(p: AudioStreamPlayer, target: float, delta: float, rate: float = 0.8) -> void:
@@ -168,9 +189,10 @@ func _fade_player(p: AudioStreamPlayer, target: float, delta: float, rate: float
 func set_fire_intensity(level: float) -> void:
 	_targets[crackle_player] = clampf(level, 0.0, 1.0) * 0.35
 
-## 0..1: how close the nearest drone is to the player (rotor hum grows loud)
-func set_drone_proximity(level: float) -> void:
-	_targets[hum_player] = clampf(level, 0.0, 1.0) * 0.45
+## 0..1: how occluded the player is from the drones (under bamboo canopy)
+var _occlusion_target: float = 0.0
+func set_canopy_occlusion(level: float) -> void:
+	_occlusion_target = clampf(level, 0.0, 1.0)
 
 func set_siren(on: bool) -> void:
 	_siren_on = on
@@ -216,6 +238,12 @@ func _ensure_buses() -> void:
 	_ambience_lpf = AudioEffectLowPassFilter.new()
 	_ambience_lpf.cutoff_hz = 20000.0
 	AudioServer.add_bus_effect(AudioServer.get_bus_index(AMBIENCE_BUS), _ambience_lpf)
+	if AudioServer.get_bus_index("Drones") == -1:
+		AudioServer.add_bus()
+		AudioServer.set_bus_name(AudioServer.bus_count - 1, "Drones")
+	_drone_lpf = AudioEffectLowPassFilter.new()
+	_drone_lpf.cutoff_hz = 20000.0
+	AudioServer.add_bus_effect(AudioServer.get_bus_index("Drones"), _drone_lpf)
 
 ## Master/Music/SFX/Ambience/UI volume, 0..1 linear (settings menu)
 func set_bus_volume(bus_name: String, linear: float) -> void:
@@ -398,7 +426,8 @@ func play_bamboo_pop() -> void:
 	_play("pop", _bamboo_pop, randf_range(0.85, 1.3), -3.0)
 
 func play_whistle() -> void:
-	_play("whistle", _whistle)
+	# whistle_alt.wav is a second take; both fall back to the synth
+	_play("whistle_alt" if randf() < 0.35 else "whistle", _whistle)
 
 func play_water_spray() -> void:
 	_play("spray", _water_spray, randf_range(0.9, 1.1), -4.0)
@@ -409,13 +438,12 @@ func play_satellite_ping() -> void:
 func play_cough() -> void:
 	_play("cough", _cough, randf_range(0.9, 1.1))
 
-func play_wind_gust() -> void:
-	_play("gust", _wind_gust, randf_range(0.9, 1.1), -3.0)
-
 func play_tapoh_warning() -> void:
 	if not _tapoh_voices.is_empty():
 		var pick := _pick_voice("tapoh", _tapoh_voices.size())
 		_play("tapoh_voice_%d" % pick, func(): return _tapoh_voices[pick])
+	elif has_bark("tapoh"):
+		play_bark("tapoh", -3.0)
 	else:
 		_play("tapoh_call", _tapoh_call)
 
@@ -481,6 +509,44 @@ func play_ending_stinger(kind: String) -> void:
 	_play("end_" + kind, _ending_stinger.bind(kind), 1.0, -3.0, SFX_BUS, 2000, 2)
 
 # ---------------------------------------------------------------------------
+# Positional (3D) one-shots — world events carry their position
+# ---------------------------------------------------------------------------
+
+func _play_at(key: String, builder: Callable, pos: Vector3, pitch: float, volume_db: float, min_interval_ms: int = 90) -> void:
+	var now := Time.get_ticks_msec()
+	if now - int(_last_played.get(key, -100000)) < min_interval_ms:
+		return
+	_last_played[key] = now
+	var stream := _stream_for(key, builder)
+	# prefer a free 3D voice; else steal the oldest (these are short one-shots)
+	var slot := 0
+	for i in _sfx3d.size():
+		if not _sfx3d[i].playing:
+			slot = i
+			break
+		else:
+			if _sfx3d[i].get_playback_position() > _sfx3d[slot].get_playback_position():
+				slot = i
+	var p := _sfx3d[slot]
+	p.global_position = pos
+	p.stream = stream
+	p.pitch_scale = pitch
+	p.volume_db = volume_db
+	p.play()
+
+func play_bamboo_pop_at(pos: Vector3) -> void:
+	_play_at("pop", _bamboo_pop, pos, randf_range(0.85, 1.3), -3.0)
+
+func play_ember_landing_at(pos: Vector3) -> void:
+	_play_at("ember_tick", _ember_tick, pos, randf_range(0.9, 1.2), -8.0)
+
+func play_cough_at(pos: Vector3) -> void:
+	_play_at("cough", _cough, pos, randf_range(0.9, 1.1), 0.0, 300)
+
+func play_shutter_at(pos: Vector3) -> void:
+	_play_at("shutter", _shutter, pos, randf_range(0.95, 1.07), -3.0, 120)
+
+# ---------------------------------------------------------------------------
 # Loudness metering (the mix pass is verified with numbers, not vibes)
 # ---------------------------------------------------------------------------
 
@@ -488,7 +554,7 @@ func play_ending_stinger(kind: String) -> void:
 func warm_sfx_cache() -> void:
 	for entry in [
 		["pop", _bamboo_pop], ["whistle", _whistle], ["spray", _water_spray],
-		["ping", _satellite_ping], ["cough", _cough], ["gust", _wind_gust],
+		["ping", _satellite_ping], ["cough", _cough],
 		["tapoh_call", _tapoh_call], ["camera", _camera_alarm], ["beep", _beep],
 		["thunder", _thunder], ["ember", _ember_crackle], ["tune", _radio_tune],
 		["chime", _harvest_chime], ["step_ash", _step_ash], ["step_brush", _step_brush],
@@ -504,7 +570,7 @@ func warm_sfx_cache() -> void:
 ## and events keep >=10 dB of headroom above the bed.
 func mix_report() -> String:
 	var sources := {
-		"LOOP crackle": crackle_player.stream, "LOOP drone_hum": hum_player.stream,
+		"LOOP crackle": crackle_player.stream, "LOOP drone_hum": drone_hum_stream,
 		"LOOP siren": siren_player.stream, "LOOP radio_static": static_player.stream,
 	}
 	for key in ambience_players:
@@ -535,7 +601,7 @@ func mix_report() -> String:
 		var rms := sqrt(sum / maxf(1.0, float(count)))
 		out.append("%-22s %9.1f %9.1f" % [key, linear_to_db(maxf(peak, 0.0001)), linear_to_db(maxf(rms, 0.0001))])
 	out.append("")
-	out.append("play targets (linear): crackle<=0.35 hum<=0.45 siren=0.30 static<=0.22")
+	out.append("play targets (linear): crackle<=0.35 siren=0.30 static<=0.22 (drone hum: 3D per-drone)")
 	out.append("held %s" % str(HELD_LEVELS))
 	out.append("music %s" % str(_music_layer_targets))
 	return "\n".join(out)
@@ -653,16 +719,6 @@ func _cough() -> AudioStreamWAV:
 			var env = minf(t / 0.015, 1.0) * exp(-t * 14.0)
 			b[s + i] += (lp * 2.5 + sin(TAU * 170.0 * t) * 0.3) * env
 	return _to_wav(_normalize(b, 0.7))
-
-func _wind_gust() -> AudioStreamWAV:
-	var b = _buffer(1.6)
-	var lp = 0.0
-	for i in b.size():
-		var t = float(i) / RATE
-		var a = 0.02 + 0.08 * sin(PI * t / 1.6)
-		lp = lp * (1.0 - a) + randf_range(-1.0, 1.0) * a
-		b[i] = lp * sin(PI * t / 1.6)
-	return _to_wav(_normalize(b, 0.6))
 
 ## Synthesized "Oo-ay!" call: voiced sawtooth through two moving formants
 func _tapoh_call() -> AudioStreamWAV:

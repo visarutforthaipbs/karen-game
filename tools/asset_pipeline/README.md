@@ -234,3 +234,18 @@ after four-angle and in-game review. The 1,500-triangle attempt remained over
 budget and was rejected. This run also exposed the need to split non-manifold
 junctions before decimation. No prop-specific fresh-texture benchmark was needed
 for this accepted source texture; that optional route is still unverified here.
+
+
+## Asset polish source set (2026-10-02)
+
+`gpu/build_polish_props.py` authors nineteen deterministic, matte faceted props.
+Run in Blender beside `build_cohesive_set.py` with `-- OUTPUT palette.json`.
+Pass the output through the existing standard candidate/review/install workflow.
+It changes crown masses, tool construction and structure silhouettes while
+preserving manifest budgets. Current installed evidence and remaining integration
+work: [polish handoff](ASSET_POLISH_HANDOFF_20261002.md).
+
+`export_polish_vfx.gd` packs generated flame/mist/ash sources;
+`validate_polish_vfx.gd` verifies dimensions, neutral channels and atlas padding.
+`review_polish_effects.gd` reviews game materials across lighting states and
+asserts the installed mist/ash hooks. The updated prop, equipment and VFX review tools isolate save paths.

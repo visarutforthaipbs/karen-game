@@ -15,7 +15,7 @@ func run() -> void:
 			for surface in node.mesh.get_surface_count():
 				triangles+=node.mesh.surface_get_arrays(surface)[Mesh.ARRAY_INDEX].size()/3
 				assert(node.get_active_material(surface).albedo_texture!=null)
-		assert(triangles==19800)
+		assert(triangles==18522)
 		for clip in expected:
 			assert(actor.animation_player.has_animation(clip))
 			assert(absf(actor.animation_player.get_animation(clip).length-expected[clip])<.0001,"Variant retimed "+clip)
@@ -27,7 +27,7 @@ func run() -> void:
 		assert(actor.animation_player.current_animation=="Photograph")
 		actor.play_clip("Idle",0)
 		assert(not actor._tablet.visible and actor._flashlight.visible)
-		print(name,": 19 bones, 19,800 triangles, 8 timed clips, locomotion API and equipment passed")
+		print(name,": 19 bones, 18,522 triangles, 8 timed clips, locomotion API and equipment passed")
 		actor.queue_free()
 		await process_frame
 	assert(RangerFigure.has_model())

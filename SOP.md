@@ -1,20 +1,51 @@
 # STANDARD OPERATING PROCEDURE (SOP)
-## Character production — refined mesh, rig, animation and Godot
+## Character production — Meshy, rig, animation and Godot
 
 **Project:** Satellite Shadow (เงาเมฆา / ไร่หมุนเวียน)  
-**Version:** 3.1 — 2026-10-02
+**Version:** 3.3 — 2026-10-02
 
 ## 1. Current production route
 
-Reference image → TRELLIS.2 source/cache → surface reconstruction → fresh texture
-pass → game mesh → visual review → calibrated skeleton/skin → animation review
-→ Godot integration → runtime checks.
+**User decision, 2026-10-02:** Use Meshy for new character generation. Stop local
+TRELLIS.2 / TripoSR character generation development. Non-character assets stay
+with the existing local asset pipeline. Existing installed characters remain
+available until reviewed replacements are ready.
+
+Approved reference → Meshy character candidate → low-poly and likeness review
+→ game mesh preparation → rig/skin and animation → gameplay motion review
+→ Godot integration → runtime checks. See
+[Meshy setup and delivery procedure](tools/character_pipeline/MESHY_SETUP.md).
+The Meshy cast is installed: five rigged characters, the ranger slate variant,
+four static C6 villagers and five matching portraits. See the
+[Meshy cast handoff](tools/character_pipeline/MESHY_CAST_HANDOFF.md) for counts,
+review evidence, tests and rollback. All current principal meshes are under
+20,000 triangles; C6 stays below 3,000 per model.
+Meshy's rigging/animation tools can supply candidates, but exported skeletons,
+clips and equipment sockets must be checked against the actual game contract.
+Never assume the old calibrated profiles fit a new Meshy mesh.
+
+**Rigging clarification, 2026-10-02:** Meshy provides cloud auto-rigging and
+animation; neither requires our RTX GPU. Start by reviewing Meshy's native rig
+and walking/running exports. Preserve its skin and use suitable Meshy library
+animations where they fit. Do not rebuild every character rig by default.
+The current game expects named joints, clips and procedural tool layers; record
+any actual incompatibility before applying a local conversion. Blender conversion
+and validation can run on a CPU; using the host named `gpu` does not mean neural
+inference is running. Missing game-specific actions still need integration and
+movement/tool tests. Runtime-hook changes remain GAME-owned.
+
+Kha-nae's exact-reference correction is installed; see
+[likeness correction and validation](tools/character_pipeline/KHANAE_LIKENESS_HANDOFF.md).
+The other approved characters were not changed by that correction.
+
+### Previous local route and installed cast (historical)
 
 The Mac runs Godot and orchestrates work over `ssh gpu`. The RTX 3090 host runs
 native TRELLIS.2 and Blender 4.5.14. The earlier TripoSR / 2,500-triangle pipeline
-remains a prototype option, not the quality route for the current characters.
+and refined local routes are retained for history and rollback, not new character
+generation. Local mesh preparation, preview and rig validation remain useful.
 
-Installed v3.1 character status (2026-10-02):
+Previously installed local v3.1 character status (superseded by Meshy):
 
 | Character | Mesh / rig | Animation and gameplay |
 |---|---|---|
@@ -44,6 +75,12 @@ fingers/faces and arbitrary deep crouches are not rigged or certified.
 
 A successful technical check does not establish visual likeness. Keep source
 images, settings, intermediate outputs, previews and validation reports.
+The user's 2026-10-02 correction rejects the first Meshy Kha-nae likeness. Use
+`assets/reference/characters/khanae/02_clothing/khanae_user_locked_v02.png` as his
+exact visual reference. Other Meshy characters remain approved. Compare face
+width, eyes/brows, beard, head-to-body proportions, silhouette and required gear
+against the locked image both before rigging and after the final export. A
+prepared derivative may not silently supersede the user's reference.
 
 **Mandatory low-poly style gate — both character and prop pipelines:** Follow
 PRD §9.1. References and finished assets must use simple angular silhouettes,
@@ -54,7 +91,7 @@ the in-game view with the existing cast, props and terrain before installation.
 Higher resolution or a larger triangle ceiling never waives this style review;
 surface smoothing for repair must not erase the intended faceted appearance.
 
-## 2. Prepare and generate the character
+## 2. Prepare the reference; generate through Meshy
 
 Use one isolated full-body A-pose reference with visible hands/feet and separated
 limbs. It must express the desired face, proportions and garment patterns.
@@ -69,6 +106,12 @@ Normally visual and cultural lock precede final rigging. The user's later
 2026-10-02 requests explicitly authorized completing all four and then proceeding
 with rigging despite the documented reference gap. Keep that gap visible;
 track that work in [cast v3.1 status](tools/character_pipeline/CAST_V31_STATUS.md).
+
+For new characters, follow [the Meshy procedure](tools/character_pipeline/MESHY_SETUP.md).
+The recipe below documents the previous local experiments; do not launch it as
+the current production route. Its visual rejection criteria still apply to Meshy.
+
+### Archived local generation recipe
 
 ```bash
 python3 tools/character_pipeline/run_refined_character.py \
@@ -101,6 +144,9 @@ All four v3.1 experiments and rejected alternatives are tracked in
 
 Rigging is the next production step for articulated hero movement. The existing
 procedural animator remains a fallback for characters that are not yet skinned.
+For a Meshy replacement, inspect its skeleton and animation exports first. Retarget
+or recalibrate as needed; the command below is a local rigging option for a mesh
+with a reviewed, matching profile, not an automatic step for every Meshy export.
 
 ```bash
 python3 tools/character_pipeline/run_rig.py \

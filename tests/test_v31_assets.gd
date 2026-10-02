@@ -1,5 +1,5 @@
 extends SceneTree
-## All installed v3.1 exports retain geometry, textures, weighted skins and clips.
+## All installed Meshy replacements of the v3.1 cast retain geometry, textures, weighted skins and clips.
 var failures := 0
 func _initialize() -> void: call_deferred("run")
 func check(ok: bool, message: String) -> void:
@@ -7,7 +7,7 @@ func check(ok: bool, message: String) -> void:
 		failures += 1
 		push_error(message)
 func run() -> void:
-	var counts := {"Khanae":14394,"Tapoh":19900,"Munaw":13957,"Maelu":19900}
+	var counts := {"Khanae":19798,"Tapoh":19374,"Munaw":19541,"Maelu":19436}
 	for name in counts:
 		var actor = load("res://scenes/characters/"+name+"Chibi.tscn").instantiate()
 		root.add_child(actor)
@@ -40,5 +40,5 @@ func run() -> void:
 		print("Checked ",name," triangles=",triangles)
 		actor.queue_free()
 		await process_frame
-	print("V31 ASSETS: ",failures," failures")
+	print("MESHY CAST ASSETS: ",failures," failures")
 	quit(1 if failures else 0)

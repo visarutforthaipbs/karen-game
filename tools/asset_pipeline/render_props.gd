@@ -100,7 +100,7 @@ func run() -> void:
 			camera.size = size * 1.5
 			world.add_child(camera)
 			var angle = deg_to_rad([0.0, 45.0, 90.0, 180.0][col])
-			camera.position = center + Vector3(sin(angle) * size * 3.0, size * 0.6, cos(angle) * size * 3.0)
+			camera.position = center + Vector3(sin(angle) * size * 3.0, size * float(record.get("elevation",0.6)), cos(angle) * size * 3.0)
 			camera.look_at(center)
 			var title = Label.new()
 			title.text = "%s | %s" % [record.label, ["Front (+Z)", "45 degrees", "Side", "Back (-Z)"][col]]

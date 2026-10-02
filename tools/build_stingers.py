@@ -60,38 +60,8 @@ def mix_into(buf, clip, at):
     if end > at:
         buf[at:end] += clip[:end - at]
 
-# ---- install takes: radio tune + satellite ping -----------------------------
-def first_newest(prefix):
-    hits = sorted(glob.glob(os.path.join(GEN, prefix + "*.mp3")))
-    return hits
-
-tune_takes = ["sfx_tunin_20261002_105653", "sfx_turni_20261002_105655", "sfx_radio_20261002_105706"]
-ping_takes = ["sfx_singl_20261002_105656", "sfx_one_i_20261002_105658"]
-
-report = []
-def install_take(base, name, peak):
-    x = mp3_to_array(os.path.join(GEN, base + ".mp3"))
-    tail = np.max(np.abs(x[-int(0.15 * SR):])) if len(x) > int(0.15 * SR) else 0
-    got = write_wav(os.path.join(AUD, name), x, peak)
-    report.append((name, base, len(x) / SR, round(float(got), 3), round(float(tail), 3)))
-    return x
-
-# tune: prefer a take whose tail is alive (ends in static, not silence)
-best_tune, best_tail = tune_takes[0], -1
-for t in tune_takes:
-    x = mp3_to_array(os.path.join(GEN, t + ".mp3"))
-    tail = float(np.max(np.abs(x[-int(0.15 * SR):])))
-    if tail > best_tail:
-        best_tune, best_tail = t, tail
-install_take(best_tune, "sfx_tune.wav", 0.55)
-for t in tune_takes:
-    if t != best_tune:
-        report.append(("(alt tune)", t, 0, 0, 0))
-install_take(ping_takes[0], "sfx_ping.wav", 0.65)
-report.append(("(alt ping)", ping_takes[1], 0, 0, 0))
-
 # ---- build stingers from the harp pluck ------------------------------------
-pluck = trim(mp3_to_array(os.path.join(GEN, "sfx_singl_20261002_105708.mp3")), thresh=0.003)
+pluck = trim(mp3_to_array(os.path.join("artifacts/sfx_elevenlabs/gen2", "pluck_harp.mp3")), thresh=0.003)
 base_f = f0_estimate(pluck)
 print(f"harp pluck: {len(pluck)/SR:.2f}s, base F0 ≈ {base_f:.1f} Hz")
 
@@ -126,7 +96,7 @@ def build(name, seq, times, amps, total, peak, ring=1.2, harsh_tail=False):
 SCALE = [293.66, 349.23, 392.0, 440.0, 587.33, 698.46]
 # phase stingers: sequences from AudioManager._phase_stinger
 for idx in range(1, 5):
-    seq = [[2, 4], [1, 3, 5], [4, 5], [3, 5, 3]][min(idx, 3)]
+    seq = [[2, 4], [1, 3, 5], [4, 5], [3, 5, 3], [0, 2, 4]][min(idx, 4)]
     freqs = [SCALE[i] for i in seq]
     times = [k * 0.22 for k in range(len(seq))]
     build(f"sfx_sting_{idx}.wav", freqs, times, [0.5] * len(seq), 1.6, 0.6)

@@ -193,7 +193,7 @@
       "meters": 2.0,
       "tris": 1000,
       "variants": 1,
-      "desc": "polar-orbiting weather satellite with a gold-foil body and one long solar panel wing",
+      "desc": "fictional gold-foil weather satellite body with two symmetric solar wings along local X, flight +Z, radiometer scanner facing down -Y, base-centred origin",
       "render_mode": "materials",
       "quality_tris": 4000
     },
@@ -295,6 +295,17 @@
       "tris": 100,
       "variants": 1,
       "desc": "fictional plain evidence tablet; blank cold screen; no writing",
+      "render_mode": "materials"
+    },
+    "C6": {
+      "name": "villager",
+      "route": "meshy",
+      "category": "organic",
+      "fit": "height",
+      "meters": 1.15,
+      "tris": 3000,
+      "variants": 4,
+      "desc": "four distinct everyday Karen villagers: man, woman, elder and teenager; static walking poses, chibi proportions, simplified handwoven tunics, some headwraps, matte broad colours, +Z front, upper back clear for bundle",
       "render_mode": "materials"
     }
   },

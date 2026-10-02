@@ -2,6 +2,11 @@
 
 Characters now use textured generated models, with calibrated skeletal rigs for all four v3.1 crew characters. Props have procedural fallbacks in `scripts/LowPoly.gd`; reviewed generated props can replace them. Particles and UI come from `FireGrid.gd` / `HUD.gd`, and audio from `scripts/AudioManager.gd`. This list tracks asset roles and routes; current build settings are in each pipeline's manifest.
 
+**2026-10-02 polish installed:** 19 revised props plus new flame/mist/ash textures.
+The approved six rigged character files are unchanged. Current counts, offsets,
+review images and remaining GAME integration work are recorded in
+[the polish handoff](tools/asset_pipeline/ASSET_POLISH_HANDOFF_20261002.md).
+
 **Building a 3D prop:** `./tools/asset_pipeline/build_asset.sh <ID> --prompt` prints a reference prompt. `--image <png>` or `--mesh <glb>` creates an isolated review candidate. After visual review, `install_asset.py <candidate-dir> --reviewed` validates and installs it. See `tools/asset_pipeline/README.md`.
 
 **Routes**
@@ -19,27 +24,31 @@ Characters now use textured generated models, with calibrated skeletal rigs for 
 - Triangle budgets matter: brush, bamboo and pines are instanced up to about 1,600 times per plot.
 - Prop tables below retain standard budgets. Explicit quality budgets (for example S1: 6,000 triangles) are in `asset_manifest.json`; they do not raise vegetation budgets.
 
-**Installed prop progress — 2026-10-02:** 13 of 26 prop types have reviewed
-pipeline models, across 20 GLBs. The v1.1 pass adds T2, S3, S5, S6, S7, T6 and T7
-(seven GLBs; 24–516 triangles each). Thirteen prop types still use fallbacks or
-await creation. See [v1.1 asset handoff](tools/asset_pipeline/V11_ASSET_HANDOFF.md)
-for exact paths, dimensions, attachment notes and integration status.
+**Installed asset audit — 2026-10-02:** 45 static GLBs cover 26 of 27 manifest
+IDs, including the four C6 villagers. Only S4's two village-house variants remain
+absent from the prop manifest. There are also six principal rigged GLBs (five
+characters plus the ranger palette variant). All required v1.2 delivery files
+are present. See [the current asset audit](tools/asset_pipeline/ASSET_AUDIT_20261002.md)
+for visual improvements, current tests, remaining procedural assets and evidence.
+Earlier v1.1/v1.2 handoffs remain historical delivery records.
 
 ## 1. Characters (already in the character pipeline)
 
 | ID | Asset | Size | Tris | Route | Status / notes |
 |---|---|---|---|---|---|
-| C1 | Kha-nae (player) | 1.2 m | 14,394 | Refined TRELLIS.2 | v3.1 installed, 19 bones; independent equipment |
-| C2 | Ta-poh (elder) | 1.15 m | 19,900 | Refined TRELLIS.2 | v3.1 installed, 19 bones |
-| C3 | Mu-naw (young forest guardian) | 1.1 m | 13,957 | Refined TRELLIS.2 | v3.1 white-dress young woman installed, 21 bones including dress controls; separate sprayer |
-| C4 | Crew rigs + animations | — | — | Calibrated Blender rig | Four v3.1 crew: Idle/Walk/Run/ToolUse; Mae-Lu also Talk/Granary. Finger closure and contact polish remain |
-| C5 | Fictional forest ranger | 1.25 m | 19,800 | Refined TRELLIS.2 + exterior repair | Installed: two uniform palettes, 19 bones, eight clips, flashlight/tablet attachments. RangerFigure scene contract supplied; see v1.1 handoff. No real insignia |
-| C6 | Checkpoint soldier | — | — | Optional | Use C5 instead; no separate soldier commissioned |
-| C7 | Mae-Lu (headwoman / granary keeper) | 1.15 m | 19,900 | Refined TRELLIS.2 | v3.1 installed, 21 bones; village gestures and portrait |
+| C1 | Kha-nae (player) | 1.20 m | 19,798 | Meshy | User-reference correction installed; 19 bones, 4 clips; existing tool sockets |
+| C2 | Ta-poh (elder) | 1.15 m | 19,374 | Meshy | Installed; 19 bones, 4 clips; blade and borrowed sprayer |
+| C3 | Mu-naw (young forest guardian) | 1.10 m | 19,541 | Meshy | Installed; 21 bones, 4 clips; skirt controls and separate sprayer |
+| C4 | Crew rigs + animations | — | — | Meshy landmarks + calibrated Blender skin/clips | Four main characters retain Idle/Walk/Run/ToolUse and semantic runtime work layers |
+| C5 | Fictional forest ranger | 1.25 m | 18,522 each | Meshy | Olive/slate variants installed; 19 bones, eight clips, existing flashlight/tablet hooks |
+| C6 | Walking villagers (man, woman, elder, teenager) | ~1.15 m | 2,785 / 2,784 / 2,785 / 2,786 | Meshy | Four static walking poses installed; no rigs, existing S7 bundle attachment |
+| C7 | Mae-Lu (headwoman / granary keeper) | 1.15 m | 19,436 | Meshy | Installed; 21 bones, 6 clips including Talk/Granary, live village portrait |
 
-Mu-naw's replacement follows [character direction v3.1](tools/character_pipeline/character_direction_v3.1.md)
-and the [reference manifest](assets/reference/characters/munaw/reference_manifest.md).
-The v3.1 replacement is installed; source/rig evidence and remaining cultural-reference limitations are in `tools/character_pipeline/CAST_V31_STATUS.md`.
+Five 256×256 transparent portraits match the installed models. All characters
+retain the approved v3.1 direction and low-poly style. See
+[Meshy cast handoff](tools/character_pipeline/MESHY_CAST_HANDOFF.md) for source
+jobs, reviews, tests, limits and rollback. Meshy is used for characters only;
+non-character assets retain the local pipeline.
 
 ## 2. Hillside environment
 
@@ -91,12 +100,12 @@ The v3.1 replacement is installed; source/rig evidence and remaining cultural-re
 
 | ID | Asset | Format | Route | Used for |
 |---|---|---|---|---|
-| X1 | Flame flipbook | 4×4 sheet, 512 px | IMG2D or Blender | Flame particles (currently a soft dot) |
-| X2 | Smoke puffs (4 variants) | 256 px each | IMG2D | Smoke plumes and the inversion ground smoke |
-| X3 | Ember / spark | 64 px | IMG2D | Bamboo explosions, jumping embers |
+| X1 | Flame flipbook | 4×4 sheet, 512 px | IMG2D | Installed revised greyscale + alpha with broader cores; game supplies colour |
+| X2 | Smoke puffs (4 variants) | 512 px 2×2 sheet | IMG2D | Installed white/grey + alpha; game supplies tint |
+| X3 | Ember / spark | 64 px | IMG2D | Installed white-hot + alpha; game supplies tint |
 | X4 | Steam burst | 4×4 sheet | IMG2D | Bamboo culm explosions |
-| X5 | Water spray mist | 256 px | IMG2D | Sprayer (no visual yet) |
-| X6 | Ash flakes | 64 px | IMG2D | Drifting ash after burns |
+| X5 | Water spray mist | Optional 2×2 sheet | IMG2D | Installed neutral 512px mist atlas; existing douse/steam hook |
+| X6 | Ash flakes | 64 px | IMG2D | Installed neutral 64px flake; existing ash burst hook |
 
 ## 7. UI and 2D art
 

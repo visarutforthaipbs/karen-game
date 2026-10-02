@@ -56,6 +56,8 @@ def main():
         prompt_key = 'quality_style_prompt' if (args.profile == 'quality' or (args.profile is None and 'quality_tris' in spec)) else 'style_prompt'
         print(manifest[prompt_key].replace('{desc}', spec['desc']))
         return
+    if spec['route'] == 'meshy' and (args.image or args.retexture):
+        p.error('Character generation uses Meshy; provide its reviewed static --mesh. See tools/character_pipeline/MESHY_SETUP.md')
     if not re.fullmatch('[a-z]', args.variant) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.@-]*', args.host):
         p.error('Invalid variant or host')
     source = args.image or args.mesh

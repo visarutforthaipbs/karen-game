@@ -14,14 +14,14 @@ mkdir -p "$OUT"
 "$GODOT" --headless --path . --import >/dev/null 2>&1 || true
 for p in "${PRESETS[@]}"; do
   case "$p" in
-    macOS)   target="$OUT/SatelliteShadow-macOS.zip" ;;
-    Linux)   mkdir -p "$OUT/SatelliteShadow-Linux";   target="$OUT/SatelliteShadow-Linux/SatelliteShadow.x86_64" ;;
-    Windows) mkdir -p "$OUT/SatelliteShadow-Windows"; target="$OUT/SatelliteShadow-Windows/SatelliteShadow.exe" ;;
+    macOS)   target="$OUT/UnderTwoSkies-macOS.zip" ;;
+    Linux)   mkdir -p "$OUT/UnderTwoSkies-Linux";   target="$OUT/UnderTwoSkies-Linux/UnderTwoSkies.x86_64" ;;
+    Windows) mkdir -p "$OUT/UnderTwoSkies-Windows"; target="$OUT/UnderTwoSkies-Windows/UnderTwoSkies.exe" ;;
     *) echo "unknown preset $p"; exit 1 ;;
   esac
   echo "== $p -> $target"
   "$GODOT" --headless --path . --export-release "$p" "$target"
 done
-if [ -d "$OUT/SatelliteShadow-Linux" ]; then (cd "$OUT" && zip -qr SatelliteShadow-Linux.zip SatelliteShadow-Linux); fi
-if [ -d "$OUT/SatelliteShadow-Windows" ]; then (cd "$OUT" && zip -qr SatelliteShadow-Windows.zip SatelliteShadow-Windows); fi
+if [ -d "$OUT/UnderTwoSkies-Linux" ]; then (cd "$OUT" && zip -qr UnderTwoSkies-Linux.zip UnderTwoSkies-Linux); fi
+if [ -d "$OUT/UnderTwoSkies-Windows" ]; then (cd "$OUT" && zip -qr UnderTwoSkies-Windows.zip UnderTwoSkies-Windows); fi
 echo "Builds in $OUT:"; ls -lh "$OUT"

@@ -1,0 +1,228 @@
+{
+  "provider": "Meshy MCP 0.5.2 / meshy-7",
+  "date": "2026-10-02",
+  "records": {
+    "khanae": {
+      "passed": true,
+      "triangles": 19798,
+      "bones": 19,
+      "surfaces": 1,
+      "height_m": 1.2000000476837158,
+      "min": [
+        -0.32458966970443726,
+        0.0,
+        -0.292929083108902
+      ],
+      "max": [
+        0.32458966970443726,
+        1.2000000476837158,
+        0.29290440678596497
+      ],
+      "clips": {
+        "Idle": 2.4000000953674316,
+        "Run": 0.6666666865348816,
+        "ToolUse": 0.699999988079071,
+        "Walk": 0.800000011920929
+      },
+      "sha256": "b9c2b70e523d6dd61a6ddf0f0aeb1399c751c87e590c1a42560b5b7bd541ef76",
+      "path": "assets/models/khanae_rigged.glb",
+      "candidate": "artifacts/character_candidates/khanae_likeness_20261002/rig_v12/khanae_rigged.glb",
+      "generation_task_id": "01a0fb7f-edac-70bc-8f99-2ef85309153f",
+      "rigging_task_id": "01a0fb85-3b15-72e8-93e9-35f28fda29f9",
+      "reference": "assets/reference/characters/khanae/02_clothing/khanae_user_locked_v02.png",
+      "reference_sha256": "7dcbceea7775226325c2b5690b4c70a21289c1ebebb973af22e3326bd3197c76",
+      "review": "tools/character_pipeline/KHANAE_LIKENESS_HANDOFF.md"
+    },
+    "tapoh": {
+      "passed": true,
+      "triangles": 19374,
+      "bones": 19,
+      "surfaces": 1,
+      "height_m": 1.149999976158142,
+      "min": [
+        -0.5297129154205322,
+        0.0,
+        -0.20577266812324524
+      ],
+      "max": [
+        0.5297129154205322,
+        1.149999976158142,
+        0.20577266812324524
+      ],
+      "clips": {
+        "Idle": 2.4000000953674316,
+        "Run": 0.6666666865348816,
+        "ToolUse": 0.699999988079071,
+        "Walk": 0.800000011920929
+      },
+      "sha256": "8ed71896acc6a97a2495558e60298bcc1f3453382b5e5255f85d52bca34c1fbb",
+      "path": "assets/models/tapoh_rigged.glb",
+      "candidate": "artifacts/character_candidates/meshy_cast_20261002/tapoh/final_v14/tapoh_rigged.glb",
+      "generation_task_id": "01a0fb3f-edf8-74ab-9d47-7e2f5855e890",
+      "rigging_task_id": "01a0fb45-3b59-73d8-9e92-07f32200be66"
+    },
+    "munaw": {
+      "passed": true,
+      "triangles": 19541,
+      "bones": 21,
+      "surfaces": 1,
+      "height_m": 1.0999999046325684,
+      "min": [
+        -0.4676770567893982,
+        0.0,
+        -0.19482854008674622
+      ],
+      "max": [
+        0.4676770865917206,
+        1.0999999046325684,
+        0.1948285698890686
+      ],
+      "clips": {
+        "Idle": 2.4000000953674316,
+        "Run": 0.6666666865348816,
+        "ToolUse": 0.699999988079071,
+        "Walk": 0.800000011920929
+      },
+      "sha256": "c4d39b5fead76ac741dd086ed971bfc136f931c26017712752bea82083652599",
+      "path": "assets/models/munaw_rigged.glb",
+      "candidate": "artifacts/character_candidates/meshy_cast_20261002/munaw/final_v14/munaw_rigged.glb",
+      "generation_task_id": "01a0fb3f-f94f-7279-aae3-6b3f33733f2b",
+      "rigging_task_id": "01a0fb46-7e31-7153-ad67-cea12baf73a3"
+    },
+    "maelu": {
+      "passed": true,
+      "triangles": 19436,
+      "bones": 21,
+      "surfaces": 1,
+      "height_m": 1.1499998569488383,
+      "min": [
+        -0.5404126644134521,
+        1.4210854715202004e-14,
+        -0.20061415433883667
+      ],
+      "max": [
+        0.5404126644134521,
+        1.1499998569488525,
+        0.20061415433883667
+      ],
+      "clips": {
+        "Granary": 2.0,
+        "Idle": 2.4000000953674316,
+        "Run": 0.6666666865348816,
+        "Talk": 2.4000000953674316,
+        "ToolUse": 0.699999988079071,
+        "Walk": 0.800000011920929
+      },
+      "sha256": "b4c52884bc1003dcd83dbda7dbfef51ef1abb89259d0b77bcc5699a3bd8de358",
+      "path": "assets/models/maelu_rigged.glb",
+      "candidate": "artifacts/character_candidates/meshy_cast_20261002/maelu/final_v14/maelu_rigged.glb",
+      "generation_task_id": "01a0fb40-0493-730a-a8d1-702e06864d85",
+      "rigging_task_id": "01a0fb46-9432-7267-a81b-84829cda8a95"
+    },
+    "ranger": {
+      "passed": true,
+      "triangles": 18522,
+      "bones": 19,
+      "surfaces": 1,
+      "height_m": 1.25,
+      "min": [
+        -0.6533804535865784,
+        0.0,
+        -0.2663109600543976
+      ],
+      "max": [
+        0.6533805727958679,
+        1.25,
+        0.2663109302520752
+      ],
+      "clips": {
+        "Escort": 0.9333333373069763,
+        "Idle": 2.4000000953674316,
+        "Photograph": 2.0,
+        "Point": 1.600000023841858,
+        "RadioTalk": 2.4000000953674316,
+        "Run": 0.6666666865348816,
+        "Scan": 3.200000047683716,
+        "Walk": 0.800000011920929
+      },
+      "sha256": "4c6563ee0032b9d8605429a77fe18d4f5d65faa13d02d60c163e2a7a29c99312",
+      "path": "assets/models/ranger_rigged.glb",
+      "candidate": "artifacts/character_candidates/meshy_cast_20261002/ranger/final_v15/ranger_rigged.glb",
+      "generation_task_id": "01a0fb40-0fe1-77ab-a440-c8c84316c68d",
+      "rigging_task_id": "01a0fb45-51ab-7159-9ee6-bc0e931504b5"
+    },
+    "ranger_slate": {
+      "passed": true,
+      "triangles": 18522,
+      "bones": 19,
+      "surfaces": 1,
+      "height_m": 1.25,
+      "min": [
+        -0.6533804535865784,
+        0.0,
+        -0.2663109600543976
+      ],
+      "max": [
+        0.6533805727958679,
+        1.25,
+        0.2663109302520752
+      ],
+      "clips": {
+        "Escort": 0.9333333373069763,
+        "Idle": 2.4000000953674316,
+        "Photograph": 2.0,
+        "Point": 1.600000023841858,
+        "RadioTalk": 2.4000000953674316,
+        "Run": 0.6666666865348816,
+        "Scan": 3.200000047683716,
+        "Walk": 0.800000011920929
+      },
+      "sha256": "79582715b86acccdfdf0fa23e1ca136e99ec00310691454c59fa6600f7aafaac",
+      "path": "assets/models/ranger_slate_rigged.glb",
+      "candidate": "artifacts/character_candidates/meshy_cast_20261002/ranger/final_v15/ranger_slate_rigged.glb",
+      "generation_task_id": "01a0fb40-0fe1-77ab-a440-c8c84316c68d",
+      "rigging_task_id": "01a0fb45-51ab-7159-9ee6-bc0e931504b5"
+    },
+    "C6_a": {
+      "path": "assets/props/C6_villager_a.glb",
+      "triangles": 2785,
+      "bones": 0,
+      "height_m": 1.15,
+      "sha256": "8f278550146a197307bac85da57c24238629b6afd2ec75cb1ccc0a216d387973",
+      "candidate": "artifacts/character_candidates/meshy_cast_20261002/villager_a/image_v2/delivery/C6_villager_a.glb"
+    },
+    "C6_b": {
+      "path": "assets/props/C6_villager_b.glb",
+      "triangles": 2784,
+      "bones": 0,
+      "height_m": 1.15,
+      "sha256": "a57f463981bf938709c13de87f5405a406ef727758cf40c27330da05b928b458",
+      "candidate": "artifacts/character_candidates/meshy_cast_20261002/villager_b/image_v2/delivery/C6_villager_b.glb"
+    },
+    "C6_c": {
+      "path": "assets/props/C6_villager_c.glb",
+      "triangles": 2785,
+      "bones": 0,
+      "height_m": 1.15,
+      "sha256": "3df4214b26cd9ef149ad2b510d98f702043c2c060149b777117d3fa53aa95df6",
+      "candidate": "artifacts/character_candidates/meshy_cast_20261002/villager_c/image_v2/delivery/C6_villager_c.glb"
+    },
+    "C6_d": {
+      "path": "assets/props/C6_villager_d.glb",
+      "triangles": 2786,
+      "bones": 0,
+      "height_m": 1.15,
+      "sha256": "130b2843e28014b9afa37d85c53bfb70305c3b3499b276c4b5c18f7163ff9f71",
+      "candidate": "artifacts/character_candidates/meshy_cast_20261002/villager_d/image_v2/delivery/C6_villager_d.glb"
+    }
+  },
+  "evidence_root": "artifacts/character_candidates/meshy_cast_20261002",
+  "rollback": "artifacts/character_candidates/meshy_cast_20261002/rollback",
+  "budget": {
+    "principal_triangles": 20000,
+    "C6_triangles": 3000
+  },
+  "front": "+Z",
+  "up": "+Y",
+  "origin": "base centred"
+}

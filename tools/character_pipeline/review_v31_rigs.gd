@@ -55,6 +55,9 @@ func run() -> void:
 				quit(1)
 				return
 			var model = doc.generate_scene(state)
+			if record.has("crowd_index"):
+				model.free()
+				model = load("res://ui/EndingScene.gd").villager_node(int(record.crowd_index), Color.WHITE)
 			if record.get("ranger_equipment",false):
 				var ranger := Node3D.new()
 				ranger.set_script(load("res://scenes/characters/RangerRig.gd"))

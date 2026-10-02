@@ -1,7 +1,7 @@
 # AGENT INSTRUCTION & ARCHITECTURE MANUAL (AGENT.md)
-## Project: Satellite Shadow (เงาเมฆา / ไร่หมุนเวียน)
+## Project: Under Two Skies (ไร่หมุนเวียนใต้เงาดาวเทียม; formerly Satellite Shadow / เงาเมฆา)
 
-This document provides explicit guidelines, environment topology, and command protocols for AI Agents operating on the Satellite Shadow codebase.
+This document provides explicit guidelines, environment topology, and command protocols for AI Agents operating on the Under Two Skies codebase.
 
 **Start here:** game code, UI and balance work continues from [`HANDOFF.md`](HANDOFF.md) (ownership split between agents, commands, rules and tunables, gotchas, open items). **What to build next** is specified in [`PRD_UPDATE_v1.1.md`](PRD_UPDATE_v1.1.md) (P0 = required for the playtest build).
 
@@ -103,14 +103,16 @@ The GPU node contains two active virtual environments:
   ```
 
 ### 3.4 3D Character Pipeline Protocol
-For the current quality character route, use the candidate runner described in SOP.md:
-```bash
-python3 tools/character_pipeline/run_refined_character.py --image <image_path> --name <character_name> --height 1.20
-```
+**2026-10-02 user decision:** Generate new character assets through Meshy. Stop
+local TRELLIS.2 / TripoSR character generation development. Keep the local pipeline
+for non-character assets. Follow [SOP.md](SOP.md) and
+[Meshy setup](tools/character_pipeline/MESHY_SETUP.md); MCP is installed with
+authentication and all 24 tools verified on 2026-10-02. Use only for character
+assets; preserve the review and gameplay validation gates.
 * **Candidate Outputs:** `artifacts/character_candidates/`; visual review precedes production installation.
 * **Production Assets:** `assets/models/<name>_textured.glb`; reviewed skeletal versions use `<name>_rigged.glb`.
-* **Rigging:** `run_rig.py --input <reviewed.glb> --profile <calibrated-profile.json>`. Kha-nae has a calibrated profile; other meshes need landmark and weight review.
-* **Legacy Prototype Route:** `generate_character.sh` retains the older TripoSR workflow.
+* **Rigging:** Review Meshy rig/animation exports against the gameplay contract. Local `run_rig.py` remains available, but existing profiles are tied to the old meshes; recalibrate landmarks and weights for replacements.
+* **Legacy Routes:** `run_refined_character.py` and `generate_character.sh` are preserved for history/rollback, not new character generation.
 * **Rigging Specs:** See [`tools/character_pipeline/rigging_guide.md`](tools/character_pipeline/rigging_guide.md).
 * **Registry & Benchmarks:** See [`tools/character_pipeline/PIPELINE_DASHBOARD.md`](tools/character_pipeline/PIPELINE_DASHBOARD.md).
 
@@ -151,3 +153,5 @@ Whenever GDScript or `.tscn` files are modified:
 1. **Rai Mun Wian (ไร่หมุนเวียน):** Preserve the authentic representation of rotational upland farming—not destructive slash-and-burn, but sustainable traditional agroecology.
 2. **Mutual Aid (เอาแรง):** The player should never be forced to micromanage every click. Companions must maintain helpful role autonomy (Elder raking firebreaks, Youth dousing hotspots).
 3. **The Satellite Shadow:** The 14:00 to 20:00 window is non-negotiable. All mechanics revolve around cooling thermal signatures before the 20:00 VIIRS night-pass.
+
+Current installed Meshy character cast and reproducible delivery evidence: `tools/character_pipeline/MESHY_CAST_HANDOFF.md`; exact counts/hashes: `tools/character_pipeline/installed_meshy_cast.json`. Legacy v3.1 numeric fixtures have been updated for these reviewed replacements.

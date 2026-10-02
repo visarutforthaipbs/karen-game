@@ -1,17 +1,27 @@
 # Character generation and quality checks
 
+**Current route — 2026-10-02:** Meshy generates new character assets. The user
+retired local character generation development; TRELLIS.2 and TripoSR recipes
+below are historical. Non-character assets continue through the local prop
+pipeline. See [Meshy setup and workflow](MESHY_SETUP.md). MCP authentication and
+tool discovery passed on 2026-10-02. The complete replacement cast is now installed;
+see [delivery, checks and rollback](MESHY_CAST_HANDOFF.md) and
+[exact installed inventory](installed_meshy_cast.json).
+Low-poly style, likeness, rigging, animation and gameplay validation remain required.
+Existing rig profiles must be recalibrated before use on a different mesh.
+
 After visual review, follow [SOP](../../SOP.md) and the
 [rigging guide](rigging_guide.md) for skeleton, skin and game integration.
-`run_rig.py` builds calibrated Kha-nae, Ta-poh, Mu-naw and Mae-Lu rigs using
+The archived `run_rig.py` builds calibrated Kha-nae, Ta-poh, Mu-naw and Mae-Lu rigs using
 `rig_profiles/<name>_v31.json`; generation
 outputs alone remain unrigged. See [gameplay motion](gameplay_motion.md) for
 work layers, calibration findings and current limits.
 
 The legacy TripoSR route is a fast vertex-colour prototype generator. Its successful
 mesh validation does **not** establish facial likeness or visual quality. The
-textured TRELLIS.2 route is the candidate path for higher visual fidelity.
+textured TRELLIS.2 experiments below document the previous production route.
 
-## One-command refined character build
+## Archived one-command local character build
 
 The refined route automates the recipe that improved Kha-nae's surface and woven
 clothing. Use one clear full-body character reference with visible face, hands,

@@ -189,6 +189,158 @@ def v31_weights(x, y, z, profile, skirt_surface=False):
     return {n:w for n,w in result.items() if w > 1e-6}
 
 
+def bake_gameplay_clips(mesh, rig, profile):
+    """Bake the existing gameplay contract onto a reviewed, weighted skeleton."""
+    armature = rig.data
+    character_name = profile['name']
+    original = [v.co.copy() for v in mesh.data.vertices]
+    original_array = np.array(original)
+    edges = np.array([tuple(edge.vertices) for edge in mesh.data.edges])
+    edge_lengths = np.linalg.norm(original_array[edges[:, 0]] - original_array[edges[:, 1]], axis=1)
+    long_edges = edge_lengths > .003
+    scene = bpy.context.scene
+    scene.render.fps = 30
+    rig.animation_data_create()
+    clip_metrics = {}
+
+    def rotate(name, axis, degrees):
+        # Express a world-rest axis in this bone's local rest basis.
+        basis = armature.bones[name].matrix_local.to_quaternion()
+        if profile.get('posed_elbow_axes', profile.get('tpose_source')) and name.startswith('Forearm.'):
+            # The T-pose arm is lowered by its parent. Bend the elbow around
+            # the posed world hinge, rather than twisting its original axis.
+            bpy.context.view_layer.update()
+            basis = rig.pose.bones[name].matrix.to_quaternion()
+        q = Quaternion(blender_point(axis).normalized(), math.radians(degrees))
+        rig.pose.bones[name].rotation_quaternion = basis.inverted() @ q @ basis
+
+    def gesture_rotate(name, axis, degrees):
+        # Meshy has a T-pose rest: preserve the lowered-arm base when layering
+        # gestures. Legacy A-pose profiles retain their original behavior.
+        base = rig.pose.bones[name].rotation_quaternion.copy()
+        rotate(name, axis, degrees)
+        if profile.get('tpose_source'):
+            rig.pose.bones[name].rotation_quaternion @= base
+
+    clips = [('Idle', 2.4), ('Walk', .8), ('Run', .65), ('ToolUse', .7)]
+    if character_name == 'maelu' and profile.get('weight_mode') == 'v31':
+        clips += [('Talk',2.4),('Granary',2.0)]
+    if character_name == 'ranger':
+        clips = [('Idle',2.4),('Walk',.8),('Run',.65),('Scan',3.2),('Photograph',2.0),('Point',1.6),('RadioTalk',2.4),('Escort',.95)]
+    for clip, duration in clips:
+        frames = round(duration*30)
+        action = bpy.data.actions.new(clip)
+        rig.animation_data.action = action
+        minimum, maximum = 1e9, -1e9
+        max_displacement = 0.0
+        max_edge_stretch = 0.0
+        worst_edge = None
+        for frame in range(frames+1):
+            scene.frame_set(frame)
+            phase = 2*math.pi*frame/frames
+            for b in rig.pose.bones:
+                b.rotation_mode = 'QUATERNION'
+                b.rotation_quaternion = Quaternion()
+                b.location = (0, 0, 0)
+            for side, sign in [('L', 1), ('R', -1)]:
+                rotate(f'UpperArm.{side}', (0, 0, 1), -sign*profile.get("arm_rest_degrees", 22))
+                if clip in ('Walk', 'Run', 'Escort'):
+                    step = math.sin(phase)*sign
+                    rotate(f'Thigh.{side}', (1, 0, 0), step*(30 if clip == 'Run' else 23))
+                    bend = max(0, -step)*(35 if clip == 'Run' else 28)
+                    rotate(f'Shin.{side}', (1, 0, 0), bend)
+                    rotate(f'Foot.{side}', (1, 0, 0), -step*(30 if clip == 'Run' else 23)-bend)
+                    base = rig.pose.bones[f'UpperArm.{side}'].rotation_quaternion.copy()
+                    rotate(f'UpperArm.{side}', (1, 0, 0), 0 if profile.get('locked_carry') else -step*10)
+                    rig.pose.bones[f'UpperArm.{side}'].rotation_quaternion @= base
+                elif clip == 'ToolUse':
+                    swing = math.sin(math.pi*frame/frames)**2
+                    base = rig.pose.bones[f'UpperArm.{side}'].rotation_quaternion.copy()
+                    rotate(f'UpperArm.{side}', (1, 0, 0), 0 if profile.get('locked_carry') else (-30 if side == 'R' else -10)*swing)
+                    rig.pose.bones[f'UpperArm.{side}'].rotation_quaternion @= base
+                    rotate(f'Forearm.{side}', (1, 0, 0), 0 if profile.get('locked_carry') else -12*swing)
+            if clip == 'Idle':
+                rotate('Chest', (1, 0, 0), math.sin(phase)*1.3)
+                rotate('Head', (0, 1, 0), math.sin(phase)*2)
+            elif clip == 'ToolUse':
+                rotate('Spine', (1, 0, 0), -8*math.sin(math.pi*frame/frames)**2)
+            elif clip in ('Talk','Granary'):
+                gesture = math.sin(math.pi*frame/frames)**2
+                rotate('Head',(1,0,0),3*math.sin(phase))
+                rotate('Forearm.R',(1,0,0),-25*gesture)
+                gesture_rotate('UpperArm.R',(1,0,0),-18*gesture)
+                if clip == 'Granary':
+                    rotate('Forearm.L',(1,0,0),-20*gesture)
+                    gesture_rotate('UpperArm.L',(1,0,0),-15*gesture)
+            if character_name == 'ranger':
+                gesture = math.sin(math.pi*frame/frames)**2
+                if clip == 'Scan':
+                    rotate('Head',(0,1,0),24*math.sin(phase))
+                    rotate('Chest',(0,1,0),7*math.sin(phase))
+                elif clip == 'Photograph':
+                    for side in ('R',):
+                        gesture_rotate('UpperArm.'+side,(1,0,0),-35*gesture)
+                        rotate('Forearm.'+side,(1,0,0),-55*gesture)
+                elif clip == 'Point':
+                    gesture_rotate('UpperArm.R',(1,0,0),-48*gesture)
+                    rotate('Forearm.R',(1,0,0),-12*gesture)
+                    rotate('Head',(0,1,0),-10*gesture)
+                elif clip == 'RadioTalk':
+                    # The microphone is on the left shoulder; distinguish this
+                    # from the right-handed tablet/ordering gestures.
+                    gesture_rotate('UpperArm.L',(1,0,0),-28*gesture)
+                    rotate('Forearm.L',(1,0,0),(-115 if profile.get('tpose_source') else -60)*gesture)
+                    rotate('Head',(0,1,0),16*gesture)
+                    base = rig.pose.bones['Head'].rotation_quaternion.copy()
+                    rotate('Head',(1,0,0),8*gesture)
+                    rig.pose.bones['Head'].rotation_quaternion @= base
+                elif clip == 'Escort':
+                    gesture_rotate('UpperArm.R',(1,0,0),-32)
+                    rotate('Forearm.R',(1,0,0),-12)
+            if profile.get('skirt') and character_name != 'maelu' and clip in ('Walk','Run'):
+                # Broad front/back panels open around the stepping legs without
+                # stretching a centre seam between left and right thighs.
+                swing = abs(math.sin(phase))*(30 if clip == 'Run' else 23)
+                rotate('Skirt.Front',(1,0,0),-swing*.9)
+                rotate('Skirt.Back',(1,0,0),swing*.9)
+            # Ground the evaluated soles, instead of bouncing the entire body.
+            bpy.context.view_layer.update()
+            evaluated = mesh.evaluated_get(bpy.context.evaluated_depsgraph_get())
+            posed = np.array([tuple(v.co) for v in evaluated.data.vertices])
+            lengths = np.linalg.norm(posed[edges[:, 0]] - posed[edges[:, 1]], axis=1)
+            ratios = lengths[long_edges] / edge_lengths[long_edges]
+            if float(np.max(ratios)) > max_edge_stretch:
+                max_edge_stretch = float(np.max(ratios))
+                pair = edges[long_edges][int(np.argmax(ratios))]
+                worst_edge = {'original': original_array[pair].tolist(), 'posed':posed[pair].tolist(),
+                              'groups':[{mesh.vertex_groups[g.group].name:g.weight for g in mesh.data.vertices[int(i)].groups} for i in pair]}
+            floor = min(v.co.z for v in evaluated.data.vertices)
+            rig.pose.bones['Root'].location = armature.bones['Root'].matrix_local.to_3x3().inverted() @ Vector((0, 0, -floor))
+            bpy.context.view_layer.update()
+            evaluated = mesh.evaluated_get(bpy.context.evaluated_depsgraph_get())
+            for index, v in enumerate(evaluated.data.vertices):
+                if not all(math.isfinite(c) for c in v.co):
+                    raise ValueError('Non-finite deformed vertex')
+                minimum = min(minimum, v.co.z)
+                maximum = max(maximum, v.co.z)
+                max_displacement = max(max_displacement, (v.co-original[index]).length)
+            for b in rig.pose.bones:
+                b.keyframe_insert('rotation_quaternion', frame=frame, group=b.name)
+                b.keyframe_insert('location', frame=frame, group=b.name)
+        clip_metrics[clip] = {'seconds': duration, 'frames': frames+1,
+                              'ground_min': minimum, 'height_max': maximum,
+                              'max_vertex_displacement': max_displacement,
+                              'max_edge_stretch_over_3mm': max_edge_stretch, 'worst_edge': worst_edge}
+        if abs(minimum) > .001 or max_displacement > profile.get('max_vertex_displacement', .4) or max_edge_stretch > 3.5:
+            raise ValueError(f'{clip}: deformation/grounding outside calibrated limits: {clip_metrics[clip]}')
+        rig.animation_data.action = None
+        track = rig.animation_data.nla_tracks.new()
+        track.name = clip
+        track.strips.new(clip, 0, action)
+        track.mute = True
+    return clip_metrics
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input', type=Path, required=True)
@@ -341,133 +493,8 @@ def main():
     modifier = mesh.modifiers.new('CharacterSkin', 'ARMATURE')
     modifier.object = rig
     mesh.parent = rig
+    clip_metrics = bake_gameplay_clips(mesh, rig, profile)
     scene = bpy.context.scene
-    scene.render.fps = 30
-    rig.animation_data_create()
-    clip_metrics = {}
-
-    def rotate(name, axis, degrees):
-        # Express a world-rest axis in this bone's local rest basis.
-        basis = armature.bones[name].matrix_local.to_quaternion()
-        q = Quaternion(blender_point(axis).normalized(), math.radians(degrees))
-        rig.pose.bones[name].rotation_quaternion = basis.inverted() @ q @ basis
-
-    clips = [('Idle', 2.4), ('Walk', .8), ('Run', .65), ('ToolUse', .7)]
-    if character_name == 'maelu' and profile.get('weight_mode') == 'v31':
-        clips += [('Talk',2.4),('Granary',2.0)]
-    if character_name == 'ranger':
-        clips = [('Idle',2.4),('Walk',.8),('Run',.65),('Scan',3.2),('Photograph',2.0),('Point',1.6),('RadioTalk',2.4),('Escort',.95)]
-    for clip, duration in clips:
-        frames = round(duration*30)
-        action = bpy.data.actions.new(clip)
-        rig.animation_data.action = action
-        minimum, maximum = 1e9, -1e9
-        max_displacement = 0.0
-        max_edge_stretch = 0.0
-        worst_edge = None
-        for frame in range(frames+1):
-            scene.frame_set(frame)
-            phase = 2*math.pi*frame/frames
-            for b in rig.pose.bones:
-                b.rotation_mode = 'QUATERNION'
-                b.rotation_quaternion = Quaternion()
-                b.location = (0, 0, 0)
-            for side, sign in [('L', 1), ('R', -1)]:
-                rotate(f'UpperArm.{side}', (0, 0, 1), -sign*profile.get("arm_rest_degrees", 22))
-                if clip in ('Walk', 'Run', 'Escort'):
-                    step = math.sin(phase)*sign
-                    rotate(f'Thigh.{side}', (1, 0, 0), step*(30 if clip == 'Run' else 23))
-                    bend = max(0, -step)*(35 if clip == 'Run' else 28)
-                    rotate(f'Shin.{side}', (1, 0, 0), bend)
-                    rotate(f'Foot.{side}', (1, 0, 0), -step*(30 if clip == 'Run' else 23)-bend)
-                    base = rig.pose.bones[f'UpperArm.{side}'].rotation_quaternion.copy()
-                    rotate(f'UpperArm.{side}', (1, 0, 0), 0 if profile.get('locked_carry') else -step*10)
-                    rig.pose.bones[f'UpperArm.{side}'].rotation_quaternion @= base
-                elif clip == 'ToolUse':
-                    swing = math.sin(math.pi*frame/frames)**2
-                    base = rig.pose.bones[f'UpperArm.{side}'].rotation_quaternion.copy()
-                    rotate(f'UpperArm.{side}', (1, 0, 0), 0 if profile.get('locked_carry') else (-30 if side == 'R' else -10)*swing)
-                    rig.pose.bones[f'UpperArm.{side}'].rotation_quaternion @= base
-                    rotate(f'Forearm.{side}', (1, 0, 0), 0 if profile.get('locked_carry') else -12*swing)
-            if clip == 'Idle':
-                rotate('Chest', (1, 0, 0), math.sin(phase)*1.3)
-                rotate('Head', (0, 1, 0), math.sin(phase)*2)
-            elif clip == 'ToolUse':
-                rotate('Spine', (1, 0, 0), -8*math.sin(math.pi*frame/frames)**2)
-            elif clip in ('Talk','Granary'):
-                gesture = math.sin(math.pi*frame/frames)**2
-                rotate('Head',(1,0,0),3*math.sin(phase))
-                rotate('Forearm.R',(1,0,0),-25*gesture)
-                rotate('UpperArm.R',(1,0,0),-18*gesture)
-                if clip == 'Granary':
-                    rotate('Forearm.L',(1,0,0),-20*gesture)
-                    rotate('UpperArm.L',(1,0,0),-15*gesture)
-            if character_name == 'ranger':
-                gesture = math.sin(math.pi*frame/frames)**2
-                if clip == 'Scan':
-                    rotate('Head',(0,1,0),24*math.sin(phase))
-                    rotate('Chest',(0,1,0),7*math.sin(phase))
-                elif clip == 'Photograph':
-                    for side in ('R',):
-                        rotate('UpperArm.'+side,(1,0,0),-35*gesture)
-                        rotate('Forearm.'+side,(1,0,0),-55*gesture)
-                elif clip == 'Point':
-                    rotate('UpperArm.R',(1,0,0),-48*gesture)
-                    rotate('Forearm.R',(1,0,0),-12*gesture)
-                    rotate('Head',(0,1,0),-10*gesture)
-                elif clip == 'RadioTalk':
-                    # The microphone is on the left shoulder; distinguish this
-                    # from the right-handed tablet/ordering gestures.
-                    rotate('UpperArm.L',(1,0,0),-28*gesture)
-                    rotate('Forearm.L',(1,0,0),-60*gesture)
-                    rotate('Head',(0,1,0),16*gesture)
-                    base = rig.pose.bones['Head'].rotation_quaternion.copy()
-                    rotate('Head',(1,0,0),8*gesture)
-                    rig.pose.bones['Head'].rotation_quaternion @= base
-                elif clip == 'Escort':
-                    rotate('UpperArm.R',(1,0,0),-32)
-                    rotate('Forearm.R',(1,0,0),-12)
-            if profile.get('skirt') and character_name != 'maelu' and clip in ('Walk','Run'):
-                # Broad front/back panels open around the stepping legs without
-                # stretching a centre seam between left and right thighs.
-                swing = abs(math.sin(phase))*(30 if clip == 'Run' else 23)
-                rotate('Skirt.Front',(1,0,0),-swing*.9)
-                rotate('Skirt.Back',(1,0,0),swing*.9)
-            # Ground the evaluated soles, instead of bouncing the entire body.
-            bpy.context.view_layer.update()
-            evaluated = mesh.evaluated_get(bpy.context.evaluated_depsgraph_get())
-            posed = np.array([tuple(v.co) for v in evaluated.data.vertices])
-            lengths = np.linalg.norm(posed[edges[:, 0]] - posed[edges[:, 1]], axis=1)
-            ratios = lengths[long_edges] / edge_lengths[long_edges]
-            if float(np.max(ratios)) > max_edge_stretch:
-                max_edge_stretch = float(np.max(ratios))
-                pair = edges[long_edges][int(np.argmax(ratios))]
-                worst_edge = {'original': original_array[pair].tolist(), 'posed':posed[pair].tolist(),
-                              'groups':[{mesh.vertex_groups[g.group].name:g.weight for g in mesh.data.vertices[int(i)].groups} for i in pair]}
-            floor = min(v.co.z for v in evaluated.data.vertices)
-            rig.pose.bones['Root'].location = armature.bones['Root'].matrix_local.to_3x3().inverted() @ Vector((0, 0, -floor))
-            bpy.context.view_layer.update()
-            evaluated = mesh.evaluated_get(bpy.context.evaluated_depsgraph_get())
-            for index, v in enumerate(evaluated.data.vertices):
-                if not all(math.isfinite(c) for c in v.co):
-                    raise ValueError('Non-finite deformed vertex')
-                minimum = min(minimum, v.co.z)
-                maximum = max(maximum, v.co.z)
-                max_displacement = max(max_displacement, (v.co-original[index]).length)
-            for b in rig.pose.bones:
-                b.keyframe_insert('rotation_quaternion', frame=frame, group=b.name)
-                b.keyframe_insert('location', frame=frame, group=b.name)
-        clip_metrics[clip] = {'seconds': duration, 'frames': frames+1,
-                              'ground_min': minimum, 'height_max': maximum,
-                              'max_vertex_displacement': max_displacement,
-                              'max_edge_stretch_over_3mm': max_edge_stretch, 'worst_edge': worst_edge}
-        if abs(minimum) > .001 or max_displacement > profile.get('max_vertex_displacement', .4) or max_edge_stretch > 3.5:
-            raise ValueError(f'{clip}: deformation/grounding outside calibrated limits: {clip_metrics[clip]}')
-        rig.animation_data.action = None
-        track = rig.animation_data.nla_tracks.new()
-        track.name = clip
-        track.strips.new(clip, 0, action)
-        track.mute = True
     # Export actions independently, not blended NLA strips.
     scene.frame_set(0)
     for b in rig.pose.bones:

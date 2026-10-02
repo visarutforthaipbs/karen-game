@@ -30,3 +30,21 @@ Deliberate practiced movement, stable slope stance; ignition, rake and spray mus
 - Visual review, calibrated rigging and gameplay checks remain separate gates.
 - Do not combine the four real inspiration biographies into a claim that all people live in the same community.
 - No production cultural lock claimed yet. Resolve uncertain garment/tool details before final approval.
+
+## User likeness correction — 2026-10-02
+
+The user rejected the first installed Meshy Kha-nae likeness while accepting the
+other characters. The authoritative production image is now
+`02_clothing/khanae_user_locked_v02.png` (original filename
+`Meshy_AI_khanae_clean_front.png`, SHA-256
+`7dcbceea7775226325c2b5690b4c70a21289c1ebebb973af22e3326bd3197c76`).
+It preserves the broader adult face, short dark goatee/moustache, sturdy body,
+wide straw hat, coloured wrap, indigo/scarlet tunic, diagonal sling, fire striker
+and gourd canteen. Do not substitute the earlier simplified v01 derivative.
+The new image is the user's visual design reference, not documentary evidence.
+
+Gate: compare identity and full-body proportions against this exact image before
+rigging and again after rigging/portrait export. A technically valid, low-poly,
+animated model can still fail likeness. Do not mark likeness accepted merely
+because the technical gates pass. Correction evidence is under
+`artifacts/character_candidates/khanae_likeness_20261002/`.
