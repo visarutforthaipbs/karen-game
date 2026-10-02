@@ -423,3 +423,12 @@ SHA-256 ee991fa2134b0c9d242c783b046262ebc7eb015d8210009ab4f43ca373e7ce5d.
 Repeat for new builds: `tools/notarize_mac.sh build/<dir>/UnderTwoSkies-macOS.zip`
 (uses the keychain profile "undertwoskies-notary"; no secrets in the repo).
 The previous ad-hoc zip is kept in R2 at beta1/archive/. Windows is still unsigned.
+
+### Beta 1 re-release (voices fix) — 2026-10-02
+The first beta 1 builds (fc8b3fd) had NO recorded voices on any platform:
+the loader skipped the ".wav.import" names an export lists. Fixed in 4107756
+(`AudioManager.wav_names`, regression check in test_all). All three beta1 files
+were replaced from build 20261002-4107756; macOS notarized again (submission
+81f523fe-7e88-4466-ac71-7c01e105b313, SHA-256 57800e89…). The fc8b3fd files are
+archived in R2 at beta1/archive/fc8b3fd/. Check exported builds with
+`<app> --headless --verbose --quit-after 30 | grep "AudioManager voices"`.
