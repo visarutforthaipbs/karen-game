@@ -412,3 +412,14 @@ button in Settings; online rank on the run summary; online top 5 on the Title.
 All failures silent. NOTE: HTTPRequest.timeout counts engine seconds, so headless
 probes must run WITHOUT --fixed-fps or network calls time out early (found the
 hard way). Suite: 148 checks.
+
+## macOS signing and notarization — 2026-10-02
+
+Beta 1's macOS build is Developer ID signed (Visarut Sankham, team 79QFYKTJMN),
+hardened runtime, secure timestamp, notarized (submission
+f68443c6-f53a-4943-ae06-6f4f3f0e300b, Accepted, no issues), stapled, and passes
+Gatekeeper as "Notarized Developer ID" even as a quarantined download.
+SHA-256 ee991fa2134b0c9d242c783b046262ebc7eb015d8210009ab4f43ca373e7ce5d.
+Repeat for new builds: `tools/notarize_mac.sh build/<dir>/UnderTwoSkies-macOS.zip`
+(uses the keychain profile "undertwoskies-notary"; no secrets in the repo).
+The previous ad-hoc zip is kept in R2 at beta1/archive/. Windows is still unsigned.

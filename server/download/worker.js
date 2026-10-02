@@ -4,7 +4,7 @@
 
 const FILES = [
 	["UnderTwoSkies-Windows.zip", "Windows 10/11 (x86_64)", "199 MB"],
-	["UnderTwoSkies-macOS.zip", "macOS (Universal)", "221 MB"],
+	["UnderTwoSkies-macOS.zip", "macOS (Universal) · ผ่านการรับรองจาก Apple", "230 MB"],
 	["UnderTwoSkies-Linux.zip", "Linux / Steam Deck (x86_64)", "189 MB"],
 ];
 
@@ -32,11 +32,10 @@ const PAGE = `<!doctype html>
 <p><a href="/beta1/SHA256SUMS.txt">SHA256SUMS.txt</a> สำหรับตรวจสอบไฟล์</p>
 <div class="card"><h2>Windows ขึ้นจอฟ้า "Windows protected your PC"?</h2>
 กด <b>More info</b> แล้ว <b>Run anyway</b> — บิลด์เบตายังไม่ได้เซ็นชื่อดิจิทัล</div>
-<div class="card"><h2>macOS เปิดไม่ได้?</h2>
-คลิกขวาที่แอป → <b>Open</b> → Open อีกครั้ง หรือรันในเทอร์มินัล:<br>
-<code>xattr -dr com.apple.quarantine "Under Two Skies.app"</code></div>
+<div class="card"><h2>macOS</h2>
+แอปเซ็นชื่อด้วย Developer ID และผ่านการตรวจรับรอง (notarized) จาก Apple แล้ว แตกไฟล์ zip แล้วดับเบิลคลิกเปิดได้เลย</div>
 <div class="card"><h2>หลังเล่นจบ ช่วยส่งผลให้เราหน่อย</h2>
-ในเกม: <b>ตั้งค่า → เปิดโฟลเดอร์บันทึกการเล่น</b> เก็บไฟล์ <code>playtest_log.csv</code> ไว้ ช่องทางส่งไฟล์และความคิดเห็นจะประกาศบนเว็บไซต์ของเกม
+ในเกม: <b>ตั้งค่า → เปิดโฟลเดอร์บันทึกการเล่น</b> เก็บไฟล์ <code>playtest_log.csv</code> ไว้ ส่งไฟล์และความคิดเห็นได้ที่ดิสคอร์ด ช่อง <b>#feedback</b>: <a href="https://discord.gg/ZJ2ywpJ7Ss">discord.gg/ZJ2ywpJ7Ss</a>
 ช่วยจดสั้น ๆ ด้วยว่า เข้าใจเป้าหมายใน 5 นาทีแรกไหม ติดตรงไหน และ FPS (กด F3 เมื่อเปิดเครื่องมือทดสอบในตั้งค่า)</div>
 <div class="card"><h2>กระดานออนไลน์ (เบตา)</h2>
 ปิดเป็นค่าเริ่มต้น เปิดได้ใน <b>ตั้งค่า → กระดานออนไลน์</b> ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีข้อมูลส่วนตัว ลบคะแนนตัวเองได้ทุกเมื่อ</div>
