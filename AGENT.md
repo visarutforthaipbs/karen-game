@@ -3,7 +3,7 @@
 
 This document provides explicit guidelines, environment topology, and command protocols for AI Agents operating on the Satellite Shadow codebase.
 
-**Start here:** game code, UI and balance work continues from [`HANDOFF.md`](HANDOFF.md) (ownership split between agents, commands, rules and tunables, gotchas, open items).
+**Start here:** game code, UI and balance work continues from [`HANDOFF.md`](HANDOFF.md) (ownership split between agents, commands, rules and tunables, gotchas, open items). **What to build next** is specified in [`PRD_UPDATE_v1.1.md`](PRD_UPDATE_v1.1.md) (P0 = required for the playtest build).
 
 ---
 

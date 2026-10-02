@@ -78,8 +78,13 @@ camera fix.
      is hidden.
 6. **Balance pass.** Everything was measured with `tests/balance_sim.gd` and a
    campaign Monte Carlo. Numbers are in §4.
-7. **Knife fix.** A camera "aim lean" moved the cell under a still mouse, so
-   hold-to-cut never finished. The lean was removed and a regression test added.
+7. **Knife fixes.**
+   - A camera "aim lean" moved the cell under a still mouse, so hold-to-cut
+     never finished. The lean was removed and a regression test added.
+   - Then a plain click did nothing, because cutting needed the button held.
+     A click now commits the cut. The user plays by clicking, so keep it that
+     way. Verify with a windowed diagnostic that warps the mouse and presses
+     `use_tool` (see §2).
 
 Also: `project.godot` sets `filesystem/import/blender/enabled=false`; `.blend`
 files blocked every headless import because Blender isn't installed on this Mac.
@@ -99,7 +104,7 @@ The campaign ends at rice ≤ 20% (famine) or scrutiny ≥ 100 (crackdown).
 | Fuel dryness by time of day | `FireGrid.dryness_at_minute` | 14:00 0.35 → 15:30 0.95 → 16:30 1.0 → 18:30 0.55 → 20:00 0.4 |
 | Burn / smoulder duration | `BURN_DURATION_TICKS` / `smolder_duration_ticks` | 12 / 480 ticks (1 tick = 0.5 s real = 20 s game). Self-cooling deadline 17:16, computed in `MainController.self_cool_deadline_minute()` and checked against `HowToPlay.SELF_COOL_DEADLINE` |
 | Spot fires in the park | `BAMBOO_BURST_CHANCE`, `BORDER_CATCH_CHANCE`, `BORDER_SPREAD_FACTOR`, `ESCAPE_TICKS` | 0.3, 0.5, 0.5, 16 ticks (8 s to douse); spots don't spread until established |
-| Firebreak cutting | `PlayerController.CLEAR_SECONDS` | 0.5 s held per cell (blade upgrades shorten it) |
+| Firebreak cutting | `PlayerController.CLEAR_SECONDS` | 0.5 s per cell (blade upgrades shorten it). A **click commits** the cut (`_begin_cut` / `_update_firebreak_cut`): raking finishes on its own, cancelled only by leaving reach or switching tools. Holding and dragging rakes a line |
 | Drones | `ForestryDrone.SWEEP_SECONDS`, `AWAY_SECONDS_*` | 45 s over the plot, 50–70 s away, at most one photo per sweep. Crew photographed only when beside open flames |
 | Ground cameras | `ThermalCamera.tripped` | each post logs a burn once (+10 × penalty_mult) |
 | Satellite detection | `SatelliteOverpass.scrutiny_for` | base penalty + 1 per extra hot cell, capped at 2× |
@@ -131,12 +136,15 @@ is the real check.
 
 ## 6. Open items / next steps
 
+**The full build plan is now [`PRD_UPDATE_v1.1.md`](PRD_UPDATE_v1.1.md)**: an audit plus P0/P1/P2 requirements with owners and acceptance criteria (title, pause, save, settings, endings, the Ranger, tool reach, telemetry, builds, Steam Deck, CI). The list below is the short version.
+
 1. **Playtest the balance:** whether 8 s is enough to reach a spot fire, how
    drone sweeps feel, burn speed (`base_spread_chance`), and the hold-to-cut
    time. Each is one constant (§4).
-2. **The GitHub repo is public:** https://github.com/visarutforthaipbs/karen-game.
-   It has no README or LICENSE yet. Ask the user whether it should stay public
-   and which licence to use.
+2. **The GitHub repo stays public** (user decision, 2026-10-02):
+   https://github.com/visarutforthaipbs/karen-game. It still needs a README, and
+   a LICENSE once the user picks the terms. The **Ranger foot patrol is
+   approved** (PRD_UPDATE_v1.1 P1-2).
 3. **Builds:** there are no export presets. A Linux build is needed for the
    Steam Deck test (still open, along with frame rate with the landscape) and a
    Mac build for testers. The Thai line-break data setting is already on.
@@ -146,3 +154,22 @@ is the real check.
 6. **Possible design follow-ups:** companions taking cover from drones;
    drip-torch fuel; showing hold-to-cut progress on the cell marker (it turns red
    when out of reach, but shows no progress).
+
+
+## Character v3.1 installation handoff — 2026-10-02
+
+All four new rigs are installed. Three field scenes set `separate_equipment=true`;
+Mu-naw is now the free-armed young woman with dress controls and separate gear.
+Mae-Lu's new character scene and live portrait are in the village granary card;
+ration presses trigger a visual gesture without changing accounting. The shared
+CompanionController change only selects the faceted tank for the new cast's
+borrowed sprayer. VillageHearth retains the existing audio/UI changes.
+Two explicit local types in AudioManager's mix-report loop fix parse errors
+encountered during validation; its sound design was not altered by this rig pass.
+
+Character tests, actual gameplay-motion tests, `test_all.gd` and the 120-frame
+smoke run pass. Runtime deformation uses role-appropriate actions for all four;
+`tests/test_motion_deformation.gd` now delegates to the manifest-capable v3.1
+checker. Evidence, rejected builds, hashes and rollback are under
+`artifacts/character_rigs_v31/`. Existing exit-time ObjectDB leak warnings remain.
+See `tools/character_pipeline/CAST_V31_STATUS.md` for reference/animation limits.
