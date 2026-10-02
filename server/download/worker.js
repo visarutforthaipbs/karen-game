@@ -11,7 +11,6 @@ const FILES = [
 const PAGE = `<!doctype html>
 <html lang="th"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
 <title>Under Two Skies — เบตา 1</title>
 <style>
 	body{background:#101318;color:#e8e2d4;font-family:system-ui,'Kanit',sans-serif;margin:0;padding:24px 16px;line-height:1.6}
@@ -27,7 +26,7 @@ const PAGE = `<!doctype html>
 	h2{font-size:1.05rem;color:#cfe3cf;margin:0 0 8px}
 </style></head><body><main>
 <h1>Under Two Skies <small>เบตา 1</small></h1>
-<p class="sub">ไร่หมุนเวียนใต้เงาดาวเทียม · รอบทดสอบสำหรับผู้ทดสอบที่ได้รับลิงก์นี้</p>
+<p class="sub">ไร่หมุนเวียนใต้เงาดาวเทียม · เบตาภาษาไทย ดาวน์โหลดฟรี ไม่ต้องสมัครสมาชิก</p>
 <p>เกมสำหรับ <b>PC เท่านั้น</b> (ใช้เมาส์+คีย์บอร์ด หรือจอยเกม) · เกมเป็นภาษาไทย · เล่นหนึ่งแปลงใช้เวลา ~9 นาที</p>
 %LINKS%
 <p><a href="/beta1/SHA256SUMS.txt">SHA256SUMS.txt</a> สำหรับตรวจสอบไฟล์</p>
@@ -37,8 +36,8 @@ const PAGE = `<!doctype html>
 คลิกขวาที่แอป → <b>Open</b> → Open อีกครั้ง หรือรันในเทอร์มินัล:<br>
 <code>xattr -dr com.apple.quarantine "Under Two Skies.app"</code></div>
 <div class="card"><h2>หลังเล่นจบ ช่วยส่งผลให้เราหน่อย</h2>
-ในเกม: <b>ตั้งค่า → เปิดโฟลเดอร์บันทึกการเล่น</b> แล้วส่งไฟล์ <code>playtest_log.csv</code> กลับมาทางช่องทางที่คุณได้รับลิงก์นี้
-พร้อมเล่าสั้น ๆ ว่า เข้าใจเป้าหมายใน 5 นาทีแรกไหม ติดตรงไหน และ FPS (กด F3 เมื่อเปิดเครื่องมือทดสอบในตั้งค่า)</div>
+ในเกม: <b>ตั้งค่า → เปิดโฟลเดอร์บันทึกการเล่น</b> เก็บไฟล์ <code>playtest_log.csv</code> ไว้ ช่องทางส่งไฟล์และความคิดเห็นจะประกาศบนเว็บไซต์ของเกม
+ช่วยจดสั้น ๆ ด้วยว่า เข้าใจเป้าหมายใน 5 นาทีแรกไหม ติดตรงไหน และ FPS (กด F3 เมื่อเปิดเครื่องมือทดสอบในตั้งค่า)</div>
 <div class="card"><h2>กระดานออนไลน์ (เบตา)</h2>
 ปิดเป็นค่าเริ่มต้น เปิดได้ใน <b>ตั้งค่า → กระดานออนไลน์</b> ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีข้อมูลส่วนตัว ลบคะแนนตัวเองได้ทุกเมื่อ</div>
 <p class="sub">ข้อมูลเกม: <a href="https://undertwoskies-website-promote.undertwoskies-game.workers.dev/th/">เว็บไซต์ Under Two Skies</a></p>
