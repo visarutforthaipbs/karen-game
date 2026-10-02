@@ -2,7 +2,8 @@
 
 After visual review, follow [SOP](../../SOP.md) and the
 [rigging guide](rigging_guide.md) for skeleton, skin and game integration.
-`run_rig.py` builds calibrated Kha-nae, Ta-poh and Mu-naw rigs; generation
+`run_rig.py` builds calibrated Kha-nae, Ta-poh, Mu-naw and Mae-Lu rigs using
+`rig_profiles/<name>_v31.json`; generation
 outputs alone remain unrigged. See [gameplay motion](gameplay_motion.md) for
 work layers, calibration findings and current limits.
 
@@ -282,3 +283,73 @@ with height 1.20 and budget 40000. The selected result measures 39,799 triangles
 It remains a review candidate outside the game: face proportions, hands and rear
 hair still differ from the reference. See `artifacts/khanae_quality_repair/candidate`,
 `before_after.png`, and `acceptance.json` for the recipe, evidence and limitations.
+
+### v3.1 candidate experiments (2026-10-02)
+
+The default refined recipe is preserved. Controlled variants can change
+`--generation-steps`, `--seed`, `--noise-seed`, `--texture-steps`,
+`--texture-seed`, `--cleanup-grid {256,512}` and `--closing-iterations`.
+When reusing `--from-run`, the manifest retains the actual source generation
+settings; CLI source defaults do not rewrite cache provenance. More closing or
+more generation steps do not guarantee a better candidate.
+
+`rebake_lowpoly.py` runs in Blender on the CPU. It creates fresh UVs and rebakes
+source colour after reducing polygons. `--target-mesh repaired.glb` transfers the
+same source colour onto a separately repaired target; both hashes are recorded.
+Missing bake rays and colour transfer still require visual review. This is useful
+for preserving a good face while testing corrected geometry. It never installs.
+
+`repair_small_surface_defects.py` removes tiny detached fragments and closes only
+small measured closed boundaries. It preserves large/open boundaries and UVs,
+and emits a repair report. It cannot detect or remove solid-surface tunnels.
+Its real Blender regression tests a pinhole, a larger intentional opening,
+detached debris, surface bounds and surviving UVs.
+
+`review_cast_in_game.gd -- manifest.json output_dir` loads four static candidates
+in the actual game terrain/lighting and captures close, 22 m and 44 m views.
+It does not alter installed scenes or prove rig/gameplay readiness. The benchmark
+renderer also supports per-record `silhouette`, `camera_size` and `target_y` for
+shape and face checks. Always use the game's default renderer for acceptance.
+
+### Exterior reconstruction experiment
+
+When a character has closed-shell tunnels, more voxel closing can preserve or
+enlarge the wrong walls. `sample_outer_surface.py` samples only visible outward
+surfaces from 26 directions; `reconstruct_outer_surface.py` builds a screened
+Poisson surface from those points. Start from the original generated game-scale
+mesh, before sparse-shell reconstruction. These tools are candidate-only and do
+not change the default runner or install a model.
+
+```bash
+blender -b --python-exit-code 1 -P tools/character_pipeline/sample_outer_surface.py -- \
+  --input /absolute/path/original_game_mesh.glb --output /absolute/path/exterior.npz
+python3 tools/character_pipeline/reconstruct_outer_surface.py \
+  /absolute/path/exterior.npz /absolute/path/reconstructed.ply --depth 8
+```
+
+The reconstruction Python environment needs NumPy, trimesh and PyMeshLab
+(`2025.7.post1` used for the v3.1 experiments). Keep this in a tool environment,
+outside the game's runtime. The GPU machine's isolated experiment install is
+`/home/visarut298/character_candidates/cast_v31_tests/meshlibs`; set `PYTHONPATH`
+to that directory when using its `aienv` Python. Sampling/reconstruction uses CPU.
+
+Depth 7 closes larger gaps and simplifies the surface; depth 8 preserves more
+detail. Neither certifies unseen geometry. Reports include component topology,
+discarded components and bounds extending beyond the sampled surface. Review
+ears, fingers, cloth openings and separate accessories after reconstruction.
+The missing-cap regression specifically checks fidelity on observed surfaces
+and reports extrapolation at the unseen cap; its initial all-surface accuracy
+assumption failed and is retained in the experiment evidence.
+
+Import the PLY into Blender with its original Z-up coordinates, reduce/unwrap,
+then texture the repaired geometry. Copying colour from a damaged low-poly bake
+can preserve black artifacts even after the geometry is fixed. Prefer a clean
+master as the colour source; fresh texturing needs a new face/identity review.
+The v3.1 Mu-naw experiment preserves the preferred master face, retextures the
+repaired body and replaces a defective lower dress with a seam-connected cloth
+surface. That dress is static and still requires deformation validation.
+
+Reproducible cast-specific experiment scripts, parameters, hashes, failed trials,
+renders and run logs are under `artifacts/cast_v31_20261002/`. They are not a
+promise of one-shot acceptance. Final visual/cultural, rig and gameplay gates
+remain mandatory.

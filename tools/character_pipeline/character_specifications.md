@@ -2,7 +2,7 @@
 **Project:** Satellite Shadow (เงาเมฆา / ไร่หมุนเวียน)  
 **Aesthetic:** Cute Low-Poly Chibi (2.5–3 Heads Tall) with Authentic Karen Mountain Culture  
 **Target Engine:** Godot 4.7+ (Forward+ Metal / Vulkan)  
-**Current installed assets:** textured characters use 11,940–39,779 triangles. The 2,000–3,000-triangle / vertex-colour standards below describe the retained legacy prototypes; use the pipeline README and recorded run metrics for the textured route.  
+**Current installed v3.1 assets:** four textured characters use 13,957–19,900 triangles, with 19 core bones and two additional garment controls on Mu-naw/Mae-Lu. The 2,000–3,000-triangle / vertex-colour standards below describe retained legacy prototypes; use the pipeline README and recorded run metrics for the current route.
 
 ---
 
@@ -17,7 +17,7 @@
   * **Upper Body:** Deep indigo-dyed handwoven cotton tunic (*ชุดกะเหรี่ยงย้อมคราม*) with geometric scarlet/terracotta chest borders (*ลายเรขาคณิต*).
   * **Lower Body:** Durable dark indigo trekking trousers tucked into laced mountain boots.
   * **Gear:** Leather tool sling across the chest carrying fire striker and field canteen.
-* **Active 3D Asset:** `assets/models/khanae_textured.glb` (39,255 tris, 2K textures, unrigged).
+* **Active 3D Asset:** `assets/models/khanae_rigged.glb` (39,799 tris, 2K textures, 19-bone skin).
 * **Concept Art:** `assets/concept_art/khanae_front_a_pose.jpg`.
 * **Turnaround Sheet:** `assets/concept_art/khanae_turntable.png`.
 
@@ -32,23 +32,25 @@
   * **Facial Features:** Soft sage white beard tuft, warm crinkling eyes.
   * **Clothing:** Heavy scarlet and cream woven elder vest over a natural hemp undertunic.
   * **Gear:** Hardwood walking stick / ceremonial clearing blade.
-* **Active 3D Asset:** `assets/models/tapoh_textured.glb` (11,940 tris, 2K textures, unrigged).
+* **Active 3D Asset:** `assets/models/tapoh_rigged.glb` (11,940 tris, 2K textures, 19-bone skin).
 * **Concept Art:** `assets/concept_art/tapoh_front_a_pose.jpg`.
 * **Turnaround Sheet:** `assets/concept_art/tapoh_turntable.png`.
 
 ---
 
-### 1.3 Mu-naw (มูนอ) — The Agile Youth (Companion)
-* **Archetype:** Energetic, swift-footed village youth responsible for perimeter watch and rapid ember suppression.
-* **Proportions:** 2.6 Heads tall, lean and bouncy silhouette.
+### 1.3 Mu-naw (มูนอ) — Young Forest Guardian (Companion)
+* **Direction:** [v3.1](character_direction_v3.1.md); [reference atlas and verification status](../../assets/reference/characters/munaw/reference_manifest.md).
+* **Archetype:** Fictional young adult Pgakenyaw woman, grounded in Huai Hin Lad Nai youth stewardship; calm, alert and purposeful.
+* **Proportions:** Approximately 2.6 heads tall, compact and agile; no childish bounce.
 * **Height Scale:** 1.10m in-engine.
 * **Costume & Cultural Markers:**
-  * **Headwear:** Folded woven bamboo cap with ventilation holes.
-  * **Clothing:** Earthy mountain-moss green sleeveless tunic with bright yellow geometric woven fringe.
-  * **Signature Gear:** 15-liter knapsack brass water tank (*ถังพ่นน้ำดับไฟป่าสะพายหลัง*) with flexible hose and brass nozzle.
-* **Active 3D Asset:** `assets/models/munaw_textured.glb` (39,779 tris, 2K textures, unrigged).
-* **Concept Art:** `assets/concept_art/munaw_front_a_pose.jpg`.
-* **Turnaround Sheet:** `assets/concept_art/munaw_turntable.png`.
+  * **Hair:** Dark, naturally tied back; no canonical bamboo cap.
+  * **Clothing:** White/ivory long dress with restrained broad red accents. Exact local construction/context requires cultural verification; no inferred marital-status meaning.
+  * **Equipment:** Separate backpack water system, harness, hose and rigid nozzle. 15 L is retained as a provisional gameplay capacity; brass construction is unverified. White garment remains first-read.
+* **Installed legacy asset:** `assets/models/munaw_rigged.glb` (39,779 tris, 2K textures, 19-bone skin). Old green design remains playable during replacement review.
+* **New production input:** `assets/reference/characters/munaw/02_clothing/munaw_apose_v02.png` (body only; imagegen reference).
+* **New candidate:** `artifacts/character_candidates/munaw_hinladnai_v01/`; inspect run manifest for live status. Not installed or rigged.
+* **Legacy references:** `assets/concept_art/munaw_front_a_pose.jpg`, `assets/concept_art/munaw_turntable.png` (superseded visual direction).
 
 ---
 

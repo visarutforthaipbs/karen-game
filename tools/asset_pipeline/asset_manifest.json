@@ -252,6 +252,50 @@
       "variants": 1,
       "desc": "sprayer wand lance with a brass nozzle",
       "render_mode": "materials"
+    },
+    "S6": {
+      "name": "ranger_truck",
+      "route": "proc",
+      "category": "hard",
+      "fit": "height",
+      "meters": 1.89,
+      "tris": 1500,
+      "variants": 1,
+      "desc": "fictional unmarked cold olive ranger pickup truck for the crackdown ending",
+      "render_mode": "materials"
+    },
+    "S7": {
+      "name": "travel_bundle",
+      "route": "proc",
+      "category": "hard",
+      "fit": "height",
+      "meters": 0.46,
+      "tris": 150,
+      "variants": 1,
+      "desc": "simple tied cloth travel bundle for the famine ending",
+      "render_mode": "materials"
+    },
+    "T6": {
+      "name": "ranger_flashlight",
+      "route": "proc",
+      "category": "hard",
+      "fit": "height",
+      "meters": 0.224,
+      "tris": 200,
+      "variants": 1,
+      "desc": "fictional unmarked black flashlight with cold white lens; local +Y beam",
+      "render_mode": "materials"
+    },
+    "T7": {
+      "name": "ranger_tablet",
+      "route": "proc",
+      "category": "hard",
+      "fit": "height",
+      "meters": 0.14,
+      "tris": 100,
+      "variants": 1,
+      "desc": "fictional plain evidence tablet; blank cold screen; no writing",
+      "render_mode": "materials"
     }
   },
   "quality_style_prompt": "Polished stylized LOW-POLY 3D game asset for Satellite Shadow, flat-shaded visibly faceted polygons, simple angular forms and clean readable silhouette, broad natural warm colour areas, restrained painted material details, simplified culturally meaningful patterns, {desc}, one isolated complete object, all extremities visible, mild orthographic front-right three-quarter view, even studio light, transparent or plain white background, no cast shadow, no people, no text, no scene dressing. Preserve structural openings and separated thin parts. Match a faceted low-poly game world: no photorealism, no dense wood grain or individual straw/fabric fibres, no noisy normal-map detail, no glossy realistic materials. Prioritize silhouette, proportions and structure over surface detail."

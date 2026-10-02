@@ -25,6 +25,22 @@ The game is in **Thai** and built with **Godot 4.7**.
    ```
    The first launch imports assets, which takes a minute.
 
+## Playtest builds
+
+```bash
+tools/build.sh            # macOS, Linux (Steam Deck) and Windows into build/<date>-<commit>/
+tools/build.sh Linux      # one platform
+```
+
+These need Godot 4.7.2 export templates (Editor → Manage Export Templates).
+The macOS build is ad-hoc signed, not notarised. On first launch, right-click
+the app and choose **Open**, or run
+`xattr -dr com.apple.quarantine "Satellite Shadow.app"`.
+
+Testers' play is logged to `playtest_log.csv` in the game's user folder
+(Settings → เปิดโฟลเดอร์บันทึกการเล่น). Tester tools (F3 info, F5–F10 time skips
+and forced events) can be switched on in Settings.
+
 ## How to play
 
 The in-game **วิธีเล่น** card explains it fully. Each plot is judged at 20:00 on two goals:
@@ -48,6 +64,7 @@ in the national-park forest must be put out within 8 seconds.
 | Rally whistle | Space / Q | LB / RB |
 | Zoom / turn the camera | Wheel, + − / Z, C | R3 / D-pad ↓ |
 | Hide the HUD | Tab | Select |
+| Pause | Esc | Start |
 
 ## Tests
 

@@ -10,6 +10,7 @@ extends Node
 ##   Rally whistle ... Space / Q ................ LB / RB
 ##   Tools ........... 1 / 2 / 3 ................ D-pad left / up / right, Y cycles
 ##   Hide HUD ........ Tab ...................... Select / Back
+##   Pause ........... Esc ...................... Start
 ##   Camera zoom ..... wheel / + - .............. R3 cycles
 ##   Camera turn ..... Z / C (90 degrees) ....... D-pad down
 
@@ -35,6 +36,7 @@ func _ready() -> void:
 	_action("tool_sprayer", [_key(KEY_3), _joy(JOY_BUTTON_DPAD_RIGHT)])
 	_action("tool_cycle", [_joy(JOY_BUTTON_Y)])
 	_action("toggle_hud", [_key(KEY_TAB), _joy(JOY_BUTTON_BACK)])
+	_action("pause", [_key(KEY_ESCAPE), _joy(JOY_BUTTON_START)])
 
 	_action("cam_zoom_in", [_mouse(MOUSE_BUTTON_WHEEL_UP), _key(KEY_EQUAL), _key(KEY_KP_ADD)])
 	_action("cam_zoom_out", [_mouse(MOUSE_BUTTON_WHEEL_DOWN), _key(KEY_MINUS), _key(KEY_KP_SUBTRACT)])

@@ -1,0 +1,120 @@
+{
+  "name": "ranger",
+  "height": 1.25,
+  "source_sha256": [
+    "ec9e2adfbef1d01c140ed5898e79e4284e3f534013dee09887cdbdb6dbde4e5c"
+  ],
+  "coordinates": "Godot Y up, front +Z; metres",
+  "weight_mode": "v31",
+  "arm_rest_degrees": 5,
+  "locked_carry": false,
+  "head_rigid_y": 0.83,
+  "body_center_x": 0,
+  "weight_smoothing": 24,
+  "landmarks": {
+    "hips": [
+      0,
+      0.41,
+      -0.075
+    ],
+    "spine": [
+      0,
+      0.51,
+      -0.075
+    ],
+    "chest": [
+      0,
+      0.65,
+      -0.07
+    ],
+    "neck": [
+      0,
+      0.78,
+      -0.065
+    ],
+    "head": [
+      0,
+      0.89,
+      -0.05
+    ],
+    "head_tip": [
+      0,
+      1.21,
+      -0.05
+    ],
+    "shoulder": [
+      0.22,
+      0.69,
+      -0.06
+    ],
+    "elbow": [
+      0.325,
+      0.51,
+      -0.065
+    ],
+    "wrist": [
+      0.385,
+      0.365,
+      -0.045
+    ],
+    "hand_tip": [
+      0.395,
+      0.275,
+      -0.01
+    ],
+    "hip": [
+      0.145,
+      0.4,
+      -0.075
+    ],
+    "knee": [
+      0.17,
+      0.225,
+      -0.065
+    ],
+    "ankle": [
+      0.19,
+      0.08,
+      -0.055
+    ],
+    "toe": [
+      0.19,
+      0.035,
+      0.08
+    ],
+    "bag": [
+      0,
+      0.41,
+      -0.14
+    ],
+    "bag_tip": [
+      0,
+      0.51,
+      -0.14
+    ]
+  },
+  "envelopes": {
+    "head": [
+      0.765,
+      0.83
+    ],
+    "arm_x": [
+      0.17,
+      0.255
+    ],
+    "leg_y": [
+      0.34,
+      0.44
+    ]
+  },
+  "calibration_notes": "Ranger v1.1 source-specific A-pose landmarks, calibrated from front/side views and mesh slices. Blank fictional uniform. No finger rig. Hand lift for photograph/radio requires up to 0.65 m displacement; original edge-stretch and grounding gates remain unchanged. Exterior-only reconstruction replaces doubled walls and loose under-sleeve fragments before rigging.",
+  "foot_weight_y": [
+    0.105,
+    0.15
+  ],
+  "arm_core_x": [
+    0.245,
+    0.29
+  ],
+  "max_vertex_displacement": 0.65
+}

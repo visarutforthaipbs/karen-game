@@ -9,6 +9,17 @@
 
 ---
 
+## Build status (2026-10-02)
+
+| Item | Status |
+|---|---|
+| P0-1 Title · P0-2 Pause · P0-3 Save · P0-4 Settings · P0-5 Endings + summary · P0-6 Tool reach · P0-7 Playtest log · P0-8 Builds · P0-10 Tester tools · P0-11 README + CI | **Done** (game side). See `HANDOFF.md` §3.8 |
+| P0-6 knife (T2) visible | Waiting for CHAR (belt attachment) |
+| P0-9 Steam Deck verification | Needs the device; builds are ready |
+| P0-11 LICENSE | User decision pending |
+| P1-2 Ranger patrol · P1-3 Checkpoint · P1-4 Companions take cover · P1-5 Cut feedback · P1-6 First-burn tips | **Done** with placeholders; they swap to CHAR assets automatically |
+| P1-1 Ranger model · P1-7 Portraits · P1-8 Title art · P1-9 Crew barks | CHAR |
+
 ## 0. How to use this document
 
 - Every requirement has an **ID**, a **priority**, an **owner** and **acceptance criteria**. Build in priority order.

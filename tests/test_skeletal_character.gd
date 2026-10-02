@@ -34,7 +34,7 @@ func run() -> void:
 			triangles += arrays[Mesh.ARRAY_INDEX].size() / 3
 			var material: BaseMaterial3D = visual.get_active_material(surface)
 			check(material.albedo_texture != null, "Rig export lost base-colour texture")
-	check(triangles == 39799, "Rig changed the reviewed geometry budget")
+	check(triangles == 14394, "Rig changed the reviewed geometry budget")
 	check(character.get_hand_socket() != null, "Hand socket missing")
 	for clip in ["Idle", "Walk", "ToolUse"]:
 		check(player.has_animation(clip), "Missing clip: " + clip)

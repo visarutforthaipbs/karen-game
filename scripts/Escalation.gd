@@ -11,6 +11,7 @@ class YearRules:
 	var satellite_threshold: float = 35.0 # VIIRS detection threshold (thermal units)
 	var hotspot_penalty: int = 15        # Scrutiny when the satellite detects the burn (up to 2x for many hot cells)
 	var ground_cameras: int = 0          # Thermal cameras along the National Park boundary
+	var ranger_count: int = 0            # Rangers on foot around the plot, 15:30-18:30 (Year 3+)
 	var checkpoints: bool = false        # Military roadblocks slow mutual-aid travel
 	var curfew: bool = false             # Zero-tolerance nighttime curfew
 	var penalty_mult: float = 1.0        # Ranger leniency for drone / camera / escape penalties
@@ -30,6 +31,8 @@ class YearRules:
 		lines.append("เกณฑ์ตรวจจับของ VIIRS: %d หน่วยความร้อน (TU)" % roundi(satellite_threshold))
 		if ground_cameras > 0:
 			lines.append("กล้องความร้อนภาคพื้น %d ตัวเฝ้าแนวเขตอุทยาน" % ground_cameras)
+		if ranger_count > 0:
+			lines.append("เจ้าหน้าที่ป่าไม้ %d นายเดินตรวจแนวป่ารอบแปลง 15:30–18:30" % ranger_count)
 		if checkpoints:
 			lines.append("ด่านทหารบนถนน: ไปเอาแรงต้องใช้เวลามากขึ้น")
 		if curfew:
@@ -56,7 +59,9 @@ static func rules_for_year(year: int) -> YearRules:
 			r.drone_count = 2
 			r.spread_mult = 1.30
 			r.satellite_threshold = 25.0
-			r.ground_cameras = 2
+			# A ranger on foot replaces one of two posts (campaign balance, PRD_UPDATE_v1.1 P1-2)
+			r.ground_cameras = 1
+			r.ranger_count = 1
 			r.humidity_pct = 16
 		_:
 			# Year 4+: checkpoints, fast quadcopters, curfew; keeps getting harsher
@@ -66,6 +71,7 @@ static func rules_for_year(year: int) -> YearRules:
 			r.spread_mult = minf(1.35 + 0.05 * extra, 1.6)
 			r.satellite_threshold = 25.0
 			r.ground_cameras = 3
+			r.ranger_count = 2
 			r.checkpoints = true
 			r.curfew = true
 			r.hotspot_penalty = 30

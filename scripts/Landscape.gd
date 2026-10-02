@@ -67,7 +67,8 @@ func _ready() -> void:
 	_build_settlements()
 	_build_smoke()
 	_build_ridges()
-	_build_mist()
+	if GameSettings.landscape_detail != "low":
+		_build_mist()
 	_thermal_mat = StandardMaterial3D.new()
 	_thermal_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	_thermal_mat.albedo_color = C_THERMAL_COLD
@@ -441,7 +442,8 @@ func _build_vegetation() -> void:
 						charred.append(_place(px, pz, 1.2, 2.0))
 		x += spacing
 	# Far ring: sparse big trees give the forested slopes texture under the haze
-	spacing = 16.0
+	# Low detail (Steam Deck): no far ring and no scrub
+	spacing = 16.0 if GameSettings.landscape_detail != "low" else 1e9
 	reach = 700.0
 	x = -reach
 	while x <= reach:

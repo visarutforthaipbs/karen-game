@@ -82,6 +82,9 @@ var water_bar: SegmentBar
 var banner_stack: VBoxContainer
 var alert_card: FacetCard
 var alert_label: Label
+var tip_card: FacetCard
+var tip_label: Label
+var _tip_serial: int = 0
 var elder_warning_banner: FacetCard
 var elder_warning_text: Label
 var drone_banner: FacetCard
@@ -94,6 +97,7 @@ var telemetry_card: FacetCard
 var satellite_telemetry_label: Label
 var thermal_legend: FacetCard
 var report_modal: Control
+var pause_menu: PauseMenu
 var report_title: Label
 var report_body: Label
 var report_tip: Label
@@ -144,6 +148,12 @@ func _ready() -> void:
 	_build_vitals_card()
 	_build_banners()
 	_build_report()
+	pause_menu = PauseMenu.new()
+	pause_menu.main = get_parent()
+	root.add_child(pause_menu)
+	var debug = DebugOverlay.new()
+	debug.main = get_parent()
+	root.add_child(debug)
 	_fade_targets = [status_card, wind_card, state_card, banner_stack, tool_col, crew_row, vitals_card]
 	_hide_hint_later()
 
@@ -407,7 +417,8 @@ func _build_tool_bar() -> void:
 	tool_col = UITheme.vbox(5)
 	_pin(tool_col, Vector2(0, 1), Vector2(12, -12), 0)
 	bottom_layer.add_child(tool_col)
-	hint_label = UITheme.outlined(_small("คลิกซ้าย ใช้ · คลิกขวา สั่งสหาย · Space นกหวีด · ล้อเมาส์ ซูม · Z/C หมุนกล้อง · Tab ซ่อนแผง"), 4)
+	hint_label = UITheme.outlined(_small("คลิกซ้าย ใช้ · คลิกขวา สั่งสหาย · Space นกหวีด · ล้อเมาส์ ซูม · Z/C หมุนกล้อง · Tab ซ่อนแผง · Esc หยุดเกม"), 4)
+	hint_label.visible = GameSettings.show_hints
 	tool_col.add_child(hint_label)
 	tool_label = UITheme.outlined(_small(), 4)
 	tool_label.add_theme_font_override("font", UITheme.font("semibold"))
@@ -525,6 +536,25 @@ func _build_banners() -> void:
 	alert_label.add_theme_font_override("font", UITheme.font("medium"))
 	alert_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	alert_card.add_child(alert_label)
+
+	# First-burn tips (FirstBurnTips): straw card above the crew chips
+	tip_card = _chip(UITheme.PANEL, UITheme.STRAW, 7)
+	tip_card.padding = Vector4(14, 8, 16, 10)
+	_pin(tip_card, Vector2(0.5, 1), Vector2(0, -64), 560)
+	tip_card.visible = false
+	bottom_layer.add_child(tip_card)
+	var tip_row = UITheme.hbox(10)
+	tip_card.add_child(tip_row)
+	var tip_icon = UITheme.icon("hotspot", UITheme.STRAW, 18.0)
+	tip_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	tip_row.add_child(tip_icon)
+	var tip_col = UITheme.vbox(0)
+	tip_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tip_row.add_child(tip_col)
+	tip_col.add_child(_small("เคล็ดลับเผาครั้งแรก", UITheme.STRAW))
+	tip_label = UITheme.wrap(UITheme.label("", "Body"))
+	tip_label.add_theme_font_size_override("font_size", 15)
+	tip_col.add_child(tip_label)
 
 func _build_satellite_screen() -> void:
 	satellite_thermal_screen = Control.new()
@@ -705,6 +735,15 @@ func update_tool(tool_name: String) -> void:
 		_tool_slots[i].base_color = Color(UITheme.PANEL_HI.lightened(0.08), 0.92) if on else Color(UITheme.PANEL, 0.7)
 		_tool_slots[i].modulate = Color.WHITE if on else Color(1, 1, 1, 0.65)
 
+func show_tip(text: String, duration: float = 10.0) -> void:
+	_tip_serial += 1
+	var serial = _tip_serial
+	tip_label.text = text
+	tip_card.visible = true
+	await get_tree().create_timer(duration).timeout
+	if serial == _tip_serial:
+		tip_card.visible = false
+
 func show_alert(message: String, duration: float = 3.0) -> void:
 	_alert_serial += 1
 	var serial = _alert_serial
@@ -854,14 +893,15 @@ func show_resolution_report(final_yield: float, detected_hotspots: int, escaped:
 	continue_button.grab_focus()
 
 func _on_continue_pressed() -> void:
-	if GameState.instance:
-		# Results were already recorded when the satellite pass resolved
-		if GameState.instance.is_game_over():
-			GameState.instance.reset_campaign()
-		else:
-			GameState.instance.advance_to_next_plot()
 	if AudioManager.instance:
 		AudioManager.instance.stop_all_loops()
+	# Results were already recorded when the satellite pass resolved.
+	# A finished campaign plays its ending and run summary (EndingScene).
+	if GameState.instance and GameState.instance.is_game_over():
+		get_tree().change_scene_to_file("res://scenes/Ending.tscn")
+		return
+	if GameState.instance:
+		GameState.instance.advance_to_next_plot()
 	get_tree().change_scene_to_file("res://scenes/VillageHearth.tscn")
 
 static func vector_to_cardinal(v: Vector2) -> String:

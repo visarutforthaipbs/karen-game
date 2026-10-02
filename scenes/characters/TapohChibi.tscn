@@ -5,6 +5,7 @@
 
 [node name="TapohChibi" type="Node3D"]
 script = ExtResource("1_anim")
+separate_equipment = true
 character_profile = "tapoh"
 
 [node name="Model" parent="." instance=ExtResource("2_mesh")]

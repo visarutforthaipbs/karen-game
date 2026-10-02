@@ -9,7 +9,7 @@ signal status_changed(companion: CompanionController, text: String)
 signal started_coughing(companion: CompanionController)
 
 enum Role { ELDER, YOUTH }
-enum State { IDLE_FOLLOW, AUTONOMOUS_WORK, MOVING_TO_TASK, PERFORMING_TASK, FLEEING }
+enum State { IDLE_FOLLOW, AUTONOMOUS_WORK, MOVING_TO_TASK, PERFORMING_TASK, FLEEING, HIDING }
 
 @export var role: Role = Role.YOUTH
 @export var player: Node3D
@@ -23,6 +23,15 @@ var speed_multiplier: float = 1.0
 var can_douse: bool = false
 
 var current_state: State = State.IDLE_FOLLOW
+
+# Taking cover (PRD_UPDATE_v1.1 P1-4): drones on station and rangers nearby
+## Drones and rangers that can photograph or report the crew (set by MainController)
+var threats: Array[Node3D] = []
+const DRONE_THREAT_RANGE: float = 15.0
+const RANGER_THREAT_RANGE: float = 14.0
+const COVER_SEARCH_CELLS: int = 6
+var _cover_check: float = 0.0
+var _clear_for: float = 0.0
 var target_coord: Vector2i = Vector2i(-1, -1)
 var target_world_pos: Vector3 = Vector3.ZERO
 var task_progress: float = 0.0
@@ -58,6 +67,9 @@ func configure_borrowed_sprayer(enabled: bool) -> void:
 		return
 	var tank := MeshInstance3D.new()
 	tank.mesh = AssetLibrary.mesh_or("T4", LowPoly.sprayer_tank())
+	if animator.get("separate_equipment"):
+		tank.mesh = load("res://scripts/CharacterEquipment.gd").sprayer_tank()
+		tank.position = Vector3(0,-0.03,-0.04)
 	animator.get_back_socket().add_child(tank)
 	tank.scale = Vector3.ONE / animator.base_scale
 	_borrowed_equipment = tank
@@ -94,6 +106,7 @@ func display_name() -> String:
 
 func _physics_process(delta: float) -> void:
 	_update_smoke(delta)
+	_check_cover(delta)
 	match current_state:
 		State.IDLE_FOLLOW:
 			_process_idle_follow(delta)
@@ -105,6 +118,8 @@ func _physics_process(delta: float) -> void:
 			_process_perform_task(delta)
 		State.FLEEING:
 			_process_flee(delta)
+		State.HIDING:
+			_process_hide(delta)
 	if role == Role.YOUTH:
 		_update_thermal_eye(delta)
 	_follow_terrain(delta)
@@ -184,6 +199,83 @@ func _start_flee() -> void:
 	target_world_pos = fire_grid.get_cell_world_pos(best.x, best.y)
 	current_state = State.FLEEING
 	_set_status("สำลักควัน กำลังหนีออกจากควัน!")
+
+## A drone overhead or a ranger close by: get under bamboo or forest canopy.
+## Spot fires in the park come first; fleeing smoke is never interrupted.
+func threat_near() -> bool:
+	for t in threats:
+		if not is_instance_valid(t):
+			continue
+		var d = _flat_distance_to(t.global_position)
+		if t is ForestryDrone:
+			if t.is_active_patrol and t.on_station and d <= DRONE_THREAT_RANGE:
+				return true
+		elif t is RangerPatrol:
+			if t.active and d <= RANGER_THREAT_RANGE:
+				return true
+	return false
+
+func _on_spot_fire_task() -> bool:
+	return target_coord.x >= 0 and fire_grid.is_valid_coord(target_coord.x, target_coord.y) \
+		and fire_grid.is_border_coord(target_coord.x, target_coord.y) \
+		and fire_grid.cell_types[fire_grid._coord_to_index(target_coord.x, target_coord.y)] == FireGrid.CellType.BURNING
+
+func _check_cover(delta: float) -> void:
+	_cover_check += delta
+	if _cover_check < 0.5 or not fire_grid:
+		return
+	_cover_check = 0.0
+	if current_state == State.HIDING or current_state == State.FLEEING or _on_spot_fire_task():
+		return
+	if not threat_near():
+		return
+	var cover = _nearest_cover()
+	if cover.x < 0:
+		return
+	target_coord = cover
+	target_world_pos = fire_grid.get_cell_world_pos(cover.x, cover.y)
+	_clear_for = 0.0
+	current_state = State.HIDING
+	if has_method("cancel_animation_work"):
+		call("cancel_animation_work")
+
+func _nearest_cover() -> Vector2i:
+	var here = fire_grid.get_cell_coord_at_world_pos(global_position)
+	var best = Vector2i(-1, -1)
+	var best_d = INF
+	for dy in range(-COVER_SEARCH_CELLS, COVER_SEARCH_CELLS + 1):
+		for dx in range(-COVER_SEARCH_CELLS, COVER_SEARCH_CELLS + 1):
+			var c = here + Vector2i(dx, dy)
+			if not fire_grid.is_valid_coord(c.x, c.y):
+				continue
+			var t = fire_grid.cell_types[fire_grid._coord_to_index(c.x, c.y)]
+			if t == FireGrid.CellType.BAMBOO or t == FireGrid.CellType.FOREST_BORDER:
+				var d = dx * dx + dy * dy
+				if d < best_d:
+					best_d = d
+					best = c
+	return best
+
+func _process_hide(delta: float) -> void:
+	# A spot fire in the park can't wait: Mu-naw breaks cover for it
+	if role == Role.YOUTH:
+		var spot = _nearest_spot_fire(16)
+		if spot.x >= 0:
+			_assign_task(spot)
+			return
+	_set_status("หลบใต้ร่มไผ่")
+	if _flat_distance_to(target_world_pos) > 0.6:
+		_move_towards(target_world_pos, delta)
+	else:
+		velocity = Vector3.ZERO
+	# Stay put until the threat has been gone a couple of seconds
+	if threat_near():
+		_clear_for = 0.0
+	else:
+		_clear_for += delta
+		if _clear_for >= 2.0:
+			target_coord = Vector2i(-1, -1)
+			current_state = State.IDLE_FOLLOW
 
 func _process_flee(delta: float) -> void:
 	if _flat_distance_to(target_world_pos) > 1.2:
@@ -470,7 +562,7 @@ func rally_to_player() -> void:
 func _show_tool_feedback(kind: StringName) -> void:
 	var origin := global_position + Vector3.UP * 0.7
 	if role == Role.YOUTH:
-		origin = animator.to_global(Vector3(0.29, 0.67, 0.15))
+		origin = animator.get_embedded_tool_tip() if animator.has_method("get_embedded_tool_tip") else animator.to_global(Vector3(0.29, 0.67, 0.15))
 	elif _borrowed_wand and kind == &"spray":
 		origin = _borrowed_wand.to_global(Vector3(0, 0.68, 0))
 	load("res://scripts/CharacterToolFeedback.gd").spawn(get_parent(), origin, target_world_pos, kind)

@@ -1,0 +1,111 @@
+{
+  "name": "khanae",
+  "height": 1.2,
+  "source_sha256": [
+    "c8eb2e001d785ff8c4bb2854c59e0a57e7b5637442cc9738ec05d616a58b5edb"
+  ],
+  "coordinates": "Godot Y up, front +Z; metres",
+  "weight_mode": "v31",
+  "arm_rest_degrees": 8,
+  "locked_carry": false,
+  "head_rigid_y": 0.775,
+  "body_center_x": 0,
+  "weight_smoothing": 40,
+  "landmarks": {
+    "hips": [
+      0,
+      0.4,
+      0
+    ],
+    "spine": [
+      0,
+      0.52,
+      0
+    ],
+    "chest": [
+      0,
+      0.65,
+      0
+    ],
+    "neck": [
+      0,
+      0.75,
+      0
+    ],
+    "head": [
+      0,
+      0.8,
+      0
+    ],
+    "head_tip": [
+      0,
+      1.15,
+      0
+    ],
+    "shoulder": [
+      0.165,
+      0.665,
+      0
+    ],
+    "elbow": [
+      0.28,
+      0.56,
+      0.006
+    ],
+    "wrist": [
+      0.3,
+      0.44,
+      0.015
+    ],
+    "hand_tip": [
+      0.32,
+      0.385,
+      0.045
+    ],
+    "hip": [
+      0.11,
+      0.4,
+      0
+    ],
+    "knee": [
+      0.11,
+      0.22,
+      0.005
+    ],
+    "ankle": [
+      0.11,
+      0.075,
+      -0.005
+    ],
+    "toe": [
+      0.11,
+      0.025,
+      0.085
+    ],
+    "bag": [
+      0,
+      0.4,
+      -0.08
+    ],
+    "bag_tip": [
+      0,
+      0.5,
+      -0.08
+    ]
+  },
+  "envelopes": {
+    "head": [
+      0.725,
+      0.775
+    ],
+    "arm_x": [
+      0.11000000000000001,
+      0.21000000000000002
+    ],
+    "leg_y": [
+      0.33,
+      0.42500000000000004
+    ]
+  },
+  "calibration_notes": "New v3.1 source, free arms and centred anatomy; candidate calibration must pass sampled clips and runtime deformation. Explicit user authorization to rig; documentary cultural reference verification remains pending."
+}

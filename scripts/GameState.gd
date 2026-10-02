@@ -52,8 +52,13 @@ var last_barn_target: float = 75.0
 ## Scrutiny the rangers let go after the last plot (shown in the report)
 var last_scrutiny_relief: int = 0
 
-# The how-to-play card opens by itself once per session on a fresh campaign
+# The how-to-play card opens by itself once per campaign start
 var seen_how_to_play: bool = false
+
+## Whole-campaign tallies for the run summary, records and playtest log
+var stats: Dictionary = {}
+## Scrutiny gained in the last plot, by source (satellite, drone, camera, escape, ranger)
+var last_breakdown: Dictionary = {}
 
 func _init() -> void:
 	instance = self
@@ -70,7 +75,23 @@ func reset_campaign() -> void:
 	season_yields.clear()
 	hotspot_log.clear()
 	pending_harvest = {}
+	last_breakdown = {}
+	stats = new_stats()
 	roll_forecast()
+
+static func new_stats() -> Dictionary:
+	return {
+		"campaign_id": str(int(Time.get_unix_time_from_system())),
+		"plots_completed": 0,
+		"ash_sum": 0.0,
+		"hotspots_detected": 0,
+		"escapes": 0,
+		"drone_photos": 0,
+		"camera_trips": 0,
+		"ranger_sightings": 0,
+		"spot_fires": 0,
+		"spot_fires_doused": 0,
+	}
 
 func rules() -> Escalation.YearRules:
 	return Escalation.rules_for_year(current_year)
@@ -87,7 +108,18 @@ func forecast_wind_direction() -> Vector2:
 ## scrutiny_gain is everything the burn added (drone photos, ground cameras,
 ## forest escape, satellite hotspots) as tallied live by MainController, so the
 ## in-burn HUD, the report and the campaign all agree.
-func record_plot_results(burn_yield: float, hotspots: int, escaped: bool, scrutiny_gain: int) -> void:
+## `breakdown` carries the burn's surveillance tallies from MainController:
+## scrutiny by source plus counts (drone_photos, camera_trips, spot_fires, ...)
+func record_plot_results(burn_yield: float, hotspots: int, escaped: bool, scrutiny_gain: int, breakdown: Dictionary = {}) -> void:
+	if stats.is_empty():
+		stats = new_stats()
+	last_breakdown = breakdown.duplicate()
+	stats.plots_completed += 1
+	stats.ash_sum += burn_yield
+	stats.hotspots_detected += hotspots
+	stats.escapes += 1 if escaped else 0
+	for key in ["drone_photos", "camera_trips", "ranger_sightings", "spot_fires", "spot_fires_doused"]:
+		stats[key] += int(breakdown.get(key, 0))
 	last_burn_yield = burn_yield
 	last_burn_hotspots = hotspots
 	last_burn_escaped = escaped
@@ -170,6 +202,88 @@ func is_crackdown() -> bool:
 
 func is_game_over() -> bool:
 	return is_famine() or is_crackdown()
+
+## "crackdown", "famine" or "" (crackdown wins if both happen at once)
+func end_cause() -> String:
+	if is_crackdown():
+		return "crackdown"
+	if is_famine():
+		return "famine"
+	return ""
+
+# ---------------------------------------------------------------------------
+# Save data (SaveGame writes it to user://). Only whole-campaign state at the
+# Hearth is saved; a burn in progress is never saved.
+# ---------------------------------------------------------------------------
+
+func to_dict() -> Dictionary:
+	var log = []
+	for e in hotspot_log:
+		log.append({"year": e.year, "plot": e.plot, "cell": [e.cell.x, e.cell.y], "lat": e.lat, "lon": e.lon, "heat": e.heat})
+	var harvest = pending_harvest.duplicate(true)
+	if harvest.has("next_rules"):
+		harvest.next_rules = Array(harvest.next_rules)
+	return {
+		"current_year": current_year,
+		"current_plot_index": current_plot_index,
+		"rice_barn": rice_barn,
+		"state_scrutiny": state_scrutiny,
+		"blade_upgrade_level": blade_upgrade_level,
+		"sprayer_upgrade_level": sprayer_upgrade_level,
+		"ration_level": ration_level,
+		"favours": favours.keys(),
+		"forecast_wind_angle": forecast_wind_angle,
+		"season_yields": Array(season_yields),
+		"hotspot_log": log,
+		"pending_harvest": harvest,
+		"last_burn_yield": last_burn_yield,
+		"last_burn_hotspots": last_burn_hotspots,
+		"last_burn_escaped": last_burn_escaped,
+		"last_rice_change": last_rice_change,
+		"last_barn_target": last_barn_target,
+		"last_scrutiny_relief": last_scrutiny_relief,
+		"seen_how_to_play": seen_how_to_play,
+		"stats": stats.duplicate(),
+	}
+
+func from_dict(d: Dictionary) -> void:
+	current_year = int(d.get("current_year", 1))
+	current_plot_index = int(d.get("current_plot_index", 1))
+	rice_barn = float(d.get("rice_barn", 100.0))
+	state_scrutiny = int(d.get("state_scrutiny", 0))
+	blade_upgrade_level = int(d.get("blade_upgrade_level", 0))
+	sprayer_upgrade_level = int(d.get("sprayer_upgrade_level", 0))
+	ration_level = int(d.get("ration_level", Ration.NORMAL))
+	favours.clear()
+	for f in d.get("favours", []):
+		favours[int(f)] = true
+	forecast_wind_angle = float(d.get("forecast_wind_angle", 0.0))
+	season_yields.clear()
+	for y in d.get("season_yields", []):
+		season_yields.append(float(y))
+	hotspot_log.clear()
+	for e in d.get("hotspot_log", []):
+		hotspot_log.append({"year": int(e.year), "plot": int(e.plot), "cell": Vector2i(int(e.cell[0]), int(e.cell[1])), "lat": float(e.lat), "lon": float(e.lon), "heat": float(e.heat)})
+	pending_harvest = d.get("pending_harvest", {})
+	if pending_harvest.has("next_rules"):
+		pending_harvest.next_rules = PackedStringArray(pending_harvest.next_rules)
+	for k in ["year", "next_year", "scrutiny_relief"]:
+		if pending_harvest.has(k):
+			pending_harvest[k] = int(pending_harvest[k])
+	last_burn_yield = float(d.get("last_burn_yield", 0.0))
+	last_burn_hotspots = int(d.get("last_burn_hotspots", 0))
+	last_burn_escaped = bool(d.get("last_burn_escaped", false))
+	last_rice_change = float(d.get("last_rice_change", 0.0))
+	last_barn_target = float(d.get("last_barn_target", 75.0))
+	last_scrutiny_relief = int(d.get("last_scrutiny_relief", 0))
+	seen_how_to_play = bool(d.get("seen_how_to_play", true))
+	stats = new_stats()
+	var saved_stats: Dictionary = d.get("stats", {})
+	for k in saved_stats:
+		stats[k] = saved_stats[k]
+	for k in stats:
+		if k != "campaign_id" and k != "ash_sum":
+			stats[k] = int(stats[k])
 
 ## Rice still free to spend without tipping the village into famine
 func spendable_rice() -> float:

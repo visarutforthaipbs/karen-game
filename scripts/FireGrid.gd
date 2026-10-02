@@ -128,6 +128,9 @@ var simulation_paused: bool = false
 var has_escaped: bool = false
 ## Park cells alight right now (spot fires)
 var burning_border_cells: int = 0
+## Spot fires this burn, and how many were caught in time (playtest stats)
+var spot_fires_started: int = 0
+var spot_fires_doused: int = 0
 var thermal_view: bool = false
 var thermal_threshold: float = 35.0
 
@@ -642,6 +645,7 @@ func _ignite_border(idx: int, next_types: Array, next_heat: Array) -> void:
 	next_heat[idx] = 100.0
 	if burning_border_cells == 0 and not has_escaped:
 		burning_border_cells = 1
+		spot_fires_started += 1
 		spot_fire_started.emit(_index_to_coord(idx))
 
 func _burn_duration(x: int, y: int) -> int:
@@ -978,6 +982,7 @@ func douse_cell(gx: int, gy: int) -> bool:
 			var y = idx / grid_width
 			if is_border_coord(x, y) and cell_timers[idx] < ESCAPE_TICKS:
 				# Caught in time: the forest is only scorched
+				spot_fires_doused += 1
 				cell_types[idx] = CellType.FOREST_BORDER
 				cell_heat[idx] = 0.0
 			elif cell_timers[idx] * 2 < _burn_duration(x, y):

@@ -1,0 +1,120 @@
+{
+  "name": "maelu",
+  "height": 1.15,
+  "source_sha256": [
+    "0d6560b9c1657643467408ca6c79473442cc3f1468bc57513bee4d07a6069ffb"
+  ],
+  "coordinates": "Godot Y up, front +Z; metres",
+  "weight_mode": "v31",
+  "arm_rest_degrees": 8,
+  "locked_carry": false,
+  "head_rigid_y": 0.755,
+  "body_center_x": 0,
+  "weight_smoothing": 0,
+  "landmarks": {
+    "hips": [
+      0,
+      0.4,
+      0
+    ],
+    "spine": [
+      0,
+      0.51,
+      0
+    ],
+    "chest": [
+      0,
+      0.64,
+      0
+    ],
+    "neck": [
+      0,
+      0.73,
+      0
+    ],
+    "head": [
+      0,
+      0.79,
+      0
+    ],
+    "head_tip": [
+      0,
+      1.0999999999999999,
+      0
+    ],
+    "shoulder": [
+      0.165,
+      0.655,
+      0
+    ],
+    "elbow": [
+      0.25,
+      0.53,
+      0.028000000000000004
+    ],
+    "wrist": [
+      0.285,
+      0.425,
+      0.07
+    ],
+    "hand_tip": [
+      0.305,
+      0.37,
+      0.1
+    ],
+    "hip": [
+      0.105,
+      0.4,
+      0
+    ],
+    "knee": [
+      0.105,
+      0.215,
+      0.005
+    ],
+    "ankle": [
+      0.105,
+      0.07,
+      -0.005
+    ],
+    "toe": [
+      0.105,
+      0.025,
+      0.085
+    ],
+    "bag": [
+      0,
+      0.4,
+      -0.08
+    ],
+    "bag_tip": [
+      0,
+      0.5,
+      -0.08
+    ]
+  },
+  "envelopes": {
+    "head": [
+      0.705,
+      0.755
+    ],
+    "arm_x": [
+      0.11000000000000001,
+      0.21000000000000002
+    ],
+    "leg_y": [
+      0.33,
+      0.42500000000000004
+    ]
+  },
+  "skirt": {
+    "top": 0.43,
+    "hem": 0.22,
+    "material": null
+  },
+  "calibration_notes": "New v3.1 source, free arms and centred anatomy; candidate calibration must pass sampled clips and runtime deformation. Explicit user authorization to rig; documentary cultural reference verification remains pending.",
+  "arm_core_x": [
+    0.145,
+    0.215
+  ]
+}

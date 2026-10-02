@@ -53,6 +53,25 @@ def require_gpu_health(health):
         raise RuntimeError(f'Refined recipe needs 20,000 MiB free VRAM: {health}')
 
 
+def recipe_for(args, source=None):
+    recipe = dict(RECIPE)
+    recipe.update(generation_steps=args.generation_steps,
+                  generation_seed=args.seed, generation_noise_seed=args.noise_seed,
+                  texture_steps=args.texture_steps, texture_seed=args.texture_seed,
+                  cleanup_grid=args.cleanup_grid, closing_iterations=args.closing_iterations)
+    if source is not None:
+        # Reused cache provenance must describe the actual source, not CLI defaults.
+        for source_key, recipe_key in (('steps', 'generation_steps'),
+                                       ('seed', 'generation_seed'),
+                                       ('noise_seed', 'generation_noise_seed')):
+            if source_key not in source:
+                raise ValueError('Cached source lacks generation provenance: ' + source_key)
+            recipe[recipe_key] = source[source_key]
+    if recipe != RECIPE:
+        recipe['version'] = 'refined-configurable-v2'
+    return recipe
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--image', type=Path, required=True)
@@ -60,10 +79,21 @@ def main():
     parser.add_argument('--height', type=float, default=1.2)
     parser.add_argument('--faces', type=int, default=40000)
     parser.add_argument('--host', default='gpu')
+    parser.add_argument('--generation-steps', type=int, default=12)
+    parser.add_argument('--seed', type=int, default=1)
+    parser.add_argument('--noise-seed', type=int, default=18)
+    parser.add_argument('--texture-steps', type=int, default=24)
+    parser.add_argument('--texture-seed', type=int, default=42)
+    parser.add_argument('--cleanup-grid', type=int, choices=(256,512), default=512)
+    parser.add_argument('--closing-iterations', type=int, default=2)
     parser.add_argument('--from-run', type=Path, help='Reuse a completed run.json and its remote cache')
     parser.add_argument('--output-dir', type=Path)
     parser.add_argument('--skip-preview', action='store_true', help='For hosts without a Godot display')
     args = parser.parse_args()
+    if not 1 <= args.generation_steps <= 100 or not 1 <= args.texture_steps <= 100:
+        parser.error('Generation and texture steps must be between 1 and 100')
+    if not 1 <= args.closing_iterations <= 6:
+        parser.error('Closing iterations must be between 1 and 6')
     if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]*', args.name):
         parser.error('Invalid character name')
     if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.@-]*', args.host):
@@ -72,6 +102,7 @@ def main():
             or not math.isfinite(args.height) or args.height <= 0 or args.faces < 4):
         parser.error('PNG/JPEG reference, positive height and at least 4 faces required')
     source = read_source(args.from_run, args.image) if args.from_run else None
+    recipe = recipe_for(args, source)
     if not args.skip_preview and not shutil.which('godot'):
         parser.error('Godot is needed for preview; use --skip-preview on a headless host')
     job = f'{args.name}_refined_{uuid.uuid4().hex[:10]}'
@@ -79,7 +110,7 @@ def main():
     if out.exists() and (not out.is_dir() or any(out.iterdir())):
         parser.error('Output directory must be empty; previous results are preserved')
     out.mkdir(parents=True, exist_ok=True)
-    manifest = {'job': job, 'status': 'running', 'recipe': RECIPE,
+    manifest = {'job': job, 'status': 'running', 'recipe': recipe,
                 'input': str(args.image.resolve()), 'input_sha256': digest(args.image),
                 'host': args.host, 'height': args.height, 'faces': args.faces,
                 'visual_review': 'required', 'installed': False, 'rigged': False, 'stages': []}
@@ -125,6 +156,10 @@ def main():
         for name in files:
             shutil.copy2(HERE / name, snapshot / name)
         shutil.copy2(ROOT / 'tools/character_pipeline_v2/render_benchmark.gd', snapshot)
+        # The model renderer is self-contained. Avoid loading gameplay autoloads
+        # which may be changing concurrently and cannot affect this static review.
+        (snapshot / 'project.godot').write_text(
+            'config_version=5\n[application]\nconfig/name="Character Candidate Review"\n')
         manifest['script_sha256'] = {p.name: digest(p) for p in snapshot.iterdir()}
         shutil.copy2(args.image, out / ('reference' + args.image.suffix.lower()))
         stage('gpu_preflight', preflight)
@@ -134,7 +169,8 @@ def main():
                     sys.executable, str(HERE / 'run_character.py'), '--image', str(args.image.resolve()),
                     '--name', args.name, '--height', str(args.height), '--faces', str(args.faces),
                     '--host', args.host, '--backend', 'trellis2', '--resolution', '1024',
-                    '--steps', '12', '--seed', '1', '--noise-seed', '18', '--texture-size', '2048',
+                    '--steps', str(recipe['generation_steps']), '--seed', str(recipe['generation_seed']),
+                    '--noise-seed', str(recipe['generation_noise_seed']), '--texture-size', '2048',
                     '--remesh-resolution', '512', '--save-material-cache', '--source-only',
                     '--output-dir', str(out / 'source')], check=True, stdout=log, stderr=subprocess.STDOUT))
                 args.from_run = out / 'source/run.json'
@@ -179,7 +215,9 @@ def main():
                               '--height', args.height, '--faces', args.faces])
 
             execute('rebuild_surface', [python, remote_dir + '/rebuild_cached_surface.py',
-                                       cache + '/pbr_voxels.bin', remote_out + '/closed.meshbin'])
+                                       cache + '/pbr_voxels.bin', remote_out + '/closed.meshbin',
+                                       '--grid', recipe['cleanup_grid'],
+                                       '--closing-iterations', recipe['closing_iterations']])
             execute('smooth_surface', [blender, '-b', '--python-exit-code', '1', '-P',
                                       remote_dir + '/decimate_cached_surface.py', '--',
                                       remote_out + '/closed.meshbin', remote_out + '/reduced.meshbin'])
@@ -194,7 +232,7 @@ def main():
                     '--dino', model + '/dinov3-vitl16-pretrain-lvd1689m',
                     '--input', remote_out + f'/surface/{args.name}_{args.faces}tris.glb',
                     '--image', prepared_image, '--image-prepared', '--resolution', '1024',
-                    '--texture-size', '2048', '--steps', '24', '--seed', '42',
+                    '--texture-size', '2048', '--steps', str(recipe['texture_steps']), '--seed', str(recipe['texture_seed']),
                     '--shape-latent-output', remote_out + '/shape.slat',
                     '--output', remote_out + '/retextured.glb'])
             prepare('restore_game_scale', remote_out + '/retextured.glb', remote_out + '/candidate')
@@ -215,7 +253,7 @@ def main():
         if not args.skip_preview:
             with (out / 'preview.log').open('w') as log:
                 stage('render_preview', lambda: subprocess.run([
-                    'godot', '--path', str(ROOT), '--rendering-method', 'gl_compatibility',
+                    'godot', '--path', str(snapshot),
                     '--script', str(snapshot / 'render_benchmark.gd'), '--',
                     str(out / 'preview_manifest.json'), str(out / 'preview.png')],
                     check=True, timeout=180, stdout=log, stderr=subprocess.STDOUT))

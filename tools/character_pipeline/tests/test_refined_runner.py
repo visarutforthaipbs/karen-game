@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch
 import subprocess
 import sys
+from types import SimpleNamespace
 
 SCRIPT = Path(__file__).resolve().parents[1] / 'run_refined_character.py'
 spec = importlib.util.spec_from_file_location('refined_runner', SCRIPT)
@@ -15,6 +16,19 @@ spec.loader.exec_module(runner)
 
 
 class RefinedRunnerTest(unittest.TestCase):
+    def test_recipe_preserves_actual_cache_settings(self):
+        args = SimpleNamespace(generation_steps=12, seed=1, noise_seed=18, texture_steps=24, texture_seed=42, cleanup_grid=512, closing_iterations=2)
+        self.assertEqual(runner.recipe_for(args), runner.RECIPE)
+        recipe = runner.recipe_for(args, {'steps': 24, 'seed': 2, 'noise_seed': 29})
+        self.assertEqual((recipe['generation_steps'], recipe['generation_seed'],
+                          recipe['generation_noise_seed']), (24, 2, 29))
+        self.assertEqual(runner.RECIPE['generation_seed'], 1)
+        args.texture_seed = 8
+        self.assertEqual(runner.recipe_for(args, {'steps': 24, 'seed': 2, 'noise_seed': 29})['texture_seed'], 8)
+        self.assertEqual(runner.RECIPE['texture_seed'], 42)
+        with self.assertRaises(ValueError):
+            runner.recipe_for(args, {'steps': 24})
+
     def test_cache_identity_and_completeness(self):
         with tempfile.TemporaryDirectory() as folder:
             image, manifest = Path(folder) / 'image.png', Path(folder) / 'run.json'

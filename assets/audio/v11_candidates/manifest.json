@@ -1,0 +1,50 @@
+{
+  "engine": "hotdogs/omnivoice-thai",
+  "sample_rate": 24000,
+  "records": [
+    {
+      "id": "munaw_spot_fire",
+      "text": "ไฟตกในป่า!",
+      "heard": "ไฟตกในป่า",
+      "cer": 0.0,
+      "take": 1,
+      "seconds": 1.72,
+      "voice": "female, young adult, moderate pitch",
+      "file": "munaw_spot_fire.wav",
+      "status": "candidate: listening review required"
+    },
+    {
+      "id": "munaw_fire_out",
+      "text": "ดับแล้ว",
+      "heard": "ดับแล้ว",
+      "cer": 0.0,
+      "take": 3,
+      "seconds": 1.48,
+      "voice": "female, young adult, moderate pitch",
+      "file": "munaw_fire_out.wav",
+      "status": "candidate: listening review required"
+    },
+    {
+      "id": "tapoh_whistle_reply",
+      "text": "ได้ยินแล้ว กำลังไป",
+      "heard": "ได้ยินแล้วกำลังไป",
+      "cer": 0.0,
+      "take": 1,
+      "seconds": 2.0,
+      "voice": "existing Pop voice, same as A1",
+      "file": "tapoh_whistle_reply.wav",
+      "status": "candidate: listening review required"
+    },
+    {
+      "id": "ranger_patrol_radio",
+      "text": "พบไฟในแนวป่า ขอรายงานศูนย์",
+      "heard": "พบไฟในแนวป่าขอรายงานศูนย์",
+      "cer": 0.0,
+      "take": 1,
+      "seconds": 2.52,
+      "voice": "male, middle-aged, moderate pitch",
+      "file": "ranger_patrol_radio.wav",
+      "status": "candidate: listening review required"
+    }
+  ]
+}

@@ -7,7 +7,11 @@ from skimage.measure import marching_cubes
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('source', type=Path, help='TRELLIS pbr_voxels.bin cache')
 parser.add_argument('destination', type=Path, help='New .meshbin file; must not exist')
+parser.add_argument('--grid', type=int, choices=(256, 512), default=512)
+parser.add_argument('--closing-iterations', type=int, default=2)
 args = parser.parse_args()
+if not 1 <= args.closing_iterations <= 6:
+    parser.error('Closing iterations must be between 1 and 6')
 source, destination = args.source, args.destination
 if destination.exists():
     parser.error('Destination already exists; preserve previous candidates')
@@ -18,15 +22,16 @@ with source.open('rb') as stream:
     raw = np.fromfile(stream,dtype='<i4',count=count*4).reshape(-1,4)
     if len(raw) != count or np.any(raw[:,0] != 0) or np.any(raw[:,1:] < 0) or np.any(raw[:,1:] >= resolution):
         raise ValueError('Invalid or unsupported voxel coordinates')
-    coords = raw[:,1:]//2
-scale=resolution//2
-minimum=coords.min(axis=0)-4
+    coords = raw[:,1:]//(resolution//args.grid)
+scale=args.grid
+margin=args.closing_iterations+2
+minimum=coords.min(axis=0)-margin
 coords=coords-minimum
-shape=coords.max(axis=0)+5
+shape=coords.max(axis=0)+margin+1
 volume=np.zeros(shape,dtype=bool)
 volume[tuple(coords.T)]=True
 print('Grid',shape.tolist(),'occupied',int(volume.sum()),flush=True)
-volume=ndimage.binary_closing(volume,iterations=2)
+volume=ndimage.binary_closing(volume,iterations=args.closing_iterations)
 volume=ndimage.binary_fill_holes(volume)
 print('Closed occupied',int(volume.sum()),flush=True)
 vertices,faces,_,_=marching_cubes(volume.astype(np.float32),level=0.5,allow_degenerate=False)

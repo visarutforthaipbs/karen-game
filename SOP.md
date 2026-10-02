@@ -2,7 +2,7 @@
 ## Character production — refined mesh, rig, animation and Godot
 
 **Project:** Satellite Shadow (เงาเมฆา / ไร่หมุนเวียน)  
-**Version:** 3.0 — 2026-10-02
+**Version:** 3.1 — 2026-10-02
 
 ## 1. Current production route
 
@@ -14,23 +14,32 @@ The Mac runs Godot and orchestrates work over `ssh gpu`. The RTX 3090 host runs
 native TRELLIS.2 and Blender 4.5.14. The earlier TripoSR / 2,500-triangle pipeline
 remains a prototype option, not the quality route for the current characters.
 
-Current character status:
+Installed v3.1 character status (2026-10-02):
 
-- **Kha-nae:** refined 39,799-triangle mesh; calibrated 19-bone skeleton,
-  Idle / Walk / Run / legacy ToolUse clips and hand/chest sockets. Gameplay uses
-  separate ignition, two-hand rake and spray poses layered over locomotion.
-- **Ta-poh:** calibrated 19-bone rig with gait, clearing-blade action, smoke
-  response and a left-hand wand/back tank when borrowing the sprayer.
-- **Mu-naw:** calibrated 19-bone rig with gait and spray/cough torso layers.
-  His authored two-hand wand/hose hold stays intact during locomotion.
+| Character | Mesh / rig | Animation and gameplay |
+|---|---|---|
+| Kha-nae | 14,394 triangles, 19 bones | Idle, Walk, Run, ToolUse; independent ignition, two-hand rake and spray layers |
+| Ta-poh | 19,900 triangles, 19 bones | Idle, Walk, Run, ToolUse; separate one-hand clearing blade and borrowed sprayer |
+| Mu-naw | 13,957 triangles, 21 bones | Idle, Walk, Run, ToolUse; free arms, dress controls, separate faceted tank, wand and flexible hose |
+| Mae-Lu | 19,900 triangles, 21 bones | Idle, Walk, Run, ToolUse, Talk, Granary; live village granary portrait with ration-selection gesture |
 
-All three character scenes use `SkeletalChibiAnimator.gd`. The generic ToolUse
-clip remains for compatibility/inspection; successful tool ticks no longer
-replace locomotion with that full-body clip. See the
-[implementation notes](tools/character_pipeline/gameplay_motion.md) for the
-runtime contract, evidence, calibration findings and remaining visual limits.
-The [original audit](tools/character_pipeline/gameplay_animation_audit.md) is a
-historical record of the gaps before this implementation.
+Use `rig_profiles/<name>_v31.json` for these meshes. Legacy profiles describe
+older geometry and remain for rollback. All new rigs preserve the selected
+geometry, UVs and materials, with four normalized influences per vertex.
+The generic ToolUse clip is an inspection/backwards-compatibility clip; gameplay
+uses semantic work layers while locomotion continues. Mae-Lu has no burn-field AI.
+
+The user explicitly authorized rigging after the reference gate was explained.
+Documentary cultural verification remains open; this installation does not claim
+that generated costume motifs have been authenticated. See
+[cast status](tools/character_pipeline/CAST_V31_STATUS.md) and
+[gameplay motion](tools/character_pipeline/gameplay_motion.md).
+
+Evidence and rollback: `artifacts/character_rigs_v31/`. All four passed baked
+clips, four-angle pose/tool review, real-renderer runtime deformation, slope/cough
+sampling, exported skin/material tests, actual controller tests and the complete
+gameplay suite. These are sampled gameplay checks, not cinematic rig approval;
+fingers/faces and arbitrary deep crouches are not rigged or certified.
 
 A successful technical check does not establish visual likeness. Keep source
 images, settings, intermediate outputs, previews and validation reports.
@@ -49,6 +58,16 @@ surface smoothing for repair must not erase the intended faceted appearance.
 Use one isolated full-body A-pose reference with visible hands/feet and separated
 limbs. It must express the desired face, proportions and garment patterns.
 Preserve Karen cultural details and character identity from the reference.
+
+For v3.1, distinguish supplied concept art from documentary cultural evidence.
+Record sources and uncertainties in each character's reference manifest. Check
+the A-pose proportions before GPU generation, then check the resulting surface
+for visible facets, dress/leg separation and unbridged hands. A long dress may
+need different surface repair and rig weights from Kha-nae's successful recipe.
+Normally visual and cultural lock precede final rigging. The user's later
+2026-10-02 requests explicitly authorized completing all four and then proceeding
+with rigging despite the documented reference gap. Keep that gap visible;
+track that work in [cast v3.1 status](tools/character_pipeline/CAST_V31_STATUS.md).
 
 ```bash
 python3 tools/character_pipeline/run_refined_character.py \
@@ -69,6 +88,14 @@ Reject damaged hands, holes, poor likeness or broken patterns even if validation
 passes. The refined recipe has been reproduced on Kha-nae; it is not a guarantee
 of first-attempt success on every new character.
 
+Close-up and silhouette review must also look for tunnels through hair, wraps,
+collars and hems. A closed triangle boundary or a “watertight” report does not
+prove that these regions are solid: a rear headwrap tunnel can expose the front
+face. Do not try to fix that solely by repainting. Preserve the source and repair
+or reconstruct the geometry, then review the changed silhouette and rebaked colour.
+All four v3.1 experiments and rejected alternatives are tracked in
+`tools/character_pipeline/CAST_V31_STATUS.md`; numeric validation is not final approval.
+
 ## 3. Rig the reviewed mesh
 
 Rigging is the next production step for articulated hero movement. The existing
@@ -87,8 +114,8 @@ it does not run another neural generation or upload to an external rigging site.
 
 The Kha-nae profile checks the exact input hash. For a new mesh or character,
 review joint landmarks and anatomical weight regions before making a new
-profile. Merely adding another hash is not calibration. Each profile selects character-specific anatomical regions. Mu-naw’s body
-midline is offset from the mesh bounds by his projecting equipment. Inspect the
+profile. Merely adding another hash is not calibration. Each profile selects character-specific anatomical regions. The legacy Mu-naw body
+midline is offset from the mesh bounds by projecting equipment. Inspect the
 body, not just the bounding box; this is not a universal automatic rigging service.
 
 See [rigging guide](tools/character_pipeline/rigging_guide.md) for bones, skinning,

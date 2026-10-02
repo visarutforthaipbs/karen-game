@@ -5,5 +5,6 @@
 
 [node name="KhanaeChibi" type="Node3D"]
 script = ExtResource("1_anim")
+separate_equipment = true
 
 [node name="Model" parent="." instance=ExtResource("2_mesh")]

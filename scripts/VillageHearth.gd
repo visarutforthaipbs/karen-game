@@ -43,6 +43,7 @@ var workshop_label: Label
 var sharpen_button: Button
 var seal_button: Button
 var granary_label: Label
+var maelu_portrait: SubViewportContainer
 var ration_buttons: Dictionary = {}
 var exchange_label: Label
 var favour_buttons: Dictionary = {}
@@ -119,6 +120,7 @@ func _build() -> void:
 	columns.add_child(right)
 	right.add_child(_build_workshop())
 	right.add_child(_build_exchange())
+	right.add_child(_build_audio_settings())
 
 	var launch_row = UITheme.hbox(0)
 	launch_row.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -143,6 +145,12 @@ func _button(text: String, toggle: bool = false) -> Button:
 	b.text = text
 	b.toggle_mode = toggle
 	b.focus_mode = Control.FOCUS_ALL
+	b.pressed.connect(func():
+		if AudioManager.instance:
+			AudioManager.instance.play_ui_click())
+	b.focus_entered.connect(func():
+		if AudioManager.instance:
+			AudioManager.instance.play_ui_focus())
 	return b
 
 func _build_header() -> Control:
@@ -286,10 +294,39 @@ func _build_workshop() -> Control:
 	box.add_child(seal_button)
 	return box.get_parent()
 
+## User audio control (game-audio standard): Master / Music / SFX volume sliders
+func _build_audio_settings() -> Control:
+	var box = _card("radio", "ระดับเสียง", UITheme.MUTED, 253, false)
+	for row_def in [["เสียงรวม", "Master"], ["ดนตรี", "Music"], ["เสียงเอฟเฟกต์", "SFX"]]:
+		var row = UITheme.hbox(8)
+		box.add_child(row)
+		var lbl = UITheme.label(row_def[0], "Small", UITheme.CREAM)
+		lbl.custom_minimum_size = Vector2(110, 0)
+		row.add_child(lbl)
+		var slider = HSlider.new()
+		slider.min_value = 0.0
+		slider.max_value = 1.0
+		slider.step = 0.05
+		slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		slider.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		slider.value = 1.0
+		var bus: String = row_def[1]
+		slider.value_changed.connect(func(v: float):
+			if AudioManager.instance:
+				AudioManager.instance.set_bus_volume(bus, v))
+		row.add_child(slider)
+	return box.get_parent()
+
 func _build_granary() -> Control:
-	var box = _card("rice", "ยุ้งข้าวและเสบียง", UITheme.STRAW, 241, false)
+	var box = _card("rice", "แม่หลู · ยุ้งข้าวและเสบียง", UITheme.STRAW, 241, false)
 	granary_label = UITheme.wrap(UITheme.label("", "Small", UITheme.CREAM))
-	box.add_child(granary_label)
+	var keeper_row := HBoxContainer.new()
+	box.add_child(keeper_row)
+	maelu_portrait = SubViewportContainer.new()
+	maelu_portrait.set_script(load("res://scripts/MaeluVillagePortrait.gd"))
+	keeper_row.add_child(maelu_portrait)
+	granary_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	keeper_row.add_child(granary_label)
 	var row = UITheme.hbox(6)
 	box.add_child(row)
 	var group = ButtonGroup.new()
@@ -298,6 +335,7 @@ func _build_granary() -> Control:
 		b.button_group = group
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.pressed.connect(_on_ration_pressed.bind(level))
+		b.pressed.connect(Callable(maelu_portrait, "granary_gesture"))
 		row.add_child(b)
 		ration_buttons[level] = b
 	return box.get_parent()
@@ -352,6 +390,7 @@ func _refresh() -> void:
 	_stat("ลมหุบเขา", "×%.1f%s" % [cfg.wind_base_speed, " · ลูกไฟข้ามแนวกันไฟได้" if strong_wind else ""], strong_wind)
 	_stat("โดรนลาดตระเวน", drones, cfg.drone_count > 0)
 	_stat("กล้องความร้อนภาคพื้น", "%d ตัวที่แนวเขตอุทยาน" % rules.ground_cameras if rules.ground_cameras > 0 else "ไม่มี", rules.ground_cameras > 0)
+	_stat("เจ้าหน้าที่เดินตรวจ", "%d นาย · 15:30–18:30" % rules.ranger_count if rules.ranger_count > 0 else "ไม่มี", rules.ranger_count > 0)
 	_stat("ความเข้มงวดของป่าอนุรักษ์", "×%.1f" % cfg.national_park_strictness, cfg.national_park_strictness > 1.5)
 	_stat("เกณฑ์ดาวเทียม VIIRS", "%d TU · ถูกจับได้ เพ่งเล็ง +%d–%d" % [roundi(rules.satellite_threshold), rules.hotspot_penalty, rules.hotspot_penalty * 2])
 	_stat("ภัยแล้งเร่งไฟ", "+%d%%" % roundi((rules.spread_mult - 1.0) * 100.0), rules.spread_mult > 1.0)
@@ -392,6 +431,8 @@ func _refresh() -> void:
 		start,
 	]
 	launch_button.text = "เดินขึ้นไร่ · เริ่มเผา %s น." % start
+	# Autosave: every Hearth change is kept, so quitting never loses the campaign
+	SaveGame.save(state)
 
 func _yield_outlook(state: Node) -> String:
 	var seeds = state.has_favour(GameState.Favour.SEEDS)
@@ -495,7 +536,9 @@ func _on_launch_pressed() -> void:
 	if AudioManager.instance:
 		AudioManager.instance.stop_all_loops()
 	# Change scene to Main hillside burn
-	get_tree().change_scene_to_file("res://scenes/Main.tscn")
+	# Year 4+: the march passes a military checkpoint first (CheckpointScene)
+	var scene = "res://scenes/Checkpoint.tscn" if GameState.instance.rules().checkpoints else "res://scenes/Main.tscn"
+	get_tree().change_scene_to_file(scene)
 
 # ---------------------------------------------------------------------------
 # Annual monsoon harvest
@@ -562,7 +605,13 @@ func _show_harvest(h: Dictionary) -> void:
 	close.grab_focus()
 
 	if AudioManager.instance:
-		AudioManager.instance.play_harvest_chime()
+		var gsx = GameState.instance
+		if gsx.rice_barn < GameState.FAMINE_THRESHOLD:
+			AudioManager.instance.play_ending_stinger("famine")
+		elif gsx.state_scrutiny >= 100:
+			AudioManager.instance.play_ending_stinger("crackdown")
+		else:
+			AudioManager.instance.play_harvest_chime()
 
 func _close_harvest() -> void:
 	GameState.instance.pending_harvest = {}

@@ -49,6 +49,12 @@ Agents have direct access to two computational environments:
 │   ├── ForestryDrone.gd        # Daylight quadcopter patrol & photo detection
 │   ├── ThermalCamera.gd        # Year 3+ ground thermal cameras on the park boundary
 │   ├── SatelliteOverpass.gd    # 20:00 False-color VIIRS infrared scan + hotspot markers
+│   ├── RangerPatrol.gd         # Year 3+ ranger on foot around the plot (vision cone, sightings)
+│   ├── RangerFigure.gd         # Ranger model or placeholder (C5 swaps in automatically)
+│   ├── SaveGame.gd             # Campaign autosave + best-run record (user://)
+│   ├── GameSettings.gd         # Player settings (user://settings.cfg)
+│   ├── PlaytestLog.gd          # One CSV row per burn (user://playtest_log.csv)
+│   ├── FirstBurnTips.gd        # Contextual tips on a campaign's first burn
 │   ├── PlayerController.gd     # Movement, tools, water tank, breath/coughing, whistle, gamepad aim
 │   ├── CompanionController.gd  # Elder & Youth mutual aid autonomous AI (smoke, flee, Thermal Eye)
 │   ├── MainController.gd       # Burn-day orchestration: phases, schedule, scrutiny, report
@@ -62,6 +68,12 @@ Agents have direct access to two computational environments:
     ├── WindCompass.gd          # Screen-space wind arrow for the isometric camera
     ├── HearthBackdrop.gd       # Low-poly night ridges behind the Village Hearth
     ├── HowToPlay.gd            # Rules card: two goals, ember-cooling rule, plan, controls
+    ├── TitleScreen.gd          # Main scene: continue / new / how to play / settings / quit
+    ├── PauseMenu.gd            # Esc / Start pause during a burn
+    ├── SettingsPanel.gd        # Settings overlay (title, pause, Hearth)
+    ├── EndingScene.gd          # Crackdown / famine endings + run summary
+    ├── CheckpointScene.gd      # Year 4+ road checkpoint on the march
+    ├── DebugOverlay.gd         # Tester tools (F3, F5-F10)
     └── HUD.gd                  # Burn-day HUD, goal checklist, banners, satellite pass, report
 ```
 

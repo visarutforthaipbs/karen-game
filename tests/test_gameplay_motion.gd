@@ -22,7 +22,7 @@ func run() -> void:
 		check(animator.has_method("set_work"), actor.name + " has skeletal gameplay animator")
 		if not animator.has_method("set_work"):
 			continue
-		check(animator.skeleton.get_bone_count() == 19, actor.name + " has 19 calibrated joints")
+		check(animator.skeleton.get_bone_count() == (21 if animator.character_profile == "munaw" else 19), actor.name + " has calibrated core and garment joints")
 		for mesh in animator.find_children("*", "MeshInstance3D", true, false):
 			if mesh.skin == null: continue # attached rigid tools
 			for surface in mesh.mesh.get_surface_count():
@@ -38,6 +38,8 @@ func run() -> void:
 		var before: Quaternion = animator.skeleton.get_bone_pose_rotation(thigh_id)
 		for i in 7: animator.update_animation(1.0/60.0, Vector3(4, 0, 0), Vector3(0, 0, 1))
 		check(not before.is_equal_approx(animator.skeleton.get_bone_pose_rotation(thigh_id)), actor.name + " legs continue articulating")
+		animator.update_animation(0.1, Vector3(0, 0, 6), Vector3(0, 0, 1))
+		check(animator.animation_player.current_animation == "Run", actor.name + " selects run at gameplay speed")
 		var phase: float = animator.work_phase
 		animator.set_work(&"spray", true)
 		check(is_equal_approx(animator.work_phase, phase), actor.name + " held work does not restart wind-up")
@@ -61,6 +63,42 @@ func run() -> void:
 	game.player.animator.set_work(&"spray", true)
 	game.player._select_tool(game.player.ToolType.FIREBREAK_BLADE)
 	check(not game.player.animator.work_active, "tool switch cancels previous action")
+	# Actual movement and held-tool controller paths retain their gameplay effects.
+	var player = game.player
+	var coord := Vector2i(20, 20)
+	var index: int = game.fire_grid._coord_to_index(coord.x, coord.y)
+	player.global_position = game.fire_grid.get_cell_world_pos(20, 21)
+	player.using_gamepad_aim = true
+	player.target_cell_coord = coord
+	player.target_cell_pos = game.fire_grid.get_cell_world_pos(20, 20)
+	player.is_targeting_valid_cell = true
+	player._select_tool(player.ToolType.WATER_SPRAYER)
+	player.water = 2.0
+	player._tool_cooldown_left = 0.0
+	game.fire_grid.cell_types[index] = game.fire_grid.CellType.SMOLDERING
+	Input.action_press("use_tool")
+	Input.action_press("move_right")
+	var start: Vector3 = player.global_position
+	player._handle_movement(1.0/60.0)
+	player._update_work_animation()
+	player._handle_held_actions(1.0/60.0)
+	player.animator.update_animation(1.0/60.0, player.velocity, player.target_cell_pos-player.global_position)
+	check(player.global_position.distance_to(start) > 0.01, "player actually moves while using tool")
+	check(game.fire_grid.cell_types[index] == game.fire_grid.CellType.ASH and is_equal_approx(player.water, 1.0), "moving spray cools cell and consumes exactly one dose")
+	player._handle_held_actions(1.0/60.0)
+	check(is_equal_approx(player.water, 1.0), "animation does not duplicate gameplay water use")
+	Input.action_release("use_tool")
+	Input.action_release("move_right")
+	player._update_work_animation()
+	check(not player.animator.work_active, "released input stops sustained tool state")
+	# Companion completes a real ordered douse with the new animator enabled.
+	game.fire_grid.cell_types[index] = game.fire_grid.CellType.SMOLDERING
+	game.youth.global_position = player.global_position
+	game.youth.receive_ping_order(coord, player.target_cell_pos)
+	for i in 90:
+		game.youth._physics_process(1.0/60.0)
+		if game.fire_grid.cell_types[index] == game.fire_grid.CellType.ASH: break
+	check(game.fire_grid.cell_types[index] == game.fire_grid.CellType.ASH, "rigged companion completes ordered douse")
 	game._on_satellite_pass()
 	for actor in actors:
 		check(not actor.animator.work_active and actor.animator.work_blend == 0, actor.name + " stops work for satellite pass")

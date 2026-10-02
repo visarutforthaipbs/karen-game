@@ -39,6 +39,9 @@ var _target_yaw: float = PI * 0.25
 func _ready() -> void:
 	if target:
 		focus = _ground_point(target.global_position)
+	GameSettings.ensure_loaded()
+	distance = clampf(GameSettings.camera_zoom, ZOOM_MIN, 64.0)
+	_target_distance = distance
 	_fit_overview()
 	get_viewport().size_changed.connect(_fit_overview)
 	_apply(true)

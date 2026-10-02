@@ -1,0 +1,116 @@
+{
+  "name": "munaw",
+  "height": 1.1,
+  "source_sha256": [
+    "b5a2d690b90d5d338eb7954599ca4c0027c895c9f431d0cc0c46d182d989e0ce"
+  ],
+  "coordinates": "Godot Y up, front +Z; metres",
+  "weight_mode": "v31",
+  "arm_rest_degrees": 8,
+  "locked_carry": false,
+  "head_rigid_y": 0.715,
+  "body_center_x": 0,
+  "weight_smoothing": 0,
+  "landmarks": {
+    "hips": [
+      0,
+      0.43,
+      0
+    ],
+    "spine": [
+      0,
+      0.52,
+      0
+    ],
+    "chest": [
+      0,
+      0.62,
+      0
+    ],
+    "neck": [
+      0,
+      0.69,
+      0
+    ],
+    "head": [
+      0,
+      0.75,
+      0
+    ],
+    "head_tip": [
+      0,
+      1.05,
+      0
+    ],
+    "shoulder": [
+      0.14,
+      0.635,
+      0
+    ],
+    "elbow": [
+      0.22,
+      0.51,
+      0.018
+    ],
+    "wrist": [
+      0.245,
+      0.405,
+      0.045
+    ],
+    "hand_tip": [
+      0.265,
+      0.35000000000000003,
+      0.075
+    ],
+    "hip": [
+      0.09,
+      0.43,
+      0
+    ],
+    "knee": [
+      0.09,
+      0.205,
+      0.005
+    ],
+    "ankle": [
+      0.09,
+      0.07,
+      -0.005
+    ],
+    "toe": [
+      0.09,
+      0.025,
+      0.085
+    ],
+    "bag": [
+      0,
+      0.43,
+      -0.08
+    ],
+    "bag_tip": [
+      0,
+      0.53,
+      -0.08
+    ]
+  },
+  "envelopes": {
+    "head": [
+      0.6649999999999999,
+      0.715
+    ],
+    "arm_x": [
+      0.08500000000000002,
+      0.185
+    ],
+    "leg_y": [
+      0.36,
+      0.455
+    ]
+  },
+  "skirt": {
+    "top": 0.49,
+    "hem": 0.213,
+    "material": 1
+  },
+  "calibration_notes": "New v3.1 source, free arms and centred anatomy; candidate calibration must pass sampled clips and runtime deformation. Explicit user authorization to rig; documentary cultural reference verification remains pending."
+}

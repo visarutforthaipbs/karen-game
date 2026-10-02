@@ -89,6 +89,52 @@ camera fix.
 Also: `project.godot` sets `filesystem/import/blender/enabled=false`; `.blend`
 files blocked every headless import because Blender isn't installed on this Mac.
 
+8. **PRD_UPDATE_v1.1 P0 and P1 build (2026-10-02).** All game-side P0 items and
+   P1-2 to P1-6 are done. Each item below has tests in `test_all.gd`.
+   - **Title** (`scenes/Title.tscn`, `ui/TitleScreen.gd`, `ui/SatelliteStreak.gd`):
+     now the main scene, with a live dusk view of the plot and landscape as the
+     backdrop.
+   - **Save / continue** (`scripts/SaveGame.gd`, `GameState.to_dict/from_dict`):
+     autosaves on every Hearth refresh to `user://campaign.json` (version 1).
+     Game-over campaigns aren't saved; best run in `user://records.json`.
+   - **Settings** (`scripts/GameSettings.gd`, `ui/SettingsPanel.gd`):
+     `user://settings.cfg`. Five volume buses, fullscreen, UI scale (root
+     `content_scale_factor`), landscape detail low/high (low = no far trees, no
+     mist), camera zoom, hints, first-burn tips, tester tools.
+   - **Pause** (`ui/PauseMenu.gd`, action `pause` = Esc / Start): sets
+     `SceneTree.paused`. "Give up this plot" runs the 20:00 pass immediately.
+     "Quit to title" keeps the pre-burn autosave.
+   - **Endings** (`scenes/Ending.tscn`, `ui/EndingScene.gd`): a crackdown raid at
+     night and a famine exodus at dawn, both skippable, then the run summary.
+     `GameState.stats` collects the campaign tallies.
+   - **Tool reach:** `PlayerController.tool_reach()`; the sprayer reaches 5.5 m,
+     other tools 4 m.
+   - **Playtest log** (`scripts/PlaytestLog.gd`): one CSV row per burn in
+     `user://playtest_log.csv`. `MainController.breakdown` holds the per-burn
+     scrutiny by source.
+   - **Tester tools** (`ui/DebugOverlay.gd`): F3 overlay, F5–F10 cheats. Enabled
+     from the editor build, or with settings → tester tools or `--debug-tools`.
+   - **Builds:** `export_presets.cfg` (macOS universal with ad-hoc signing,
+     Linux x86_64, Windows x86_64) and `tools/build.sh`, which writes
+     `build/<date>-<commit>/`. Export templates 4.7.2 are installed on this Mac.
+     macOS needs `import_etc2_astc=true` (set).
+   - **Ranger patrol** (`scripts/RangerPatrol.gd`, `scripts/RangerFigure.gd`):
+     Year 3+, 15:30–18:30, one ranger in Y3 and two in Y4+. The vision cone and
+     marker draw through the canopy. Smoke blocks sight; bamboo hides the crew.
+     One sighting per lap, +10 × penalty_mult. **Y3 ground cameras went from 2
+     to 1** to keep good-player Y3 survival around 42% (Monte Carlo).
+     `RangerFigure` is a placeholder until CHAR installs
+     `scenes/characters/RangerChibi.tscn`; it's then used automatically, and the
+     model should expose `update_animation(delta, velocity, face)` like the crew.
+   - **Companions take cover** (`CompanionController` state `HIDING`, `threats`
+     set by MainController): they hide from a drone on station within 15 m or a
+     ranger within 14 m, but always break cover for a spot fire.
+   - **Cut progress disc** (`PlayerController._show_cut_progress`) and
+     **first-burn tips** (`scripts/FirstBurnTips.gd`, `HUD.show_tip`).
+   - **Year 4+ checkpoint** (`scenes/Checkpoint.tscn`, `ui/CheckpointScene.gd`):
+     plays between the Hearth and the burn. Uses `AssetLibrary` "S5" with a
+     procedural fallback.
+
 ## 4. Rules and tunables (where to change them)
 
 **How a plot is judged at 20:00:**
@@ -136,25 +182,31 @@ is the real check.
 
 ## 6. Open items / next steps
 
-**The full build plan is now [`PRD_UPDATE_v1.1.md`](PRD_UPDATE_v1.1.md)**: an audit plus P0/P1/P2 requirements with owners and acceptance criteria (title, pause, save, settings, endings, the Ranger, tool reach, telemetry, builds, Steam Deck, CI). The list below is the short version.
+The full plan is [`PRD_UPDATE_v1.1.md`](PRD_UPDATE_v1.1.md). Game-side P0 and
+P1-2 to P1-6 are built (§3.8). What remains:
 
-1. **Playtest the balance:** whether 8 s is enough to reach a spot fire, how
-   drone sweeps feel, burn speed (`base_spread_chance`), and the hold-to-cut
-   time. Each is one constant (§4).
-2. **The GitHub repo stays public** (user decision, 2026-10-02):
-   https://github.com/visarutforthaipbs/karen-game. It still needs a README, and
-   a LICENSE once the user picks the terms. The **Ranger foot patrol is
-   approved** (PRD_UPDATE_v1.1 P1-2).
-3. **Builds:** there are no export presets. A Linux build is needed for the
-   Steam Deck test (still open, along with frame rate with the landscape) and a
-   Mac build for testers. The Thai line-break data setting is already on.
-4. **Translation review:** have a native Thai and ideally Karen (ปกาเกอะญอ)
-   speaker check the radio script, proverbs and names.
-5. **CI:** a GitHub Action that runs `test_all.gd` on push.
-6. **Possible design follow-ups:** companions taking cover from drones;
-   drip-torch fuel; showing hold-to-cut progress on the cell marker (it turns red
-   when out of reach, but shows no progress).
-
+1. **Playtest the balance:** whether 8 s is enough to reach a spot fire, drone
+   sweeps, ranger sightings, burn speed. Tune from `user://playtest_log.csv`.
+   The constants are in §4.
+2. **Steam Deck (P0-9):** needs the device. Run the Linux build from
+   `tools/build.sh`, fill in the checklist in PRD_UPDATE_v1.1, and try landscape
+   detail "low" if fps < 40.
+3. **LICENSE:** the repo stays public; the licence terms are still the user's
+   call. README says "all rights reserved until decided".
+4. **CHAR assets that plug straight in:**
+   - the Ranger C5 (`scenes/characters/RangerChibi.tscn`);
+   - the S5 roadblock (asset ID "S5");
+   - the T2 knife on Kha-nae's belt (tool label "มีดพร้าและคราด": rake only so far);
+   - portraits U3, title art U6, crew barks A2.
+5. **Known issues:**
+   - Quitting to the title mid-burn and continuing replays that burn from the
+     Hearth (pre-burn autosave). It's a mild re-roll exploit; accepted for the
+     playtest.
+   - The Hearth has its own 3-slider audio card (from the audio work) next to
+     the full Settings panel. It doesn't persist, so merge it into
+     `GameSettings` later.
+6. **Translation review** by a native Thai and ideally Pgakenyaw speaker.
+7. **P2 polish:** see PRD_UPDATE_v1.1 §4.
 
 ## Character v3.1 installation handoff — 2026-10-02
 

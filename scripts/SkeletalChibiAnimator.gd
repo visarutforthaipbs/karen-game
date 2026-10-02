@@ -6,7 +6,10 @@ var skeleton: Skeleton3D
 var hand_socket: Node3D
 var back_socket: Node3D
 var left_hand_socket: Node3D
-@export_enum("khanae", "tapoh", "munaw") var character_profile: String = "khanae"
+@export_enum("khanae", "tapoh", "munaw", "maelu") var character_profile: String = "khanae"
+@export var separate_equipment := false
+var _carried_tool: MeshInstance3D
+var _hose: MeshInstance3D
 var _action_playing := false
 var work_kind: StringName = &""
 var work_active := false
@@ -16,7 +19,6 @@ var coughing := false
 var terrain: Node3D
 var _motion_time := 0.0
 var _work_hold := 0.0
-var _last_face := Vector3.ZERO
 var _bone_ids: Dictionary = {}
 var _rest_axes: Dictionary = {}
 
@@ -42,6 +44,63 @@ func _ready() -> void:
 		_bone_ids[skeleton.get_bone_name(i)] = i
 		_rest_axes[skeleton.get_bone_name(i)] = skeleton.get_bone_global_rest(i).basis.get_rotation_quaternion()
 	animation_player.play("Idle")
+	if separate_equipment:
+		_setup_separate_equipment()
+
+func _setup_separate_equipment() -> void:
+	if character_profile not in ["tapoh", "munaw"]: return
+	_carried_tool = MeshInstance3D.new()
+	_carried_tool.mesh = AssetLibrary.mesh_or("T5", LowPoly.tool_mesh("wand")) if character_profile == "munaw" else AssetLibrary.mesh_or("T2", _clearing_blade())
+	hand_socket.add_child(_carried_tool)
+	_carried_tool.scale = Vector3.ONE / base_scale
+	if character_profile == "munaw":
+		var tank := MeshInstance3D.new()
+		tank.mesh = load("res://scripts/CharacterEquipment.gd").sprayer_tank()
+		back_socket.add_child(tank)
+		tank.position = Vector3(0,-0.03,-0.04)
+		tank.scale = Vector3.ONE / base_scale
+		_hose = MeshInstance3D.new()
+		_hose.mesh = ImmediateMesh.new()
+		var rubber := StandardMaterial3D.new()
+		rubber.albedo_color = Color(0.055, 0.048, 0.043)
+		rubber.roughness = 0.95
+		_hose.material_override = rubber
+		add_child(_hose)
+
+func _clearing_blade() -> ArrayMesh:
+	var handle := BoxMesh.new()
+	handle.size = Vector3(0.045, 0.13, 0.045)
+	var blade := BoxMesh.new()
+	blade.size = Vector3(0.085, 0.33, 0.012)
+	var mesh := LowPoly.compose([[handle, Transform3D(Basis.IDENTITY,Vector3(0,0.015,0)), Color(0.28,0.15,0.07)],
+		[blade, Transform3D(Basis.IDENTITY,Vector3(0,0.23,0)), Color(0.32,0.34,0.35)]])
+	mesh.surface_set_material(0,LowPoly.vertex_color_material())
+	return mesh
+
+func _update_hose() -> void:
+	if _hose == null: return
+	var mesh := _hose.mesh as ImmediateMesh
+	mesh.clear_surfaces()
+	var start := to_local(back_socket.global_position) + Vector3(-0.11, -0.15, -0.04)
+	var finish := to_local(hand_socket.global_position)
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in 12:
+		var t := float(i)/12.0
+		var u := float(i+1)/12.0
+		var a := start.lerp(finish,t) + Vector3(-0.16*sin(t*PI), -0.12*sin(t*PI), 0)
+		var b := start.lerp(finish,u) + Vector3(-0.16*sin(u*PI), -0.12*sin(u*PI), 0)
+		var axis := (b-a).normalized()
+		var right := axis.cross(Vector3.FORWARD).normalized()*0.008
+		var up := axis.cross(right).normalized()*0.008
+		for j in 6:
+			var p := TAU*j/6.0
+			var q := TAU*(j+1)/6.0
+			var r := right*cos(p)+up*sin(p)
+			var s := right*cos(q)+up*sin(q)
+			for vertex in [a+r,b+r,b+s,a+r,b+s,a+s]:
+				mesh.surface_set_normal((r+s).normalized())
+				mesh.surface_add_vertex(vertex)
+	mesh.surface_end()
 
 func _make_socket(bone: String, socket_name: String, rest_offset: Vector3) -> Node3D:
 	var bone_id := skeleton.find_bone(bone)
@@ -65,6 +124,13 @@ func get_hand_socket() -> Node3D:
 func get_left_hand_socket() -> Node3D:
 	return left_hand_socket
 
+func get_embedded_tool_tip() -> Vector3:
+	if separate_equipment and _carried_tool:
+		return _carried_tool.to_global(Vector3(0, 0.68, 0))
+	var id: int = _bone_ids[&"Chest"]
+	var bind_tip := skeleton.get_bone_global_rest(id).affine_inverse() * Vector3(0.29, 0.67, 0.15)
+	return skeleton.to_global(skeleton.get_bone_global_pose(id) * bind_tip)
+
 func get_back_socket() -> Node3D:
 	return back_socket
 
@@ -84,7 +150,6 @@ func cancel_work() -> void:
 	_work_hold = 0.0
 	work_blend = 0.0
 	_action_playing = false
-	_last_face = Vector3.ZERO
 	animation_player.play("Idle", 0)
 	skeleton.reset_bone_poses()
 	animation_player.advance(0)
@@ -104,7 +169,6 @@ func update_animation(delta: float, velocity: Vector3, face_dir: Vector3 = Vecto
 	_is_moving = speed > 0.2
 	var facing := face_dir if face_dir != Vector3.ZERO else Vector3(velocity.x, 0, velocity.z)
 	if facing.length_squared() > 0.001:
-		_last_face = facing
 		rotation.y = lerp_angle(rotation.y, atan2(facing.x, facing.z), minf(delta * 12.0, 1.0))
 	if not _action_playing:
 		var next := ("Run" if speed >= 4.6 and animation_player.has_animation("Run") else "Walk") if _is_moving else "Idle"
@@ -124,22 +188,28 @@ func _rotate_bone(bone: StringName, axis: Vector3, radians: float) -> void:
 	skeleton.set_bone_pose_rotation(id, skeleton.get_bone_pose_rotation(id) * q)
 
 func _apply_motion_layers(velocity: Vector3) -> void:
-	# Turn the pelvis/legs toward travel while chest and tools keep their aim.
+	# Redirect the step without twisting the tunic while chest/tools keep aim.
 	if _is_moving and work_blend > 0.0:
 		var travel := wrapf(atan2(velocity.x, velocity.z) - rotation.y, -PI, PI)
 		for side in ["L", "R"]:
 			var foot := StringName("Foot." + side)
 			var rest := skeleton.get_bone_global_rest(_bone_ids[foot]).origin
 			var offset := skeleton.get_bone_global_pose(_bone_ids[foot]).origin - rest
+			# Shorter working steps leave room for aim-facing and backward foot IK.
+			if separate_equipment:
+				offset.x *= 0.75
+				offset.z *= 0.75
 			var target := rest + Basis(Vector3.UP, travel) * offset
 			_solve_chain(StringName("Thigh." + side), StringName("Shin." + side), foot, target, work_blend)
-	if character_profile == "munaw":
+	if character_profile == "munaw" and not separate_equipment:
 		# His fused wand, fingers and hose were authored in a two-hand hold.
 		# Preserve that hold rather than swinging the arms through rigid equipment.
 		for bone in [&"UpperArm.L", &"UpperArm.R", &"Forearm.L", &"Forearm.R"]:
 			skeleton.set_bone_pose_rotation(_bone_ids[bone], skeleton.get_bone_rest(_bone_ids[bone]).basis.get_rotation_quaternion())
 	if work_blend <= 0.001:
 		hand_socket.basis = skeleton.get_bone_global_rest(_bone_ids[&"Hand.R"]).basis.inverse()
+		if separate_equipment and character_profile == "tapoh":
+			hand_socket.basis *= Basis(Quaternion(Vector3.UP,Vector3.DOWN))
 	if work_blend > 0.001:
 		_apply_work_pose()
 	if coughing:
@@ -148,21 +218,28 @@ func _apply_motion_layers(velocity: Vector3) -> void:
 		_rotate_bone(&"Head", Vector3.RIGHT, cough * 0.5)
 	skeleton.force_update_all_bone_transforms()
 	_place_feet()
+	_update_hose()
 
 func _apply_work_pose() -> void:
 	var cycle := sin(work_phase * TAU / 0.8)
-	if character_profile == "munaw":
+	if character_profile == "munaw" and not separate_equipment:
 		_rotate_bone(&"Chest", Vector3.UP, work_blend * 0.12 * sin(work_phase * 1.5))
 		return
 	if character_profile == "tapoh" and work_kind == &"spray":
 		_rotate_bone(&"UpperArm.L", Vector3.RIGHT, work_blend * -0.35)
 		_rotate_bone(&"Forearm.L", Vector3.RIGHT, work_blend * -0.15)
+		if separate_equipment:
+			var hand: Transform3D = skeleton.get_bone_global_pose(_bone_ids[&"Hand.L"])
+			left_hand_socket.basis = Basis(hand.basis.get_rotation_quaternion().inverse() * Quaternion(Vector3.UP,Vector3(0,-0.1,1).normalized()))
 		return
 	if character_profile == "tapoh":
-		# Existing blade remains on the right hand; modest bends protect fused sleeve.
+		# Elder clears with a one-handed blade, rather than the player's long rake.
 		_rotate_bone(&"UpperArm.R", Vector3.RIGHT, work_blend * (-0.25 - 0.22 * cycle))
 		_rotate_bone(&"Forearm.R", Vector3.RIGHT, work_blend * -0.10)
 		_rotate_bone(&"Chest", Vector3.RIGHT, work_blend * -0.035 * cycle)
+		if separate_equipment:
+			var hand: Transform3D = skeleton.get_bone_global_pose(_bone_ids[&"Hand.R"])
+			hand_socket.basis = Basis(hand.basis.get_rotation_quaternion().inverse() * Quaternion(Vector3.UP, Vector3(0,-0.7,0.7).normalized()))
 		return
 	# Explicit hand targets produce distinct holds without replacing the gait.
 	var right := Vector3(-0.22, 0.46, 0.18)
@@ -177,6 +254,18 @@ func _apply_work_pose() -> void:
 		&"ignite":
 			right = Vector3(-0.25, 0.39, 0.14)
 			direction = Vector3(-0.10, -0.42, 0.9).normalized()
+	if separate_equipment:
+		# Targets follow the new body's measured chest and shoulder position.
+		var chest := skeleton.get_bone_global_rest(_bone_ids[&"Chest"]).origin
+		right.y += chest.y - 0.57
+		if work_kind == &"rake":
+			right.x = -0.10
+			right.z = 0.12 + 0.018 * cycle
+		if character_profile == "munaw":
+			right.x = -0.21
+	# Carry the grip with the baked gait grounding offset, not a fixed world height.
+	var root_id: int = _bone_ids[&"Root"]
+	right += skeleton.get_bone_global_pose(root_id).origin - skeleton.get_bone_global_rest(root_id).origin
 	_solve_chain(&"UpperArm.R", &"Forearm.R", &"Hand.R", right, work_blend)
 	skeleton.force_update_all_bone_transforms()
 	# Align tool +Y to its working direction in character space, independent of wrist rest basis.

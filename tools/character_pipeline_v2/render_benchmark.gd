@@ -68,6 +68,8 @@ func run() -> void:
 				player.seek(float(record.get("time", 0.0)), true)
 			if record.get("vertex_material", true):
 				apply_material(model)
+			if record.get("silhouette", false):
+				apply_silhouette(model)
 			var env_node = WorldEnvironment.new()
 			var env = Environment.new()
 			env.background_mode = Environment.BG_COLOR
@@ -84,11 +86,12 @@ func run() -> void:
 			world.add_child(light)
 			var camera = Camera3D.new()
 			camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-			camera.size = 1.65
+			camera.size = float(record.get("camera_size", 1.65))
 			world.add_child(camera)
 			var angle = deg_to_rad([0.0, 45.0, 90.0, 180.0][col])
-			camera.position = Vector3(sin(angle) * 3.0, 0.72, cos(angle) * 3.0)
-			camera.look_at(Vector3(0, 0.6, 0))
+			var target_y = float(record.get("target_y", 0.6))
+			camera.position = Vector3(sin(angle) * 3.0, target_y + 0.12, cos(angle) * 3.0)
+			camera.look_at(Vector3(0, target_y, 0))
 			var title = Label.new()
 			title.text = "%s | %s" % [record.label, ["Front (+Z)", "45 degrees", "Side", "Back (-Z)"][col]]
 			title.position = Vector2(col * tile + 8, row * (tile + LABEL) + 5)
@@ -113,3 +116,12 @@ func apply_material(node: Node) -> void:
 			node.set_surface_override_material(s, mat)
 	for child in node.get_children():
 		apply_material(child)
+
+func apply_silhouette(node: Node) -> void:
+	if node is MeshInstance3D:
+		var mat = StandardMaterial3D.new()
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mat.albedo_color = Color(0.8, 0.8, 0.8)
+		node.material_override = mat
+	for child in node.get_children():
+		apply_silhouette(child)

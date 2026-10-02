@@ -1,0 +1,46 @@
+{
+  "source": "AudioManager._cough synthesis, distinct deterministic seeds and fundamental pitches",
+  "sample_rate": 24000,
+  "records": [
+    {
+      "file": "khanae_cough.wav",
+      "seconds": 0.8,
+      "peak": 0.7,
+      "pitch_hz": 165,
+      "seed": 451,
+      "status": "candidate: listening review required"
+    },
+    {
+      "file": "tapoh_cough.wav",
+      "seconds": 0.8,
+      "peak": 0.7,
+      "pitch_hz": 135,
+      "seed": 452,
+      "status": "candidate: listening review required"
+    },
+    {
+      "file": "munaw_cough.wav",
+      "seconds": 0.8,
+      "peak": 0.7,
+      "pitch_hz": 215,
+      "seed": 453,
+      "status": "candidate: listening review required"
+    },
+    {
+      "file": "maelu_cough.wav",
+      "seconds": 0.8,
+      "peak": 0.7,
+      "pitch_hz": 185,
+      "seed": 454,
+      "status": "candidate: listening review required"
+    },
+    {
+      "file": "ranger_cough.wav",
+      "seconds": 0.8,
+      "peak": 0.7,
+      "pitch_hz": 155,
+      "seed": 455,
+      "status": "candidate: listening review required"
+    }
+  ]
+}

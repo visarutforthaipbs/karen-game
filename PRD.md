@@ -2,6 +2,7 @@
 
 # Project: Satellite Shadow (เงาเมฆา / ไร่หมุนเวียน)
 **Document Version:** 1.0.0  
+**Update:** v1.1 completion & test-readiness requirements are in [`PRD_UPDATE_v1.1.md`](PRD_UPDATE_v1.1.md) (title/pause/save/settings, endings, the Ranger, builds, Steam Deck, telemetry).  
 **Status:** Approved & Ready for Implementation  
 **Target Engine:** Godot 4.3+ (Forward+ 3D, GDScript)  
 **Primary Platform:** PC (Steam / itch.io) with full Steam Deck / Gamepad support  
@@ -262,8 +263,10 @@ Godot integration. Technical mesh validity alone is not visual acceptance.
 - [x] Kha-nae initial 19-bone skeleton and weighted skin; rigid head/hat.
 - [x] Idle, in-place Walk/Run and legacy ToolUse clips; runtime transitions and hand tool attachment.
 - [x] Semantic work state, aim-facing while moving, smoke reaction, interruption handling and successful-action feedback.
-- [ ] Separate rake, ignition and spraying motions with convincing hand/tool contact.
-- [ ] Terrain foot placement and walk stride/speed polish.
+- [x] Separate rake, ignition and spraying runtime poses, including two-hand rake targets.
+- [ ] Final hand/tool contact polish (finger closure remains optional for close-ups).
+- [x] Bounded terrain foot correction and directional step targets.
+- [ ] Final terrace-edge contact and high-speed stride polish.
 - [x] Calibrated rigs and animation review for Ta-poh and Mu-naw.
 - [ ] Facial/finger animation if required by future close-up scenes.
 

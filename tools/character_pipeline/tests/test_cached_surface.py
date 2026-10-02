@@ -24,20 +24,22 @@ class CachedSurfaceTest(unittest.TestCase):
             coords = np.array([(0,*v) for v in xyz],dtype='<i4')
             src.write_bytes(struct.pack('<8sqii',b'TRLPBR1\0',len(coords),6,1024)+coords.tobytes()
                             +np.zeros((len(coords),6),dtype='<f4').tobytes())
-            subprocess.run([sys.executable,str(SCRIPT),str(src),str(dst)],check=True,capture_output=True)
-            data=dst.read_bytes(); magic,nv,nf,flags,_=struct.unpack_from('<8sQQII',data)
-            vertices=np.frombuffer(data,dtype='<f4',count=nv*3,offset=32).reshape(-1,3)
-            faces=np.frombuffer(data,dtype='<i4',count=nf*3,offset=32+nv*12).reshape(-1,3)
-            mesh=trimesh.Trimesh(vertices=vertices,faces=faces,process=False)
-            self.assertEqual(magic,b'TRLMESH1')
-            self.assertTrue(np.isfinite(vertices).all())
-            self.assertTrue(mesh.is_watertight)
-            self.assertTrue((mesh.area_faces>0).all())
-            np.testing.assert_allclose(mesh.bounds.mean(axis=0),np.full(3,108/1024-0.5),atol=1/1024)
-            # A retry must preserve the already generated candidate.
-            again=subprocess.run([sys.executable,str(SCRIPT),str(src),str(dst)],capture_output=True)
-            self.assertNotEqual(again.returncode,0)
-            self.assertEqual(dst.read_bytes(),data)
+            for grid in (512, 256):
+                dst = Path(tmp)/f"surface_{grid}.meshbin"
+                subprocess.run([sys.executable,str(SCRIPT),str(src),str(dst),"--grid",str(grid)],check=True,capture_output=True)
+                data=dst.read_bytes(); magic,nv,nf,flags,_=struct.unpack_from('<8sQQII',data)
+                vertices=np.frombuffer(data,dtype='<f4',count=nv*3,offset=32).reshape(-1,3)
+                faces=np.frombuffer(data,dtype='<i4',count=nf*3,offset=32+nv*12).reshape(-1,3)
+                mesh=trimesh.Trimesh(vertices=vertices,faces=faces,process=False)
+                self.assertEqual(magic,b'TRLMESH1')
+                self.assertTrue(np.isfinite(vertices).all())
+                self.assertTrue(mesh.is_watertight)
+                self.assertTrue((mesh.area_faces>0).all())
+                np.testing.assert_allclose(mesh.bounds.mean(axis=0),np.full(3,108/1024-0.5),atol=1/grid)
+                # A retry must preserve the already generated candidate.
+                again=subprocess.run([sys.executable,str(SCRIPT),str(src),str(dst),"--grid",str(grid)],capture_output=True)
+                self.assertNotEqual(again.returncode,0)
+                self.assertEqual(dst.read_bytes(),data)
 
 if __name__=='__main__':
     unittest.main()

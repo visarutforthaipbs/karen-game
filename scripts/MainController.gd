@@ -16,6 +16,9 @@ extends Node3D
 
 const ESCAPE_BASE_PENALTY: float = 30.0
 const CAMERA_BASE_PENALTY: float = 10.0
+const RANGER_BASE_PENALTY: float = 10.0
+const RANGER_START_MINUTE: int = 15 * 60 + 30
+const RANGER_END_MINUTE: int = 18 * 60 + 30
 
 # In-game minutes since midnight for scheduled events (PRD §3.1, §6.2)
 const DRONE_LAUNCH_MINUTE: int = 15 * 60
@@ -39,6 +42,11 @@ var latest_rice_yield: float = 0.0
 # GameState is only updated once, when the satellite pass resolves.
 var starting_scrutiny: int = 0
 var plot_scrutiny_gain: int = 0
+# Playtest log: when fire was first lit, and the hut yard's pre-cleared cells
+var first_ignition_minute: int = -1
+var _firebreak_baseline: int = 0
+## This burn's surveillance tallies for the report, run summary and playtest log
+var breakdown: Dictionary = {"satellite": 0, "drone": 0, "camera": 0, "escape": 0, "ranger": 0, "drone_photos": 0, "camera_trips": 0, "ranger_sightings": 0}
 
 var plot_cfg: PlotGenerator.PlotConfig
 var rules: Escalation.YearRules
@@ -47,6 +55,7 @@ var park_strictness: float = 1.0
 var drones: Array[ForestryDrone] = []
 var drones_launched: int = 0
 var thermal_cameras: Array[ThermalCamera] = []
+var rangers: Array[RangerPatrol] = []
 var inversion_started: bool = false
 var pass_started: bool = false
 var current_phase: int = -1
@@ -91,6 +100,7 @@ func _ready() -> void:
 	add_child(landscape)
 	_build_field_hut()
 	_place_crew_at_hut()
+	_firebreak_baseline = fire_grid.count_cells_of_type(FireGrid.CellType.FIREBREAK)
 	wind_manager.configure(state.forecast_wind_direction(), plot_cfg.wind_base_speed, plot_cfg.wind_shift_interval)
 
 	# Mutual aid exchange: favours arrive at the cost of a late start
@@ -99,6 +109,17 @@ func _ready() -> void:
 	_apply_crew_preparation(state)
 	_setup_drones()
 	_setup_thermal_cameras()
+	_setup_rangers()
+	if FirstBurnTips.wanted(state):
+		var tips = FirstBurnTips.new()
+		tips.main = self
+		add_child(tips)
+	# Companions take cover from whatever can photograph or report them
+	var threats: Array[Node3D] = []
+	threats.append_array(drones)
+	threats.append_array(rangers)
+	for c in [elder, youth]:
+		c.threats = threats
 
 	satellite.thermal_threshold = rules.satellite_threshold
 	satellite.hotspot_penalty = rules.hotspot_penalty
@@ -175,6 +196,7 @@ func _ready() -> void:
 
 	if AudioManager.instance:
 		AudioManager.instance.set_music_intensity(0)
+		AudioManager.instance.play_day_start()
 
 ## Rations, workshop upgrades and borrowed equipment take effect for this burn
 func _apply_crew_preparation(state: Node) -> void:
@@ -261,6 +283,31 @@ func _setup_drones() -> void:
 		drone.set_physics_process(false)
 
 ## Year 3+: thermal camera posts along the most protected edge of the park
+## Year 3+: rangers walk the forest belt around the plot (PRD_UPDATE_v1.1 P1-2)
+func _setup_rangers() -> void:
+	var crew: Array[Node3D] = [player, elder, youth]
+	for i in rules.ranger_count:
+		var r = RangerPatrol.new()
+		r.fire_grid = fire_grid
+		r.landscape = landscape
+		r.crew = crew
+		r.direction = 1 if i % 2 == 0 else -1
+		r.start_fraction = 0.12 + 0.5 * i
+		add_child(r)
+		r.spotted.connect(_on_ranger_spotted)
+		rangers.append(r)
+
+func _on_ranger_spotted(_pos: Vector3, is_flame: bool) -> void:
+	if pass_started:
+		return
+	var penalty = _penalty(RANGER_BASE_PENALTY)
+	_add_scrutiny(penalty)
+	breakdown.ranger += penalty
+	breakdown.ranger_sightings += 1
+	hud.show_drone_alert(("เจ้าหน้าที่เดินตรวจเห็นเปลวไฟ! วิทยุแจ้งศูนย์ · ความเพ่งเล็ง +%d" if is_flame else "เจ้าหน้าที่เห็นทีมอยู่ข้างกองไฟ! · ความเพ่งเล็ง +%d") % penalty, true)
+	if AudioManager.instance:
+		AudioManager.instance.play_camera_alarm()
+
 func _setup_thermal_cameras() -> void:
 	if rules.ground_cameras <= 0:
 		return
@@ -318,6 +365,9 @@ func _process(delta: float) -> void:
 		for d in drones:
 			hum = maxf(hum, d.get_hum_level(player.global_position))
 		AudioManager.instance.set_drone_proximity(hum)
+		# Ambience bed: cicadas thin out through dusk; inversion muffles the bed
+		var cicada = 1.0 if hours < 17.0 else clampf((18.5 - hours) / 1.5, 0.0, 1.0)
+		AudioManager.instance.set_ambience(0.45, cicada * 0.7, _inversion_level)
 
 	# Pre-monsoon storm front: thunder and lightning as the evening comes on
 	if plot_cfg.storm_front and hours >= 17.0:
@@ -332,6 +382,8 @@ func _on_clock_ticked(time_str: String, hour: int, minute: int) -> void:
 	hud.update_clock(time_str)
 	var now = hour * 60 + minute
 	_update_phase(now)
+	if first_ignition_minute < 0 and not fire_grid.active_burning_indices.is_empty():
+		first_ignition_minute = now
 	# Damp at 14:00, driest 15:30-17:00, dew again toward evening
 	fire_grid.fuel_dryness = FireGrid.dryness_at_minute(now)
 	hud.update_fuel(fire_grid.fuel_dryness)
@@ -350,6 +402,15 @@ func _on_clock_ticked(time_str: String, hour: int, minute: int) -> void:
 				any_returned = true
 		if any_returned:
 			hud.show_drone_alert("โดรนบินกลับฐาน — แสงน้อยจนกล้องถ่ายไม่ชัด", false)
+
+	# Rangers on foot, 15:30-18:30 (Year 3+)
+	for r in rangers:
+		var on_duty = now >= RANGER_START_MINUTE and now < RANGER_END_MINUTE
+		if on_duty and not r.active:
+			r.start()
+			hud.show_drone_alert("เจ้าหน้าที่ป่าไม้เดินตรวจแนวป่ารอบแปลง (ถึง 18:30) — อย่าให้เขาเห็นเปลวไฟ", false)
+		elif not on_duty and r.active:
+			r.stop()
 
 	# 18:00 Atmospheric Inversion
 	if not inversion_started and now >= INVERSION_MINUTE:
@@ -379,6 +440,7 @@ func _update_phase(now: int) -> void:
 		hud.show_alert(PHASES[idx].title + "\n" + goal, 4.0)
 	if AudioManager.instance:
 		AudioManager.instance.set_music_intensity(idx)
+		AudioManager.instance.play_phase_stinger(idx)
 
 func _on_drone_sweep_started(_d: ForestryDrone) -> void:
 	if not pass_started:
@@ -392,15 +454,20 @@ func _on_drone_spotted(_world_pos: Vector3, is_flame: bool) -> void:
 	# Flames are evidence of burning; a crew in the open is only suspicious
 	var penalty = _penalty(15.0 if is_flame else 10.0)
 	_add_scrutiny(penalty)
+	breakdown.drone += penalty
+	breakdown.drone_photos += 1
 
 	var msg = "แฟลชโดรน! ถ่ายภาพเปลวไฟได้ · ความเพ่งเล็ง +%d" % penalty if is_flame else "แฟลชโดรน! ถ่ายภาพทีมกลางที่โล่งได้ · ความเพ่งเล็ง +%d" % penalty
 	hud.show_drone_alert(msg, true)
 	if AudioManager.instance:
+		AudioManager.instance.play_camera_shutter()
 		AudioManager.instance.play_camera_alarm()
 
 func _on_camera_heat(_cam: ThermalCamera, _world_pos: Vector3) -> void:
 	var penalty = _penalty(CAMERA_BASE_PENALTY)
 	_add_scrutiny(penalty)
+	breakdown.camera += penalty
+	breakdown.camera_trips += 1
 	hud.show_drone_alert("กล้องความร้อนที่แนวเขตอุทยานจับได้! · ความเพ่งเล็ง +%d" % penalty, true)
 	if AudioManager.instance:
 		AudioManager.instance.play_camera_alarm()
@@ -414,12 +481,18 @@ func _on_wind_shifted(direction: Vector2, speed: float) -> void:
 	hud.update_wind(direction, speed)
 	hud.show_alert("ลมเปลี่ยนทิศแล้ว! ตรวจแนวกันไฟรอบแปลงอีกครั้ง", 3.0)
 	if AudioManager.instance:
-		AudioManager.instance.play_wind_gust()
+		AudioManager.instance.play_wind_shift()
 
 func _on_bamboo_exploded(_coord: Vector2i, _world_pos: Vector3, _landing: Vector2i) -> void:
 	if AudioManager.instance:
 		AudioManager.instance.play_bamboo_pop()
+		get_tree().create_timer(randf_range(0.45, 0.75)).timeout.connect(_on_ember_landed)
 	hud.show_alert("ปล้องไผ่ระเบิด! แรงไอน้ำดีดลูกไฟไปตามลม", 3.5)
+
+## A flying spark settling after its arc
+func _on_ember_landed() -> void:
+	if AudioManager.instance:
+		AudioManager.instance.play_ember_landing()
 
 ## A spark caught in the protected forest: a few seconds to douse it
 func _on_spot_fire(_coord: Vector2i) -> void:
@@ -434,6 +507,7 @@ func _on_ember_jumped(_from: Vector2i, _landing: Vector2i) -> void:
 	hud.show_alert("ลมแรง — ลูกไฟกระโดดข้ามแนวกันไฟ!", 3.0)
 	if AudioManager.instance:
 		AudioManager.instance.play_ember_jump()
+		get_tree().create_timer(randf_range(0.5, 0.8)).timeout.connect(_on_ember_landed)
 
 func _on_satellite_closing(mins_remaining: int) -> void:
 	if mins_remaining % 10 == 0 or mins_remaining <= 5:
@@ -455,6 +529,8 @@ func _on_satellite_pass() -> void:
 			d.end_patrol()
 	for cam in thermal_cameras:
 		cam.set_active(false)
+	for r in rangers:
+		r.stop()
 
 	if AudioManager.instance:
 		AudioManager.instance.stop_all_loops()
@@ -473,9 +549,22 @@ func _on_satellite_sweep_completed(detected_hotspots: int, scrutiny_increase: in
 	# Commit this burn to the campaign once, then report the resulting state
 	var state = GameState.instance
 	state.log_hotspots(satellite.detected_cells, satellite.detected_heat)
-	state.record_plot_results(latest_rice_yield, detected_hotspots, escaped_to_forest, plot_scrutiny_gain)
+	breakdown.satellite = scrutiny_increase
+	breakdown.spot_fires = fire_grid.spot_fires_started
+	breakdown.spot_fires_doused = fire_grid.spot_fires_doused
+	state.record_plot_results(latest_rice_yield, detected_hotspots, escaped_to_forest, plot_scrutiny_gain, breakdown)
 	hud.update_scrutiny(state.state_scrutiny)
+	_log_playtest_row(state)
 	hud.show_resolution_report(latest_rice_yield, detected_hotspots, escaped_to_forest, state, scrutiny_increase, _gis_lines(state))
+
+## One CSV row per burn for balance tuning (PlaytestLog, P0-7)
+func _log_playtest_row(state: Node) -> void:
+	var cut_total = fire_grid.count_cells_of_type(FireGrid.CellType.FIREBREAK) - _firebreak_baseline
+	PlaytestLog.append(PlaytestLog.row_for(state, {
+		"first_ignition": "" if first_ignition_minute < 0 else "%d:%02d" % [first_ignition_minute / 60, first_ignition_minute % 60],
+		"firebreak_player": player.cells_cut,
+		"firebreak_crew": maxi(0, cut_total - player.cells_cut),
+	}))
 
 ## GISTDA-style hotspot log lines for this plot's detections
 func _gis_lines(state: Node) -> PackedStringArray:
@@ -503,6 +592,7 @@ func _on_forest_escape() -> void:
 	escaped_to_forest = true
 	var penalty = _penalty(ESCAPE_BASE_PENALTY * park_strictness)
 	_add_scrutiny(penalty)
+	breakdown.escape += penalty
 	hud.show_alert("อันตราย! ไฟลามเข้าป่าอนุรักษ์แล้ว · ความเพ่งเล็ง +%d" % penalty, 6.0)
 
 func _on_tool_changed(tool_name: String) -> void:

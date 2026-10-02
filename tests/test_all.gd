@@ -28,6 +28,15 @@ func load_main(year: int, plot: int) -> Node:
 
 func _run() -> void:
 	await process_frame
+	# Never touch the player's real save: the Hearth autosaves on every refresh
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("user://test_tmp"))
+	SaveGame.dir = "user://test_tmp/"
+	SaveGame.delete()
+	GameSettings.dir = "user://test_tmp/"
+	PlaytestLog.dir = "user://test_tmp/"
+	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://test_tmp/playtest_log.csv"))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://test_tmp/settings.cfg"))
+	GameSettings.load_settings()
 	var gs = root.get_node("GameState")
 	var am = root.get_node("AudioManager")
 
@@ -36,7 +45,7 @@ func _run() -> void:
 	var r3 = Escalation.rules_for_year(3); var r4 = Escalation.rules_for_year(4)
 	check(r1.drone_count == 0 and r1.penalty_mult < 1.0, "Y1: no drones, lenient rangers")
 	check(r2.drone_count == 1 and is_equal_approx(r2.spread_mult, 1.25), "Y2: one drone, drought +25%")
-	check(r3.drone_count == 2 and r3.satellite_threshold == 25.0 and r3.ground_cameras == 2, "Y3: dual drones, threshold 25, ground cameras")
+	check(r3.drone_count == 2 and r3.satellite_threshold == 25.0 and r3.ground_cameras == 1, "Y3: dual drones, threshold 25, one ground camera")
 	check(r4.checkpoints and r4.curfew and r4.drone_speed_mult > 1.0 and r4.hotspot_penalty == 30, "Y4+: checkpoints, curfew, fast drones")
 	check(PlotGenerator.get_plot_config(1, 3).drone_count == 0, "no drones anywhere in Year 1")
 
@@ -65,6 +74,21 @@ func _run() -> void:
 	hearth._tune_radio(1)
 	hearth._on_chatter_timeout()
 	check(am.radio_player.playing, "tuning the radio plays a recorded broadcast line")
+	# ---- Audio architecture (2026-10-02 SFX audit)
+	check(AudioServer.get_bus_index("SFX") != -1 and AudioServer.get_bus_index("Music") != -1 \
+		and AudioServer.get_bus_index("Ambience") != -1 and AudioServer.get_bus_index("UI") != -1,
+		"Master/SFX/Music/Ambience/UI bus layout present")
+	am.set_held_loop("spray", true)
+	check(am._targets[am.held_players["spray"]] > 0.0, "spray held loop on")
+	am.set_held_loop("spray", false)
+	am.play_footstep()
+	am.play_ui_click()
+	am.play_day_start()
+	am.play_phase_stinger(1)
+	am.play_ending_stinger("famine")
+	am.set_ambience(0.5, 1.0, 0.5)
+	check(am._cache.has("step_brush") and am._cache.has("ui_click"), "new SFX synthesize on demand")
+	check(am._ambience_targets["cicada"] == 1.0, "ambience bed driven by time of day")
 	hearth._on_ration_pressed(gs.Ration.FULL)
 	hearth._on_favour_pressed(gs.Favour.WATER)
 	hearth._on_favour_pressed(gs.Favour.SPRAYER)
@@ -156,6 +180,12 @@ func _run() -> void:
 	main.player._apply_tool_to_cell(Vector2i(21, 20))
 	check(fg.cell_types[i1] == FireGrid.CellType.SMOLDERING, "empty tank can't douse")
 
+	# ---- Per-tool reach: the sprayer's jet reaches 5.5 m, hand tools 4 m
+	main.player._select_tool(2)
+	var spray_reach = main.player.tool_reach()
+	main.player._select_tool(1)
+	check(is_equal_approx(spray_reach, 5.5) and is_equal_approx(main.player.tool_reach(), 4.0), "sprayer reaches 5.5 m, knife and rake 4 m")
+
 	# ---- Hold-to-cut: half a second of work per firebreak cell
 	var cut_idx = fg._coord_to_index(22, 20)
 	fg.cell_types[cut_idx] = FireGrid.CellType.VEGETATION
@@ -165,6 +195,15 @@ func _run() -> void:
 	var after_short = fg.cell_types[cut_idx]
 	main.player._cut_firebreak(Vector2i(22, 20), 0.3 * mult)
 	check(after_short == FireGrid.CellType.VEGETATION and fg.cell_types[cut_idx] == FireGrid.CellType.FIREBREAK, "firebreak cell needs a held half-second to cut")
+	# A click commits the cut: raking finishes on its own after the button is released
+	var near = fg.get_cell_coord_at_world_pos(main.player.global_position) + Vector2i(1, 0)
+	var near_idx = fg._coord_to_index(near.x, near.y)
+	fg.cell_types[near_idx] = FireGrid.CellType.VEGETATION
+	main.player._select_tool(1)
+	main.player._begin_cut(near)
+	main.player._update_firebreak_cut(0.3 * mult)
+	main.player._update_firebreak_cut(0.3 * mult)
+	check(fg.cell_types[near_idx] == FireGrid.CellType.FIREBREAK and not main.player._cutting, "a single click rakes the cell to bare soil")
 
 	# ---- Ember jumping over a firebreak in high wind
 	fg.set_wind(Vector2(1, 0), 2.4)
@@ -218,6 +257,8 @@ func _run() -> void:
 	main.game_clock.current_sim_time_seconds = 15 * 3600 + 31 * 60
 	await frames(3)
 	check(main.current_phase == 1, "Phase 2 at 15:31")
+	var tips_node = main.get_children().filter(func(n): return n is FirstBurnTips)
+	check(tips_node.size() == 1 and main.hud.tip_card.visible and main.hud.tip_label.text.contains("เชื้อไฟแห้ง"), "first-burn tip appears when the fuel dries at 15:30")
 	main.game_clock.current_sim_time_seconds = 18 * 3600 + 60
 	await frames(3)
 	check(main.inversion_started and main.current_phase == 2, "18:00 inversion + Phase 3")
@@ -239,6 +280,8 @@ func _run() -> void:
 	check(main.hud.report_modal.visible and main.hud.report_text.text.contains("°N"), "report includes the GIS hotspot log")
 	check(main.hud.report_body.text.contains("เป้าหมาย 1") and main.hud.report_body.text.contains("ไม่ผ่าน เป้าหมาย 2"), "report explains both goals")
 	check(gs.hotspot_log.size() >= 4, "hotspots logged to GameState (%d)" % gs.hotspot_log.size())
+	var csv = FileAccess.get_file_as_string(PlaytestLog.path()).strip_edges().split("\n")
+	check(csv.size() >= 2 and csv[0].begins_with("campaign_id,") and csv[1].split(",").size() == PlaytestLog.COLUMNS.size(), "burn written to the playtest log (%d lines)" % csv.size())
 	check(gs.favours.is_empty(), "favours used up after the burn")
 
 	# ---- Year 3 / plot 4: dual drones, cameras, park border, threshold
@@ -246,7 +289,7 @@ func _run() -> void:
 	main = await load_main(3, 4)
 	fg = main.fire_grid
 	check(main.drones.size() == 2, "Y3 plot 4: two drones")
-	check(main.thermal_cameras.size() == 2, "Y3: two ground thermal cameras")
+	check(main.thermal_cameras.size() == 1, "Y3: one ground thermal camera (plus a ranger)")
 	check(fg.border_depth.north == 7 and fg.is_border_coord(20, 6), "park boundary covers the upper slope")
 	check(main.satellite.thermal_threshold == 25.0, "Y3 satellite threshold 25")
 	check(is_equal_approx(fg.spread_multiplier, 1.3), "Y3 drought spread multiplier")
@@ -276,6 +319,98 @@ func _run() -> void:
 	dr._phase_left = 0.01
 	await frames(3)
 	check(dr.on_station and not dr._photo_taken, "drone returns for a fresh sweep")
+
+	# ---- Companions take cover from a drone overhead (P1-4)
+	var yt = main.youth
+	yt.set_physics_process(false)
+	yt.current_state = yt.State.IDLE_FOLLOW
+	yt.target_coord = Vector2i(-1, -1)
+	dr.global_position = yt.global_position + Vector3(3, 12, 0)
+	dr.on_station = true
+	dr.is_active_patrol = true
+	yt._cover_check = 1.0
+	yt._check_cover(0.1)
+	var cover_type = fg.cell_types[fg._coord_to_index(yt.target_coord.x, yt.target_coord.y)] if fg.is_valid_coord(yt.target_coord.x, yt.target_coord.y) else -1
+	check(yt.current_state == yt.State.HIDING and cover_type in [FireGrid.CellType.BAMBOO, FireGrid.CellType.FOREST_BORDER], "a companion takes cover under bamboo or forest when a drone is overhead")
+	# ...but breaks cover for a spot fire in the park
+	var spot_c = fg.get_cell_coord_at_world_pos(yt.global_position)
+	spot_c.y = fg.grid_height - 1 # Park edge just south of the crew near the hut
+	var nb2: Array = []
+	var nh2: Array = []
+	nb2.assign(fg.cell_types)
+	nh2.assign(fg.cell_heat)
+	fg._ignite_border(fg._coord_to_index(spot_c.x, spot_c.y), nb2, nh2)
+	fg.cell_types = nb2
+	fg.cell_heat = nh2
+	yt._process_hide(0.1)
+	check(yt.current_state == yt.State.MOVING_TO_TASK and yt.target_coord == spot_c, "a spot fire comes before staying hidden")
+	fg.cell_types[fg._coord_to_index(spot_c.x, spot_c.y)] = FireGrid.CellType.FOREST_BORDER
+	dr.on_station = false
+	yt.current_state = yt.State.IDLE_FOLLOW
+	yt.set_physics_process(true)
+
+	# ---- Ranger foot patrol, Year 3+ (P1-2)
+	check(Escalation.rules_for_year(2).ranger_count == 0 and Escalation.rules_for_year(3).ranger_count == 1 and Escalation.rules_for_year(4).ranger_count == 2, "rangers patrol from Year 3 (two from Year 4)")
+	check(main.rangers.size() == 1 and main.rangers[0].active, "ranger on duty at 15:31")
+	var rg = main.rangers[0]
+	# Find a plot cell inside the ranger's vision cone and set it alight
+	var seen_cell = Vector2i(-1, -1)
+	for y in fg.grid_height:
+		for x in fg.grid_width:
+			if seen_cell.x < 0 and not fg.is_border_coord(x, y) and rg.can_see(fg.get_cell_world_pos(x, y)):
+				seen_cell = Vector2i(x, y)
+	check(seen_cell.x >= 0, "ranger's cone covers part of the plot")
+	if seen_cell.x >= 0:
+		for i in fg.cell_types.size():
+			if fg.cell_types[i] == FireGrid.CellType.BURNING: fg.cell_types[i] = FireGrid.CellType.ASH
+		fg.cell_types[fg._coord_to_index(seen_cell.x, seen_cell.y)] = FireGrid.CellType.BURNING
+		var g_before = main.plot_scrutiny_gain
+		rg._lap_logged = false
+		rg._scan()
+		var g_after = main.plot_scrutiny_gain
+		rg._scan()
+		check(g_after > g_before and main.plot_scrutiny_gain == g_after and main.breakdown.ranger_sightings >= 1, "ranger reports a flame once per lap (+%d)" % (g_after - g_before))
+		# Thick smoke between them hides the flame
+		rg._lap_logged = false
+		var mid = fg.get_cell_coord_at_world_pos(rg.global_position.lerp(fg.get_cell_world_pos(seen_cell.x, seen_cell.y), 0.6))
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				if fg.is_valid_coord(mid.x + dx, mid.y + dy):
+					fg.cell_types[fg._coord_to_index(mid.x + dx, mid.y + dy)] = FireGrid.CellType.BURNING
+		check(not rg.can_see(fg.get_cell_world_pos(seen_cell.x, seen_cell.y)), "thick smoke blocks the ranger's view")
+
+	# ---- Save / continue (P0-3)
+	gs.reset_campaign()
+	gs.current_year = 2
+	gs.current_plot_index = 4
+	gs.rice_barn = 63.0
+	gs.state_scrutiny = 41
+	gs.blade_upgrade_level = 2
+	gs.toggle_favour(gs.Favour.SEEDS)
+	gs.season_yields.assign([81.0, 77.5, 69.0])
+	gs.log_hotspots([Vector2i(3, 4)], [44.0])
+	gs.record_plot_results(80.0, 1, false, 16, {"drone_photos": 2, "camera_trips": 1, "spot_fires": 3, "spot_fires_doused": 2})
+	var before = gs.to_dict()
+	check(SaveGame.save(gs) and SaveGame.exists(), "campaign autosave written")
+	gs.reset_campaign()
+	check(SaveGame.load_into(gs) == "", "campaign save loads")
+	var after = gs.to_dict()
+	check(JSON.stringify(after) == JSON.stringify(before), "save round-trip restores the identical campaign")
+	check(gs.stats.drone_photos == 2 and gs.stats.spot_fires_doused == 2 and gs.hotspot_log[0].cell == Vector2i(3, 4), "campaign stats and hotspot log survive the save")
+	var bad = FileAccess.open(SaveGame.dir.path_join(SaveGame.CAMPAIGN_FILE), FileAccess.WRITE)
+	bad.store_string("{not json")
+	bad.close()
+	check(SaveGame.load_into(gs) == "corrupt", "a corrupt save is rejected, not loaded")
+	gs.state_scrutiny = 100
+	check(not SaveGame.save(gs), "a finished (game-over) campaign is not autosaved")
+	SaveGame.delete()
+	check(not SaveGame.exists(), "save slot can be cleared")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveGame.dir.path_join(SaveGame.RECORDS_FILE)))
+	gs.reset_campaign()
+	gs.stats.plots_completed = 7
+	check(SaveGame.submit_record(gs) and SaveGame.best_record().plots_completed == 7, "best run recorded")
+	gs.stats.plots_completed = 3
+	check(not SaveGame.submit_record(gs), "a shorter run does not replace the record")
 
 	# ---- Scrutiny relief between plots (campaign balance)
 	gs.reset_campaign()
@@ -309,10 +444,114 @@ func _run() -> void:
 		await process_frame
 	check(am.music_ready, "procedural Tena harp / khaen music rendered")
 
+	await _flow_checks(gs)
 	await _fire_balance_checks()
 
 	print("\nRESULT: %s (%d failures)" % ["OK" if fails == 0 else "FAILED", fails])
 	quit(fails)
+
+## Title, settings and pause (PRD_UPDATE_v1.1 P0-1, P0-2, P0-4)
+func _flow_checks(gs: Node) -> void:
+	# Settings persist
+	GameSettings.camera_zoom = 52.0
+	GameSettings.show_hints = false
+	GameSettings.volumes["Music"] = 0.4
+	GameSettings.save_settings()
+	GameSettings.camera_zoom = 44.0
+	GameSettings.load_settings()
+	check(is_equal_approx(GameSettings.camera_zoom, 52.0) and not GameSettings.show_hints and is_equal_approx(GameSettings.volumes["Music"], 0.4), "settings persist across restarts")
+	GameSettings.apply(self)
+	check(absf(db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music"))) - 0.4) < 0.01, "music volume setting reaches the mixer")
+	GameSettings.camera_zoom = 44.0
+	GameSettings.show_hints = true
+	GameSettings.volumes["Music"] = 1.0
+	GameSettings.apply(self)
+	GameSettings.save_settings()
+
+	# Title: no save -> only "new game"; new game resets and opens the Hearth
+	SaveGame.delete()
+	change_scene_to_file("res://scenes/Title.tscn")
+	await process_frame
+	await process_frame
+	var title = current_scene
+	check(not title.continue_button.visible and title.new_button.visible, "title without a save offers only a new game")
+	gs.current_year = 3
+	title._on_new_game()
+	await process_frame
+	await process_frame
+	check(current_scene.name == "VillageHearth" and gs.current_year == 1 and SaveGame.exists(), "new game starts Year 1 at the Hearth and autosaves")
+	gs.current_plot_index = 3
+	current_scene._refresh()
+	change_scene_to_file("res://scenes/Title.tscn")
+	await process_frame
+	await process_frame
+	check(current_scene.continue_button.visible, "title offers continue when a save exists")
+	gs.reset_campaign()
+	current_scene._on_continue()
+	await process_frame
+	await process_frame
+	check(current_scene.name == "VillageHearth" and gs.current_plot_index == 3, "continue restores the saved campaign")
+
+	# Pause freezes the burn; giving up runs the 20:00 pass now
+	var main = await load_main(1, 2)
+	check(main.get_children().filter(func(n): return n is FirstBurnTips).is_empty(), "no first-burn tips on later plots")
+	# Year 4+ march: checkpoint scene, then the burn (P1-3)
+	var main_ref = main
+	gs.current_year = 4
+	change_scene_to_file("res://scenes/VillageHearth.tscn")
+	await process_frame
+	await process_frame
+	current_scene._on_launch_pressed()
+	await process_frame
+	await process_frame
+	check(current_scene.name == "Checkpoint", "Year 4+ march passes the checkpoint scene")
+	current_scene._t = 2.0
+	current_scene.finish()
+	await process_frame
+	await process_frame
+	check(current_scene.name == "Main", "checkpoint leads into the burn")
+	gs.current_year = 1
+	main = current_scene
+	var pm = main.hud.pause_menu
+	check(pm.can_pause(), "pause is available during a burn")
+	pm.open()
+	var t0 = main.game_clock.current_sim_time_seconds
+	await frames(30)
+	check(paused and is_equal_approx(main.game_clock.current_sim_time_seconds, t0), "pause freezes the burn clock")
+	pm.resume()
+	await frames(30)
+	check(not paused and main.game_clock.current_sim_time_seconds > t0, "resume continues the burn")
+	pm.open()
+	pm._give_up_plot()
+	await frames(3)
+	check(not paused and main.pass_started and not pm.can_pause(), "giving up a plot runs the satellite pass immediately")
+	await frames(300)
+	SaveGame.delete()
+
+	# Endings: a finished campaign plays its scene, then the run summary (P0-5)
+	for cause in ["crackdown", "famine"]:
+		gs.reset_campaign()
+		gs.stats.plots_completed = 4
+		gs.stats.ash_sum = 320.0
+		if cause == "crackdown":
+			gs.state_scrutiny = 100
+		else:
+			gs.rice_barn = 10.0
+		SaveGame.save(gs) # an older autosave from before the final burn
+		gs.state_scrutiny = 100 if cause == "crackdown" else 0
+		change_scene_to_file("res://scenes/Ending.tscn")
+		await process_frame
+		await process_frame
+		var ending = current_scene
+		check(ending.cause == cause and not SaveGame.exists(), "%s ending plays and the finished campaign can't be continued" % cause)
+		await frames(10)
+		ending.show_summary()
+		check(ending.summary_card != null and ending.summary_card.visible, "%s ending shows the run summary" % cause)
+	check(int(SaveGame.best_record().get("plots_completed", 0)) >= 4, "the run is kept as a record")
+	current_scene._new_campaign()
+	await process_frame
+	await process_frame
+	check(current_scene.name == "VillageHearth" and gs.current_year == 1 and not gs.is_game_over(), "summary starts a fresh campaign")
 
 ## Fire rules from the 2026-10-02 balance pass, on a standalone FireGrid
 func _fire_balance_checks() -> void:

@@ -21,7 +21,11 @@ const TOOL_LABELS = {
 }
 
 @export var base_move_speed: float = 6.0
-@export var interaction_range: float = 4.0 # Horizontal reach in metres
+@export var interaction_range: float = 4.0 # Horizontal reach in metres (knife, rake, torch)
+## The backpack sprayer's pressurised jet reaches further (spot fires across a firebreak)
+const SPRAYER_REACH: float = 5.5
+## Firebreak cells the player has raked this burn (playtest log)
+var cells_cut: int = 0
 @export var tool_cooldown: float = 0.15
 @export var fire_grid: FireGrid
 
@@ -57,6 +61,9 @@ var blade_cooldown_multiplier: float = 1.0
 const CLEAR_SECONDS: float = 0.5
 var _clear_cell: Vector2i = Vector2i(-1, -1)
 var _clear_progress: float = 0.0
+## A click commits a cut: raking continues on its own until the cell is bare,
+## unless the player walks out of reach or switches tools
+var _cutting: bool = false
 
 # Gamepad aim: a virtual cursor offset around the player's screen position
 const GAMEPAD_AIM_SPEED: float = 650.0
@@ -121,8 +128,17 @@ func _create_tool_rig() -> void:
 		tank.position = Vector3.ZERO
 		tank.scale = Vector3.ONE / animator.base_scale
 
+var _step_accum: float = 0.0
+
+## Reach of the current tool in metres
+func tool_reach() -> float:
+	return SPRAYER_REACH if current_tool == ToolType.WATER_SPRAYER else interaction_range
+
 func _select_tool(tool: ToolType) -> void:
 	current_tool = tool
+	_cancel_cut()
+	if AudioManager.instance:
+		AudioManager.instance.play_tool_switch()
 	if animator and animator.has_method("cancel_work"):
 		animator.cancel_work()
 	match tool:
@@ -154,6 +170,8 @@ func _physics_process(delta: float) -> void:
 	_handle_button_actions()
 	_update_work_animation()
 	_handle_held_actions(delta)
+	_update_work_sounds()
+	_update_footsteps(delta)
 	if animator:
 		var facing := target_cell_pos - global_position if is_targeting_valid_cell and Input.is_action_pressed("use_tool") and not _pointer_over_gui() else Vector3.ZERO
 		facing.y = 0
@@ -187,12 +205,14 @@ func _update_smoke_and_stamina(delta: float) -> void:
 	stamina_changed.emit(current_stamina, max_stamina)
 
 func _update_refill(delta: float) -> void:
-	if refill_point == Vector3.INF or water >= water_capacity:
-		return
-	if Vector2(refill_point.x - global_position.x, refill_point.z - global_position.z).length() <= REFILL_RADIUS:
+	var refilling := refill_point != Vector3.INF and water < water_capacity \
+		and Vector2(refill_point.x - global_position.x, refill_point.z - global_position.z).length() <= REFILL_RADIUS
+	if refilling:
 		water = minf(water_capacity, water + REFILL_RATE * delta)
 		_empty_warned = false
 		water_changed.emit(water, water_capacity)
+	if AudioManager.instance:
+		AudioManager.instance.set_held_loop("refill", refilling)
 
 func set_water_capacity(capacity: float) -> void:
 	water_capacity = capacity
@@ -280,7 +300,7 @@ func _update_mouse_targeting() -> void:
 		if target_indicator:
 			target_indicator.visible = true
 			target_indicator.global_position = target_cell_pos + Vector3(0, 0.25, 0)
-			var in_reach = _flat_distance_to(target_cell_pos) <= interaction_range
+			var in_reach = _flat_distance_to(target_cell_pos) <= tool_reach()
 			(target_indicator.mesh.material as StandardMaterial3D).albedo_color = Color(1.0, 1.0, 0.0, 0.45) if in_reach else Color(1.0, 0.3, 0.2, 0.3)
 	else:
 		is_targeting_valid_cell = false
@@ -289,6 +309,8 @@ func _update_mouse_targeting() -> void:
 
 func set_input_enabled(enabled: bool) -> void:
 	input_enabled = enabled
+	if not enabled:
+		_cancel_cut()
 	if not enabled and animator and animator.has_method("cancel_work"):
 		animator.cancel_work()
 	if not enabled and target_indicator:
@@ -323,19 +345,84 @@ func _flat_distance_to(pos: Vector3) -> float:
 
 ## Use tool (hold): rate-limited so dragging paints a line
 func _handle_held_actions(delta: float) -> void:
+	if current_tool == ToolType.FIREBREAK_BLADE:
+		if not _cutting and Input.is_action_pressed("use_tool") and is_targeting_valid_cell and not _pointer_over_gui() \
+				and _flat_distance_to(target_cell_pos) <= tool_reach():
+			_begin_cut(target_cell_coord)
+		_update_firebreak_cut(delta)
+		return
+
 	_tool_cooldown_left = max(0.0, _tool_cooldown_left - delta)
 	if _tool_cooldown_left > 0.0:
 		return
 
 	if Input.is_action_pressed("use_tool") and is_targeting_valid_cell and not _pointer_over_gui():
-		if _flat_distance_to(target_cell_pos) <= interaction_range:
-			if current_tool == ToolType.FIREBREAK_BLADE:
-				_cut_firebreak(target_cell_coord, delta)
-				return
+		if _flat_distance_to(target_cell_pos) <= tool_reach():
 			_apply_tool_to_cell(target_cell_coord)
 			_tool_cooldown_left = tool_cooldown
-			return
+
+## Start raking a brush cell (a click is enough; holding and dragging rakes a line)
+func _begin_cut(coord: Vector2i) -> void:
+	if not fire_grid or not fire_grid.is_valid_coord(coord.x, coord.y):
+		return
+	var t = fire_grid.cell_types[fire_grid._coord_to_index(coord.x, coord.y)]
+	if t != FireGrid.CellType.VEGETATION and t != FireGrid.CellType.BAMBOO:
+		return
+	_clear_cell = coord
 	_clear_progress = 0.0
+	_cutting = true
+
+## Keep raking the committed cell until it is bare soil
+func _update_firebreak_cut(delta: float) -> void:
+	if not _cutting:
+		return
+	var idx = fire_grid._coord_to_index(_clear_cell.x, _clear_cell.y)
+	var t = fire_grid.cell_types[idx]
+	var cell_pos = fire_grid.get_cell_world_pos(_clear_cell.x, _clear_cell.y)
+	if (t != FireGrid.CellType.VEGETATION and t != FireGrid.CellType.BAMBOO) or _flat_distance_to(cell_pos) > interaction_range + 0.75:
+		_cancel_cut()
+		return
+	_cut_firebreak(_clear_cell, delta)
+	if _clear_cell == Vector2i(-1, -1):
+		_cutting = false
+		_show_cut_progress(Vector3.ZERO, 0.0)
+	else:
+		_show_cut_progress(cell_pos, _clear_progress)
+
+func _cancel_cut() -> void:
+	_cutting = false
+	_clear_progress = 0.0
+	_clear_cell = Vector2i(-1, -1)
+	_show_cut_progress(Vector3.ZERO, 0.0)
+
+## Straw disc on the cell being raked, growing with the work (PRD_UPDATE_v1.1 P1-5)
+var _cut_marker: MeshInstance3D
+func _show_cut_progress(pos: Vector3, progress: float) -> void:
+	if progress <= 0.0:
+		if _cut_marker:
+			_cut_marker.visible = false
+		return
+	if _cut_marker == null:
+		_cut_marker = MeshInstance3D.new()
+		var disc = CylinderMesh.new()
+		disc.top_radius = 0.7
+		disc.bottom_radius = 0.7
+		disc.height = 0.04
+		disc.radial_segments = 8
+		disc.rings = 0
+		var mat = StandardMaterial3D.new()
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		mat.albedo_color = Color(0.92, 0.77, 0.42, 0.7)
+		disc.material = mat
+		_cut_marker.mesh = disc
+		_cut_marker.top_level = true
+		_cut_marker.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(_cut_marker)
+	_cut_marker.visible = true
+	_cut_marker.global_position = pos + Vector3(0, 0.32, 0)
+	var k = clampf(progress, 0.08, 1.0)
+	_cut_marker.scale = Vector3(k, 1.0, k)
 
 ## Hold on a cell to rake it down to bare soil; moving to another cell restarts the work
 func _cut_firebreak(coord: Vector2i, delta: float) -> void:
@@ -362,6 +449,7 @@ func _apply_tool_to_cell(coord: Vector2i) -> void:
 				_show_tool_feedback(coord)
 		ToolType.FIREBREAK_BLADE:
 			if fire_grid.clear_firebreak(coord.x, coord.y):
+				cells_cut += 1
 				_swing()
 				_show_tool_feedback(coord)
 		ToolType.WATER_SPRAYER:
@@ -382,9 +470,11 @@ func _work_kind() -> StringName:
 	return [&"ignite", &"rake", &"spray"][int(current_tool)]
 
 func _can_animate_work() -> bool:
+	if _cutting and input_enabled and current_tool == ToolType.FIREBREAK_BLADE:
+		return true
 	if not input_enabled or not fire_grid or not is_targeting_valid_cell or not Input.is_action_pressed("use_tool") or _pointer_over_gui():
 		return false
-	if _flat_distance_to(target_cell_pos) > interaction_range or not fire_grid.is_valid_coord(target_cell_coord.x, target_cell_coord.y):
+	if _flat_distance_to(target_cell_pos) > tool_reach() or not fire_grid.is_valid_coord(target_cell_coord.x, target_cell_coord.y):
 		return false
 	var type: int = fire_grid.cell_types[fire_grid._coord_to_index(target_cell_coord.x, target_cell_coord.y)]
 	if current_tool == ToolType.WATER_SPRAYER:
@@ -406,6 +496,33 @@ func _swing() -> void:
 	var tween = _tool_prop.create_tween()
 	tween.tween_property(_tool_prop, "rotation:x", 0.9, 0.08)
 	tween.tween_property(_tool_prop, "rotation:x", 0.0, 0.14)
+
+## Held tool loops follow the same gate as the work animation: the sound IS the work
+func _update_work_sounds() -> void:
+	if not AudioManager.instance:
+		return
+	var working := _can_animate_work()
+	AudioManager.instance.set_held_loop("spray", working and current_tool == ToolType.WATER_SPRAYER)
+	AudioManager.instance.set_held_loop("ignite", working and current_tool == ToolType.DRIP_TORCH)
+	AudioManager.instance.set_held_loop("rake", _cutting and input_enabled)
+
+## Footsteps on a distance cadence; duller on bare/ashed ground
+func _update_footsteps(delta: float) -> void:
+	var speed := Vector2(velocity.x, velocity.z).length()
+	if speed < 0.6:
+		_step_accum = 0.0
+		return
+	_step_accum += speed * delta
+	if _step_accum >= maxf(1.0, speed * 0.38):
+		_step_accum = 0.0
+		if AudioManager.instance:
+			var ash := false
+			if fire_grid:
+				var c := fire_grid.get_cell_coord_at_world_pos(global_position)
+				if fire_grid.is_valid_coord(c.x, c.y):
+					var t: int = fire_grid.cell_types[fire_grid._coord_to_index(c.x, c.y)]
+					ash = t != FireGrid.CellType.VEGETATION and t != FireGrid.CellType.BAMBOO
+			AudioManager.instance.play_footstep(ash)
 
 func _show_tool_feedback(coord: Vector2i) -> void:
 	var origin := _tool_prop.global_position
