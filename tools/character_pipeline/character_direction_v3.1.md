@@ -1,6 +1,6 @@
-# Satellite Shadow — Character Research & Development Direction v3.1
+# Under Two Skies — Character Research & Development Direction v3.1
 
-**Project:** Satellite Shadow / เงาเมฆา / ไร่หมุนเวียน  
+**Project:** Under Two Skies / เงาเมฆา / ไร่หมุนเวียน  
 **Document:** Character Research, Visual Direction & Production Handoff  
 **Version:** 3.1  
 **Date:** 2026-10-02  
@@ -1186,7 +1186,7 @@ Rebuild Mu-naw's reference direction before final rigging.
 
 # 21. One-Line Character Direction
 
-> **Satellite Shadow should look like real contemporary Northern Pgakenyaw people and communities translated into a warm, cute, faceted low-poly world — not fantasy characters decorated with “Karen” motifs.**
+> **Under Two Skies should look like real contemporary Northern Pgakenyaw people and communities translated into a warm, cute, faceted low-poly world — not fantasy characters decorated with “Karen” motifs.**
 
 And for Mu-naw specifically:
 

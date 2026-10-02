@@ -45,7 +45,7 @@ func _run() -> void:
 	var r3 = Escalation.rules_for_year(3); var r4 = Escalation.rules_for_year(4)
 	check(r1.drone_count == 0 and r1.penalty_mult < 1.0, "Y1: no drones, lenient rangers")
 	check(r2.drone_count == 1 and is_equal_approx(r2.spread_mult, 1.25), "Y2: one drone, drought +25%")
-	check(r3.drone_count == 2 and r3.satellite_threshold == 25.0 and r3.ground_cameras == 1, "Y3: dual drones, threshold 25, one ground camera")
+	check(r3.drone_count == 2 and r3.satellite_threshold == 35.0 and r3.ground_cameras == 1, "Y3: dual drones, one ground camera; threshold stays 35")
 	check(r4.checkpoints and r4.curfew and r4.drone_speed_mult > 1.0 and r4.hotspot_penalty == 30, "Y4+: checkpoints, curfew, fast drones")
 	check(PlotGenerator.get_plot_config(1, 3).drone_count == 0, "no drones anywhere in Year 1")
 
@@ -291,7 +291,7 @@ func _run() -> void:
 	check(main.drones.size() == 2, "Y3 plot 4: two drones")
 	check(main.thermal_cameras.size() == 1, "Y3: one ground thermal camera (plus a ranger)")
 	check(fg.border_depth.north == 7 and fg.is_border_coord(20, 6), "park boundary covers the upper slope")
-	check(main.satellite.thermal_threshold == 25.0, "Y3 satellite threshold 25")
+	check(main.satellite.thermal_threshold == 35.0, "Y3 satellite threshold stays 35")
 	check(is_equal_approx(fg.spread_multiplier, 1.3), "Y3 drought spread multiplier")
 	main.game_clock.current_sim_time_seconds = 15 * 3600 + 31 * 60
 	await frames(4)
@@ -622,6 +622,31 @@ func _fire_balance_checks() -> void:
 	fg.cell_heat = nh
 	for i in 6: fg._simulation_step()
 	check(spots[0] == 1 and not fg.has_escaped, "a spark in the park is a spot fire, not yet an escape")
+
+	# Test: A second spark far away is a new spot fire
+	nb.assign(fg.cell_types)
+	nh.assign(fg.cell_heat)
+	fg._ignite_border(fg._coord_to_index(30, 0), nb, nh)
+	fg.cell_types = nb
+	fg.cell_heat = nh
+	check(fg.spot_fires_started == 2 and spots[0] == 2, "a second distant spark is a second spot fire")
+
+	# Test: A spark adjacent to an existing burning border cell is not a new spot fire
+	nb.assign(fg.cell_types)
+	nh.assign(fg.cell_heat)
+	fg._ignite_border(fg._coord_to_index(21, 0), nb, nh)
+	fg.cell_types = nb
+	fg.cell_heat = nh
+	check(fg.spot_fires_started == 2 and spots[0] == 2, "spread next to a burning park cell is not a new spot fire")
+
+	# Clean up the new cells before the next phase
+	fg.cell_types[fg._coord_to_index(30, 0)] = FireGrid.CellType.FOREST_BORDER
+	fg.cell_heat[fg._coord_to_index(30, 0)] = 0.0
+	fg.cell_timers[fg._coord_to_index(30, 0)] = 0
+	fg.cell_types[fg._coord_to_index(21, 0)] = FireGrid.CellType.FOREST_BORDER
+	fg.cell_heat[fg._coord_to_index(21, 0)] = 0.0
+	fg.cell_timers[fg._coord_to_index(21, 0)] = 0
+
 	var bursts_before = fg.get_children().filter(func(n): return n.name.begins_with("DouseBurst")).size()
 	fg.douse_cell(20, 0)
 	check(fg.get_children().filter(func(n): return n.name.begins_with("DouseBurst")).size() > bursts_before, "dousing a fire puffs steam (mist VFX)")

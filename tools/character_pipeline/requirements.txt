@@ -1,4 +1,4 @@
-# Satellite Shadow — Character Generation Pipeline (GPU node / local DCC)
+# Under Two Skies — Character Generation Pipeline (GPU node / local DCC)
 # Install:  pip install -r requirements.txt
 # Also requires the TripoSR repo on PYTHONPATH (default ~/TripoSR):
 #   git clone https://github.com/VAST-AI-Research/TripoSR ~/TripoSR

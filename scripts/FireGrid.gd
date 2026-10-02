@@ -693,10 +693,32 @@ func _ignite_landing(landing_x: int, landing_y: int, next_types: Array, next_hea
 func _ignite_border(idx: int, next_types: Array, next_heat: Array) -> void:
 	next_types[idx] = CellType.BURNING
 	next_heat[idx] = 100.0
-	if burning_border_cells == 0 and not has_escaped:
+
+	# Check if this starts a fresh cluster: none of the 8 neighbors is a burning border cell
+	var coord = _index_to_coord(idx)
+	var is_fresh_cluster = true
+	for dy in [-1, 0, 1]:
+		for dx in [-1, 0, 1]:
+			if dx == 0 and dy == 0:
+				continue
+			var nx = coord.x + dx
+			var ny = coord.y + dy
+			if is_valid_coord(nx, ny) and is_border_coord(nx, ny):
+				var n_idx = _coord_to_index(nx, ny)
+				if cell_types[n_idx] == CellType.BURNING:
+					is_fresh_cluster = false
+					break
+		if not is_fresh_cluster:
+			break
+
+	# Seed the border cells count if needed (for caught-in-time checks between steps)
+	if burning_border_cells == 0:
 		burning_border_cells = 1
+
+	# Count as a new spot fire only if it's a fresh cluster and not escaped
+	if is_fresh_cluster and not has_escaped:
 		spot_fires_started += 1
-		spot_fire_started.emit(_index_to_coord(idx))
+		spot_fire_started.emit(coord)
 
 func _burn_duration(x: int, y: int) -> int:
 	return BORDER_BURN_TICKS if is_border_coord(x, y) else BURN_DURATION_TICKS

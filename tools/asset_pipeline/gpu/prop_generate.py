@@ -1,4 +1,4 @@
-"""Satellite Shadow prop pipeline, stage 1 (runs on gpu01 with ~/aienv/bin/python3).
+"""Under Two Skies prop pipeline, stage 1 (runs on gpu01 with ~/aienv/bin/python3).
 
 Concept image -> background removal -> TripoSR -> high-resolution vertex-coloured mesh,
 re-oriented to glTF/Godot space (+Y up, front facing +Z, 1 unit = 1 m) and grounded at y = 0.

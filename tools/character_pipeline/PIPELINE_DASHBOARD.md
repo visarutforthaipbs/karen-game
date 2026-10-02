@@ -2,7 +2,7 @@
 
 > 2026-10-01 audit: the registry below describes legacy prototype assets. “Production Ready” means the existing geometry checks passed, not visual approval. The measured quality work and new candidate runner are documented in [README.md](README.md). Historical timing claims below were not reproduced by the new end-to-end runner.
 
-**Project:** Satellite Shadow (เงาเมฆา / ไร่หมุนเวียน)  
+**Project:** Under Two Skies (เงาเมฆา / ไร่หมุนเวียน)  
 **Host:** `lighthouse-control` (macOS 15.x / Apple Silicon)  
 **Compute Node:** `visarut298@lighthouse-gpu01` (`ssh gpu`)  
 **Hardware:** NVIDIA GeForce RTX 3090 (24GB GDDR6X VRAM, Driver 595.84, CUDA 13.2)  

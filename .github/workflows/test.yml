@@ -36,6 +36,14 @@ jobs:
       - name: Gameplay tests
         run: ~/godot/godot --headless --path . --fixed-fps 60 --script res://tests/test_all.gd
 
+      - name: Character and asset tests
+        run: |
+          set -e
+          # tests/test_motion_deformation.gd excluded — requires windowed renderer
+          for t in test_gameplay_motion test_skeletal_character test_equipment_motion test_ranger_assets test_v31_assets; do
+            ~/godot/godot --headless --path . --fixed-fps 60 --script "res://tests/$t.gd"
+          done
+
       - name: Smoke run
         run: |
           ~/godot/godot --headless --path . --fixed-fps 60 --quit-after 120 2>&1 | tee smoke.log

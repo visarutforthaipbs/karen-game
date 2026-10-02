@@ -15,7 +15,7 @@ var sweep_progress: float = 0.0
 var sweep_duration: float = 4.0 # Seconds for the satellite orbital line to cross the plot
 var detected_hotspots: int = 0
 
-## VIIRS detection threshold in thermal units; lowered to 25 from Year 3
+## VIIRS detection threshold in thermal units (set by YearRules.satellite_threshold: 35 TU all years)
 var thermal_threshold: float = 35.0
 var hotspot_penalty: int = 15
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Satellite Shadow — 3D Character Generation Pipeline Runner
+# Under Two Skies — 3D Character Generation Pipeline Runner
 # Host: Mac Workstation -> Compute: NVIDIA RTX 3090 (ssh gpu)
 # ==============================================================================
 set -euo pipefail

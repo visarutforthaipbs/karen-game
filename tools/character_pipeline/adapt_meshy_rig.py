@@ -1,4 +1,4 @@
-"""Blender: adapt reviewed Meshy models to the existing Satellite Shadow contract.
+"""Blender: adapt reviewed Meshy models to the existing Under Two Skies contract.
 
 Preserves Meshy geometry/UVs, rebuilds game joints from Meshy landmarks,
 calibrates skin weights, normalizes metres/grounding and bakes named clips. Does not install assets.

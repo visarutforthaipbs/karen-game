@@ -273,8 +273,13 @@ P1-2 to P1-6 are built (§3.8). What remains:
 6a. **Audit fixes (beta blockers), 2026-10-02:** AUDIT_BRIEF items 1, 3, 4 and 5
    are fixed with tests (see the status note there). Rule change for players:
    a clean burn now needs ≥60% ash; bamboo **and** forest edge hide the crew
-   from drones and rangers alike.
-6b. **Graphics pass assets** (ASSET_REQUESTS_v1.2) delivered and integrated
+   from drones and rangers alike. N1 (Year 3 threshold) fixed: dead config removed,
+   satellite detection is 35 TU for all years.
+6b. **P2 design option:** a real year-over-year satellite-sensitivity escalation
+   (lowering SMOLDER_END_HEAT to let embers cool below 35 TU in later years,
+   shrinking the cooling window) would require a full balance re-run with
+   `balance_sim.gd` + Monte Carlo.
+6c. **Graphics pass assets** (ASSET_REQUESTS_v1.2) delivered and integrated
    (§3.8). Optional mist/ash sprites were not made; they would need a small hook.
 7. **P2 polish:** see PRD_UPDATE_v1.1 §4.
 

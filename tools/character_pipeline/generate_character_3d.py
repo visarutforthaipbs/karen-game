@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Satellite Shadow - Local AI 3D Character Generation Pipeline
+Under Two Skies - Local AI 3D Character Generation Pipeline
 Automated end-to-end character generator for RTX 3090 GPU Node.
 
 Pipeline:
@@ -182,7 +182,7 @@ def render_turntable_preview(mesh: trimesh.Trimesh, output_path: str, character_
     plt.close()
 
 def main():
-    parser = argparse.ArgumentParser(description="Satellite Shadow 3D Character Generation Pipeline")
+    parser = argparse.ArgumentParser(description="Under Two Skies 3D Character Generation Pipeline")
     parser.add_argument("--image", required=True, help="Path to input 2D orthographic A-pose concept image")
     parser.add_argument("--name", required=True, help="Character identifier (e.g., khanae, tapoh, munaw)")
     parser.add_argument("--faces", type=int, default=2500, help="Target face count for low poly decimation (default: 2500)")

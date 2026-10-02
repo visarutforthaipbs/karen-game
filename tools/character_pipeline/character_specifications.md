@@ -1,5 +1,5 @@
 # Character Specifications & Design System
-**Project:** Satellite Shadow (เงาเมฆา / ไร่หมุนเวียน)  
+**Project:** Under Two Skies (เงาเมฆา / ไร่หมุนเวียน)  
 **Aesthetic:** Cute Low-Poly Chibi (2.5–3 Heads Tall) with Authentic Karen Mountain Culture  
 **Target Engine:** Godot 4.7+ (Forward+ Metal / Vulkan)  
 **Current installed v3.1 assets:** four textured characters use 13,957–19,900 triangles, with 19 core bones and two additional garment controls on Mu-naw/Mae-Lu. The 2,000–3,000-triangle / vertex-colour standards below describe retained legacy prototypes; use the pipeline README and recorded run metrics for the current route.

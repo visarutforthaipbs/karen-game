@@ -40,3 +40,31 @@ Audit the commit tagged `audit-baseline-1` (the commit that adds this file). Unc
 
 ## Out of scope for correctness
 Art direction, character authenticity and style gates are governed by `SOP.md`, `ASSETS.md` and `tools/character_pipeline/character_direction_v3.1.md`.
+
+---
+
+# FINAL AUDIT — Fable, 2026-10-02 (HEAD `d31126e`)
+
+Full re-audit of the finalized game, per the owner's request. Tree was clean at HEAD; everything below was verified by running it, not only by reading.
+
+## Verified at HEAD
+- `tests/test_all.gd`: **130 PASS, 0 FAIL**. Smoke run (`--quit-after 120`): clean.
+- Character/asset suites: `test_gameplay_motion`, `test_skeletal_character`, `test_equipment_motion`, `test_ranger_assets`, `test_v31_assets` all pass headless. `test_motion_deformation` refuses headless by design (skinned meshes need a renderer) and **passes windowed**.
+- Independent behavioural probe (temporary `tests/_audit_probe.gd`, removed after the run; copy in the session scratchpad) confirmed each earlier fix end-to-end:
+  - famine at harvest shows the fatal card and leads to the Ending; a game-over Hearth redirects to the Ending;
+  - unburned give-up now gets only the −10 drift (and still costs 25 rice);
+  - malformed-but-valid JSON saves are rejected as "corrupt" with live state untouched; a damaged main save falls back to `.bak`;
+  - `FireGrid.is_cover()` gives drone and ranger the same cover rule;
+  - a 90-minute labour delay starts the clock at 15:30 (no int-division bug);
+  - save migration from the old "Satellite Shadow" `user://` folder is guarded and test-safe.
+
+## New findings (this pass)
+- **N1 — Year-3 "threshold lowered to 25 TU" has no mechanical effect. CONFIRMED numerically.** Attainable cell heats are 100 (burning), 45→35 (smoldering; measured floor 35.02), 10 (ash), 0. Nothing ever lies in (25, 35), so `get_hotspot_cells(25)` ≡ `get_hotspot_cells(35)`. Yet the radio, Hearth brief and phase-4 goal all advertise the 25 TU escalation. Options: (a) make it real — lower `SMOLDER_END_HEAT` below 25 (e.g. 24), so embers that have cooled under 35 escape the Y1–2 scan but are caught from Y3; this genuinely shrinks the cooling window year-over-year, but eases Y1–2 and **must** be re-balanced (`balance_sim.gd` + Monte Carlo, PRD_UPDATE rule 3 forbids silent balance changes); or (b) stay honest cheaply — stop advertising a threshold change. Owner's call. **FIXED (option b): dead config removed, threshold is 35 for all years; option (a) recorded as a P2 design item in HANDOFF.md.**
+- **N2 — `spot_fires_started` undercounts.** `_ignite_border` increments it only when no border cell is alight; simultaneous or overlapping spot fires count as one in stats/playtest CSV. Minor telemetry skew only.
+- **N3 — CI gap remains.** `.github/workflows/test.yml` still runs only `test_all.gd` + smoke. The five headless-capable character/asset suites are green and cheap; add them. Document that `test_motion_deformation` is windowed-only.
+- **N4 — Performance still unmeasured** (`_update_visuals()` full-grid loop per tick and per tool action; Steam Deck P0-9 open). Unchanged from baseline; now the biggest unknown before beta.
+- **N5 — Cosmetics:** old name survives only in two `tools/` script comments; `README`/presets/bundle id are renamed. Still no `LICENSE` (owner decision pending). Sprayer refill continues while input is disabled at the 20:00 pass (harmless).
+- **Accepted-risk unchanged:** mid-burn quit replays the burn (HANDOFF known issue #2).
+
+## Verdict
+Core loop, campaign accounting, save integrity, endings and escalation logic hold up under behavioural testing. **No release blocker found.** Ship the beta after deciding N1 (fix or stop advertising) and running one real playthrough on a second machine. N4 is the main thing the beta itself should measure (ask testers for FPS via the F3 overlay).

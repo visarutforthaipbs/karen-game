@@ -196,7 +196,7 @@ Between burning days, the game transitions to the **Village Hearth screen**:
 ### 8.2 Endless Escalation (Year-over-Year Progression)
 * **Year 1:** Baseline VIIRS satellite overpass at 20:00; lenient rangers; standard rainfall.
 * **Year 2:** Single daytime forestry drone deployed; regional drought increases fire spread speed by $25\%$.
-* **Year 3:** Dual drone patrols; ground thermal cameras placed along the National Park boundary; satellite detection threshold lowered to $25\text{ Thermal Units}$.
+* **Year 3:** Dual drone patrols; ground thermal cameras placed along the National Park boundary.
 * **Year 4+:** Military checkpoint roadblocks; high-speed quadcopters; zero-tolerance nighttime curfew.
 
 ---

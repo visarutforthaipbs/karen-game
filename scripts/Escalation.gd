@@ -55,10 +55,9 @@ static func rules_for_year(year: int) -> YearRules:
 			r.spread_mult = 1.25
 			r.humidity_pct = 18
 		3:
-			# Dual drones, park-boundary ground cameras, threshold lowered to 25
+			# Dual drones, park-boundary ground cameras
 			r.drone_count = 2
 			r.spread_mult = 1.30
-			r.satellite_threshold = 25.0
 			# A ranger on foot replaces one of two posts (campaign balance, PRD_UPDATE_v1.1 P1-2)
 			r.ground_cameras = 1
 			r.ranger_count = 1
@@ -69,7 +68,6 @@ static func rules_for_year(year: int) -> YearRules:
 			r.drone_count = 2
 			r.drone_speed_mult = 1.6 + 0.1 * extra
 			r.spread_mult = minf(1.35 + 0.05 * extra, 1.6)
-			r.satellite_threshold = 25.0
 			r.ground_cameras = 3
 			r.ranger_count = 2
 			r.checkpoints = true

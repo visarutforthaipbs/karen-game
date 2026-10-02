@@ -220,7 +220,7 @@ func _update_smoke_and_stamina(delta: float) -> void:
 	stamina_changed.emit(current_stamina, max_stamina)
 
 func _update_refill(delta: float) -> void:
-	var refilling := refill_point != Vector3.INF and water < water_capacity \
+	var refilling := input_enabled and refill_point != Vector3.INF and water < water_capacity \
 		and Vector2(refill_point.x - global_position.x, refill_point.z - global_position.z).length() <= REFILL_RADIUS
 	if refilling:
 		water = minf(water_capacity, water + REFILL_RATE * delta)

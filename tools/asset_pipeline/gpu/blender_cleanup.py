@@ -1,4 +1,4 @@
-"""Satellite Shadow prop pipeline, stage 2 (runs inside headless Blender 4.5 on gpu01).
+"""Under Two Skies prop pipeline, stage 2 (runs inside headless Blender 4.5 on gpu01).
 
 Raw high-resolution mesh -> normalized master -> budgeted static prop.
 Preserve mode retains UVs and materials. Vertex mode requires vertex colours and

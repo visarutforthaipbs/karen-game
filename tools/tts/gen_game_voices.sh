@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Generate Thai voice lines for Satellite Shadow via OmniVoice-Thai on lighthouse-gpu01.
+# Generate Thai voice lines for Under Two Skies via OmniVoice-Thai on lighthouse-gpu01.
 # Same engine as the stickman-reel project (Pop voice clone, lexicon respellings,
 # best-of-N takes with Whisper QC, 24 kHz wavs).
 #
