@@ -8,6 +8,13 @@ signal closed
 signal how_to_play_requested
 
 var close_button: Button
+var language_picker: OptionButton
+var _content_scroll: ScrollContainer
+var delete_scores_button: Button
+var online_status: Label
+var _focus_scope: ModalFocusScope
+var _delete_pending: bool = false
+var _delete_requester: Callable = OnlineBoard.delete_my_scores
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -34,8 +41,35 @@ func _ready() -> void:
 	title.add_theme_font_size_override("font_size", 28)
 	page.add_child(title)
 
+	var language_row = UITheme.hbox(14)
+	language_row.add_child(UITheme.label("ภาษา / Language", "Body", UITheme.CREAM))
+	language_picker = OptionButton.new()
+	language_picker.name = "LanguagePicker"
+	language_picker.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	language_picker.add_item("ไทย", 0)
+	language_picker.add_item("English", 1)
+	language_picker.select(1 if GameSettings.locale == "en" else 0)
+	language_picker.custom_minimum_size = Vector2(220, 36)
+	language_picker.focus_mode = Control.FOCUS_ALL
+	language_picker.item_selected.connect(func(index: int):
+		Localization.set_language("en" if index == 1 else "th"))
+	language_row.add_child(language_picker)
+	page.add_child(language_row)
+
+	# Keep every setting reachable at increased text size and on smaller
+	# displays. Keyboard/controller focus scrolls the body into view.
+	_content_scroll = ScrollContainer.new()
+	_content_scroll.name = "SettingsBody"
+	_content_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_content_scroll.follow_focus = true
+	_content_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_content_scroll.custom_minimum_size.y = minf(440.0, maxf(160.0, get_viewport_rect().size.y - 220.0))
+	page.add_child(_content_scroll)
+	get_viewport().size_changed.connect(func():
+		_content_scroll.custom_minimum_size.y = minf(440.0, maxf(160.0, get_viewport_rect().size.y - 220.0)))
 	var cols = UITheme.hbox(18)
-	page.add_child(cols)
+	cols.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_content_scroll.add_child(cols)
 	var left = UITheme.vbox(8)
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cols.add_child(left)
@@ -72,6 +106,7 @@ func _ready() -> void:
 	name_label.custom_minimum_size = Vector2(170, 0)
 	name_row.add_child(name_label)
 	var name_edit = LineEdit.new()
+	name_edit.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	name_edit.text = GameSettings.player_name
 	name_edit.max_length = SaveGame.NAME_MAX
 	name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -88,15 +123,20 @@ func _ready() -> void:
 	right.add_child(_toggle_row("ส่งผลการเล่นขึ้นกระดานออนไลน์", GameSettings.online_board, func(on):
 		GameSettings.online_board = on
 		if on:
-			OnlineBoard.ensure_identity()))
+			OnlineBoard.ensure_identity()
+		_update_delete_button()))
 	var online_note = UITheme.label("ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ", "Small", UITheme.MUTED)
 	online_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	right.add_child(online_note)
 	var wipe = Button.new()
+	delete_scores_button = wipe
 	wipe.text = "ลบคะแนนของฉันออกจากกระดานออนไลน์"
-	wipe.disabled = GameSettings.client_id == ""
-	wipe.pressed.connect(func(): OnlineBoard.delete_my_scores(self))
+	_update_delete_button()
+	wipe.pressed.connect(_delete_scores)
 	right.add_child(wipe)
+	online_status = UITheme.wrap(UITheme.label("", "Small", UITheme.MUTED))
+	online_status.visible = false
+	right.add_child(online_status)
 
 	right.add_child(UITheme.header("hammer", "สำหรับผู้ทดสอบ", UITheme.MUTED))
 	right.add_child(_toggle_row("เครื่องมือทดสอบ (F3 ข้อมูล · F5–F10 ข้ามเวลา/บังคับเหตุการณ์)", GameSettings.debug_tools, func(on):
@@ -115,7 +155,28 @@ func _ready() -> void:
 	close_button.custom_minimum_size = Vector2(300, 48)
 	close_button.pressed.connect(close)
 	foot.add_child(close_button)
+	_focus_scope = ModalFocusScope.begin(self)
 	close_button.grab_focus()
+
+func _update_delete_button() -> void:
+	if is_instance_valid(delete_scores_button):
+		delete_scores_button.disabled = _delete_pending or GameSettings.client_id == "" or GameSettings.client_secret == ""
+
+func _delete_scores() -> void:
+	if _delete_pending or GameSettings.client_id == "" or GameSettings.client_secret == "":
+		return
+	_delete_pending = true
+	_update_delete_button()
+	online_status.text = "กำลังลบคะแนนออนไลน์…"
+	online_status.show()
+	_delete_requester.call(self, _on_delete_complete)
+
+func _on_delete_complete(deleted: int) -> void:
+	_delete_pending = false
+	_update_delete_button()
+	online_status.text = L10n.format("ลบคะแนนออนไลน์แล้ว %d รายการ", deleted) if deleted >= 0 else "ลบคะแนนไม่สำเร็จ โปรดลองอีกครั้ง"
+	online_status.add_theme_color_override("font_color", UITheme.EMERALD if deleted >= 0 else UITheme.EMBER)
+	online_status.show()
 
 func _slider_row(text: String, value: float, lo: float, hi: float, step: float, on_change: Callable, fmt: String, shown_scale: float) -> Control:
 	var row = UITheme.hbox(10)
@@ -124,6 +185,7 @@ func _slider_row(text: String, value: float, lo: float, hi: float, step: float, 
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	row.add_child(l)
 	var slider = HSlider.new()
+	slider.scrollable = false
 	slider.min_value = lo
 	slider.max_value = hi
 	slider.step = step
@@ -132,12 +194,12 @@ func _slider_row(text: String, value: float, lo: float, hi: float, step: float, 
 	slider.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	slider.focus_mode = Control.FOCUS_ALL
 	row.add_child(slider)
-	var shown = UITheme.label(fmt % (value * shown_scale), "Small", UITheme.STRAW)
+	var shown = UITheme.label(L10n.format(fmt, value * shown_scale), "Small", UITheme.STRAW)
 	shown.custom_minimum_size = Vector2(58, 0)
 	shown.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	row.add_child(shown)
 	slider.value_changed.connect(func(v):
-		shown.text = fmt % (v * shown_scale)
+		shown.text = L10n.format(fmt, v * shown_scale)
 		on_change.call(v))
 	return row
 
@@ -158,5 +220,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func close() -> void:
 	GameSettings.save_settings()
+	if _focus_scope:
+		_focus_scope.release()
 	closed.emit()
 	queue_free()

@@ -60,7 +60,7 @@ Agents have direct access to two computational environments:
 │   ├── MainController.gd       # Burn-day orchestration: phases, schedule, scrutiny, report
 │   └── ChibiAnimator.gd        # Character animation (owned by the character pipeline)
 ├── assets/fonts/               # Kanit (village UI) + Chakra Petch (state readouts), OFL
-└── ui/                         # All UI is built in code; all player-facing text is Thai
+└── ui/                         # All UI is built in code; Thai/English selectable in Settings
     ├── UITheme.gd              # Palette, fonts, shared Theme, label/card/icon builders
     ├── FacetCard.gd            # Triangulated low-poly panel (chamfered, accent ridge)
     ├── LowPolyIcon.gd          # Flat-shaded polygon icons (flame, drop, satellite...)

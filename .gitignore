@@ -13,6 +13,8 @@ __pycache__/
 .venv/
 venv/
 .mimocode/
+.wrangler/
+server/**/*.import
 
 # Exported playtest builds (tools/build.sh)
 build/

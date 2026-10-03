@@ -1,0 +1,124 @@
+{
+  "output_directory": "artifacts/audio_english_20261003",
+  "credit_cap": 5000,
+  "language_code": "eng",
+  "max_cer": 0.0,
+  "purpose": "English counterparts of the 30 current spoken clips; user authorized ElevenLabs generation 2026-10-03",
+  "jobs": [
+    {
+      "id": "en_bark_rally_reply",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Heard you. On my way.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.25,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_rally_reply.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Heard you. On my way."
+      },
+      "source_caption": "bark_rally_reply.wav"
+    },
+    {
+      "id": "en_bark_embers",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Flying embers! Watch the forest edge.",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.25,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_embers.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "Flying embers! Watch the forest edge."
+      },
+      "source_caption": "bark_embers.wav"
+    },
+    {
+      "id": "en_bark_maelu_1",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Save enough rice to last until the rains, dear.",
+        "voice_id": "OSCkDOqeWrrCkMiFPGB3",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.25,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_maelu_1.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "maelu",
+        "text": "Save enough rice to last until the rains, dear."
+      },
+      "source_caption": "bark_maelu_1.wav"
+    },
+    {
+      "id": "en_radio_ch1_03",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Any hot spot detected inside the national park will lead to prosecution, without exception.",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.1,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch1_03.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "Any hot spot detected inside the national park will lead to prosecution, without exception."
+      },
+      "source_caption": "radio_ch1_03.wav"
+    },
+    {
+      "id": "en_radio_ch2_01",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Air humidity keeps falling. Valley winds will strengthen this afternoon.",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.1,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch2_01.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "Air humidity keeps falling. Valley winds will strengthen this afternoon."
+      },
+      "source_caption": "radio_ch2_01.wav"
+    }
+  ]
+}

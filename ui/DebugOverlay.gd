@@ -72,11 +72,11 @@ func _process(_delta: float) -> void:
 		var idx = fg._coord_to_index(p.target_cell_coord.x, p.target_cell_coord.y)
 		cell = "%s %s heat %.0f" % [str(p.target_cell_coord), FireGrid.CellType.keys()[fg.cell_types[idx]], fg.cell_heat[idx]]
 	var b: Dictionary = main.breakdown
-	_label.text = "\n".join(PackedStringArray([
-		"FPS %d · ปี %d แปลง %d" % [Engine.get_frames_per_second(), GameState.instance.current_year, GameState.instance.current_plot_index],
-		"ช่อง %s" % cell,
-		"เชื้อไฟแห้ง %.2f · ลม ×%.1f" % [fg.fuel_dryness, fg.wind_speed_multiplier],
-		"ลุกไหม้ %d · จุดร้อน %d · ไฟป่า %d" % [fg.active_burning_indices.size(), fg.active_hotspot_count, fg.burning_border_cells],
-		"เพ่งเล็งรอบนี้ +%d (ดาวเทียม %d โดรน %d กล้อง %d ลามป่า %d เจ้าหน้าที่ %d)" % [main.plot_scrutiny_gain, b.satellite, b.drone, b.camera, b.escape, b.get("ranger", 0)],
+	_label.text = L10n.join(PackedStringArray([
+		L10n.format("FPS %d · ปี %d แปลง %d", [Engine.get_frames_per_second(), GameState.instance.current_year, GameState.instance.current_plot_index]),
+		L10n.format("ช่อง %s", cell),
+		L10n.format("เชื้อไฟแห้ง %.2f · ลม ×%.1f", [fg.fuel_dryness, fg.wind_speed_multiplier]),
+		L10n.format("ลุกไหม้ %d · จุดร้อน %d · ไฟป่า %d", [fg.active_burning_indices.size(), fg.active_hotspot_count, fg.burning_border_cells]),
+		L10n.format("เพ่งเล็งรอบนี้ +%d (ดาวเทียม %d โดรน %d กล้อง %d ลามป่า %d เจ้าหน้าที่ %d)", [main.plot_scrutiny_gain, b.satellite, b.drone, b.camera, b.escape, b.get("ranger", 0)]),
 		"F5 +30น. · F6 19:45 · F7 ปีถัดไป · F8 น้ำเต็ม · F9 ลูกไฟ · F10 ถูกปราบ",
 	]))

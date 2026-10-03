@@ -1,67 +1,58 @@
 extends SceneTree
-## Actual Hearth integration: delivered props, reserve state, responsive controls, camera.
+## Actual Hearth integration: focused preparation controls and responsive layout.
 var failures := 0
-func _initialize() -> void:call_deferred("run")
-func check(ok:bool,message:String) -> void:
+func _initialize() -> void: call_deferred("run")
+func check(ok: bool, message: String) -> void:
 	if not ok:
-		failures+=1
+		failures += 1
 		push_error(message)
 func run() -> void:
-	SaveGame.dir="user://village_presentation_test"
-	DirAccess.make_dir_recursive_absolute(SaveGame.dir)
-	GameSettings.dir=SaveGame.dir
-	PlaytestLog.dir=SaveGame.dir
-	var state=root.get_node("GameState")
+	var scratch = "user://village_presentation_test_%d" % Time.get_ticks_usec()
+	SaveGame.dir = scratch
+	GameSettings.dir = scratch
+	PlaytestLog.dir = scratch
+	DirAccess.make_dir_recursive_absolute(scratch)
+	GameSettings.load_settings()
+	var state = root.get_node("GameState")
 	state.reset_campaign()
-	state.seen_how_to_play=true
-	var view:=SubViewport.new()
-	view.size=Vector2i(1280,720)
-	view.render_target_update_mode=SubViewport.UPDATE_ALWAYS
+	state.seen_how_to_play = true
+	var view := SubViewport.new()
+	view.size = Vector2i(1280, 720)
+	view.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(view)
-	var hearth=load("res://scenes/VillageHearth.tscn").instantiate()
+	var hearth = load("res://scenes/VillageHearth.tscn").instantiate()
 	view.add_child(hearth)
-	for i in 12:await process_frame
-	var village=hearth.village_diorama
-	check(village!=null and village.camera!=null,"Hearth has no 3D village")
-	for id in ["S3","S4","S8","S9","S10","S12","S13","S14","S15","S16"]:
-		check(AssetLibrary.has_asset(id),"Missing village asset "+id)
-		check(not village.world.find_children(id+"_VillageProp*","MeshInstance3D",true,false).is_empty(),"Village does not place "+id)
-	check(village.villagers.size()==4,"Village is missing an approved crew member")
-	for amount in [100.0,40.0,0.0]:
-		village.set_reserve(amount)
-		var visible:=0
-		for sack in village.reserve_props:visible+=int(sack.visible)
-		check(visible==int(ceil(amount/20.0)),"Rice reserve dressing does not match state")
-	hearth._tune_radio(2,false)
-	check(hearth.current_radio_channel==2 and not hearth.radio_text.text.is_empty(),"Radio controls stopped working")
-	for resolution in [Vector2i(1280,720),Vector2i(960,720),Vector2i(1280,600)]:
-		view.size=resolution
-		hearth.size=resolution
-		for i in 12:await process_frame
-		check(hearth.launch_button.get_global_rect().end.y<=resolution.y+.5,"Launch button falls below screen")
-		check(hearth._card_columns.size.x<=resolution.x-39,"Management cards clip horizontally")
-		check(hearth._card_columns.columns==(1 if resolution.x<1100 else 3),"Hearth did not adapt its card layout")
-		# Every house/granary corner must fit inside the panorama.
-		var size=village.viewport_3d.size
-		for prop in village.world.get_children():
-			if not prop is MeshInstance3D or not (prop.name.begins_with("S3_") or prop.name.begins_with("S4_")):continue
-			for i in 8:
-				var point:Vector3=prop.global_transform*prop.mesh.get_aabb().get_endpoint(i)
-				var pixel:Vector2=village.camera.unproject_position(point)
-				check(pixel.x>=0 and pixel.x<=size.x and pixel.y>=0 and pixel.y<=size.y,"Village camera crops a building at "+str(resolution))
-	var village_home=village.get_parent()
-	hearth.show_village()
-	for i in 6:await process_frame
-	check(hearth._village_overlay!=null and village.get_parent()!=village_home,"Village inspection view did not open")
-	village.focus_station("S9")
-	check(village.camera.size<10,"Workshop inspection did not frame the station")
-	village.focus_station("S3")
-	check(village.camera.size<12,"Granary inspection did not frame the station")
-	for button in hearth._village_overlay.find_children("*","Button",true,false):
-		if button.text=="กลับเตาไฟ":button.pressed.emit()
-	for i in 6:await process_frame
-	check(hearth._village_overlay==null and village.get_parent()==village_home,"Village inspection did not restore Hearth controls")
+	for i in 12: await process_frame
+	check(hearth.find_children("*", "VillageDiorama", true, false).is_empty(), "Preparation must not instantiate the decorative village")
+	for button in hearth.find_children("*", "Button", true, false):
+		check(button.text != "ดูหมู่บ้าน", "Preparation must not expose the removed inspection action")
+	var campaign: Dictionary = state.to_dict().duplicate(true)
+	var output = OS.get_cmdline_user_args()
+	if not output.is_empty(): DirAccess.make_dir_recursive_absolute(output[0])
+	for locale in ["en", "th"]:
+		L10n.set_locale(locale)
+		for channel in [1, 2, 3]:
+			hearth.radio_buttons[channel - 1].pressed.emit()
+			check(hearth.current_radio_channel == channel and not hearth.radio_text.text.is_empty(), "Radio channel controls stopped working")
+		hearth._tune_radio(1, false)
+		for resolution in [Vector2i(1280, 720), Vector2i(960, 720), Vector2i(1280, 600)]:
+			view.size = resolution
+			hearth.size = resolution
+			for i in 12: await process_frame
+			check(hearth.launch_button.get_global_rect().end.y <= resolution.y + .5, "Launch action falls below screen")
+			check(hearth._card_columns.size.x <= hearth._card_scroll.size.x + .5, "Preparation cards clip horizontally")
+			check(hearth.settings_button.get_global_rect().end.x <= resolution.x + .5, "Header actions clip horizontally")
+			check(hearth._card_scroll.position.y < 180, "Decorative banner still displaces preparation controls")
+			check(hearth.ration_buttons.size() == 3 and hearth.favour_buttons.size() == 3, "Preparation choices are missing")
+			if not output.is_empty() and resolution == Vector2i(1280, 720) and DisplayServer.get_name() != "headless":
+				await RenderingServer.frame_post_draw
+				view.get_texture().get_image().save_png(output[0].path_join("preparation_" + locale + ".png"))
+	check(state.to_dict() == campaign, "Browsing preparation changed campaign choices")
 	view.queue_free()
-	for i in 3:await process_frame
-	print("VILLAGE RESULT: ",failures," failures")
+	for i in 3: await process_frame
+	root.get_node("AudioManager").stop_all_loops()
+	for file in DirAccess.get_files_at(scratch):
+		DirAccess.remove_absolute(scratch.path_join(file))
+	DirAccess.remove_absolute(scratch)
+	print("VILLAGE RESULT: ", failures, " failures")
 	quit(1 if failures else 0)

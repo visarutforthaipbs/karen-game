@@ -1,0 +1,1073 @@
+{
+  "output_directory": "artifacts/audio_voice_v4_20261003/th",
+  "credit_cap": 8000,
+  "language_code": "tha",
+  "max_cer": 0.0,
+  "purpose": "Owner approved dry v4 narrator pilot and requested replacement of every old-model game voice on 2026-10-03. Preserve five speaker identities, subtitles and paths; no new clones/music/SFX.",
+  "jobs": [
+    {
+      "id": "v4_th_opening_th_intro_00",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "บ้านเราอยู่กับผืนป่านี้ ไร่หมุนเวียนคือการดูแลแปลงเดิมเป็นรอบ ๆ",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_00.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "บ้านเราอยู่กับผืนป่านี้ ไร่หมุนเวียนคือการดูแลแปลงเดิมเป็นรอบ ๆ"
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_th_r2.json",
+        "id": "intro_th_00_r2",
+        "sha256": "f9eb6c43b1e735deab0e1a3b8917f767b8d9bcdea75c955dfc9508839347faf2"
+      }
+    },
+    {
+      "id": "v4_th_opening_th_intro_01",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "เราปลูกข้าวหนึ่งฤดู แล้วพักผืนดินไว้หลายปี ให้พืชกลับมาเติบโต ระหว่างนั้นเราทำกินในแปลงอื่น",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_01.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "เราปลูกข้าวหนึ่งฤดู แล้วพักผืนดินไว้หลายปี ให้พืชกลับมาเติบโต ระหว่างนั้นเราทำกินในแปลงอื่น"
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_th_r2.json",
+        "id": "intro_th_01_r2",
+        "sha256": "b5b2137c76533c52161abebc69f483fd88b93476514e9fde1f578f73f31d914e"
+      }
+    },
+    {
+      "id": "v4_th_opening_th_intro_02",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "วันนี้เราช่วยกันเตรียมแปลงสำหรับข้าว เถ้าจากเศษพืชคืนธาตุอาหารบางส่วนให้ดิน",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_02.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "วันนี้เราช่วยกันเตรียมแปลงสำหรับข้าว เถ้าจากเศษพืชคืนธาตุอาหารบางส่วนให้ดิน"
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_th.json",
+        "id": "intro_th_02",
+        "sha256": "3dc1aa6c1568e10c90a64c96c2e61b64b9efcafa3a0fa3fe7ad7b7694b9a35d9"
+      }
+    },
+    {
+      "id": "v4_th_opening_th_intro_03",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ก่อนจุดไฟ ต้องกวาดใบไม้และเศษกิ่งออกให้เห็นดินโล่ง แนวกันไฟตัดทางเชื้อเพลิงระหว่างไร่กับป่า",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_03.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ก่อนจุดไฟ ต้องกวาดใบไม้และเศษกิ่งออกให้เห็นดินโล่ง แนวกันไฟตัดทางเชื้อเพลิงระหว่างไร่กับป่า"
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_th.json",
+        "id": "intro_th_03",
+        "sha256": "fb5bd1c6012d3b49c7b96a0405d1edc5ffeb5e9dd40412664463de8fc6317809"
+      }
+    },
+    {
+      "id": "v4_th_opening_th_intro_04",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "แต่ลูกไฟอาจปลิวข้ามแนวได้ อ่านทิศลม และให้ทีมช่วยเฝ้าขอบป่า",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_04.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "แต่ลูกไฟอาจปลิวข้ามแนวได้ อ่านทิศลม และให้ทีมช่วยเฝ้าขอบป่า"
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_th.json",
+        "id": "intro_th_04",
+        "sha256": "71f9e1c5da63f3449645f9532a5c988690580c047ce270ac98a022c2c56dca85"
+      }
+    },
+    {
+      "id": "v4_th_opening_th_intro_05",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "เปลวไฟดับแล้ว แต่ถ่านข้างใต้ยังร้อน ต้องฉีดน้ำให้ถ่านคุเย็นลง งานของเราจึงจะเสร็จ",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_05.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "เปลวไฟดับแล้ว แต่ถ่านข้างใต้ยังร้อน ต้องฉีดน้ำให้ถ่านคุเย็นลง งานของเราจึงจะเสร็จ"
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_th_r3.json",
+        "id": "intro_th_05_r3",
+        "sha256": "65e343c31634da9730d8240892cbfcbdbff2aff5635fc17f18401cab78d91ae0"
+      }
+    },
+    {
+      "id": "v4_th_opening_th_intro_06",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ในเกมนี้ ดาวเทียมจะสแกนตอนสองทุ่ม มันเห็นจุดร้อน แต่ไม่เห็นเหตุผลของคนที่อยู่ข้างล่าง",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_06.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ในเกมนี้ ดาวเทียมจะสแกนตอนสองทุ่ม มันเห็นจุดร้อน แต่ไม่เห็นเหตุผลของคนที่อยู่ข้างล่าง"
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_th.json",
+        "id": "intro_th_06",
+        "sha256": "acbffe015202776f95a8933d143d8255423b68e01a54f6bb9fd3141cf95199e1"
+      }
+    },
+    {
+      "id": "v4_th_opening_th_intro_07",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "เตรียมแนว คุมไฟ ดับความร้อน ให้แปลงพร้อมปลูกข้าว และไม่มีจุดร้อนก่อนสองทุ่ม",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_07.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "เตรียมแนว คุมไฟ ดับความร้อน ให้แปลงพร้อมปลูกข้าว และไม่มีจุดร้อนก่อนสองทุ่ม"
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_th_r3.json",
+        "id": "intro_th_07_r3",
+        "sha256": "74ed334952a4187caf91746f8f0cc0d453077008ece43703519d0662628037e0"
+      }
+    },
+    {
+      "id": "v4_th_bark_embers",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ลูกไฟ! ระวังแนวป่า",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "bark_embers.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "ลูกไฟ! ระวังแนวป่า"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "bark_embers",
+        "sha256": "c144f54e0d8accdae6c6f3adab81b544cfc8714724ee290953e848948e877704"
+      }
+    },
+    {
+      "id": "v4_th_bark_embers_2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ลูกไฟข้ามแนวแล้ว!",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "bark_embers_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "ลูกไฟข้ามแนวแล้ว!"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "bark_embers_2",
+        "sha256": "e64c9f508c95cd8d60211f26ce127d6a83a4b4aec343412e51b1e1a365b03b85"
+      }
+    },
+    {
+      "id": "v4_th_bark_fire_out",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ดับแล้ว",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "bark_fire_out.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "ดับแล้ว"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "bark_fire_out",
+        "sha256": "4664df4da87e55e402870cc0259281f762f68bc814644ce2d6e18cfcb97e8663"
+      }
+    },
+    {
+      "id": "v4_th_bark_fire_out_2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ตรงนี้ดับแล้ว",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "bark_fire_out_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "ตรงนี้ดับแล้ว"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/revision_plan.json",
+        "id": "bark_fire_out_2_rev2",
+        "sha256": "8c68fb9b9d603a55d021bd9eb1cf84d747fbd242ff35c11787259e6af1a2c165"
+      }
+    },
+    {
+      "id": "v4_th_bark_maelu_1",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "แบ่งข้าวไว้ให้พอกินถึงหน้าฝนนะลูก",
+        "voice_id": "OSCkDOqeWrrCkMiFPGB3",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "bark_maelu_1.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "maelu",
+        "text": "แบ่งข้าวไว้ให้พอกินถึงหน้าฝนนะลูก"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "bark_maelu_1",
+        "sha256": "70a5004e9157f0553ccc74045c1b27028799e2c88760a934a0bd4d09dad2cacc"
+      }
+    },
+    {
+      "id": "v4_th_bark_maelu_2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ปีนี้หนักหน่อย แต่เราช่วยกันได้",
+        "voice_id": "OSCkDOqeWrrCkMiFPGB3",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "bark_maelu_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "maelu",
+        "text": "ปีนี้หนักหน่อย แต่เราช่วยกันได้"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "bark_maelu_2",
+        "sha256": "298898859524e682922c8cc40ee3c65e55c249ddb97bfba7adef23fec834f677"
+      }
+    },
+    {
+      "id": "v4_th_bark_rally_reply",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ได้ยินแล้ว กำลังไป",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "bark_rally_reply.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ได้ยินแล้ว กำลังไป"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "bark_rally_reply",
+        "sha256": "334f53a6fe02ea6f10eb33d263d7c70a6e9daffc2e945d893c619101936a45ec"
+      }
+    },
+    {
+      "id": "v4_th_bark_rally_reply_2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "มาแล้ว ระวังท้ายไฟด้วย",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "bark_rally_reply_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "มาแล้ว ระวังท้ายไฟด้วย"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "bark_rally_reply_2",
+        "sha256": "0b12837d0212d653b109cfb65ea1a15fd44b05c5c602aadbd3f30dd1196599b0"
+      }
+    },
+    {
+      "id": "v4_th_bark_report_crew",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ศูนย์ครับ พบชาวบ้านทำงานในแปลง บันทึกการตรวจแล้ว",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "bark_report_crew.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "ศูนย์ครับ พบชาวบ้านทำงานในแปลง บันทึกการตรวจแล้ว"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "bark_report_crew",
+        "sha256": "e3e448f6b25a7305a3a3bc2a8a77a77a6ca6fd5e9dd721ed58b834bd36396418"
+      }
+    },
+    {
+      "id": "v4_th_bark_report_flame",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ศูนย์ครับ พบเปลวไฟในแปลง บันทึกพิกัดแล้ว",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "bark_report_flame.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "ศูนย์ครับ พบเปลวไฟในแปลง บันทึกพิกัดแล้ว"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "bark_report_flame",
+        "sha256": "477b6a5516ab747c397baef5118f0838b31eb0d64a63bb2633bf618d6d45bd01"
+      }
+    },
+    {
+      "id": "v4_th_bark_spot_fire",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ไฟตกในป่า! รีบดับก่อนลาม",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "bark_spot_fire.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "ไฟตกในป่า! รีบดับก่อนลาม"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "bark_spot_fire",
+        "sha256": "8f1b919de68fd90e9685f47a47ffc10932b172d4e28f977c0afadc92558ef351"
+      }
+    },
+    {
+      "id": "v4_th_bark_spot_fire_2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ไฟติดชายป่าแล้ว!",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "bark_spot_fire_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "ไฟติดชายป่าแล้ว!"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "bark_spot_fire_2",
+        "sha256": "e44d7962c6e1a716accc2b84a17356534558c7ba43e5ee16c6960e3b2a0b6a3d"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch1_01",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "สถานีสี่ถึงทุกหน่วย มาตรการห้ามเผาเด็ดขาดมีผลทั่วทั้งลุ่มน้ำ",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch1_01.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "สถานีสี่ถึงทุกหน่วย มาตรการห้ามเผาเด็ดขาดมีผลทั่วทั้งลุ่มน้ำ"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch1_01",
+        "sha256": "4a2ff5d28aa0404485d704b50e457514413bb46448f07e84f1840d622117b77f"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch1_02",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "เจ้าหน้าที่ชุดลาดตระเวน เข้าประจำจุดแนวชายป่าสงวนแล้ว",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch1_02.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "เจ้าหน้าที่ชุดลาดตระเวน เข้าประจำจุดแนวชายป่าสงวนแล้ว"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch1_02",
+        "sha256": "3dfffeda7f393ef3da2614435fccac7159387dcc6cb2dfdd160f89f478d3b835"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch1_03",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "หากพบจุดความร้อนในเขตอุทยาน จะดำเนินคดีโดยไม่มีข้อยกเว้น",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch1_03.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "หากพบจุดความร้อนในเขตอุทยาน จะดำเนินคดีโดยไม่มีข้อยกเว้น"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch1_03",
+        "sha256": "60602d39239d512b41431a581e002d4813605c609f2245f5d482363af2135c34"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch1_04",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "อากาศยานไร้คนขับจะขึ้นบินสำรวจหุบเขาตั้งแต่บ่ายสามโมง",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch1_04.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "อากาศยานไร้คนขับจะขึ้นบินสำรวจหุบเขาตั้งแต่บ่ายสามโมง"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch1_04",
+        "sha256": "c55fb885cd4e6fa51c2194f2ecc03ab1e3fb6aff9a2f9875ddadad7e7b25d903"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch1_05",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ด่านตรวจบนถนนสายเชียงใหม่แม่ฮ่องสอน ตั้งจุดสกัดยานพาหนะทุกคัน",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch1_05.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "ด่านตรวจบนถนนสายเชียงใหม่แม่ฮ่องสอน ตั้งจุดสกัดยานพาหนะทุกคัน"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch1_05",
+        "sha256": "9bdf55edcdfd0f2840368970eb818e0493f9d494c85e7efdcc37c8005eb2a15b"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch1_06",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ประกาศจากอธิบดี พื้นที่เฝ้าระวังพิเศษคือแนวรอยต่อป่าอนุรักษ์",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch1_06.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "ประกาศจากอธิบดี พื้นที่เฝ้าระวังพิเศษคือแนวรอยต่อป่าอนุรักษ์"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch1_06",
+        "sha256": "dcc68ab277160de7865738f6e8677a6b7a41c551ce13d0f3359e538968cc116d"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch1_07",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "หมู่บ้านใดพบการเผาในพื้นที่ต้องห้าม จะถูกตัดสิทธิ์การสนับสนุนทั้งหมด",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch1_07.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "หมู่บ้านใดพบการเผาในพื้นที่ต้องห้าม จะถูกตัดสิทธิ์การสนับสนุนทั้งหมด"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch1_07",
+        "sha256": "a0e3ba385def08c40d3d552467f5850092c02f729a22cf2414a397ef83044604"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch1_08",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "สถานีสี่เรียกห้า ได้ยินตอบรับด้วย",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch1_08.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "สถานีสี่เรียกห้า ได้ยินตอบรับด้วย"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch1_08",
+        "sha256": "84641d04fb5d1f7c8bfcc29fd9fd0ad7e6106f1583a029e4e25f522afa23467b"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch2_01",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ความชื้นในอากาศต่ำลงเรื่อย ๆ ลมหุบเขาจะพัดแรงขึ้นในช่วงบ่าย",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch2_01.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "ความชื้นในอากาศต่ำลงเรื่อย ๆ ลมหุบเขาจะพัดแรงขึ้นในช่วงบ่าย"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch2_01",
+        "sha256": "d49acff04880bc3856ce679d3cf95fff49bbad00989588c3cc1c0fbcc71435e5"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch2_02",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ชั้นอากาศผกผันจะกดควันให้ติดพื้นตั้งแต่พระอาทิตย์ตก",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch2_02.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "ชั้นอากาศผกผันจะกดควันให้ติดพื้นตั้งแต่พระอาทิตย์ตก"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch2_02",
+        "sha256": "e35b8faa393744c427b419dac54bee015f2bab6e7a46c35f2c372972ea07a283"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch2_03",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "เมฆฝนฟ้าคะนองก่อตัวเหนือสันดอย อาจเคลื่อนถึงพื้นที่ก่อนค่ำ",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch2_03.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "เมฆฝนฟ้าคะนองก่อตัวเหนือสันดอย อาจเคลื่อนถึงพื้นที่ก่อนค่ำ"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch2_03",
+        "sha256": "d46b0ec5f4a30ba96fcf0f8555b2b91dbb90ec97230177741405875dfcd41e06"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch2_04",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ลมบนสันดอยแปรปรวนตลอดทั้งวัน ระวังการลามของไฟในที่โล่ง",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch2_04.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "ลมบนสันดอยแปรปรวนตลอดทั้งวัน ระวังการลามของไฟในที่โล่ง"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch2_04",
+        "sha256": "a0cd75315a978339e68a6293126a018ca391272c11535aca6340ef3960f8b42b"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch2_05",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "อุณหภูมิจะลดลงอย่างรวดเร็วหลังตะวันตกดิน ควันจะหนาขึ้น",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch2_05.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "อุณหภูมิจะลดลงอย่างรวดเร็วหลังตะวันตกดิน ควันจะหนาขึ้น"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch2_05",
+        "sha256": "2decdb37a8e9845fe334f545be431a6eb6e75b16cfc12e515985b4172b8b1f8d"
+      }
+    },
+    {
+      "id": "v4_th_radio_ch2_06",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "พยากรณ์สำหรับพรุ่งนี้ ท้องฟ้าโปร่งและแห้งแล้งต่อเนื่อง",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "radio_ch2_06.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "พยากรณ์สำหรับพรุ่งนี้ ท้องฟ้าโปร่งและแห้งแล้งต่อเนื่อง"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "radio_ch2_06",
+        "sha256": "82623f18c0eb77c9e98802e0bc194ca8166eff9bb416df0620c8690b1b6b20f1"
+      }
+    },
+    {
+      "id": "v4_th_ta_poh_call",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ระวังไฟ!",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "ta_poh_call.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ระวังไฟ!"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "ta_poh_call",
+        "sha256": "885fe00671de8b95f41692460f909e6655cd7b8b27fea6ec8daeb8ab8fdf85d9"
+      }
+    },
+    {
+      "id": "v4_th_tapoh_wind_warning",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ลมกำลังจะเปลี่ยนทิศ ระวังไฟลามกลับมาทางเรา",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "tapoh_wind_warning.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ลมกำลังจะเปลี่ยนทิศ ระวังไฟลามกลับมาทางเรา"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "tapoh_wind_warning",
+        "sha256": "c462a11660d7d1a760c35bfb2e577060238f529914081e0644cb1b8979350d98"
+      }
+    },
+    {
+      "id": "v4_th_tapoh_wind_warning_2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ลมหุบเขาจะกลับทิศเร็ว ๆ นี้ เร่งทำแนวกันไฟก่อนเลย",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "tapoh_wind_warning_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ลมหุบเขาจะกลับทิศเร็ว ๆ นี้ เร่งทำแนวกันไฟก่อนเลย"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "tapoh_wind_warning_2",
+        "sha256": "8641238cbbee22174d13a082ac6f7ea19fb86773521288125eadf970a6c064ad"
+      }
+    },
+    {
+      "id": "v4_th_tapoh_wind_warning_3",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ลมกำลังเปลี่ยนทิศ ย้ายออกจากท้ายไฟก่อน",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "tapoh_wind_warning_3.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ลมกำลังเปลี่ยนทิศ ย้ายออกจากท้ายไฟก่อน"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/revision_plan.json",
+        "id": "tapoh_wind_warning_3_rev2",
+        "sha256": "40bd38fda5adea4952366fa084c2f0517172538d8245002e062bf40f04ed487f"
+      }
+    }
+  ]
+}

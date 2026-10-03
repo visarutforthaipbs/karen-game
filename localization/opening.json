@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "title": {
+    "th": "เส้นแบ่งบนสันดอย",
+    "en": "The Line on the Mountain"
+  },
+  "chapters": [
+    {
+      "id": "land",
+      "title": {
+        "th": "ผืนดินที่ได้พัก",
+        "en": "Land that rests"
+      },
+      "term": {
+        "th": "ไร่หมุนเวียน",
+        "en": "Rotational farming"
+      }
+    },
+    {
+      "id": "rice",
+      "title": {
+        "th": "ข้าวสำหรับชุมชน",
+        "en": "Rice for the community"
+      },
+      "term": {
+        "th": "ช่วยกันทำงาน",
+        "en": "Working together"
+      }
+    },
+    {
+      "id": "boundary",
+      "title": {
+        "th": "เส้นที่เราดูแลด้วยกัน",
+        "en": "A boundary we tend together"
+      },
+      "term": {
+        "th": "แนวกันไฟ",
+        "en": "Firebreak"
+      }
+    },
+    {
+      "id": "heat",
+      "title": {
+        "th": "ไฟมอด งานยังไม่จบ",
+        "en": "Flames out. Work unfinished."
+      },
+      "term": {
+        "th": "ถ่านคุ · จุดร้อน",
+        "en": "Embers · Hot spots"
+      }
+    }
+  ],
+  "cues": [
+    {
+      "chapter": 0,
+      "min_seconds": 6.5,
+      "th": "บ้านเราอยู่กับผืนป่านี้ ไร่หมุนเวียนคือการดูแลแปลงเดิมเป็นรอบ ๆ",
+      "en": "Our home is part of this forest. We tend established fields in cycles.",
+      "audio": "intro_00.wav"
+    },
+    {
+      "chapter": 0,
+      "min_seconds": 8.0,
+      "th": "เราปลูกข้าวหนึ่งฤดู แล้วพักผืนดินไว้หลายปี ให้พืชกลับมาเติบโต ระหว่างนั้นเราทำกินในแปลงอื่น",
+      "en": "We grow rice for a season, then rest the field for years. Plants return while we farm another plot.",
+      "audio": "intro_01.wav"
+    },
+    {
+      "chapter": 1,
+      "min_seconds": 8.0,
+      "th": "วันนี้เราช่วยกันเตรียมแปลงสำหรับข้าว เถ้าจากเศษพืชคืนธาตุอาหารบางส่วนให้ดิน",
+      "en": "Today we prepare a rice field together. Ash from plant residues returns some nutrients to the soil.",
+      "audio": "intro_02.wav"
+    },
+    {
+      "chapter": 2,
+      "min_seconds": 9.0,
+      "th": "ก่อนจุดไฟ ต้องกวาดใบไม้และเศษกิ่งออกให้เห็นดินโล่ง แนวกันไฟตัดทางเชื้อเพลิงระหว่างไร่กับป่า",
+      "en": "Before lighting, clear leaves and branches to bare soil. The firebreak interrupts fuel between field and forest.",
+      "audio": "intro_03.wav"
+    },
+    {
+      "chapter": 2,
+      "min_seconds": 6.5,
+      "th": "แต่ลูกไฟอาจปลิวข้ามแนวได้ อ่านทิศลม และให้ทีมช่วยเฝ้าขอบป่า",
+      "en": "Embers can still fly across. Read the wind. Let your team help watch the forest edge.",
+      "audio": "intro_04.wav"
+    },
+    {
+      "chapter": 3,
+      "min_seconds": 7.0,
+      "th": "เปลวไฟดับแล้ว แต่ถ่านข้างใต้ยังร้อน ต้องฉีดน้ำให้ถ่านคุเย็นลง งานของเราจึงจะเสร็จ",
+      "en": "The flames are gone. The ash is still hot. Douse the remaining embers.",
+      "audio": "intro_05.wav"
+    },
+    {
+      "chapter": 3,
+      "min_seconds": 8.0,
+      "th": "ในเกมนี้ ดาวเทียมจะสแกนตอนสองทุ่ม มันเห็นจุดร้อน แต่ไม่เห็นเหตุผลของคนที่อยู่ข้างล่าง",
+      "en": "In this game, the satellite scans each evening. It sees hot spots, but not the lives beneath them.",
+      "audio": "intro_06.wav"
+    },
+    {
+      "chapter": 3,
+      "min_seconds": 7.0,
+      "th": "เตรียมแนว คุมไฟ ดับความร้อน ให้แปลงพร้อมปลูกข้าว และไม่มีจุดร้อนก่อนสองทุ่ม",
+      "en": "Prepare the boundary. Control the fire. Cool the embers. Leave enough cooled ash, and no hot spots before the evening scan.",
+      "audio": "intro_07.wav"
+    }
+  ]
+}

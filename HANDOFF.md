@@ -569,3 +569,144 @@ Promotion Worker version: e141dd1e-b465-405d-a93f-36861577d5d9.
 Promotion source commit: 252eacb.
 Evidence: artifacts/release_beta2_20261003/website_ux_download_en.jpg and
 artifacts/release_beta2_20261003/website_ux_promo_th.jpg.
+
+
+## Thai / English implementation — 2026-10-03
+
+The owner requested English support for Steam preparation. Native controls now
+translate through the Localization autoload and L10n helpers, with the selected
+locale saved independently of campaign data. See [localization handoff](docs/LOCALIZATION.md)
+for coverage, reproduction commands, translation conventions and release gates.
+Keep Thai canonical source strings, save identities and existing voice recordings.
+Use L10n.format/join/concat for dynamic displayed sentences so open reports and
+alerts can switch languages without rebuilding scenes. Do not translate player
+names or persist localized enum/identity values. This is a tested bilingual source
+implementation; the public beta installer still requires a separate release.
+
+English spoken audio is now installed for all 30 dialogue/radio clips, with the
+same five ElevenLabs voice identities as Thai. Selecting English chooses the
+English recording; switching languages stops current speech/captions immediately
+and leaves music, ambience and work sounds intact. Per-clip Thai fallback remains.
+Original Thai WAV hashes are unchanged. See
+[`tools/audio_pipeline/ENGLISH_VOICE_HANDOFF.md`](tools/audio_pipeline/ENGLISH_VOICE_HANDOFF.md)
+for exact provenance, wording reviews, tests, preview and release limits.
+
+## Preparation screen focus — 2026-10-03
+
+At the owner's request, removed the decorative village panorama and "Visit the
+village" inspection action from VillageHearth. The preparation cards now use the
+freed vertical space; the radio, rations, workshop, mutual aid, plot briefing,
+help/settings and fixed launch action retain their existing behavior. The old
+VillageDiorama class and delivered models remain available as development assets,
+but the preparation screen no longer instantiates or renders that scene.
+
+## Game UI audit — 2026-10-03
+
+User requested an agent-team audit of the game interface. The review and surface
+matrix are in [docs/UI_AUDIT_20261003.md](docs/UI_AUDIT_20261003.md).
+`ui/ModalFocusScope.gd` now owns modal focus isolation, opener restoration and
+nested caption suppression; release scopes before emitting close signals when
+replacing sibling overlays. Standard controller A/B activate GUI Confirm/Back.
+Pause destructive actions and saved-game replacement default to Cancel.
+Preparation follows focused choices; gameplay captions/tips/warnings reserve
+actual visible control bounds. Keep HUD signal scheduling on HUD-owned methods
+so scene changes remove persistent caption/viewport listeners automatically.
+
+New regression suites (also wired into CI): `tests/test_ui_navigation.gd`,
+`tests/test_menu_ux.gd`, `tests/test_gameplay_ui.gd`. Run them without accelerated
+fixed FPS because feedback lifetimes use real elapsed time. Review captures
+are in `artifacts/ui_audit_20261003/`; fixtures isolate settings and saves.
+This pass does not build or publish installers.
+
+
+## First-time context film — 2026-10-03
+
+Owner approved a short low-poly opening explaining rotational farming, firebreaks,
+windborne embers and cooling before the game's 20:00 scan. `ui/OpeningFilm.gd`
+plays about 63 seconds with Thai/English Ta-poh narration from ElevenLabs, always
+visible subtitles, immediate Skip, Pause and a language switch.
+`ui/OpeningDiorama.gd` uses the installed cast/props in a separate world; it has no
+simulation or save hooks. Script: `localization/opening.json`.
+
+Title New Game opens it only while profile setting `onboarding/intro_seen` is
+false. Completion or Skip persists that flag; campaign reset does not clear it.
+Continue never inserts the film. How to play has a replay button available from
+Title, preparation and Pause. Film restores the prior tree pause, audio playback
+and modal focus. New campaigns use field tips and optional Help rather than an
+automatic full rules card after the film. Legacy saves/direct preparation entry
+retain the old `seen_how_to_play` fallback. No burn mechanics were changed.
+
+`tests/test_opening.gd` adds 87 first-use/replay/persistence/audio/localization/
+layout/transition checks and is in CI. The full suite's first-New-Game check now
+closes the film before asserting the preparation autosave. Current validation:
+87 opening, 150 gameplay, 167 localized UI, 37 navigation and 86 menu checks pass.
+See [opening delivery/review](docs/OPENING_FILM_20261003.md) for provenance,
+commands, human cultural/listening review limits and native video evidence.
+
+Owner subsequently flagged echo in the Thai narrator. Technical/transcript
+checks do not constitute voice-quality acceptance. A separate Eleven v4
+voice-only pilot is prepared for listening; the original Thai takes remain
+installed pending the reviewed replacement. See the opening document.
+
+## All spoken assets upgraded to Eleven v4 — 2026-10-03
+
+The owner approved the dry pilot and requested replacing every old-model voice.
+This supersedes the pending voice note above. All 76 current recordings now use
+v4: 38 Thai, 38 English, including opening, crew, forestry/ranger and weather.
+Five speaker identities, canonical text and filenames are unchanged. All final
+takes pass exact Scribe wording/source-hash checks; three rejected first takes
+have reviewed replacements. The 68 non-speech WAVs are byte-identical.
+
+`tools/audio_pipeline/installed_voices_v4.json` resolves the entire current cast;
+the English and opening registries are updated. Full rollback bytes and raw/review
+evidence are in `artifacts/audio_voice_v4_20261003/`. Runtime checks (413), offline
+pipeline tests (19), production smoke and exported-pack verification pass. The
+export probe verifies all 76 imported-resource hashes from an empty directory.
+Complete native film previews now include the controls and captions, with the
+approved-model voices. See [v4 delivery](tools/audio_pipeline/VOICE_V4_HANDOFF.md).
+Local source/assets are updated; public installers have not been rebuilt here.
+
+## Opening background sound — 2026-10-03
+
+The owner requested background sound after approving the dry voices. OpeningFilm
+now mixes the existing ElevenLabs warm score, bamboo wind and distant cicadas at
+audible levels, with a pulse during the satellite scan and action-synced rake,
+fire and spray. Smooth fades lower music by 5 dB during speech, ambience by 2 dB
+and work sounds by 3 dB. No voice effects or new generated assets were added.
+Every layer follows its settings bus, pauses with the film and releases on close.
+
+92 opening checks, 20 audio checks and the required production smoke pass.
+The 76 voice recordings and 68 existing non-speech WAVs remain unchanged.
+Native full-interface previews: `artifacts/opening_background_20261003/`;
+Thai 67.33 s / English 67.67 s including recap, decoded peaks -3.3 / -3.7 dBFS.
+See [opening delivery](docs/OPENING_FILM_20261003.md) for current preview paths.
+This is a local mix update; installers have not been rebuilt or published.
+
+
+## Beta 3 release qualification — 2026-10-03
+
+Owner requested an agent swarm release audit and fixes. Follow
+[RELEASE_BETA3.md](docs/RELEASE_BETA3.md) for candidate, artifacts and publication
+status. Gameplay/save, UI/localization and packaging agents reviewed distinct
+scopes; manager integrates and qualifies the actual archives.
+
+Confirmed fixes: consume first-use film Back before changing scene; clear old
+burn summaries on campaign reset; validate finite numbers/enum keys before save
+load; recover the atomic scoreboard backup while preserving valid empty tables.
+Invalid/future save versions remain intact and do not downgrade to a backup.
+`tests/test_save_recovery.gd` adds 102 isolated recovery/transition checks.
+
+All presets exclude build/review/docs/tools/server and rejected audio material,
+and explicitly include all three language JSON files and both OFL font notices.
+`tools/build.sh` requires committed runtime sources, uses a fresh output directory
+and fails on engine error logs as well as exit status. `tools/release/validate_pack.py`
+checks actual exported payloads, including embedded Windows/Linux packs, against
+76 approved recordings and current catalogs/licenses. `qualify_native.gd` is an
+external exported-executable probe using isolated saves and actual scene flows.
+Online-board payload version is beta3; project/export version is 0.3.0.
+
+Current website deployment account is Under Two Skies - Game /
+`37985e3dbd0d5cc809f4740dec81dbfc`, user visarut298@gmail.com. Use the named
+Wrangler profile `undertwoskies-game`; default credentials belong to another
+project. Promo GitHub auto-deploy is working again; prior broken-token notes are
+historical. Versioned R2 prefixes retain beta1/beta2 for rollback.

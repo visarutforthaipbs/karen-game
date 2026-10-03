@@ -12,6 +12,8 @@ var new_button: Button
 var notice_label: Label
 var board: VBoxContainer
 var _menu: VBoxContainer
+var menu_scroll: ScrollContainer
+var quit_button: Button
 var _camera: Camera3D
 var _orbit: float = 0.6
 # The satellite pass: big, low and slow, its shadow sweeping the plot (V3)
@@ -37,6 +39,8 @@ var _scan_tick: float = 0.0
 var _pinged: bool = false
 var _was_scanning: bool = false
 var _overlay: Control
+var _overlay_scope: ModalFocusScope
+var _confirmation_open: bool = false
 
 func _ready() -> void:
 	theme = UITheme.get_theme()
@@ -266,14 +270,22 @@ func _build_menu() -> void:
 	margin.add_theme_constant_override("margin_bottom", 24)
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(margin)
-	var col = UITheme.vbox(10)
+	menu_scroll = ScrollContainer.new()
+	menu_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	menu_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	menu_scroll.follow_focus = true
+	menu_scroll.custom_minimum_size.x = minf(780.0, get_viewport().get_visible_rect().size.x - 100.0)
+	menu_scroll.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	margin.add_child(menu_scroll)
+	var compact_menu = get_viewport().get_visible_rect().size.y < 680.0
+	var col = UITheme.vbox(8 if compact_menu else 10)
 	col.alignment = BoxContainer.ALIGNMENT_CENTER
 	col.custom_minimum_size = Vector2(440, 0)
 	col.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	margin.add_child(col)
+	menu_scroll.add_child(col)
 
 	_logo = TitleLogo.new()
-	_logo.size_px = 74.0
+	_logo.size_px = 40.0 if compact_menu else 66.0
 	col.add_child(_logo)
 	var logo_gap = Control.new()
 	logo_gap.custom_minimum_size = Vector2(0, 0)
@@ -286,17 +298,18 @@ func _build_menu() -> void:
 	gap.custom_minimum_size = Vector2(0, 8)
 	col.add_child(gap)
 
-	_menu = UITheme.vbox(10)
+	_menu = UITheme.vbox(6 if compact_menu else 10)
 	col.add_child(_menu)
 	continue_button = _menu_button("เล่นต่อ", _on_continue, "PrimaryButton")
 	continue_button.visible = SaveGame.exists()
 	new_button = _menu_button("เริ่มเกมใหม่", _on_new_game, "Button" if SaveGame.exists() else "PrimaryButton")
 	_menu_button("วิธีเล่น", _on_how_to_play)
-	_menu_button("ตั้งค่า", _on_settings)
-	_menu_button("ออกจากเกม", func(): InputBindings.request_exit())
+	_menu_button("ตั้งค่า / Settings", _on_settings)
+	quit_button = _menu_button("ออกจากเกม", func(): InputBindings.request_exit())
 
 	notice_label = UITheme.wrap(UITheme.outlined(UITheme.label("", "Small", UITheme.EMBER), 4))
 	notice_label.custom_minimum_size = Vector2(440, 0)
+	notice_label.visible = false
 	col.add_child(notice_label)
 	# Village board (top 5) sits in the bottom-right corner, out of the menu column
 	board = UITheme.vbox(2)
@@ -316,7 +329,7 @@ func _menu_button(text: String, action: Callable, variation: String = "Button") 
 	var b = Button.new()
 	b.text = text
 	b.theme_type_variation = variation
-	b.custom_minimum_size = Vector2(340, 48)
+	b.custom_minimum_size = Vector2(340, 44 if get_viewport().get_visible_rect().size.y < 680.0 else 48)
 	b.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	b.add_theme_font_size_override("font_size", 19)
 	b.pressed.connect(action)
@@ -333,7 +346,7 @@ func _fill_board() -> void:
 	board.add_child(head)
 	for i in mini(5, rows.size()):
 		var r = rows[i]
-		var line = UITheme.outlined(UITheme.label("%d. %s · %d แปลง · ปีที่ %d · เถ้า %.0f%%" % [i + 1, r.name, int(r.plots), int(r.year), float(r.avg_ash)], "Small", UITheme.MUTED), 4)
+		var line = UITheme.outlined(UITheme.label(L10n.format("%d. %s · %d แปลง · ปีที่ %d · เถ้า %.0f%%", [i + 1, r.name, int(r.plots), int(r.year), float(r.avg_ash)], false), "Small", UITheme.MUTED), 4)
 		line.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		board.add_child(line)
 
@@ -347,29 +360,46 @@ func _fill_online_board(rows: Array) -> void:
 	for r in rows.slice(0, 5):
 		if not (r is Dictionary):
 			continue
-		var line = UITheme.outlined(UITheme.label("%d. %s · %d แปลง · ปีที่ %d · เถ้า %.0f%%" % [int(r.get("rank", 0)), SaveGame.sanitize_name(r.get("name", "")), int(r.get("plots", 0)), int(r.get("year", 0)), float(r.get("avg_ash", 0))], "Small", UITheme.MUTED), 4)
+		var line = UITheme.outlined(UITheme.label(L10n.format("%d. %s · %d แปลง · ปีที่ %d · เถ้า %.0f%%", [int(r.get("rank", 0)), SaveGame.sanitize_name(r.get("name", "")), int(r.get("plots", 0)), int(r.get("year", 0)), float(r.get("avg_ash", 0))], false), "Small", UITheme.MUTED), 4)
 		line.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		board.add_child(line)
 
 func _on_continue() -> void:
+	if is_instance_valid(_overlay):
+		return
 	var why = SaveGame.load_into(GameState.instance)
 	if why != "":
-		notice_label.text = "โหลดเกมที่บันทึกไว้ไม่ได้ (%s) · เริ่มเกมใหม่แทนได้" % ("ไฟล์เสียหาย" if why == "corrupt" else "เวอร์ชันเก่า" if why == "version" else "ไม่พบไฟล์")
+		notice_label.show()
+		notice_label.text = L10n.format("โหลดเกมที่บันทึกไว้ไม่ได้ (%s) · เริ่มเกมใหม่แทนได้", ("ไฟล์เสียหาย" if why == "corrupt" else "เวอร์ชันเก่า" if why == "version" else "ไม่พบไฟล์"))
 		continue_button.visible = false
 		new_button.grab_focus()
 		return
 	_go_to_hearth()
 
 func _on_new_game() -> void:
-	if SaveGame.exists() and _overlay == null:
+	if is_instance_valid(_overlay):
+		return
+	if SaveGame.exists():
 		_confirm("เริ่มเกมใหม่จะลบเกมที่บันทึกไว้ ยืนยันไหม?", _start_new_campaign)
 		return
 	_start_new_campaign()
 
 func _start_new_campaign() -> void:
 	GameState.instance.reset_campaign()
-	GameState.instance.seen_how_to_play = false
+	# Context film + contextual first-burn tips replace the automatic dense guide.
+	# The complete manual remains available from Help, even after skipping.
+	GameState.instance.seen_how_to_play = true
 	SaveGame.delete()
+	GameSettings.ensure_loaded()
+	if not GameSettings.intro_seen:
+		var opening = OpeningFilm.new()
+		opening.remember_completion = true
+		_overlay = opening
+		opening.closed.connect(func():
+			_overlay = null
+			_go_to_hearth())
+		add_child(opening)
+		return
 	_go_to_hearth()
 
 func _go_to_hearth() -> void:
@@ -378,19 +408,28 @@ func _go_to_hearth() -> void:
 	get_tree().change_scene_to_file(HEARTH_SCENE)
 
 func _on_how_to_play() -> void:
+	if is_instance_valid(_overlay):
+		return
 	var h = HowToPlay.new()
-	h.closed.connect(func(): _menu.get_child(0 if continue_button.visible else 1).grab_focus())
+	_overlay = h
+	h.closed.connect(func(): _overlay = null)
 	add_child(h)
 
 func _on_settings() -> void:
+	if is_instance_valid(_overlay):
+		return
 	var s = SettingsPanel.new()
-	s.closed.connect(func(): _menu.get_child(0 if continue_button.visible else 1).grab_focus())
+	_overlay = s
+	s.closed.connect(func(): _overlay = null)
 	s.how_to_play_requested.connect(func():
 		s.close()
 		_on_how_to_play())
 	add_child(s)
 
 func _confirm(question: String, on_yes: Callable) -> void:
+	if is_instance_valid(_overlay):
+		return
+	_confirmation_open = true
 	_overlay = Control.new()
 	_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(_overlay)
@@ -413,17 +452,29 @@ func _confirm(question: String, on_yes: Callable) -> void:
 	box.add_child(row)
 	var yes = Button.new()
 	yes.text = "ยืนยัน เริ่มใหม่"
-	yes.theme_type_variation = "PrimaryButton"
 	yes.pressed.connect(func():
-		_overlay.queue_free()
-		_overlay = null
+		_dismiss_confirmation()
 		on_yes.call())
-	row.add_child(yes)
 	var no = Button.new()
 	no.text = "ยกเลิก"
+	no.theme_type_variation = "PrimaryButton"
 	no.pressed.connect(func():
-		_overlay.queue_free()
-		_overlay = null
-		new_button.grab_focus())
+		_dismiss_confirmation())
 	row.add_child(no)
+	row.add_child(yes)
+	_overlay_scope = ModalFocusScope.begin(_overlay)
 	no.grab_focus()
+
+func _dismiss_confirmation() -> void:
+	if _overlay_scope:
+		_overlay_scope.release()
+		_overlay_scope = null
+	if is_instance_valid(_overlay):
+		_overlay.queue_free()
+	_overlay = null
+	_confirmation_open = false
+
+func _unhandled_input(event: InputEvent) -> void:
+	if _confirmation_open and event.is_action_pressed("ui_cancel"):
+		_dismiss_confirmation()
+		get_viewport().set_input_as_handled()

@@ -1,0 +1,37 @@
+{
+  "output_directory": "artifacts/audio_voice_v4_20261003/th_r2",
+  "credit_cap": 1000,
+  "language_code": "tha",
+  "max_cer": 0.0,
+  "purpose": "Review/install only the revisions replacing three confirmed base transcript mismatches. Extra candidates generated during the final review snapshot are retained without installing.",
+  "jobs": [
+    {
+      "id": "v4_th_opening_th_intro_05__r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "เปลวไฟดับแล้ว แต่ถ่านข้างใต้ยังร้อน ต้องฉีดน้ำให้ถ่านคุเย็นลง งานของเราจึงจะเสร็จ",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_05.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "เปลวไฟดับแล้ว แต่ถ่านข้างใต้ยังร้อน ต้องฉีดน้ำให้ถ่านคุเย็นลง งานของเราจึงจะเสร็จ"
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_th_r3.json",
+        "id": "intro_th_05_r3",
+        "sha256": "65e343c31634da9730d8240892cbfcbdbff2aff5635fc17f18401cab78d91ae0"
+      }
+    }
+  ]
+}

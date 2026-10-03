@@ -1,0 +1,193 @@
+{
+  "output_directory": "artifacts/opening_20261003/audio_th",
+  "credit_cap": 3000,
+  "language_code": "tha",
+  "max_cer": 0.0,
+  "purpose": "User approved first-time Ta-poh opening, 2026-10-03. Same reviewed voice as current cast. No clones or new music.",
+  "jobs": [
+    {
+      "id": "intro_th_00",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ขะแน บ้านเราอยู่กับผืนป่านี้ ไร่หมุนเวียนคือการดูแลแปลงเดิมเป็นรอบ ๆ",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_00.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ขะแน บ้านเราอยู่กับผืนป่านี้ ไร่หมุนเวียนคือการดูแลแปลงเดิมเป็นรอบ ๆ"
+      }
+    },
+    {
+      "id": "intro_th_01",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ปลูกข้าวหนึ่งฤดู แล้วพักแปลงไว้หลายปี ให้พืชกลับมาเติบโต ระหว่างนั้นเราทำกินในแปลงอื่น",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_01.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ปลูกข้าวหนึ่งฤดู แล้วพักแปลงไว้หลายปี ให้พืชกลับมาเติบโต ระหว่างนั้นเราทำกินในแปลงอื่น"
+      }
+    },
+    {
+      "id": "intro_th_02",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "วันนี้เราช่วยกันเตรียมแปลงสำหรับข้าว เถ้าจากเศษพืชคืนธาตุอาหารบางส่วนให้ดิน",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_02.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "วันนี้เราช่วยกันเตรียมแปลงสำหรับข้าว เถ้าจากเศษพืชคืนธาตุอาหารบางส่วนให้ดิน"
+      }
+    },
+    {
+      "id": "intro_th_03",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ก่อนจุดไฟ ต้องกวาดใบไม้และเศษกิ่งออกให้เห็นดินโล่ง แนวกันไฟตัดทางเชื้อเพลิงระหว่างไร่กับป่า",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_03.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ก่อนจุดไฟ ต้องกวาดใบไม้และเศษกิ่งออกให้เห็นดินโล่ง แนวกันไฟตัดทางเชื้อเพลิงระหว่างไร่กับป่า"
+      }
+    },
+    {
+      "id": "intro_th_04",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "แต่ลูกไฟอาจปลิวข้ามแนวได้ อ่านทิศลม และให้ทีมช่วยเฝ้าขอบป่า",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_04.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "แต่ลูกไฟอาจปลิวข้ามแนวได้ อ่านทิศลม และให้ทีมช่วยเฝ้าขอบป่า"
+      }
+    },
+    {
+      "id": "intro_th_05",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ไฟมอดแล้ว แต่เถ้ายังร้อน งานยังไม่จบ ต้องฉีดน้ำดับถ่านที่ยังคุ",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_05.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ไฟมอดแล้ว แต่เถ้ายังร้อน งานยังไม่จบ ต้องฉีดน้ำดับถ่านที่ยังคุ"
+      }
+    },
+    {
+      "id": "intro_th_06",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ในเกมนี้ ดาวเทียมจะสแกนตอนสองทุ่ม มันเห็นจุดร้อน แต่ไม่เห็นเหตุผลของคนที่อยู่ข้างล่าง",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_06.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ในเกมนี้ ดาวเทียมจะสแกนตอนสองทุ่ม มันเห็นจุดร้อน แต่ไม่เห็นเหตุผลของคนที่อยู่ข้างล่าง"
+      }
+    },
+    {
+      "id": "intro_th_07",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "เตรียมแนว คุมไฟ ดับความร้อน ให้มีเถ้าที่เย็นพอสำหรับแปลงข้าว และไม่มีจุดร้อนเหลือก่อนสองทุ่ม",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_07.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "เตรียมแนว คุมไฟ ดับความร้อน ให้มีเถ้าที่เย็นพอสำหรับแปลงข้าว และไม่มีจุดร้อนเหลือก่อนสองทุ่ม"
+      }
+    }
+  ]
+}

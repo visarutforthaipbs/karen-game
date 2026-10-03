@@ -1,0 +1,32 @@
+{
+  "output_directory": "artifacts/opening_20261003/audio_th_dry_pilot",
+  "credit_cap": 500,
+  "language_code": "tha",
+  "max_cer": 0.0,
+  "purpose": "Owner rejected Thai opening narrator echo on 2026-10-03. A voice-only pilot, not a production replacement; no acting quality acceptance from ASR.",
+  "jobs": [
+    {
+      "id": "thai_narrator_dry_pilot",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "บ้านเราอยู่กับผืนป่านี้ ไร่หมุนเวียนคือการดูแลแปลงเดิมเป็นรอบ ๆ เราปลูกข้าวหนึ่งฤดู แล้วพักผืนดินไว้หลายปี ให้พืชกลับมาเติบโต ระหว่างนั้นเราทำกินในแปลงอื่น",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/dry_pilot.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "บ้านเราอยู่กับผืนป่านี้ ไร่หมุนเวียนคือการดูแลแปลงเดิมเป็นรอบ ๆ เราปลูกข้าวหนึ่งฤดู แล้วพักผืนดินไว้หลายปี ให้พืชกลับมาเติบโต ระหว่างนั้นเราทำกินในแปลงอื่น"
+      }
+    }
+  ]
+}

@@ -31,20 +31,57 @@ jobs:
           chmod +x ~/godot/godot
 
       - name: Import project
-        run: ~/godot/godot --headless --path . --import || true
+        run: |
+          set -euo pipefail
+          ~/godot/godot --headless --path . --import 2>&1 | tee import.log
+          ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" import.log
+
+      - name: Build failure safeguards
+        run: |
+          python3 tools/tests/test_build.py
+          python3 tools/tests/test_validate_pack.py
 
       - name: Gameplay tests
-        run: ~/godot/godot --headless --path . --fixed-fps 60 --script res://tests/test_all.gd
+        run: |
+          set -euo pipefail
+          for t in test_all test_save_recovery; do
+            ~/godot/godot --headless --path . --fixed-fps 60 --script "res://tests/$t.gd" 2>&1 | tee "$t.log"
+            ! grep -E "SCRIPT ERROR|Parse Error" "$t.log"
+          done
 
       - name: Character and asset tests
         run: |
-          set -e
+          set -euo pipefail
           # tests/test_motion_deformation.gd excluded — requires windowed renderer
           for t in test_gameplay_motion test_skeletal_character test_equipment_motion test_ranger_assets test_v31_assets test_animation_transitions test_audio_upgrade test_player_guidance test_platform_shortcuts test_village_presentation; do
-            ~/godot/godot --headless --path . --fixed-fps 60 --script "res://tests/$t.gd"
+            ~/godot/godot --headless --path . --fixed-fps 60 --script "res://tests/$t.gd" 2>&1 | tee "$t.log"
+            ! grep -E "SCRIPT ERROR|Parse Error" "$t.log"
+          done
+
+      - name: Thai and English localization
+        run: |
+          set -euo pipefail
+          python3 tools/localization/validate_catalog.py
+          for t in test_localization test_localized_gameplay test_localized_ui; do
+            ~/godot/godot --headless --path . --script "res://tests/$t.gd" 2>&1 | tee "$t.log"
+            ! grep -E "SCRIPT ERROR|Parse Error" "$t.log"
+          done
+          # Recorded audio uses wall time; do not accelerate its timers.
+          for t in test_voice_subtitles test_voice_locales; do
+            ~/godot/godot --headless --path . --script "res://tests/$t.gd" 2>&1 | tee "$t.log"
+            ! grep -E "SCRIPT ERROR|Parse Error" "$t.log"
+          done
+
+      - name: Game UI navigation and feedback
+        run: |
+          set -euo pipefail
+          for t in test_ui_navigation test_menu_ux test_gameplay_ui test_opening; do
+            ~/godot/godot --headless --path . --script "res://tests/$t.gd" 2>&1 | tee "ui-$t.log"
+            ! grep -E "SCRIPT ERROR|Parse Error" "ui-$t.log"
           done
 
       - name: Smoke run
         run: |
+          set -euo pipefail
           ~/godot/godot --headless --path . --fixed-fps 60 --quit-after 120 2>&1 | tee smoke.log
           ! grep -E "SCRIPT ERROR|Parse Error" smoke.log

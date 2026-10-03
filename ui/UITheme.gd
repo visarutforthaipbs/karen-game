@@ -125,8 +125,41 @@ static func get_theme() -> Theme:
 	track.content_margin_right = 4
 	t.set_stylebox("scroll", "VScrollBar", track)
 
+	# Editable controls share the same palette and visible keyboard focus.
+	# Sliders highlight both their filled track and thumb when focused.
+	var slider_track = slab(INK, 0, 3)
+	slider_track.set_content_margin_all(3)
+	var slider_fill = slab(MUTED, 0, 3)
+	slider_fill.set_content_margin_all(3)
+	var slider_focus = slab(STRAW, 0, 3)
+	slider_focus.set_content_margin_all(3)
+	t.set_stylebox("slider", "HSlider", slider_track)
+	t.set_stylebox("grabber_area", "HSlider", slider_fill)
+	t.set_stylebox("grabber_area_highlight", "HSlider", slider_focus)
+	t.set_icon("grabber", "HSlider", _slider_thumb(CREAM))
+	t.set_icon("grabber_highlight", "HSlider", _slider_thumb(STRAW))
+	t.set_icon("grabber_disabled", "HSlider", _slider_thumb(DIM))
+	t.set_stylebox("normal", "LineEdit", slab(INK, 0, 5))
+	t.set_stylebox("read_only", "LineEdit", slab(PANEL, 0, 5))
+	t.set_stylebox("focus", "LineEdit", outline(STRAW, 2, 5))
+	t.set_color("font_color", "LineEdit", CREAM)
+	t.set_color("caret_color", "LineEdit", STRAW)
+	t.set_color("selection_color", "LineEdit", EMERALD_DEEP)
+	t.set_color("font_selected_color", "LineEdit", CREAM)
+	t.set_color("font_placeholder_color", "LineEdit", MUTED)
+
 	_theme = t
 	return t
+
+static func _slider_thumb(color: Color) -> ImageTexture:
+	var image = Image.create(14, 18, false, Image.FORMAT_RGBA8)
+	image.fill(Color.TRANSPARENT)
+	for y in 18:
+		for x in 14:
+			# Cut corners keep the thumb legible against faceted panels.
+			if x + y >= 3 and (13 - x) + y >= 3 and x + (17 - y) >= 3 and (13 - x) + (17 - y) >= 3:
+				image.set_pixel(x, y, color)
+	return ImageTexture.create_from_image(image)
 
 static func _label_variation(t: Theme, name: String, weight: String, size: int, color: Color) -> void:
 	t.set_type_variation(name, "Label")

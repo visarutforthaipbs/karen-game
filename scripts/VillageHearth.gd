@@ -52,18 +52,21 @@ var launch_button: Button
 
 var current_radio_channel: int = 1
 var _harvest_modal: Control
+var _harvest_focus_scope: ModalFocusScope
+var _harvest_card: FacetCard
+var _harvest_scroll: ScrollContainer
+var _harvest_content: VBoxContainer
 var help_button: Button
 var settings_button: Button
 var harvest_button: Button
 var settings_panel: SettingsPanel
 var how_to_play: HowToPlay
-var village_diorama: VillageDiorama
 var _card_columns: GridContainer
+var _card_scroll: ScrollContainer
 var _header_row: HBoxContainer
 var _header_stats: HBoxContainer
 var _barn_card: Control
 var _watch_card: Control
-var _village_overlay: Control
 
 func _ready() -> void:
 	theme = UITheme.get_theme()
@@ -92,8 +95,7 @@ func show_how_to_play() -> void:
 		return
 	how_to_play = HowToPlay.new()
 	how_to_play.closed.connect(func():
-		how_to_play = null
-		launch_button.grab_focus())
+		how_to_play = null)
 	add_child(how_to_play)
 
 func show_settings() -> void:
@@ -101,44 +103,11 @@ func show_settings() -> void:
 		return
 	settings_panel = SettingsPanel.new()
 	settings_panel.closed.connect(func():
-		settings_panel = null
-		launch_button.grab_focus())
+		settings_panel = null)
 	settings_panel.how_to_play_requested.connect(func():
 		settings_panel.close()
 		show_how_to_play())
 	add_child(settings_panel)
-
-func show_village() -> void:
-	if _village_overlay:return
-	var home := village_diorama.get_parent()
-	var home_index := village_diorama.get_index()
-	_village_overlay = PanelContainer.new()
-	_village_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(_village_overlay)
-	var box = UITheme.vbox(12)
-	_village_overlay.add_child(box)
-	var bar = UITheme.hbox(12)
-	box.add_child(bar)
-	var title = UITheme.label("หมู่บ้าน · ข้างเตาไฟยามค่ำ", "Title")
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	bar.add_child(title)
-	for station in [["หมู่บ้าน",""],["วิทยุ","S8"],["ยุ้งข้าว","S3"],["โรงซ่อม","S9"]]:
-		var button = _button(station[0])
-		button.pressed.connect(village_diorama.focus_station.bind(station[1]))
-		bar.add_child(button)
-	var close = _button("กลับเตาไฟ")
-	bar.add_child(close)
-	close.pressed.connect(func():
-		village_diorama.reparent(home,false)
-		home.move_child(village_diorama,home_index)
-		village_diorama.size_flags_vertical=Control.SIZE_FILL
-		_village_overlay.queue_free()
-		_village_overlay=null
-		village_diorama.focus_station("")
-		launch_button.grab_focus())
-	village_diorama.reparent(box,false)
-	village_diorama.size_flags_vertical=Control.SIZE_EXPAND_FILL
-	close.grab_focus()
 
 # ---------------------------------------------------------------------------
 # Build
@@ -162,14 +131,11 @@ func _build() -> void:
 	margin.add_child(page)
 
 	page.add_child(_build_header())
-	village_diorama = VillageDiorama.new()
-	village_diorama.name = "VillageDiorama"
-	village_diorama.custom_minimum_size.y = 210
-	village_diorama.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	page.add_child(village_diorama)
 
 	# The cards scroll when the window is short; the launch button below stays pinned
 	var scroll = ScrollContainer.new()
+	_card_scroll = scroll
+	scroll.follow_focus = true
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	page.add_child(scroll)
@@ -184,17 +150,20 @@ func _build() -> void:
 
 	var left = UITheme.vbox(12)
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	left.custom_minimum_size.x = 300
 	columns.add_child(left)
 	left.add_child(_build_radio())
 	left.add_child(_build_granary())
 
 	var centre = _build_plot_brief()
 	centre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	centre.custom_minimum_size.x = 340
 	centre.size_flags_stretch_ratio = 1.05
 	columns.add_child(centre)
 
 	var right = UITheme.vbox(12)
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right.custom_minimum_size.x = 340
 	columns.add_child(right)
 	right.add_child(_build_workshop())
 	right.add_child(_build_exchange())
@@ -210,19 +179,42 @@ func _build() -> void:
 	resized.connect(_fit_layout)
 	_fit_layout.call_deferred()
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and is_inside_tree():
+		# Wait for translated Control minimum sizes; no refresh or autosave needed.
+		_fit_layout.call_deferred()
+
 func _fit_layout() -> void:
 	if not _card_columns: return
-	var narrow := size.x < 1100
-	_card_columns.columns = 1 if narrow else 3
-	var stats_parent: HBoxContainer = _header_stats if narrow else _header_row
-	for card in [_barn_card,_watch_card]:
-		if card.get_parent()!=stats_parent:card.reparent(stats_parent,false)
-	if not narrow:
-		_header_row.move_child(_barn_card,1)
-		_header_row.move_child(_watch_card,2)
-	_header_stats.visible=narrow
-	village_diorama.custom_minimum_size.y = 160 if size.y < 700 else 210
-	launch_button.custom_minimum_size.x = minf(560,maxf(240,size.x-48))
+	var available = maxf(240.0, size.x - 40.0)
+	# Measure the complete header as if its two reserve cards were on row one.
+	# English and larger UI scales can need the second row even at 1280 pixels.
+	var row_width = _barn_card.get_combined_minimum_size().x + _watch_card.get_combined_minimum_size().x
+	var count = 2
+	for child in _header_row.get_children():
+		if child != _barn_card and child != _watch_card:
+			row_width += child.get_combined_minimum_size().x
+			count += 1
+	row_width += float(count - 1) * _header_row.get_theme_constant("separation")
+	var separate_stats = row_width > available
+	var stats_parent: HBoxContainer = _header_stats if separate_stats else _header_row
+	for card in [_barn_card, _watch_card]:
+		if card.get_parent() != stats_parent:
+			card.reparent(stats_parent, false)
+	if not separate_stats:
+		_header_row.move_child(_barn_card, 1)
+		_header_row.move_child(_watch_card, 2)
+	_header_stats.visible = separate_stats
+	# The minimum widths include translated headings/buttons, not a fixed cutoff.
+	var widths: Array[float] = []
+	for column in _card_columns.get_children():
+		widths.append(column.get_combined_minimum_size().x)
+	var gap = float(_card_columns.get_theme_constant("h_separation"))
+	var three_width = widths[0] + widths[1] + widths[2] + 2.0 * gap
+	var two_width = maxf(widths[0], widths[2]) + widths[1] + gap
+	_card_columns.columns = 3 if three_width <= available - 14.0 else (2 if two_width <= available - 14.0 else 1)
+	launch_button.custom_minimum_size.x = minf(560.0, maxf(240.0, available - 8.0))
+	_fit_harvest_layout()
 
 func _card(kind: String, title: String, tint: Color, seed_value: int, expand: bool = true) -> VBoxContainer:
 	var card = UITheme.card(Color(UITheme.PANEL, 0.93), tint, seed_value)
@@ -230,12 +222,18 @@ func _card(kind: String, title: String, tint: Color, seed_value: int, expand: bo
 		card.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var box = UITheme.vbox(8)
 	card.add_child(box)
-	box.add_child(UITheme.header(kind, title, tint))
+	var heading = UITheme.header(kind, title, tint)
+	var heading_label = heading.get_child(heading.get_child_count() - 1) as Label
+	UITheme.wrap(heading_label)
+	heading_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_child(heading)
 	return box
 
 func _button(text: String, toggle: bool = false) -> Button:
 	var b = Button.new()
 	b.text = text
+	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	b.custom_minimum_size.y = 44
 	b.toggle_mode = toggle
 	b.focus_mode = Control.FOCUS_ALL
 	return b
@@ -260,7 +258,7 @@ func _build_header() -> Control:
 	var tag = UITheme.label("ข้างเตาไฟยามค่ำ", "Kicker", UITheme.MUTED)
 	tag.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	name_row.add_child(tag)
-	header_label = UITheme.label("", "Body", UITheme.CREAM)
+	header_label = UITheme.wrap(UITheme.label("", "Body", UITheme.CREAM))
 	titles.add_child(header_label)
 
 	var barn = _header_stat("rice", "ข้าวในยุ้ง", UITheme.STRAW, 201)
@@ -291,9 +289,6 @@ func _build_header() -> Control:
 	settings_button.add_theme_font_size_override("font_size", 17)
 	settings_button.pressed.connect(show_settings)
 	row.add_child(settings_button)
-	var village_button = _button("ดูหมู่บ้าน")
-	village_button.pressed.connect(show_village)
-	row.add_child(village_button)
 	return header
 
 func _header_stat(kind: String, title: String, tint: Color, seed_value: int) -> Array:
@@ -449,11 +444,10 @@ func _stat(label_text: String, value: String, warn: bool = false) -> void:
 
 func _refresh() -> void:
 	var state = GameState.instance
-	if village_diorama: village_diorama.set_reserve(state.rice_barn)
 	var cfg: PlotGenerator.PlotConfig = state.plot_config()
 	var rules: Escalation.YearRules = cfg.rules
 
-	header_label.text = "ปีที่ %d · แปลงที่ %d/%d · ฤดูแล้งของไร่หมุนเวียน" % [state.current_year, state.current_plot_index, GameState.PLOTS_PER_YEAR]
+	header_label.text = L10n.format("ปีที่ %d · แปลงที่ %d/%d · ฤดูแล้งของไร่หมุนเวียน", [state.current_year, state.current_plot_index, GameState.PLOTS_PER_YEAR])
 	barn_value.text = "%.0f%%" % state.rice_barn
 	barn_bar.value = state.rice_barn
 	barn_bar.fill_color = UITheme.RUBY if state.rice_barn < 40.0 else UITheme.STRAW
@@ -467,30 +461,30 @@ func _refresh() -> void:
 		plot_stats.remove_child(c)
 		c.queue_free()
 	var strong_wind = cfg.wind_base_speed > FireGrid.EMBER_JUMP_WIND
-	var drones = "ไม่มีรายงาน" if cfg.drone_count == 0 else "%d ลำ · 15:00–18:00%s" % [cfg.drone_count, " · ความเร็วสูง" if rules.drone_speed_mult > 1.0 else ""]
-	_stat("ความสูงของเนิน", "%.1f ม. · ไฟขึ้นเนินเร็ว ×%.1f" % [cfg.terrain_rise(), cfg.uphill_spread_factor()])
-	_stat("ความหนาแน่นของไผ่", "%.0f%% · เสี่ยงปล้องระเบิด" % (cfg.bamboo_ratio * 100.0), cfg.bamboo_ratio > 0.3)
-	_stat("ลมหุบเขา", "×%.1f%s" % [cfg.wind_base_speed, " · ลูกไฟข้ามแนวกันไฟได้" if strong_wind else ""], strong_wind)
+	var drones = "ไม่มีรายงาน" if cfg.drone_count == 0 else L10n.format("%d ลำ · 15:00–18:00%s", [cfg.drone_count, " · ความเร็วสูง" if rules.drone_speed_mult > 1.0 else ""])
+	_stat("ความสูงของเนิน", L10n.format("%.1f ม. · ไฟขึ้นเนินเร็ว ×%.1f", [cfg.terrain_rise(), cfg.uphill_spread_factor()]))
+	_stat("ความหนาแน่นของไผ่", L10n.format("%.0f%% · เสี่ยงปล้องระเบิด", (cfg.bamboo_ratio * 100.0)), cfg.bamboo_ratio > 0.3)
+	_stat("ลมหุบเขา", L10n.format("×%.1f%s", [cfg.wind_base_speed, " · ลูกไฟข้ามแนวกันไฟได้" if strong_wind else ""]), strong_wind)
 	_stat("โดรนลาดตระเวน", drones, cfg.drone_count > 0)
-	_stat("กล้องความร้อนภาคพื้น", "%d ตัวที่แนวเขตอุทยาน" % rules.ground_cameras if rules.ground_cameras > 0 else "ไม่มี", rules.ground_cameras > 0)
-	_stat("เจ้าหน้าที่เดินตรวจ", "%d นาย · 15:30–18:30" % rules.ranger_count if rules.ranger_count > 0 else "ไม่มี", rules.ranger_count > 0)
+	_stat("กล้องความร้อนภาคพื้น", L10n.format("%d ตัวที่แนวเขตอุทยาน", rules.ground_cameras) if rules.ground_cameras > 0 else "ไม่มี", rules.ground_cameras > 0)
+	_stat("เจ้าหน้าที่เดินตรวจ", L10n.format("%d นาย · 15:30–18:30", rules.ranger_count) if rules.ranger_count > 0 else "ไม่มี", rules.ranger_count > 0)
 	_stat("ความเข้มงวดของป่าอนุรักษ์", "×%.1f" % cfg.national_park_strictness, cfg.national_park_strictness > 1.5)
-	_stat("เกณฑ์ดาวเทียม VIIRS", "%d TU · ถูกจับได้ เพ่งเล็ง +%d–%d" % [roundi(rules.satellite_threshold), rules.hotspot_penalty, rules.hotspot_penalty * 2])
+	_stat("เกณฑ์ดาวเทียม VIIRS", L10n.format("%d TU · ถูกจับได้ เพ่งเล็ง +%d–%d", [roundi(rules.satellite_threshold), rules.hotspot_penalty, rules.hotspot_penalty * 2]))
 	_stat("ภัยแล้งเร่งไฟ", "+%d%%" % roundi((rules.spread_mult - 1.0) * 100.0), rules.spread_mult > 1.0)
 
 	for c in goal_rows.get_children():
 		goal_rows.remove_child(c)
 		c.queue_free()
 	var start = UITheme.clock_text(state.labour_delay_minutes())
-	_goal("clock", UITheme.STRAW, "เผาในหน้าต่างเงาดาวเทียม %s–20:00 น." % start)
-	_goal("rice", UITheme.EMERALD, "เผาให้ได้เถ้า ≥%d%% ของแปลง ข้าวจึงจะเต็มยุ้ง" % (65 if state.has_favour(GameState.Favour.SEEDS) else 75))
-	_goal("satellite", UITheme.STATE, "ก่อน 20:00 ดับทุกจุดที่ร้อนตั้งแต่ %d TU ไม่ให้ VIIRS เห็น" % roundi(rules.satellite_threshold))
-	_goal("crew", UITheme.STRAW, "ตาโพถางแนวกันไฟ%s · มูนอตามดับถ่าน" % (" และฉีดน้ำได้" if state.has_favour(GameState.Favour.SPRAYER) else ""))
+	_goal("clock", UITheme.STRAW, L10n.format("เผาในหน้าต่างเงาดาวเทียม %s–20:00 น.", start))
+	_goal("rice", UITheme.EMERALD, L10n.format("เผาให้ได้เถ้า ≥%d%% ของแปลง ข้าวจึงจะเต็มยุ้ง", (65 if state.has_favour(GameState.Favour.SEEDS) else 75)))
+	_goal("satellite", UITheme.STATE, L10n.format("ก่อน 20:00 ดับทุกจุดที่ร้อนตั้งแต่ %d TU ไม่ให้ VIIRS เห็น", roundi(rules.satellite_threshold)))
+	_goal("crew", UITheme.STRAW, L10n.format("ตาโพถางแนวกันไฟ%s · มูนอตามดับถ่าน", (" และฉีดน้ำได้" if state.has_favour(GameState.Favour.SPRAYER) else "")))
 
-	workshop_label.text = "มีดพร้า: ระดับ %d/3 · ถางแนวกันไฟเร็วขึ้น %d%%\nซีลถังพ่นน้ำ: ระดับ %d/3 · ใช้น้ำ %.2f ลิตรต่อครั้ง" % [
+	workshop_label.text = L10n.format("มีดพร้า: ระดับ %d/3 · ถางแนวกันไฟเร็วขึ้น %d%%\nซีลถังพ่นน้ำ: ระดับ %d/3 · ใช้น้ำ %.2f ลิตรต่อครั้ง", [
 		state.blade_upgrade_level, state.blade_upgrade_level * 20,
 		state.sprayer_upgrade_level, 1.0 - 0.15 * state.sprayer_upgrade_level
-	]
+	])
 	sharpen_button.disabled = state.blade_upgrade_level >= 3 or not state.can_afford_upgrade()
 	seal_button.disabled = state.sprayer_upgrade_level >= 3 or not state.can_afford_upgrade()
 
@@ -499,27 +493,27 @@ func _refresh() -> void:
 		var b: Button = ration_buttons[level]
 		b.set_pressed_no_signal(state.ration_level == level)
 		b.disabled = not state.can_afford_ration(level)
-	granary_label.text = "อดอยากเมื่อข้าวในยุ้งต่ำกว่า %d%%\n%s — %s\nเผาครั้งก่อนได้เถ้า %.0f%% → %s" % [
+	granary_label.text = L10n.format("อดอยากเมื่อข้าวในยุ้งเหลือ %d%% หรือน้อยกว่า\n%s — %s\nเผาครั้งก่อนได้เถ้า %.0f%% → %s", [
 		roundi(GameState.FAMINE_THRESHOLD),
 		GameState.RATION_NAMES[state.ration_level], RATION_EFFECTS[state.ration_level],
 		state.last_burn_yield, _yield_outlook(state),
-	]
+	])
 
 	# Mutual aid exchange
 	for f in favour_buttons:
 		favour_buttons[f].set_pressed_no_signal(state.has_favour(f))
-	exchange_label.text = "เอาแรงแต่ละครั้งกินเวลาเผาพรุ่งนี้ %d นาที%s · เริ่มเผา %s" % [
+	exchange_label.text = L10n.format("เอาแรงแต่ละครั้งกินเวลาเผาพรุ่งนี้ %d นาที%s · เริ่มเผา %s", [
 		state.favour_minutes(),
 		" (ด่านทหารทำให้เดินทางช้าลง)" if rules.checkpoints else "",
 		start,
-	]
-	launch_button.text = "เดินขึ้นไร่ · เริ่มเผา %s น." % start
+	])
+	launch_button.text = L10n.format("เดินขึ้นไร่ · เริ่มเผา %s น.", start)
 	# Autosave: every Hearth change is kept, so quitting never loses the campaign
 	SaveGame.save(state)
 
 func _yield_outlook(state: Node) -> String:
 	var seeds = state.has_favour(GameState.Favour.SEEDS)
-	return "≥%d%% ข้าวเต็มยุ้ง ต่ำกว่า 60%% หมายถึงความหิว" % (65 if seeds else 75)
+	return L10n.format("≥%d%% ข้าวเต็มยุ้ง ต่ำกว่า 60%% หมายถึงความหิว", (65 if seeds else 75))
 
 # ---------------------------------------------------------------------------
 # Radio
@@ -544,23 +538,23 @@ func _tune_radio(channel: int, with_sound: bool = true) -> void:
 		1:
 			var lines = PackedStringArray()
 			for l in rules.headlines():
-				lines.append("· " + l)
-			radio_text.text = """[FM 88.5 MHz · กรมป่าไม้]
+				lines.append(L10n.concat(["· ", l]))
+			radio_text.text = L10n.format("""[FM 88.5 MHz · กรมป่าไม้]
 “...สถานี 4 ถึงทุกหน่วย มาตรการห้ามเผาเด็ดขาดมีผลทั่วทั้งลุ่มน้ำ พื้นที่เฝ้าระวังพรุ่งนี้: %s...”
 
-%s""" % [cfg.name.get_slice(":", 0), "\n".join(lines)]
+%s""", [cfg.name.get_slice(":", 0), L10n.join(lines)])
 		2:
 			var wind_dir = UITheme.cardinal_th(state.forecast_wind_direction())
 			var storm = "\nเมฆฝนฟ้าคะนองก่อตัวเหนือสันดอย พายุก่อนมรสุมจะมาถึงช่วงค่ำ" if cfg.storm_front else ""
 			var gusty = " ลมกระโชกแปรปรวนบนสันดอยที่เปิดโล่ง" if cfg.wind_shift_interval.x < 50.0 else ""
-			radio_text.text = """[FM 94.2 MHz · พยากรณ์อากาศบนดอย]
-“...ความชื้นสัมพัทธ์ %d%% ลมหุบเขาช่วงบ่ายพัดไปทาง%s แรง ×%.1f%s คาดว่าลมจะเปลี่ยนทิศทุก %d–%d นาที ชั้นอากาศผกผันจะกดควันไว้ติดพื้นตั้งแต่พระอาทิตย์ตก 18:00 น....”%s""" % [
+			radio_text.text = L10n.format("""[FM 94.2 MHz · พยากรณ์อากาศบนดอย]
+“...ความชื้นสัมพัทธ์ %d%% ลมหุบเขาช่วงบ่ายพัดไปทาง%s แรง ×%.1f%s คาดว่าลมจะเปลี่ยนทิศทุก %d–%d นาที ชั้นอากาศผกผันจะกดควันไว้ติดพื้นตั้งแต่พระอาทิตย์ตก 18:00 น....”%s""", [
 				rules.humidity_pct, wind_dir, cfg.wind_base_speed, gusty,
 				roundi(cfg.wind_shift_interval.x / 1.5), roundi(cfg.wind_shift_interval.y / 1.5), storm,
-			]
+			])
 		3:
-			radio_text.text = """[FM 101.0 MHz · เตหน่ากูและเพลงพื้นบ้านปกาเกอะญอ]
-“...(เสียงเตหน่ากูเจ็ดสายกับแคนไม้ไผ่ดังก้องในกระท่อม)... ผู้เฒ่าเตือนเราว่า: %s”""" % PROVERBS[(state.current_year + state.current_plot_index) % PROVERBS.size()]
+			radio_text.text = L10n.format("""[FM 101.0 MHz · เตหน่ากูและเพลงพื้นบ้านปกาเกอะญอ]
+“...(เสียงเตหน่ากูเจ็ดสายกับแคนไม้ไผ่ดังก้องในกระท่อม)... ผู้เฒ่าเตือนเราว่า: %s”""", PROVERBS[(state.current_year + state.current_plot_index) % PROVERBS.size()])
 
 ## Recorded broadcast lines over the static: one when tuning, then while listening.
 ## Channel 3 is music and stays voiceless.
@@ -576,7 +570,8 @@ func _start_chatter() -> void:
 
 func _can_chatter() -> bool:
 	return AudioManager.instance != null and current_radio_channel != 3 \
-		and AudioManager.instance.has_radio_voice(current_radio_channel)
+		and AudioManager.instance.has_radio_voice(current_radio_channel) \
+		and not is_instance_valid(_harvest_modal)
 
 func _on_chatter_timeout() -> void:
 	if not _can_chatter() or chatter_timer == null:
@@ -634,6 +629,12 @@ func _on_launch_pressed() -> void:
 # ---------------------------------------------------------------------------
 
 func _show_harvest(h: Dictionary) -> void:
+	# The annual report owns attention; delay background broadcast chatter until
+	# it closes, so a radio caption cannot obscure the report's pinned action.
+	if chatter_timer:
+		chatter_timer.stop()
+	if AudioManager.instance:
+		AudioManager.instance.play_hearth_music(current_radio_channel == 3)
 	_harvest_modal = Control.new()
 	_harvest_modal.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(_harvest_modal)
@@ -646,18 +647,29 @@ func _show_harvest(h: Dictionary) -> void:
 	card.padding = Vector4(28, 24, 28, 26)
 	card.chamfer = 16.0
 	card.set_anchors_preset(Control.PRESET_CENTER)
-	card.custom_minimum_size = Vector2(680, 0)
+	_harvest_card = card
 	card.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	card.grow_vertical = Control.GROW_DIRECTION_BOTH
 	_harvest_modal.add_child(card)
+	var frame = UITheme.vbox(12)
+	card.add_child(frame)
+	_harvest_scroll = ScrollContainer.new()
+	_harvest_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_harvest_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_harvest_scroll.focus_mode = Control.FOCUS_ALL
+	_harvest_scroll.follow_focus = true
+	frame.add_child(_harvest_scroll)
 	var box = UITheme.vbox(12)
-	card.add_child(box)
+	_harvest_content = box
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_harvest_scroll.add_child(box)
 
 	# A poor harvest can tip the barn into famine: the campaign ends here, it does
 	# not carry on unsaved (audit finding 1)
 	var over = GameState.instance.is_game_over()
-	box.add_child(UITheme.header("rice", "เก็บเกี่ยวหน้ามรสุม · ปีที่ %d" % h.year, UITheme.EMERALD))
-	var title = UITheme.wrap(UITheme.label("ฝนมาแล้ว แต่ข้าวที่ได้ไม่พอกินถึงปีหน้า" if over else "ฝนมาแล้ว ข้าวไร่งอกงามในแปลงเถ้า", "Title"))
+	var famine = GameState.instance.end_cause() == "famine"
+	box.add_child(UITheme.header("rice", L10n.format("เก็บเกี่ยวหน้ามรสุม · ปีที่ %d", h.year), UITheme.EMERALD))
+	var title = UITheme.wrap(UITheme.label("ฝนมาแล้ว แต่ข้าวที่ได้ไม่พอกินถึงปีหน้า" if famine else "ฝนมาแล้ว ข้าวไร่งอกงามในแปลงเถ้า", "Title"))
 	title.add_theme_font_size_override("font_size", 26)
 	box.add_child(title)
 
@@ -670,51 +682,102 @@ func _show_harvest(h: Dictionary) -> void:
 		tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var tb = UITheme.vbox(0)
 		tile.add_child(tb)
-		tb.add_child(UITheme.label("แปลง %d" % (i + 1), "Small"))
+		tb.add_child(UITheme.label(L10n.format("แปลง %d", (i + 1)), "Small"))
 		var v = UITheme.label("%.0f%%" % h.yields[i], "Title", UITheme.EMERALD if h.yields[i] >= 60.0 else UITheme.STRAW)
 		tb.add_child(v)
 		yields.add_child(tile)
 
-	box.add_child(UITheme.wrap(UITheme.label("เถ้าเฉลี่ยทั้งฤดู %.0f%%  →  ยุ้งข้าว %+.0f%%\nฝนมรสุมชะความเพ่งเล็งของรัฐออกไป %d" % [h.average, h.rice_delta, h.scrutiny_relief], "Body")))
+	box.add_child(UITheme.wrap(UITheme.label(L10n.format("เถ้าเฉลี่ยทั้งฤดู %.0f%%  →  ยุ้งข้าว %+.0f%%\nฝนมรสุมชะความเพ่งเล็งของรัฐออกไป %d", [h.average, h.rice_delta, h.scrutiny_relief]), "Body")))
 
 	var news = PackedStringArray()
 	for l in h.next_rules:
-		news.append("· " + l)
+		news.append(L10n.concat(["· ", l]))
 	var state_card = UITheme.card(UITheme.STATE_DEEP, UITheme.STATE, 320)
 	state_card.padding = Vector4(14, 10, 14, 12)
 	state_card.visible = not over # No next year to announce
 	box.add_child(state_card)
 	var sb = UITheme.vbox(4)
 	state_card.add_child(sb)
-	sb.add_child(UITheme.header("eye", "ปีที่ %d · สิ่งที่รัฐจะนำมา" % h.next_year, UITheme.STATE))
-	sb.add_child(UITheme.wrap(UITheme.label("\n".join(news), "Small", UITheme.CREAM)))
+	sb.add_child(UITheme.header("eye", L10n.format("ปีที่ %d · สิ่งที่รัฐจะนำมา", h.next_year), UITheme.STATE))
+	sb.add_child(UITheme.wrap(UITheme.label(L10n.join(news), "Small", UITheme.CREAM)))
 
 	if over:
-		var famine = GameState.instance.end_cause() == "famine"
-		var warn = UITheme.wrap(UITheme.label(("ข้าวในยุ้งเหลือ %.0f%% หลังเก็บเกี่ยว ต่ำกว่า %.0f%% · หมู่บ้านอดอยาก" % [GameState.instance.rice_barn, GameState.FAMINE_THRESHOLD]) if famine else "ความเพ่งเล็งถึง 100 · รัฐบุกหมู่บ้าน", "Title", UITheme.RUBY))
+		var warn = UITheme.wrap(UITheme.label((L10n.format("ข้าวในยุ้งเหลือ %.0f%% หลังเก็บเกี่ยว เกณฑ์อดอยากคือ %.0f%% หรือน้อยกว่า · หมู่บ้านอดอยาก", [GameState.instance.rice_barn, GameState.FAMINE_THRESHOLD])) if famine else "ความเพ่งเล็งถึง 100 · รัฐบุกหมู่บ้าน", "Title", UITheme.RUBY))
 		warn.add_theme_font_size_override("font_size", 20)
 		box.add_child(warn)
 	var close = Button.new()
 	close.theme_type_variation = "PrimaryButton"
-	close.text = "ดูบทสรุปของหมู่บ้าน" if over else "เริ่มปีที่ %d" % h.next_year
+	close.text = "ดูบทสรุปของหมู่บ้าน" if over else L10n.format("เริ่มปีที่ %d", h.next_year)
 	close.custom_minimum_size = Vector2(0, 50)
 	close.pressed.connect(_end_campaign if over else _close_harvest)
 	harvest_button = close
-	box.add_child(close)
+	frame.add_child(close)
+	close.focus_next = close.get_path_to(_harvest_scroll)
+	close.focus_previous = close.focus_next
+	close.focus_neighbor_left = close.focus_next
+	close.focus_neighbor_right = close.focus_next
+	_harvest_scroll.focus_next = _harvest_scroll.get_path_to(close)
+	_harvest_scroll.focus_previous = _harvest_scroll.focus_next
+	_harvest_scroll.focus_neighbor_left = _harvest_scroll.focus_next
+	_harvest_scroll.focus_neighbor_right = _harvest_scroll.focus_next
+	_harvest_focus_scope = ModalFocusScope.begin(_harvest_modal)
 	close.grab_focus()
+	_fit_harvest_layout.call_deferred()
 
 	# On a campaign end the Ending scene plays the stinger; the card stays quiet
 	if AudioManager.instance and not over:
 		AudioManager.instance.play_harvest_chime()
 
+func _fit_harvest_layout() -> void:
+	if not is_instance_valid(_harvest_card):
+		return
+	# Only the narrative body scrolls. The continue/ending action stays visible.
+	var width = minf(680.0, maxf(300.0, size.x - 48.0))
+	var height = minf(640.0, maxf(240.0, size.y - 40.0))
+	_harvest_card.offset_left = -width * 0.5
+	_harvest_card.offset_right = width * 0.5
+	_harvest_card.offset_top = -height * 0.5
+	_harvest_card.offset_bottom = height * 0.5
+
+func _input(event: InputEvent) -> void:
+	if not is_instance_valid(_harvest_modal) or not is_instance_valid(_harvest_scroll):
+		return
+	var focus = get_viewport().gui_get_focus_owner()
+	if focus != harvest_button and focus != _harvest_scroll:
+		return
+	# The body has no buttons. D-pad/arrows scroll it while Enter/A remains on
+	# the fixed action; Tab cycles the two focus targets within the modal.
+	var delta = 0
+	if event.is_action_pressed("ui_down", true):
+		delta = 72
+	elif event.is_action_pressed("ui_up", true):
+		delta = -72
+	elif event is InputEventKey and event.pressed:
+		if event.keycode == KEY_PAGEDOWN:
+			delta = int(_harvest_scroll.size.y * 0.85)
+		elif event.keycode == KEY_PAGEUP:
+			delta = -int(_harvest_scroll.size.y * 0.85)
+	if delta != 0:
+		_harvest_scroll.scroll_vertical += delta
+		get_viewport().set_input_as_handled()
+
 func _end_campaign() -> void:
+	if is_instance_valid(_harvest_focus_scope):
+		_harvest_focus_scope.release()
 	GameState.instance.pending_harvest = {}
 	get_tree().change_scene_to_file(ENDING_SCENE)
 
 func _close_harvest() -> void:
 	GameState.instance.pending_harvest = {}
+	if is_instance_valid(_harvest_focus_scope):
+		_harvest_focus_scope.release()
+		_harvest_focus_scope = null
 	if _harvest_modal:
 		_harvest_modal.queue_free()
 		_harvest_modal = null
+		_harvest_card = null
+		_harvest_scroll = null
+		_harvest_content = null
 	launch_button.grab_focus()
+	_start_chatter()
 	_refresh()

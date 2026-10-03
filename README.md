@@ -17,10 +17,11 @@ you and your crew (ขะแน, the elder ตาโพ and the young มูน�
 burn the plot, and cool every ember before the **20:00 VIIRS pass**. Burn too
 little and the village goes hungry. Leave a hotspot and the state comes.
 
-The game is in **Thai** and built with **Godot 4.7**.
+The game supports **Thai and English** interface text, subtitles and recorded
+speech. Choose the language in Settings. It is built with **Godot 4.7.2**.
 
-> Status: in development, preparing the first playtest build. See
-> [`PRD_UPDATE_v1.1.md`](PRD_UPDATE_v1.1.md) for what's left.
+> Status: free playtest beta. Beta 3 / 0.3.0 is being qualified;
+> see [`release audit`](docs/RELEASE_BETA3.md) for exact build/publication status.
 
 ## Run it from source
 
@@ -34,14 +35,17 @@ The game is in **Thai** and built with **Godot 4.7**.
 ## Playtest builds
 
 ```bash
-tools/build.sh            # macOS, Linux (Steam Deck) and Windows into build/<date>-<commit>/
+tools/build.sh            # macOS, Linux and Windows into a fresh build/<date-time>-<commit>-<run>/
 tools/build.sh Linux      # one platform
 ```
 
 These need Godot 4.7.2 export templates (Editor → Manage Export Templates).
-The macOS build is ad-hoc signed, not notarised. On first launch, right-click
-the app and choose **Open**, or run
-`xattr -dr com.apple.quarantine "Under Two Skies.app"`.
+Commit runtime source/assets before exporting. The build script rejects engine
+errors and records its exact source revision. Exported macOS ZIPs are initially
+ad-hoc signed; qualify the candidate, then run `tools/notarize_mac.sh <zip>`
+with the existing Developer ID and `undertwoskies-notary` keychain profile.
+Publish only the resulting notarized ZIP after Gatekeeper verification.
+Windows is unsigned; native Windows and Steam Deck testing remain release limits.
 
 Testers' play is logged to `playtest_log.csv` in the game's user folder
 (Settings → เปิดโฟลเดอร์บันทึกการเล่น). Tester tools (F3 info, F5–F10 time skips

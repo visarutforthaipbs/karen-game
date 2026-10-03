@@ -1,0 +1,182 @@
+{
+  "tapoh_wind_warning.wav": {
+    "speaker": "ตาโพ",
+    "speaker_en": "Ta-poh",
+    "th": "ลมกำลังจะเปลี่ยนทิศ ระวังไฟลามกลับมาทางเรา",
+    "en": "Wind is about to turn. Watch for fire spreading back toward us."
+  },
+  "tapoh_wind_warning_2.wav": {
+    "speaker": "ตาโพ",
+    "speaker_en": "Ta-poh",
+    "th": "ลมหุบเขาจะกลับทิศเร็ว ๆ นี้ เร่งทำแนวกันไฟก่อนเลย",
+    "en": "The valley wind will reverse soon. Finish the firebreak first."
+  },
+  "tapoh_wind_warning_3.wav": {
+    "speaker": "ตาโพ",
+    "speaker_en": "Ta-poh",
+    "th": "ลมกำลังเปลี่ยนทิศ ย้ายออกจากท้ายไฟก่อน",
+    "en": "The wind is turning. Move clear of the back of the fire."
+  },
+  "radio_ch1_01.wav": {
+    "speaker": "เจ้าหน้าที่ป่าไม้",
+    "speaker_en": "Forestry officer",
+    "th": "สถานีสี่ถึงทุกหน่วย มาตรการห้ามเผาเด็ดขาดมีผลทั่วทั้งลุ่มน้ำ",
+    "en": "Station Four to all units: a total burning ban is in force throughout the watershed."
+  },
+  "radio_ch1_02.wav": {
+    "speaker": "เจ้าหน้าที่ป่าไม้",
+    "speaker_en": "Forestry officer",
+    "th": "เจ้าหน้าที่ชุดลาดตระเวน เข้าประจำจุดแนวชายป่าสงวนแล้ว",
+    "en": "Patrol officers are now stationed along the forest reserve boundary."
+  },
+  "radio_ch1_03.wav": {
+    "speaker": "เจ้าหน้าที่ป่าไม้",
+    "speaker_en": "Forestry officer",
+    "th": "หากพบจุดความร้อนในเขตอุทยาน จะดำเนินคดีโดยไม่มีข้อยกเว้น",
+    "en": "Any hot spot detected inside the national park will lead to prosecution, without exception."
+  },
+  "radio_ch1_04.wav": {
+    "speaker": "เจ้าหน้าที่ป่าไม้",
+    "speaker_en": "Forestry officer",
+    "th": "อากาศยานไร้คนขับจะขึ้นบินสำรวจหุบเขาตั้งแต่บ่ายสามโมง",
+    "en": "Drones will begin surveying the valley at three this afternoon."
+  },
+  "radio_ch1_05.wav": {
+    "speaker": "เจ้าหน้าที่ป่าไม้",
+    "speaker_en": "Forestry officer",
+    "th": "ด่านตรวจบนถนนสายเชียงใหม่แม่ฮ่องสอน ตั้งจุดสกัดยานพาหนะทุกคัน",
+    "en": "Checkpoints on the Chiang Mai–Mae Hong Son road are stopping every vehicle."
+  },
+  "radio_ch1_06.wav": {
+    "speaker": "เจ้าหน้าที่ป่าไม้",
+    "speaker_en": "Forestry officer",
+    "th": "ประกาศจากอธิบดี พื้นที่เฝ้าระวังพิเศษคือแนวรอยต่อป่าอนุรักษ์",
+    "en": "Announcement from the Director-General. Special surveillance focuses on the protected forest boundary."
+  },
+  "radio_ch1_07.wav": {
+    "speaker": "เจ้าหน้าที่ป่าไม้",
+    "speaker_en": "Forestry officer",
+    "th": "หมู่บ้านใดพบการเผาในพื้นที่ต้องห้าม จะถูกตัดสิทธิ์การสนับสนุนทั้งหมด",
+    "en": "Any village found burning in a prohibited area will lose all support."
+  },
+  "radio_ch1_08.wav": {
+    "speaker": "เจ้าหน้าที่ป่าไม้",
+    "speaker_en": "Forestry officer",
+    "th": "สถานีสี่เรียกห้า ได้ยินตอบรับด้วย",
+    "en": "Station Four calling Five. Please acknowledge."
+  },
+  "radio_ch2_01.wav": {
+    "speaker": "วิทยุพยากรณ์อากาศ",
+    "speaker_en": "Weather radio",
+    "th": "ความชื้นในอากาศต่ำลงเรื่อย ๆ ลมหุบเขาจะพัดแรงขึ้นในช่วงบ่าย",
+    "en": "Air humidity keeps falling. Valley winds will strengthen this afternoon."
+  },
+  "radio_ch2_02.wav": {
+    "speaker": "วิทยุพยากรณ์อากาศ",
+    "speaker_en": "Weather radio",
+    "th": "ชั้นอากาศผกผันจะกดควันให้ติดพื้นตั้งแต่พระอาทิตย์ตก",
+    "en": "A temperature inversion will trap smoke near the ground from sunset."
+  },
+  "radio_ch2_03.wav": {
+    "speaker": "วิทยุพยากรณ์อากาศ",
+    "speaker_en": "Weather radio",
+    "th": "เมฆฝนฟ้าคะนองก่อตัวเหนือสันดอย อาจเคลื่อนถึงพื้นที่ก่อนค่ำ",
+    "en": "Thunderclouds are forming above the ridge and may reach us before dusk."
+  },
+  "radio_ch2_04.wav": {
+    "speaker": "วิทยุพยากรณ์อากาศ",
+    "speaker_en": "Weather radio",
+    "th": "ลมบนสันดอยแปรปรวนตลอดทั้งวัน ระวังการลามของไฟในที่โล่ง",
+    "en": "Ridge winds will shift throughout the day. Watch for fire spreading in open ground."
+  },
+  "radio_ch2_05.wav": {
+    "speaker": "วิทยุพยากรณ์อากาศ",
+    "speaker_en": "Weather radio",
+    "th": "อุณหภูมิจะลดลงอย่างรวดเร็วหลังตะวันตกดิน ควันจะหนาขึ้น",
+    "en": "Temperatures will fall quickly after sunset. Smoke will thicken."
+  },
+  "radio_ch2_06.wav": {
+    "speaker": "วิทยุพยากรณ์อากาศ",
+    "speaker_en": "Weather radio",
+    "th": "พยากรณ์สำหรับพรุ่งนี้ ท้องฟ้าโปร่งและแห้งแล้งต่อเนื่อง",
+    "en": "Tomorrow’s forecast: clear skies and continued dry weather."
+  },
+  "bark_rally_reply.wav": {
+    "speaker": "ตาโพ",
+    "speaker_en": "Ta-poh",
+    "th": "ได้ยินแล้ว กำลังไป",
+    "en": "Heard you. On my way."
+  },
+  "bark_rally_reply_2.wav": {
+    "speaker": "ตาโพ",
+    "speaker_en": "Ta-poh",
+    "th": "มาแล้ว ระวังท้ายไฟด้วย",
+    "en": "Coming! Watch the back of the fire."
+  },
+  "ta_poh_call.wav": {
+    "speaker": "ตาโพ",
+    "speaker_en": "Ta-poh",
+    "th": "ระวังไฟ!",
+    "en": "Watch the fire!"
+  },
+  "bark_embers.wav": {
+    "speaker": "มูนอ",
+    "speaker_en": "Mu-naw",
+    "th": "ลูกไฟ! ระวังแนวป่า",
+    "en": "Flying embers! Watch the forest edge."
+  },
+  "bark_embers_2.wav": {
+    "speaker": "มูนอ",
+    "speaker_en": "Mu-naw",
+    "th": "ลูกไฟข้ามแนวแล้ว!",
+    "en": "An ember crossed the firebreak!"
+  },
+  "bark_spot_fire.wav": {
+    "speaker": "มูนอ",
+    "speaker_en": "Mu-naw",
+    "th": "ไฟตกในป่า! รีบดับก่อนลาม",
+    "en": "Fire in the forest! Put it out before it spreads."
+  },
+  "bark_spot_fire_2.wav": {
+    "speaker": "มูนอ",
+    "speaker_en": "Mu-naw",
+    "th": "ไฟติดชายป่าแล้ว!",
+    "en": "The forest edge is burning!"
+  },
+  "bark_fire_out.wav": {
+    "speaker": "มูนอ",
+    "speaker_en": "Mu-naw",
+    "th": "ดับแล้ว",
+    "en": "It’s out."
+  },
+  "bark_fire_out_2.wav": {
+    "speaker": "มูนอ",
+    "speaker_en": "Mu-naw",
+    "th": "ตรงนี้ดับแล้ว",
+    "en": "This spot is out."
+  },
+  "bark_report_flame.wav": {
+    "speaker": "เจ้าหน้าที่ป่าไม้",
+    "speaker_en": "Forestry officer",
+    "th": "ศูนย์ครับ พบเปลวไฟในแปลง บันทึกพิกัดแล้ว",
+    "en": "Control, flames detected in a field. Coordinates recorded."
+  },
+  "bark_report_crew.wav": {
+    "speaker": "เจ้าหน้าที่ป่าไม้",
+    "speaker_en": "Forestry officer",
+    "th": "ศูนย์ครับ พบชาวบ้านทำงานในแปลง บันทึกการตรวจแล้ว",
+    "en": "Control, villagers found working in a field. Inspection recorded."
+  },
+  "bark_maelu_1.wav": {
+    "speaker": "แม่ลู",
+    "speaker_en": "Mae-Lu",
+    "th": "แบ่งข้าวไว้ให้พอกินถึงหน้าฝนนะลูก",
+    "en": "Save enough rice to last until the rains, dear."
+  },
+  "bark_maelu_2.wav": {
+    "speaker": "แม่ลู",
+    "speaker_en": "Mae-Lu",
+    "th": "ปีนี้หนักหน่อย แต่เราช่วยกันได้",
+    "en": "It’s a hard year, but we can help each other."
+  }
+}

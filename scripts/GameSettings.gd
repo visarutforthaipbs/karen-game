@@ -31,6 +31,10 @@ static var player_name: String = "ขะแน"
 static var online_board: bool = false
 static var client_id: String = ""
 static var client_secret: String = ""
+## Thai remains the default for existing saves; language never changes save data.
+static var locale: String = "th"
+## Profile-level context film; starting a new campaign must not reset this.
+static var intro_seen: bool = false
 static var _loaded: bool = false
 
 static func _path() -> String:
@@ -43,12 +47,29 @@ static func ensure_loaded() -> void:
 
 static func load_settings() -> void:
 	_loaded = true
+	# Loading a different/missing settings file must not inherit a previous
+	# player's opt-in identity or preferences (also used by isolated QA runs).
+	locale = "th"
+	intro_seen = false
+	fullscreen = false
+	ui_scale = 1.0
+	camera_zoom = 44.0
+	show_hints = true
+	first_burn_tips = true
+	landscape_detail = "high"
+	debug_tools = false
+	player_name = SaveGame.DEFAULT_NAME
+	online_board = false
+	client_id = ""
+	client_secret = ""
 	volumes.clear()
 	for b in VOLUME_BUSES:
 		volumes[b[0]] = 1.0
 	var cfg = ConfigFile.new()
 	if cfg.load(_path()) != OK:
 		return
+	locale = L10n.validated_locale(str(cfg.get_value("accessibility", "locale", "th")))
+	intro_seen = bool(cfg.get_value("onboarding", "intro_seen", false))
 	for b in VOLUME_BUSES:
 		volumes[b[0]] = clampf(float(cfg.get_value("audio", b[0], 1.0)), 0.0, 1.0)
 	fullscreen = bool(cfg.get_value("display", "fullscreen", false))
@@ -65,6 +86,8 @@ static func load_settings() -> void:
 
 static func save_settings() -> void:
 	var cfg = ConfigFile.new()
+	cfg.set_value("accessibility", "locale", L10n.validated_locale(locale))
+	cfg.set_value("onboarding", "intro_seen", intro_seen)
 	for b in VOLUME_BUSES:
 		cfg.set_value("audio", b[0], volumes.get(b[0], 1.0))
 	cfg.set_value("display", "fullscreen", fullscreen)
@@ -83,6 +106,7 @@ static func save_settings() -> void:
 ## Push the current values to the mixer, window and UI scale
 static func apply(tree: SceneTree) -> void:
 	ensure_loaded()
+	L10n.set_locale(locale)
 	for bus in volumes:
 		var idx = AudioServer.get_bus_index(bus)
 		if idx != -1:

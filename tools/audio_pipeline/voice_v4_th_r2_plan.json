@@ -1,0 +1,149 @@
+{
+  "output_directory": "artifacts/audio_voice_v4_20261003/th_r2",
+  "credit_cap": 1000,
+  "language_code": "tha",
+  "max_cer": 0.0,
+  "purpose": "Fresh v4 takes for transcript mismatches only; retain canonical wording, speaker and previous rejected evidence.",
+  "jobs": [
+    {
+      "id": "v4_th_opening_th_intro_05__r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "เปลวไฟดับแล้ว แต่ถ่านข้างใต้ยังร้อน ต้องฉีดน้ำให้ถ่านคุเย็นลง งานของเราจึงจะเสร็จ",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_05.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "เปลวไฟดับแล้ว แต่ถ่านข้างใต้ยังร้อน ต้องฉีดน้ำให้ถ่านคุเย็นลง งานของเราจึงจะเสร็จ"
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_th_r3.json",
+        "id": "intro_th_05_r3",
+        "sha256": "65e343c31634da9730d8240892cbfcbdbff2aff5635fc17f18401cab78d91ae0"
+      }
+    },
+    {
+      "id": "v4_th_ta_poh_call__r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ระวังไฟ!",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "ta_poh_call.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ระวังไฟ!"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "ta_poh_call",
+        "sha256": "885fe00671de8b95f41692460f909e6655cd7b8b27fea6ec8daeb8ab8fdf85d9"
+      }
+    },
+    {
+      "id": "v4_th_tapoh_wind_warning__r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ลมกำลังจะเปลี่ยนทิศ ระวังไฟลามกลับมาทางเรา",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "tapoh_wind_warning.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ลมกำลังจะเปลี่ยนทิศ ระวังไฟลามกลับมาทางเรา"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "tapoh_wind_warning",
+        "sha256": "c462a11660d7d1a760c35bfb2e577060238f529914081e0644cb1b8979350d98"
+      }
+    },
+    {
+      "id": "v4_th_tapoh_wind_warning_2__r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ลมหุบเขาจะกลับทิศเร็ว ๆ นี้ เร่งทำแนวกันไฟก่อนเลย",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "tapoh_wind_warning_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ลมหุบเขาจะกลับทิศเร็ว ๆ นี้ เร่งทำแนวกันไฟก่อนเลย"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/voice_plan.json",
+        "id": "tapoh_wind_warning_2",
+        "sha256": "8641238cbbee22174d13a082ac6f7ea19fb86773521288125eadf970a6c064ad"
+      }
+    },
+    {
+      "id": "v4_th_tapoh_wind_warning_3__r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ลมกำลังเปลี่ยนทิศ ย้ายออกจากท้ายไฟก่อน",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "th",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "tapoh_wind_warning_3.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ลมกำลังเปลี่ยนทิศ ย้ายออกจากท้ายไฟก่อน"
+      },
+      "previous": {
+        "plan": "tools/audio_pipeline/revision_plan.json",
+        "id": "tapoh_wind_warning_3_rev2",
+        "sha256": "40bd38fda5adea4952366fa084c2f0517172538d8245002e062bf40f04ed487f"
+      }
+    }
+  ]
+}

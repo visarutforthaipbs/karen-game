@@ -12,6 +12,13 @@ signal closed
 const SELF_COOL_DEADLINE = "17:16"
 
 var close_button: Button
+var replay_button: Button
+var _opening: OpeningFilm
+var guide_card: FacetCard
+var guide_scroll: ScrollContainer
+var guide_columns: GridContainer
+var controls_grid: GridContainer
+var _focus_scope: ModalFocusScope
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -22,6 +29,7 @@ func _ready() -> void:
 	add_child(dim)
 
 	var card = UITheme.card(Color(UITheme.PANEL, 0.98), UITheme.STRAW, 401)
+	guide_card = card
 	card.padding = Vector4(26, 20, 26, 22)
 	card.chamfer = 16.0
 	card.set_anchors_preset(Control.PRESET_CENTER)
@@ -29,8 +37,21 @@ func _ready() -> void:
 	card.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	card.grow_vertical = Control.GROW_DIRECTION_BOTH
 	add_child(card)
+	# Longer English instructions scroll without pushing the close button off screen.
+	var shell = UITheme.vbox(12)
+	card.add_child(shell)
+	var scroll = ScrollContainer.new()
+	guide_scroll = scroll
+	scroll.focus_mode = Control.FOCUS_ALL
+	scroll.gui_input.connect(_on_scroll_input)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.follow_focus = true
+	scroll.custom_minimum_size.y = minf(560.0, get_viewport().get_visible_rect().size.y - 156.0)
+	shell.add_child(scroll)
 	var page = UITheme.vbox(12)
-	card.add_child(page)
+	page.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(page)
 
 	var head = UITheme.hbox(14)
 	page.add_child(head)
@@ -43,7 +64,11 @@ func _ready() -> void:
 	lead.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	head.add_child(lead)
 
-	var cols = UITheme.hbox(16)
+	var cols = GridContainer.new()
+	guide_columns = cols
+	cols.columns = 2
+	cols.add_theme_constant_override("h_separation", 16)
+	cols.add_theme_constant_override("v_separation", 16)
 	page.add_child(cols)
 	var left = UITheme.vbox(10)
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -67,7 +92,7 @@ func _ready() -> void:
 	rule.add_child(rb)
 	rb.add_child(UITheme.header("flame", "กฎของถ่าน · สำคัญที่สุด", UITheme.EMBER))
 	rb.add_child(UITheme.wrap(UITheme.label("ไฟลุกราว 6 วินาที แล้วกลายเป็นถ่านคุ ถ่านเย็นเป็นเถ้าเองต้องใช้ราว 4 นาที (2 ชม. 40 นาทีในเกม)", "Small", UITheme.CREAM)))
-	rb.add_child(UITheme.wrap(UITheme.label("ไฟที่ลุกหลัง %s จะยังร้อนตอน 20:00 ต้องฉีดน้ำ" % SELF_COOL_DEADLINE, "Body", UITheme.STRAW)))
+	rb.add_child(UITheme.wrap(UITheme.label(L10n.format("ไฟที่ลุกหลัง %s จะยังร้อนตอน 20:00 ต้องฉีดน้ำ", SELF_COOL_DEADLINE), "Body", UITheme.STRAW)))
 	rb.add_child(UITheme.wrap(UITheme.label("ฉีดน้ำใส่ถ่านคุ = เป็นเถ้าทันที (ได้เถ้าและไม่มีจุดร้อน)\nอย่าฉีดเปลวไฟที่เพิ่งติด ไฟจะดับกลับเป็นพุ่มไม้ ไม่ได้เถ้า\nลูกไฟตกในป่าอุทยาน = มีเวลา 8 วินาทีให้ฉีดดับ ไม่งั้นนับว่าไฟลามเข้าป่า", "Small", UITheme.CREAM)))
 
 	var lose = UITheme.card(Color(UITheme.INK, 0.7), UITheme.RUBY, 403)
@@ -97,6 +122,7 @@ func _ready() -> void:
 	keys.add_child(kb)
 	kb.add_child(UITheme.header("crew", "ปุ่มควบคุม (คีย์บอร์ด / จอย)", UITheme.CREAM))
 	var grid = GridContainer.new()
+	controls_grid = grid
 	grid.columns = 2
 	grid.add_theme_constant_override("h_separation", 16)
 	grid.add_theme_constant_override("v_separation", 3)
@@ -113,18 +139,36 @@ func _ready() -> void:
 		["Z, C / ลูกศรลง", "หมุนกล้องทีละ 90°"],
 		["Tab / Select", "ซ่อน / แสดงแผงข้อมูล"],
 	]:
-		grid.add_child(UITheme.label(row[0], "Small", UITheme.STRAW))
-		grid.add_child(UITheme.label(row[1], "Small", UITheme.CREAM))
+		var key = UITheme.wrap(UITheme.label(row[0], "Small", UITheme.STRAW))
+		key.custom_minimum_size.x = 140
+		grid.add_child(key)
+		var meaning = UITheme.wrap(UITheme.label(row[1], "Small", UITheme.CREAM))
+		meaning.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		grid.add_child(meaning)
 
 	var foot = UITheme.hbox(0)
 	foot.alignment = BoxContainer.ALIGNMENT_CENTER
-	page.add_child(foot)
+	shell.add_child(foot)
+	replay_button = Button.new()
+	replay_button.text = "ดูเรื่องราวก่อนลงไร่อีกครั้ง"
+	replay_button.custom_minimum_size = Vector2(0, 48)
+	replay_button.pressed.connect(_replay_opening)
+	foot.add_child(replay_button)
 	close_button = Button.new()
 	close_button.theme_type_variation = "PrimaryButton"
 	close_button.text = "เข้าใจแล้ว"
 	close_button.custom_minimum_size = Vector2(320, 48)
 	close_button.pressed.connect(close)
 	foot.add_child(close_button)
+	scroll.focus_next = scroll.get_path_to(close_button)
+	scroll.focus_previous = scroll.get_path_to(replay_button)
+	close_button.focus_next = close_button.get_path_to(replay_button)
+	close_button.focus_previous = close_button.get_path_to(scroll)
+	replay_button.focus_next = replay_button.get_path_to(scroll)
+	replay_button.focus_previous = replay_button.get_path_to(close_button)
+	get_viewport().size_changed.connect(_fit_layout)
+	_fit_layout()
+	_focus_scope = ModalFocusScope.begin(self)
 	close_button.grab_focus()
 
 func _goal_tile(kind: String, tint: Color, kicker: String, goal: String, detail: String) -> FacetCard:
@@ -137,7 +181,7 @@ func _goal_tile(kind: String, tint: Color, kicker: String, goal: String, detail:
 	var g = UITheme.wrap(UITheme.label(goal, "Title", tint))
 	g.add_theme_font_size_override("font_size", 18)
 	b.add_child(g)
-	b.add_child(UITheme.label(detail, "Small", UITheme.CREAM))
+	b.add_child(UITheme.wrap(UITheme.label(detail, "Small", UITheme.CREAM)))
 	return tile
 
 func _step(parent: Control, when: String, what: String) -> void:
@@ -151,11 +195,56 @@ func _step(parent: Control, when: String, what: String) -> void:
 	d.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(d)
 
+## Larger UI text reduces the logical viewport; stack the two reading columns
+## and keep the fixed footer inside the screen without shrinking the text.
+func _fit_layout() -> void:
+	if not is_instance_valid(guide_card):
+		return
+	var area = get_viewport().get_visible_rect().size
+	var width = minf(1160.0, area.x - 48.0)
+	guide_columns.columns = 1 if width < 1080.0 else 2
+	guide_card.custom_minimum_size.x = width
+	guide_scroll.custom_minimum_size.y = maxf(160.0, minf(560.0, area.y - 156.0))
+	# Explicit bounds avoid stale center-anchor offsets when the UI scale changes.
+	guide_card.size = Vector2(width, guide_scroll.custom_minimum_size.y + 102.0)
+	guide_card.position = (area - guide_card.size) * 0.5
+
+## Tab/D-pad focus can enter the guide; arrows and page keys scroll its text.
+func _on_scroll_input(event: InputEvent) -> void:
+	var step = 0
+	if event.is_action_pressed("ui_down"):
+		step = 48
+	elif event.is_action_pressed("ui_up"):
+		step = -48
+	elif event is InputEventKey and event.pressed:
+		if event.keycode == KEY_PAGEDOWN:
+			step = int(guide_scroll.size.y * 0.8)
+		elif event.keycode == KEY_PAGEUP:
+			step = -int(guide_scroll.size.y * 0.8)
+		elif event.keycode == KEY_END:
+			step = int(guide_scroll.get_v_scroll_bar().max_value)
+		elif event.keycode == KEY_HOME:
+			step = -int(guide_scroll.get_v_scroll_bar().max_value)
+	if step != 0:
+		guide_scroll.scroll_vertical += step
+		guide_scroll.accept_event()
+
 func _unhandled_input(event: InputEvent) -> void:
+	if is_instance_valid(_opening):
+		return
 	if event.is_action_pressed("ui_cancel"):
 		close()
 		get_viewport().set_input_as_handled()
 
 func close() -> void:
+	if _focus_scope:
+		_focus_scope.release()
 	closed.emit()
 	queue_free()
+
+func _replay_opening() -> void:
+	if is_instance_valid(_opening):
+		return
+	_opening = OpeningFilm.new()
+	_opening.closed.connect(func(): _opening = null)
+	add_child(_opening)

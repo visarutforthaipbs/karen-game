@@ -79,6 +79,13 @@ func reset_campaign() -> void:
 	hotspot_log.clear()
 	pending_harvest = {}
 	last_breakdown = {}
+	last_burn_yield = 0.0
+	last_burn_hotspots = 0
+	last_burn_escaped = false
+	last_rice_change = 0.0
+	last_barn_target = 75.0
+	last_scrutiny_relief = 0
+	seen_how_to_play = false
 	stats = new_stats()
 	roll_forecast()
 

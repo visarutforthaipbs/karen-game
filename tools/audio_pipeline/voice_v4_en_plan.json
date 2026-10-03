@@ -1,0 +1,1103 @@
+{
+  "output_directory": "artifacts/audio_voice_v4_20261003/en",
+  "credit_cap": 8000,
+  "language_code": "eng",
+  "max_cer": 0.0,
+  "purpose": "Owner approved dry v4 narrator pilot and requested replacement of every old-model game voice on 2026-10-03. Preserve five speaker identities, subtitles and paths; no new clones/music/SFX.",
+  "jobs": [
+    {
+      "id": "v4_en_opening_en_intro_00",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Our home is part of this forest. We tend established fields in cycles.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_00.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Our home is part of this forest. We tend established fields in cycles."
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_en_r2.json",
+        "id": "intro_en_00_r2",
+        "sha256": "5094259e51ccd789dc1ce1899a6905b85e5867dfbc5a0815e45dbd643e029487"
+      }
+    },
+    {
+      "id": "v4_en_opening_en_intro_01",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "We grow rice for a season, then rest the field for years. Plants return while we farm another plot.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_01.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "We grow rice for a season, then rest the field for years. Plants return while we farm another plot."
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_en.json",
+        "id": "intro_en_01",
+        "sha256": "420bcac70341a47b5f59ad9c614d38a54ae9f94735756b04b8d41c4973b9fbe3"
+      }
+    },
+    {
+      "id": "v4_en_opening_en_intro_02",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Today we prepare a rice field together. Ash from plant residues returns some nutrients to the soil.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_02.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Today we prepare a rice field together. Ash from plant residues returns some nutrients to the soil."
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_en.json",
+        "id": "intro_en_02",
+        "sha256": "bba1c5621646137a1355a391bfcb50bfd57cb228d586e19aa511ead90bbf02b0"
+      }
+    },
+    {
+      "id": "v4_en_opening_en_intro_03",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Before lighting, clear leaves and branches to bare soil. The firebreak interrupts fuel between field and forest.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_03.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Before lighting, clear leaves and branches to bare soil. The firebreak interrupts fuel between field and forest."
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_en.json",
+        "id": "intro_en_03",
+        "sha256": "a3fae227eab1139a8a6a4c61f657e150f7f1c1a9b7438ba105ef1d61e14bd10a"
+      }
+    },
+    {
+      "id": "v4_en_opening_en_intro_04",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Embers can still fly across. Read the wind. Let your team help watch the forest edge.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_04.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Embers can still fly across. Read the wind. Let your team help watch the forest edge."
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_en.json",
+        "id": "intro_en_04",
+        "sha256": "c432ca3826578134733f1a10ec3f2bb8630b31beebc157e85dd6cabfc10b3fb8"
+      }
+    },
+    {
+      "id": "v4_en_opening_en_intro_05",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "The flames are gone. The ash is still hot. Douse the remaining embers.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_05.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "The flames are gone. The ash is still hot. Douse the remaining embers."
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_en.json",
+        "id": "intro_en_05",
+        "sha256": "95fc3ae1ae9bea85f5bea3dcb56b6be51b5eb9b8de4b4d4767ec072394399c8b"
+      }
+    },
+    {
+      "id": "v4_en_opening_en_intro_06",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "In this game, the satellite scans each evening. It sees hot spots, but not the lives beneath them.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_06.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "In this game, the satellite scans each evening. It sees hot spots, but not the lives beneath them."
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_en_r4.json",
+        "id": "intro_en_06_r4",
+        "sha256": "3856f47c5b5f745644dbf069ef7f7a6bba84bb0581b7ef96c35e4b4990ec861e"
+      }
+    },
+    {
+      "id": "v4_en_opening_en_intro_07",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Prepare the boundary. Control the fire. Cool the embers. Leave enough cooled ash, and no hot spots before the evening scan.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_07.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Prepare the boundary. Control the fire. Cool the embers. Leave enough cooled ash, and no hot spots before the evening scan."
+      },
+      "previous": {
+        "plan": "tools/onboarding/voice_en_r3.json",
+        "id": "intro_en_07_r3",
+        "sha256": "cc5bc7a50a3a31d9a37f6d0beec9de5b0ea5d637b131fe93d57c0597a9bf9d36"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_embers",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Flying embers! Watch the forest edge.",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_embers.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "Flying embers! Watch the forest edge."
+      },
+      "source_caption": "bark_embers.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_embers",
+        "sha256": "2651d56e72ccdc861010cc2e1164163c885b07728bba410243f9c3f64bf2cf10"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_embers_2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "An ember crossed the firebreak!",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_embers_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "An ember crossed the firebreak!"
+      },
+      "source_caption": "bark_embers_2.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_embers_2",
+        "sha256": "f1c4014a14d10650cdea381fafdd19c68e9b3a7eae686e367b28eafad34a0426"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_fire_out",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "It’s out.",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_fire_out.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "It’s out."
+      },
+      "source_caption": "bark_fire_out.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_fire_out",
+        "sha256": "de89a245716d511f8c76a0f9479ec98a4eef025b19009550474f5f3eeb340733"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_fire_out_2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "This spot is out.",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_fire_out_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "This spot is out."
+      },
+      "source_caption": "bark_fire_out_2.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_fire_out_2",
+        "sha256": "8285b434c84242496c19d4eeb4c541fbcec7be55c3c0ae59b5b53f5b81225e06"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_maelu_1",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Save enough rice to last until the rains, dear.",
+        "voice_id": "OSCkDOqeWrrCkMiFPGB3",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_maelu_1.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "maelu",
+        "text": "Save enough rice to last until the rains, dear."
+      },
+      "source_caption": "bark_maelu_1.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_maelu_1",
+        "sha256": "4de19df6d9df579c05688a563bdf1bd4dc3f1e1a58f39fba01968d17e1fd57da"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_maelu_2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "It’s a hard year, but we can help each other.",
+        "voice_id": "OSCkDOqeWrrCkMiFPGB3",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_maelu_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "maelu",
+        "text": "It’s a hard year, but we can help each other."
+      },
+      "source_caption": "bark_maelu_2.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_maelu_2",
+        "sha256": "949a80537b6b8110c149dade52ba94e3c7884b14a7b81f64260fb26cbce4567f"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_rally_reply",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Heard you. On my way.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_rally_reply.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Heard you. On my way."
+      },
+      "source_caption": "bark_rally_reply.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_rally_reply",
+        "sha256": "ceb9750fd9e3d93bf48fbe80c4ddf6485d650bb8e61c841c46b9d045abe5a474"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_rally_reply_2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Coming! Watch the back of the fire.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_rally_reply_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Coming! Watch the back of the fire."
+      },
+      "source_caption": "bark_rally_reply_2.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_rally_reply_2",
+        "sha256": "14620e6126e2d3082eb639d08cd0c1be4266991bfad189e951d2409014ac2efe"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_report_crew",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Control, villagers found working in a field. Inspection recorded.",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_report_crew.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "Control, villagers found working in a field. Inspection recorded."
+      },
+      "source_caption": "bark_report_crew.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_report_crew",
+        "sha256": "30347279e750c34978a6450598e74af204499608298c28c2f3db86c63b74d7b1"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_report_flame",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Control, flames detected in a field. Coordinates recorded.",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_report_flame.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "Control, flames detected in a field. Coordinates recorded."
+      },
+      "source_caption": "bark_report_flame.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_report_flame",
+        "sha256": "b3cae2d76c63ec9c6c3c58bb0f6f55b8752659be75fa26eeb86c988877b761fc"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_spot_fire",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Fire in the forest! Put it out before it spreads.",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_spot_fire.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "Fire in the forest! Put it out before it spreads."
+      },
+      "source_caption": "bark_spot_fire.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_spot_fire",
+        "sha256": "2eb71d96cc0085449bfbbb8391a829d30a75ac744646beb78bd8cf6c224d4460"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_spot_fire_2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "The forest edge is burning!",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_spot_fire_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "The forest edge is burning!"
+      },
+      "source_caption": "bark_spot_fire_2.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_spot_fire_2",
+        "sha256": "f6470a34968352fe313fcba43899bcfea55ddcbc74aae6df8941333a171c43c0"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch1_01",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Station Four to all units: a total burning ban is in force throughout the watershed.",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch1_01.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "Station Four to all units: a total burning ban is in force throughout the watershed."
+      },
+      "source_caption": "radio_ch1_01.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch1_01",
+        "sha256": "1dd63e3ae45f1c66629ac4f9540dda710698c1e9a76eccfcfc0e86e08c1434b2"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch1_02",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Patrol officers are now stationed along the forest reserve boundary.",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch1_02.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "Patrol officers are now stationed along the forest reserve boundary."
+      },
+      "source_caption": "radio_ch1_02.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch1_02",
+        "sha256": "3d02a3eef4d64156aaa0488ccc6e872bf8713064cc0b1f24e9ebb20d40252ba2"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch1_03",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Any hot spot detected inside the national park will lead to prosecution, without exception.",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch1_03.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "Any hot spot detected inside the national park will lead to prosecution, without exception."
+      },
+      "source_caption": "radio_ch1_03.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch1_03",
+        "sha256": "75a43efa0a27da6caba0a60adc7e37c948b1950521a3a2833af2683b52901ae2"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch1_04",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Drones will begin surveying the valley at three this afternoon.",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch1_04.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "Drones will begin surveying the valley at three this afternoon."
+      },
+      "source_caption": "radio_ch1_04.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch1_04",
+        "sha256": "ad13d99b3e4e4d908309a14aa37c91cd514d93a46e82f6dda7e893c9f2aa4da8"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch1_05",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Checkpoints on the Chiang Mai–Mae Hong Son road are stopping every vehicle.",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch1_05.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "Checkpoints on the Chiang Mai–Mae Hong Son road are stopping every vehicle."
+      },
+      "source_caption": "radio_ch1_05.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch1_05",
+        "sha256": "1e65785370f33df021b00781d9cdea007b60b354e51b7cd721bf2db6070329b8"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch1_06",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Announcement from the Director-General. Special surveillance focuses on the protected forest boundary.",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch1_06.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "Announcement from the Director-General. Special surveillance focuses on the protected forest boundary."
+      },
+      "source_caption": "radio_ch1_06.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch1_06",
+        "sha256": "baa01fb562d8b06d2df0e8ea2731fc654bcd0858051d3c9b3d961468142494e2"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch1_07",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Any village found burning in a prohibited area will lose all support.",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch1_07.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "Any village found burning in a prohibited area will lose all support."
+      },
+      "source_caption": "radio_ch1_07.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch1_07",
+        "sha256": "9f033db9c4fe2779fe417695714d4fcd05b671c15df54c19b9bb47b630affaf4"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch1_08",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Station Four calling Five. Please acknowledge.",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch1_08.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "Station Four calling Five. Please acknowledge."
+      },
+      "source_caption": "radio_ch1_08.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch1_08",
+        "sha256": "4fb312c345ab9298143d6dd42ea7a48849b6ae84b1c01a26e3755b601a5dc6e8"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch2_01",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Air humidity keeps falling. Valley winds will strengthen this afternoon.",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch2_01.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "Air humidity keeps falling. Valley winds will strengthen this afternoon."
+      },
+      "source_caption": "radio_ch2_01.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch2_01",
+        "sha256": "a0f1baf2d4d45232f53d71a88675621818bbbda7c2aad1679e90222b34069422"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch2_02",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "A temperature inversion will trap smoke near the ground from sunset.",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch2_02.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "A temperature inversion will trap smoke near the ground from sunset."
+      },
+      "source_caption": "radio_ch2_02.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch2_02",
+        "sha256": "a14f493bd8ffd5625f9b233eda6c3bc8932b58172afe0f8dcc87d54527fe60b7"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch2_03",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Thunderclouds are forming above the ridge and may reach us before dusk.",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch2_03.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "Thunderclouds are forming above the ridge and may reach us before dusk."
+      },
+      "source_caption": "radio_ch2_03.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch2_03",
+        "sha256": "a1256d89b74f2fdae0be881aa5981e128b5d65e57e7a76195a16d8df2fff1378"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch2_04",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Ridge winds will shift throughout the day. Watch for fire spreading in open ground.",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch2_04.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "Ridge winds will shift throughout the day. Watch for fire spreading in open ground."
+      },
+      "source_caption": "radio_ch2_04.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch2_04",
+        "sha256": "5dab70d85adf243f37b999460db01909b86bfd4aef7c17737a4ffbb820828ac5"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch2_05",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Temperatures will fall quickly after sunset. Smoke will thicken.",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch2_05.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "Temperatures will fall quickly after sunset. Smoke will thicken."
+      },
+      "source_caption": "radio_ch2_05.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch2_05",
+        "sha256": "38e13dfc500b8af15cb24e2c7717d4db483334257046f9a3dda7d4841809f4e8"
+      }
+    },
+    {
+      "id": "v4_en_en_radio_ch2_06",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Tomorrow’s forecast: clear skies and continued dry weather.",
+        "voice_id": "wMBr6SfqQVuOqplK01NE",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/radio_ch2_06.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "weather",
+        "text": "Tomorrow’s forecast: clear skies and continued dry weather."
+      },
+      "source_caption": "radio_ch2_06.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_radio_ch2_06",
+        "sha256": "b317fe00d0170b412bda7c294466b53d479fb734de2373077224fd99dd9599cf"
+      }
+    },
+    {
+      "id": "v4_en_en_ta_poh_call",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Watch the fire!",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/ta_poh_call.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Watch the fire!"
+      },
+      "source_caption": "ta_poh_call.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_ta_poh_call",
+        "sha256": "5e4d3d2712f5927b11237b008653e4b4ae461b72df578ad22a69507129647c49"
+      }
+    },
+    {
+      "id": "v4_en_en_tapoh_wind_warning",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Wind is about to turn. Watch for fire spreading back toward us.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/tapoh_wind_warning.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Wind is about to turn. Watch for fire spreading back toward us."
+      },
+      "source_caption": "tapoh_wind_warning.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_tapoh_wind_warning",
+        "sha256": "2a4bc88e26d39c731104ec4d2b1b13d2d93177d0d30ba640bc8ca5840c06c188"
+      }
+    },
+    {
+      "id": "v4_en_en_tapoh_wind_warning_2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "The valley wind will reverse soon. Finish the firebreak first.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/tapoh_wind_warning_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "The valley wind will reverse soon. Finish the firebreak first."
+      },
+      "source_caption": "tapoh_wind_warning_2.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_tapoh_wind_warning_2",
+        "sha256": "8829538c3f4ac5a59d08165c5ac3506ef032a4442a8d4a86188bec1dde78764d"
+      }
+    },
+    {
+      "id": "v4_en_en_tapoh_wind_warning_3",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "The wind is turning. Move clear of the back of the fire.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/tapoh_wind_warning_3.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "The wind is turning. Move clear of the back of the fire."
+      },
+      "source_caption": "tapoh_wind_warning_3.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_tapoh_wind_warning_3",
+        "sha256": "f7dcdfcfe4061ffb05c4ab64369a463fffd43c61604d62431e55ee886dacb4b5"
+      }
+    }
+  ]
+}

@@ -12,6 +12,10 @@ const SKIP_AFTER: float = 2.0
 
 var cause: String = "crackdown"
 var summary_card: Control
+var summary_scroll: ScrollContainer
+var summary_content: VBoxContainer
+var summary_grid: GridContainer
+var summary_online_label: Label
 var new_record: bool = false
 var _vp: SubViewport
 var _camera: Camera3D
@@ -397,16 +401,28 @@ func show_summary() -> void:
 	summary_card.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	summary_card.grow_vertical = Control.GROW_DIRECTION_BOTH
 	add_child(summary_card)
+	var shell = UITheme.vbox(12)
+	summary_card.add_child(shell)
+	summary_scroll = ScrollContainer.new()
+	summary_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	summary_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	summary_scroll.follow_focus = true
+	summary_scroll.focus_mode = Control.FOCUS_ALL
+	summary_scroll.gui_input.connect(_on_summary_scroll_input)
+	shell.add_child(summary_scroll)
 	var box = UITheme.vbox(12)
-	summary_card.add_child(box)
+	summary_content = box
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	summary_scroll.add_child(box)
 	box.add_child(UITheme.header("eye" if cause == "crackdown" else "rice", "สรุปการเดินทาง", UITheme.MUTED))
 	var title = UITheme.wrap(UITheme.label("รัฐปราบปรามหมู่บ้าน" if cause == "crackdown" else "หมู่บ้านอดอยาก ต้องทิ้งดอย", "Title", UITheme.RUBY if cause == "crackdown" else UITheme.STRAW))
 	title.add_theme_font_override("font", UITheme.font("bold"))
 	title.add_theme_font_size_override("font_size", 30)
 	box.add_child(title)
-	box.add_child(UITheme.wrap(UITheme.label("หมู่บ้านอยู่รอดมาได้ %d แปลง ถึงปีที่ %d ของการเผาใต้เงาดาวเทียม" % [plots, state.current_year], "Body")))
+	box.add_child(UITheme.wrap(UITheme.label(L10n.format("หมู่บ้านอยู่รอดมาได้ %d แปลง ถึงปีที่ %d ของการเผาใต้เงาดาวเทียม", [plots, state.current_year]), "Body")))
 
 	var grid = GridContainer.new()
+	summary_grid = grid
 	grid.columns = 4
 	grid.add_theme_constant_override("h_separation", 8)
 	grid.add_theme_constant_override("v_separation", 8)
@@ -426,7 +442,7 @@ func show_summary() -> void:
 		grid.add_child(_tile(tile[0], tile[1], tile[2]))
 
 	var best = SaveGame.best_record()
-	var rec_text = "สถิติใหม่! รอดได้นานที่สุดเท่าที่เคยเล่นมา" if new_record else ("สถิติดีที่สุด: รอด %d แปลง (ถึงปีที่ %d)" % [int(best.get("plots_completed", 0)), int(best.get("year", 1))] if not best.is_empty() else "")
+	var rec_text = "สถิติใหม่! รอดได้นานที่สุดเท่าที่เคยเล่นมา" if new_record else (L10n.format("สถิติดีที่สุด: รอด %d แปลง (ถึงปีที่ %d)", [int(best.get("plots_completed", 0)), int(best.get("year", 1))]) if not best.is_empty() else "")
 	box.add_child(UITheme.label(rec_text, "Kicker", UITheme.EMERALD if new_record else UITheme.MUTED))
 
 	# Name on the village board, and where this run landed on it
@@ -436,6 +452,7 @@ func show_summary() -> void:
 	box.add_child(name_row)
 	name_row.add_child(UITheme.label("ชื่อบนกระดานหมู่บ้าน:", "Small", UITheme.CREAM))
 	var name_edit = LineEdit.new()
+	name_edit.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	name_edit.text = GameSettings.player_name
 	name_edit.max_length = SaveGame.NAME_MAX
 	name_edit.custom_minimum_size = Vector2(260, 40)
@@ -451,9 +468,10 @@ func show_summary() -> void:
 			if rows[i].campaign_id == campaign_id:
 				rank = i + 1
 				break
-	rank_label.text = "ติดอันดับที่ %d ของหมู่บ้าน" % rank if rank > 0 else ""
+	rank_label.text = L10n.format("ติดอันดับที่ %d ของหมู่บ้าน", rank) if rank > 0 else ""
 	rank_label.visible = rank > 0
 	var online_label = UITheme.label("", "Small", UITheme.STATE)
+	summary_online_label = online_label
 	online_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	online_label.visible = false
 	box.add_child(online_label)
@@ -461,7 +479,7 @@ func show_summary() -> void:
 		OnlineBoard.ensure_identity()
 		OnlineBoard.submit(self, state, func(online_rank):
 			if is_instance_valid(online_label):
-				online_label.text = "อันดับออนไลน์ #%d (เบตา)" % online_rank
+				online_label.text = L10n.format("อันดับออนไลน์ #%d (เบตา)", online_rank)
 				online_label.visible = true)
 	name_edit.text_changed.connect(func(t: String):
 		GameSettings.player_name = SaveGame.sanitize_name(t)
@@ -470,7 +488,7 @@ func show_summary() -> void:
 
 	var row = UITheme.hbox(10)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	box.add_child(row)
+	shell.add_child(row)
 	var again = Button.new()
 	again.text = "เริ่มแคมเปญใหม่"
 	again.theme_type_variation = "PrimaryButton"
@@ -482,7 +500,50 @@ func show_summary() -> void:
 	home.custom_minimum_size = Vector2(220, 50)
 	home.pressed.connect(func(): get_tree().change_scene_to_file(TITLE_SCENE))
 	row.add_child(home)
+	summary_scroll.focus_next = summary_scroll.get_path_to(name_edit)
+	summary_scroll.focus_previous = summary_scroll.get_path_to(home)
+	name_edit.focus_next = name_edit.get_path_to(again)
+	name_edit.focus_previous = name_edit.get_path_to(summary_scroll)
+	again.focus_next = again.get_path_to(home)
+	again.focus_previous = again.get_path_to(name_edit)
+	home.focus_next = home.get_path_to(summary_scroll)
+	home.focus_previous = home.get_path_to(again)
+	summary_content.minimum_size_changed.connect(_fit_summary)
+	get_viewport().size_changed.connect(_fit_summary)
+	_fit_summary()
 	again.grab_focus()
+
+## Keep actions fixed even if an asynchronous online rank adds another line.
+func _fit_summary() -> void:
+	if not is_instance_valid(summary_card):
+		return
+	var area = get_viewport().get_visible_rect().size
+	var width = minf(760.0, area.x - 48.0)
+	summary_grid.columns = 2 if width < 740.0 else 4
+	var height = maxf(120.0, minf(summary_content.get_combined_minimum_size().y, area.y - 156.0))
+	summary_scroll.custom_minimum_size.y = height
+	summary_card.custom_minimum_size.x = width
+	summary_card.size = Vector2(width, height + 108.0)
+	summary_card.position = (area - summary_card.size) * 0.5
+
+func _on_summary_scroll_input(event: InputEvent) -> void:
+	var step = 0
+	if event.is_action_pressed("ui_down"):
+		step = 48
+	elif event.is_action_pressed("ui_up"):
+		step = -48
+	elif event is InputEventKey and event.pressed:
+		if event.keycode == KEY_PAGEDOWN:
+			step = int(summary_scroll.size.y * 0.8)
+		elif event.keycode == KEY_PAGEUP:
+			step = -int(summary_scroll.size.y * 0.8)
+		elif event.keycode == KEY_END:
+			step = int(summary_scroll.get_v_scroll_bar().max_value)
+		elif event.keycode == KEY_HOME:
+			step = -int(summary_scroll.get_v_scroll_bar().max_value)
+	if step != 0:
+		summary_scroll.scroll_vertical += step
+		summary_scroll.accept_event()
 
 func _tile(title: String, value: String, color: Color) -> Control:
 	var t = UITheme.card(UITheme.PANEL_HI, color, 570 + title.length())

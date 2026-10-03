@@ -81,10 +81,10 @@ static func load_into(state: Node) -> String:
 static func _load_file(state: Node, path: String) -> String:
 	if not FileAccess.file_exists(path):
 		return "missing"
-	var data = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data = _read_json(path)
 	if typeof(data) != TYPE_DICTIONARY or not data.has("campaign"):
 		return "corrupt"
-	if int(data.get("version", 0)) != VERSION:
+	if not _num(data.get("version")) or float(data.version) != VERSION:
 		return "version"
 	# Validate every field before touching the live state, so a damaged save
 	# reports "corrupt" instead of erroring with the singleton half-loaded
@@ -93,8 +93,13 @@ static func _load_file(state: Node, path: String) -> String:
 	state.from_dict(data.campaign)
 	return ""
 
+## Damaged local files are an expected recovery path, not an engine error.
+static func _read_json(path: String):
+	var parser = JSON.new()
+	return parser.data if parser.parse(FileAccess.get_file_as_string(path)) == OK else null
+
 static func _num(v) -> bool:
-	return typeof(v) == TYPE_INT or typeof(v) == TYPE_FLOAT
+	return (typeof(v) == TYPE_INT or typeof(v) == TYPE_FLOAT) and is_finite(float(v))
 
 static func _nums(a) -> bool:
 	if typeof(a) != TYPE_ARRAY:
@@ -115,8 +120,20 @@ static func valid_campaign(d) -> bool:
 			return false
 	if int(d.get("current_year", 1)) < 1 or int(d.get("current_plot_index", 1)) < 1 or int(d.get("current_plot_index", 1)) > 5:
 		return false
+	# Correct numeric types alone do not make safe enum/dictionary keys.
+	for k in ["current_year", "current_plot_index", "ration_level", "blade_upgrade_level", "sprayer_upgrade_level"]:
+		if d.has(k) and (not is_finite(float(d[k])) or float(d[k]) != floorf(float(d[k]))):
+			return false
+	if int(d.get("ration_level", 1)) not in [0, 1, 2]:
+		return false
+	for k in ["blade_upgrade_level", "sprayer_upgrade_level"]:
+		if int(d.get(k, 0)) < 0 or int(d.get(k, 0)) > 3:
+			return false
 	for k in ["favours", "season_yields"]:
 		if d.has(k) and not _nums(d[k]):
+			return false
+	for favour in d.get("favours", []):
+		if not is_finite(float(favour)) or float(favour) != floorf(float(favour)) or int(favour) not in [0, 1, 2]:
 			return false
 	if typeof(d.get("hotspot_log", [])) != TYPE_ARRAY:
 		return false
@@ -202,12 +219,20 @@ static func _write_runs(rows: Array) -> bool:
 	return write_atomic(_path(RECORDS_FILE), JSON.stringify({"version": RECORDS_VERSION, "runs": rows}, "\t"))
 
 ## The sorted board (best first). A v1 file (one bare best-run dict) is migrated
-## to a one-row v2 table on first read. A missing or malformed file gives [].
+## to a one-row v2 table on first read. Recover .bak after an interrupted write;
+## a valid empty main table stays empty rather than resurrecting old records.
 static func runs() -> Array:
 	var p = _path(RECORDS_FILE)
-	if not FileAccess.file_exists(p):
-		return []
-	var data = JSON.parse_string(FileAccess.get_file_as_string(p))
+	var data = null
+	for candidate in [p, p + ".bak"]:
+		if not FileAccess.file_exists(candidate):
+			continue
+		var loaded = _read_json(candidate)
+		if typeof(loaded) != TYPE_DICTIONARY:
+			continue
+		if (loaded.has("runs") and typeof(loaded.runs) == TYPE_ARRAY) or (loaded.has("plots_completed") and _num(loaded.plots_completed)):
+			data = loaded
+			break
 	if typeof(data) != TYPE_DICTIONARY:
 		return []
 	var rows: Array = []

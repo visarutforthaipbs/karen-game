@@ -1,0 +1,67 @@
+{
+  "output_directory": "artifacts/audio_voice_v4_20261003/en_r2",
+  "credit_cap": 1000,
+  "language_code": "eng",
+  "max_cer": 0.0,
+  "purpose": "Review/install only the revisions replacing three confirmed base transcript mismatches. Extra candidates generated during the final review snapshot are retained without installing.",
+  "jobs": [
+    {
+      "id": "v4_en_en_bark_rally_reply_2__r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Coming! Watch the back of the fire.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_rally_reply_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Coming! Watch the back of the fire."
+      },
+      "source_caption": "bark_rally_reply_2.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_rally_reply_2",
+        "sha256": "14620e6126e2d3082eb639d08cd0c1be4266991bfad189e951d2409014ac2efe"
+      }
+    },
+    {
+      "id": "v4_en_en_bark_report_flame__r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Control, flames detected in a field. Coordinates recorded.",
+        "voice_id": "onwK4e9ZLuTAKqWW03F9",
+        "model_id": "eleven_v4",
+        "language": "en",
+        "stability": 0.7,
+        "similarity_boost": 0.65,
+        "style": 0.0,
+        "use_speaker_boost": false,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "en/bark_report_flame.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "ranger",
+        "text": "Control, flames detected in a field. Coordinates recorded."
+      },
+      "source_caption": "bark_report_flame.wav",
+      "previous": {
+        "plan": "tools/audio_pipeline/english_voice_plan.json",
+        "id": "en_bark_report_flame",
+        "sha256": "b3cae2d76c63ec9c6c3c58bb0f6f55b8752659be75fa26eeb86c988877b761fc"
+      }
+    }
+  ]
+}

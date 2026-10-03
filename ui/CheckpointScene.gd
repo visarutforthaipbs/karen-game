@@ -186,7 +186,7 @@ func caption_at(t: float) -> String:
 	if t < 6.4:
 		return "เจ้าหน้าที่ตรวจบัตรและค้นเครื่องมือทุกชิ้น"
 	var delay = GameState.instance.labour_delay_minutes() if GameState.instance else 0
-	return "ผ่านด่านได้ · เช้านี้เสียเวลาไปกับเอาแรงและด่านตรวจ %d นาที" % delay if delay > 0 else "ผ่านด่านได้ · รีบขึ้นไร่ก่อนบ่ายสอง"
+	return L10n.format("ผ่านด่านได้ · เช้านี้เสียเวลาไปกับเอาแรงและด่านตรวจ %d นาที", delay) if delay > 0 else "ผ่านด่านได้ · รีบขึ้นไร่ก่อนบ่ายสอง"
 
 func _process(delta: float) -> void:
 	if _done:

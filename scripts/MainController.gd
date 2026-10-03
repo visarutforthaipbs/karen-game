@@ -190,9 +190,9 @@ func _ready() -> void:
 	sky.apply_time(game_clock.get_hours())
 
 	# The status card shows only the phase title, so the first objective is announced here
-	var intro = "%s · ปีที่ %d\n%s" % [plot_cfg.name, state.current_year, PHASES[0].goal]
+	var intro = L10n.format("%s · ปีที่ %d\n%s", [plot_cfg.name, state.current_year, PHASES[0].goal])
 	if delay > 0:
-		intro += "\nเช้านี้ทีมไปเอาแรงช่วยหมู่บ้านอื่น เริ่มเผาช้าไป %d นาที" % delay
+		intro = L10n.concat([intro, L10n.format("\nเช้านี้ทีมไปเอาแรงช่วยหมู่บ้านอื่น เริ่มเผาช้าไป %d นาที", delay)])
 	hud.show_alert(intro, 5.0)
 
 	if AudioManager.instance:
@@ -306,7 +306,7 @@ func _on_ranger_spotted(_pos: Vector3, is_flame: bool) -> void:
 	_add_scrutiny(penalty)
 	breakdown.ranger += penalty
 	breakdown.ranger_sightings += 1
-	hud.show_drone_alert(("เจ้าหน้าที่เดินตรวจเห็นเปลวไฟ! วิทยุแจ้งศูนย์ · ความเพ่งเล็ง +%d" if is_flame else "เจ้าหน้าที่เห็นทีมอยู่ข้างกองไฟ! · ความเพ่งเล็ง +%d") % penalty, true, true)
+	hud.show_drone_alert(L10n.format("เจ้าหน้าที่เดินตรวจเห็นเปลวไฟ! วิทยุแจ้งศูนย์ · ความเพ่งเล็ง +%d" if is_flame else "เจ้าหน้าที่เห็นทีมอยู่ข้างกองไฟ! · ความเพ่งเล็ง +%d", penalty), true, true)
 	if AudioManager.instance:
 		AudioManager.instance.play_ranger_report_at(_pos, is_flame)
 
@@ -357,7 +357,7 @@ func _process(delta: float) -> void:
 	var minutes_now = hours * 60.0
 	if minutes_now >= COUNTDOWN_MINUTE:
 		var secs_left = maxi(0, int((PASS_MINUTE - minutes_now) * 60.0))
-		hud.update_countdown("VIIRS ผ่านใน %02d:%02d" % [secs_left / 60, secs_left % 60])
+		hud.update_countdown(L10n.format("VIIRS ผ่านใน %02d:%02d", [secs_left / 60, secs_left % 60]))
 
 	_ember_alert_cooldown = maxf(0.0, _ember_alert_cooldown - delta)
 
@@ -440,10 +440,10 @@ func _update_phase(now: int) -> void:
 	current_phase = idx
 	var goal: String = PHASES[idx].goal
 	if goal.contains("%d"):
-		goal = goal % roundi(rules.satellite_threshold)
+		goal = L10n.format(goal, roundi(rules.satellite_threshold))
 	hud.update_phase(PHASES[idx].title, goal)
 	if idx > 0:
-		hud.show_alert(PHASES[idx].title + "\n" + goal, 4.0)
+		hud.show_alert(L10n.join([PHASES[idx].title, goal]), 4.0)
 	if AudioManager.instance:
 		AudioManager.instance.set_music_intensity(idx)
 		AudioManager.instance.play_phase_stinger(idx)
@@ -463,7 +463,7 @@ func _on_drone_spotted(_world_pos: Vector3, is_flame: bool) -> void:
 	breakdown.drone += penalty
 	breakdown.drone_photos += 1
 
-	var msg = "แฟลชโดรน! ถ่ายภาพเปลวไฟได้ · ความเพ่งเล็ง +%d" % penalty if is_flame else "แฟลชโดรน! ถ่ายภาพทีมกลางที่โล่งได้ · ความเพ่งเล็ง +%d" % penalty
+	var msg = L10n.format("แฟลชโดรน! ถ่ายภาพเปลวไฟได้ · ความเพ่งเล็ง +%d", penalty) if is_flame else L10n.format("แฟลชโดรน! ถ่ายภาพทีมกลางที่โล่งได้ · ความเพ่งเล็ง +%d", penalty)
 	hud.show_drone_alert(msg, true)
 	if AudioManager.instance:
 		AudioManager.instance.play_shutter_at(_world_pos)
@@ -474,7 +474,7 @@ func _on_camera_heat(_cam: ThermalCamera, _world_pos: Vector3) -> void:
 	_add_scrutiny(penalty)
 	breakdown.camera += penalty
 	breakdown.camera_trips += 1
-	hud.show_drone_alert("กล้องความร้อนที่แนวเขตอุทยานจับได้! · ความเพ่งเล็ง +%d" % penalty, true)
+	hud.show_drone_alert(L10n.format("กล้องความร้อนที่แนวเขตอุทยานจับได้! · ความเพ่งเล็ง +%d", penalty), true)
 	if AudioManager.instance:
 		AudioManager.instance.play_camera_alarm()
 
@@ -531,7 +531,7 @@ func _on_ember_jumped(_from: Vector2i, _landing: Vector2i) -> void:
 
 func _on_satellite_closing(mins_remaining: int) -> void:
 	if mins_remaining % 10 == 0 or mins_remaining <= 5:
-		hud.show_alert("อีก %d นาที ดาวเทียม VIIRS จะโคจรผ่าน!" % mins_remaining, 3.0)
+		hud.show_alert(L10n.format("อีก %d นาที ดาวเทียม VIIRS จะโคจรผ่าน!", mins_remaining), 3.0)
 
 func _on_satellite_pass() -> void:
 	pass_started = true
@@ -597,7 +597,7 @@ func _gis_lines(state: Node) -> PackedStringArray:
 		if shown <= 6:
 			lines.append("#%02d  %.5f°N  %.5f°E  %d TU" % [shown, entry.lat, entry.lon, roundi(entry.heat)])
 	if shown > 6:
-		lines.append("... และอีก %d จุด" % (shown - 6))
+		lines.append(L10n.format("... และอีก %d จุด", (shown - 6)))
 	return lines
 
 func _on_rice_yield_changed(new_yield: float) -> void:
@@ -613,7 +613,7 @@ func _on_forest_escape() -> void:
 	var penalty = _penalty(ESCAPE_BASE_PENALTY * park_strictness)
 	_add_scrutiny(penalty)
 	breakdown.escape += penalty
-	hud.show_alert("อันตราย! ไฟลามเข้าป่าอนุรักษ์แล้ว · ความเพ่งเล็ง +%d" % penalty, 6.0)
+	hud.show_alert(L10n.format("อันตราย! ไฟลามเข้าป่าอนุรักษ์แล้ว · ความเพ่งเล็ง +%d", penalty), 6.0)
 
 func _on_tool_changed(tool_name: String) -> void:
 	hud.update_tool(tool_name)
@@ -624,7 +624,7 @@ func _on_tank_empty() -> void:
 func _on_companion_coughing(who: CompanionController) -> void:
 	if AudioManager.instance:
 		AudioManager.instance.play_cough_at(who.global_position, "tapoh" if who.role == CompanionController.Role.ELDER else "munaw")
-	hud.show_alert("%s สำลักควัน! เป่านกหวีดเรียกกลับมา" % who.display_name(), 3.0)
+	hud.show_alert(L10n.format("%s สำลักควัน! เป่านกหวีดเรียกกลับมา", who.display_name()), 3.0)
 
 func _on_stamina_changed(curr: float, max_val: float) -> void:
 	latest_stamina = curr

@@ -21,6 +21,10 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().auto_accept_quit = false
 	get_tree().root.close_requested.connect(request_exit)
+	# Godot's project input defaults are keyboard-only here. Menus use the
+	# standard GUI actions, separate from the in-world tool bindings below.
+	_action("ui_accept", [_joy(JOY_BUTTON_A)])
+	_action("ui_cancel", [_joy(JOY_BUTTON_B)])
 	_action("move_left", [_key(KEY_A), _key(KEY_LEFT), _axis(JOY_AXIS_LEFT_X, -1.0)])
 	_action("move_right", [_key(KEY_D), _key(KEY_RIGHT), _axis(JOY_AXIS_LEFT_X, 1.0)])
 	_action("move_up", [_key(KEY_W), _key(KEY_UP), _axis(JOY_AXIS_LEFT_Y, -1.0)])

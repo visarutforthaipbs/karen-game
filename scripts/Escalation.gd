@@ -25,18 +25,18 @@ class YearRules:
 		elif drone_count == 1:
 			lines.append("โดรนป่าไม้ 1 ลำลาดตระเวนหุบเขาช่วงกลางวัน")
 		else:
-			lines.append("โดรนป่าไม้ %d ลำบินลาดตระเวนประสานกัน%s" % [drone_count, " ด้วยความเร็วสูง" if drone_speed_mult > 1.0 else ""])
+			lines.append(L10n.format("โดรนป่าไม้ %d ลำบินลาดตระเวนประสานกัน%s", [drone_count, " ด้วยความเร็วสูง" if drone_speed_mult > 1.0 else ""]))
 		if spread_mult > 1.0:
-			lines.append("ภัยแล้งทั้งภูมิภาค: ไฟลามเร็วขึ้น %d%% (ความชื้น %d%%)" % [roundi((spread_mult - 1.0) * 100.0), humidity_pct])
-		lines.append("เกณฑ์ตรวจจับของ VIIRS: %d หน่วยความร้อน (TU)" % roundi(satellite_threshold))
+			lines.append(L10n.format("ภัยแล้งทั้งภูมิภาค: ไฟลามเร็วขึ้น %d%% (ความชื้น %d%%)", [roundi((spread_mult - 1.0) * 100.0), humidity_pct]))
+		lines.append(L10n.format("เกณฑ์ตรวจจับของ VIIRS: %d หน่วยความร้อน (TU)", roundi(satellite_threshold)))
 		if ground_cameras > 0:
-			lines.append("กล้องความร้อนภาคพื้น %d ตัวเฝ้าแนวเขตอุทยาน" % ground_cameras)
+			lines.append(L10n.format("กล้องความร้อนภาคพื้น %d ตัวเฝ้าแนวเขตอุทยาน", ground_cameras))
 		if ranger_count > 0:
-			lines.append("เจ้าหน้าที่ป่าไม้ %d นายเดินตรวจแนวป่ารอบแปลง 15:30–18:30" % ranger_count)
+			lines.append(L10n.format("เจ้าหน้าที่ป่าไม้ %d นายเดินตรวจแนวป่ารอบแปลง 15:30–18:30", ranger_count))
 		if checkpoints:
 			lines.append("ด่านทหารบนถนน: ไปเอาแรงต้องใช้เวลามากขึ้น")
 		if curfew:
-			lines.append("เคอร์ฟิวไม่ผ่อนผัน: ถ้าดาวเทียมจับได้ ความเพ่งเล็งเพิ่ม %d–%d" % [hotspot_penalty, hotspot_penalty * 2])
+			lines.append(L10n.format("เคอร์ฟิวไม่ผ่อนผัน: ถ้าดาวเทียมจับได้ ความเพ่งเล็งเพิ่ม %d–%d", [hotspot_penalty, hotspot_penalty * 2]))
 		if penalty_mult < 1.0:
 			lines.append("ปีนี้เจ้าหน้าที่ยังผ่อนปรนอยู่")
 		return lines

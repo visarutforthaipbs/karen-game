@@ -1,0 +1,193 @@
+{
+  "output_directory": "artifacts/opening_20261003/audio_en",
+  "credit_cap": 3000,
+  "language_code": "eng",
+  "max_cer": 0.0,
+  "purpose": "User approved first-time Ta-poh opening, 2026-10-03. Same reviewed voice as current cast. No clones or new music.",
+  "jobs": [
+    {
+      "id": "intro_en_00",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Kha-nae, our home is part of this forest. We tend established fields in cycles.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_00.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Kha-nae, our home is part of this forest. We tend established fields in cycles."
+      }
+    },
+    {
+      "id": "intro_en_01",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "We grow rice for a season, then rest the field for years. Plants return while we farm another plot.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_01.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "We grow rice for a season, then rest the field for years. Plants return while we farm another plot."
+      }
+    },
+    {
+      "id": "intro_en_02",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Today we prepare a rice field together. Ash from plant residues returns some nutrients to the soil.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_02.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Today we prepare a rice field together. Ash from plant residues returns some nutrients to the soil."
+      }
+    },
+    {
+      "id": "intro_en_03",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Before lighting, clear leaves and branches to bare soil. The firebreak interrupts fuel between field and forest.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_03.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Before lighting, clear leaves and branches to bare soil. The firebreak interrupts fuel between field and forest."
+      }
+    },
+    {
+      "id": "intro_en_04",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Embers can still fly across. Read the wind. Let your team help watch the forest edge.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_04.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Embers can still fly across. Read the wind. Let your team help watch the forest edge."
+      }
+    },
+    {
+      "id": "intro_en_05",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "The flames are gone. The ash is still hot. Douse the remaining embers.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_05.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "The flames are gone. The ash is still hot. Douse the remaining embers."
+      }
+    },
+    {
+      "id": "intro_en_06",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "In this game, the satellite scans at twenty hundred. It sees hot spots, but not the lives beneath them.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_06.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "In this game, the satellite scans at twenty hundred. It sees hot spots, but not the lives beneath them."
+      }
+    },
+    {
+      "id": "intro_en_07",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Prepare the boundary. Control the fire. Cool the embers. Leave enough cooled ash, and no hot spots before twenty hundred.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_07.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Prepare the boundary. Control the fire. Cool the embers. Leave enough cooled ash, and no hot spots before twenty hundred."
+      }
+    }
+  ]
+}

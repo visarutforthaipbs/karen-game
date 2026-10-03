@@ -1,5 +1,24 @@
 # Audio production pipeline — Under Two Skies
 
+## Current speech model
+
+The owner approved the dry Toto narrator pilot and requested replacement of
+every old-model game voice on 2026-10-03. The active replacement plans are
+`voice_v4_th_plan.json` and `voice_v4_en_plan.json`: 38 clips per language,
+including eight opening sentences and 30 dialogue/radio lines. They use
+`eleven_v4`, stability 0.7, similarity 0.65, and the existing five speaker IDs.
+Use this model/settings direction for future speech candidates. The earlier
+v3 plans and raw takes are historical evidence; do not reinstall them over v4
+delivery. Music, effects, coughs and existing radio filtering are separate.
+
+The approved sample establishes the narrator direction, not an acting approval
+for every newly generated take. Keep exact transcript/source binding, PCM peak
+checks, runtime language/subtitle tests and listening review. ASR cannot certify
+the absence of echo. The baseline backups are under
+`artifacts/audio_voice_v4_20261003/before/`.
+
+## Previous audio upgrade
+
 The 2026-10-03 pass installs **62 new/replacement WAV files**: 30 spoken clips,
 three character cough effects, and 29 effects/ambience/music files. The production
 library now contains 89 WAVs (39.54 MB). Existing isolated v1.1 candidates remain
@@ -9,7 +28,7 @@ separate. Detailed delivery: `artifacts/audio_upgrade_20261003/DELIVERY.md`.
 
 - `RadioVoice` is the unfiltered parent controlled by the existing speech slider.
   `RadioFilter` feeds it and filters broadcasts/positional ranger reports. Crew
-  speech has dedicated 2D/3D players, priority and a four-second per-event limit.
+  speech has dedicated 2D/3D players, priority and a four-second event cooldown.
   Urgent speech can interrupt lower-priority speech; stale warnings are dropped.
 - `UI` and `Drones` feed `SFX`. User gain is distinct from drone occlusion. Zero
   slider values mute buses. Active speech ducks music.
@@ -66,12 +85,46 @@ Subscription usage is cached briefly to avoid rate limits; individual observed
 account deltas are **not per-file prices**. Read fresh account usage after a batch.
 Spending caps use observed account usage and can lag the provider's accounting.
 
-`review_speech.py` compares Thai transcripts after removing spaces/punctuation.
+`review_speech.py` reads the plan's `language_code` (ISO 639-3, default `tha`)
+and `max_cer` (maximum character error ratio, default `0.10`). English plans
+use `"language_code": "eng", "max_cer": 0` for exact normalized wording.
+Comparison uses Unicode NFC normalization, case folding and removal of
+spaces/punctuation, preserving Thai marks and the existing Thai comparison.
 The final 30 installed spoken clips have exact normalized transcript matches;
 two revisions replaced a wording ambiguity and an overbroad fire-out claim.
 ASR establishes wording, not acting, pronunciation, cultural fidelity or voice
 identity. Native-speaker/headphone listening remains necessary for final polish.
 The coughs are SFX, not voice clones of their dialogue actors.
+
+Reviews resume from `speech_review.json`. Matching wording/language/source
+decisions are retained, including individual listening overrides. New reviews
+store the source SHA-256; legacy Thai reviews remain readable. Changed text,
+language or a known source hash invalidates the old acceptance before another
+call. Tightening `max_cer` rechecks the cached transcript without another call;
+any mismatches need a fresh individual listening decision. Retain the expected
+text, actual transcript and CER when setting `accepted` after listening, and
+record the specific rationale in `manual_review`; do not broadly accept a batch.
+
+Before decoding any clip, `install.py` validates every accepted speech decision
+against the exact plan text, the plan language (`tha` when omitted), and the
+SHA-256 of the raw file named in the ledger. These bindings are mandatory for
+Thai and English alike. A stale or unbound acceptance raises a clear error
+before any candidate, backup or production file changes, even if the affected
+job is later in the batch. Rejected/unreviewed clips remain skipped.
+
+Legacy Thai decisions without `language_code` or `source_sha256` can be viewed
+and resumed by the reviewer, but cannot authorize a new installation. Explicitly
+listen/review the current raw take and record its exact wording, language and
+source hash with the individual decision, or retain the old evidence and obtain
+a fresh review. Do not add hashes blindly: hashing today's file does not prove
+that an older listening decision evaluated those same bytes. Existing installed
+Thai assets do not need reinstalling solely to migrate historical reviews.
+
+Provider errors, missing files and empty transcripts never pass. Errors and
+interrupted pending reviews are resumable rejected entries; only an explicit
+`--retry-errors` permits another ASR attempt. Completed decisions require no
+MCP connection/configuration read. ASR attempts can cost credits; the local
+tests below use fake recognizers and make no requests.
 
 ## Preparation, installation and rollback
 
@@ -87,6 +140,13 @@ pass are in the main batch or voices batch backup. Revision backups contain the
 first new takes. Keep all of them. The final manifest resolves revisions to the
 actual installed file and hash; do not use a superseded first-take hash.
 
+English speech uses `"file": "en/<same_basename>.wav"` and installs into
+`assets/audio/en/`, with equivalent nested candidate/backup directories. Parent
+directories are created when needed. All plan filenames are validated before
+preparation or installation: absolute paths, parent traversal, Windows-style
+paths and symlinks escaping a destination are rejected. Thai filenames and
+normalization/first-byte backup behavior remain unchanged.
+
 For asset rollback, restore the original byte backups, remove newly added files
 only after consulting the final manifest, remove the state marker when returning
 to old layered music, and reimport with Godot. Runtime changes should be reviewed
@@ -95,6 +155,7 @@ separately: several touched scene files also contain unrelated visual work.
 ## Validation
 
 ```sh
+python3 -m unittest discover -s tools/audio_pipeline/tests -v
 godot --headless --editor --quit --path /Users/lighthouse-control/Desktop/hill-blackmirror
 godot --headless --path /Users/lighthouse-control/Desktop/hill-blackmirror --fixed-fps 60 --script res://tests/test_audio_upgrade.gd
 godot --headless --path /Users/lighthouse-control/Desktop/hill-blackmirror --fixed-fps 60 --script res://tests/test_all.gd
@@ -106,3 +167,4 @@ protection from footstep stealing, cancellation of old delayed reports, music
 state selection, footstep variation and authoritative extinguish feedback.
 The full suite intentionally exercises corrupt-save parsing; those fixture
 errors are expected. Test teardown drains stopped audio before engine shutdown.
+Current v4 delivery and verification: [`VOICE_V4_HANDOFF.md`](VOICE_V4_HANDOFF.md).

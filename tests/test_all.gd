@@ -429,7 +429,8 @@ func _run() -> void:
 	check(not SaveGame.save(gs), "a finished (game-over) campaign is not autosaved")
 	SaveGame.delete()
 	check(not SaveGame.exists(), "save slot can be cleared")
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveGame.dir.path_join(SaveGame.RECORDS_FILE)))
+	for suffix in ["", ".bak", ".tmp"]:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveGame.dir.path_join(SaveGame.RECORDS_FILE) + suffix))
 	gs.reset_campaign()
 	gs.stats.plots_completed = 7
 	check(SaveGame.submit_record(gs) and SaveGame.best_record().plots_completed == 7, "best run recorded")
@@ -437,7 +438,8 @@ func _run() -> void:
 	check(not SaveGame.submit_record(gs), "a shorter run does not replace the record")
 	check(SaveGame.runs().size() == 2 and SaveGame.runs()[0].plots == 7, "a shorter run is still kept on the board")
 	# Tiebreak: equal plots, higher average ash first (then fewer detections)
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveGame.dir.path_join(SaveGame.RECORDS_FILE)))
+	for suffix in ["", ".bak", ".tmp"]:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveGame.dir.path_join(SaveGame.RECORDS_FILE) + suffix))
 	gs.reset_campaign()
 	gs.stats.plots_completed = 5
 	gs.stats.ash_sum = 300.0
@@ -471,7 +473,9 @@ func _run() -> void:
 	var junk = FileAccess.open(SaveGame.dir.path_join(SaveGame.RECORDS_FILE), FileAccess.WRITE)
 	junk.store_string("{not json")
 	junk.close()
-	check(SaveGame.runs().is_empty() and SaveGame.best_record().is_empty(), "a malformed records file reads as an empty board")
+	check(SaveGame.runs().size() == 10 and SaveGame.best_record().plots_completed == 12, "a malformed records file recovers the intact board backup")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveGame.dir.path_join(SaveGame.RECORDS_FILE) + ".bak"))
+	check(SaveGame.runs().is_empty() and SaveGame.best_record().is_empty(), "a malformed records file without a valid backup reads as an empty board")
 	# v1 file (one bare best-run dict) migrates to a one-row table
 	var v1 = FileAccess.open(SaveGame.dir.path_join(SaveGame.RECORDS_FILE), FileAccess.WRITE)
 	v1.store_string(JSON.stringify({"plots_completed": 5, "year": 3, "avg_ash": 61.0, "cause": "famine", "date": "2026-09-01"}))
@@ -517,7 +521,8 @@ func _run() -> void:
 	check(GameSettings.player_name == "ชาวดอย", "player name persists in settings.cfg")
 	GameSettings.player_name = "ขะแน"
 	GameSettings.save_settings()
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveGame.dir.path_join(SaveGame.RECORDS_FILE)))
+	for suffix in ["", ".bak", ".tmp"]:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveGame.dir.path_join(SaveGame.RECORDS_FILE) + suffix))
 	gs.reset_campaign()
 
 	# ---- Scrutiny relief between plots (campaign balance)
@@ -610,7 +615,7 @@ func _flow_checks(gs: Node) -> void:
 	GameSettings.apply(self)
 	GameSettings.save_settings()
 
-	# Title: no save -> only "new game"; new game resets and opens the Hearth
+	# Title: first New Game explains context before the preparation autosave.
 	SaveGame.delete()
 	change_scene_to_file("res://scenes/Title.tscn")
 	await process_frame
@@ -619,6 +624,10 @@ func _flow_checks(gs: Node) -> void:
 	check(not title.continue_button.visible and title.new_button.visible, "title without a save offers only a new game")
 	gs.current_year = 3
 	title._on_new_game()
+	await process_frame
+	await process_frame
+	check(title._overlay is OpeningFilm and paused, "first new game opens the context film")
+	title._overlay.close()
 	await process_frame
 	await process_frame
 	check(current_scene.name == "VillageHearth" and gs.current_year == 1 and SaveGame.exists(), "new game starts Year 1 at the Hearth and autosaves")

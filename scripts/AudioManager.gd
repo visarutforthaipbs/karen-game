@@ -6,6 +6,14 @@ extends Node
 
 static var instance: Node
 
+## Source captions are emitted only for recordings that actually start playback.
+signal voice_caption_changed(speaker: String, text: String, duration: float)
+const VOICE_CAPTION_PATH = "res://localization/voice_subtitles.json"
+var voice_captions: Dictionary = {}
+var _caption_player: Node
+var _caption_stream: AudioStream
+var subtitle_overlay: CanvasLayer
+
 const RATE: int = 44100
 const SFX_VOICES: int = 24
 const MUSIC_LOOP_SECONDS: float = 16.0
@@ -17,6 +25,9 @@ const SILENT_DB: float = -60.0
 ##   radio_ch1_NN.wav ...   FM 88.5 forestry / ranger chatter
 ##   radio_ch2_NN.wav ...   FM 94.2 hill weather forecast
 const AUDIO_DIR := "res://assets/audio"
+const ENGLISH_VOICE_DIR := "res://assets/audio/en"
+var _english_voices: Dictionary = {}
+var _voice_locale: String = ""
 const TAPOH_VOICE_PATH = "res://assets/audio/tapoh_wind_warning.wav"
 const RADIO_VOICE_BUS := "RadioVoice"
 const RADIO_FILTER_BUS := "RadioFilter"
@@ -144,7 +155,16 @@ func _ready() -> void:
 	speech_player_3d.unit_size = 12.0
 	speech_player_3d.max_distance = 100.0
 	add_child(speech_player_3d)
+	_voice_locale = TranslationServer.get_locale().get_slice("_", 0)
+	var localization = get_node_or_null("/root/Localization")
+	if localization:
+		localization.language_changed.connect(_on_voice_language_changed)
+	_load_voice_captions()
 	_load_recorded_voices()
+	for voice_player in [radio_player, speech_player, speech_player_3d]:
+		voice_player.finished.connect(_on_caption_finished.bind(voice_player))
+	subtitle_overlay = load("res://scripts/VoiceSubtitles.gd").new()
+	add_child(subtitle_overlay)
 	for i in 3:
 		var mp = AudioStreamPlayer.new()
 		mp.volume_db = SILENT_DB
@@ -177,6 +197,7 @@ func _exit_tree() -> void:
 	_cache.clear()
 	_tapoh_voices.clear()
 	_radio_voices.clear()
+	_english_voices.clear()
 	_voice_last.clear()
 
 func _make_loop_player(stream: AudioStreamWAV, bus: String = SFX_BUS) -> AudioStreamPlayer:
@@ -189,6 +210,9 @@ func _make_loop_player(stream: AudioStreamWAV, bus: String = SFX_BUS) -> AudioSt
 	return p
 
 func _process(delta: float) -> void:
+	# Direct stop() calls and scene changes must never leave stale dialogue.
+	if _caption_player and (not _caption_player.playing or _caption_player.stream != _caption_stream):
+		_clear_voice_caption()
 	if not music_ready:
 		_run_music_jobs()
 
@@ -272,6 +296,8 @@ func set_music_intensity(level: int) -> void:
 func play_hearth_music(on: bool) -> void:
 	if radio_player:
 		radio_player.stop()
+		if _caption_player == radio_player:
+			_clear_voice_caption()
 	_music_state = 0
 	_music_layer_targets = [0.28, 0.0, 0.0] if on else [0.0, 0.0, 0.0]
 
@@ -281,6 +307,7 @@ func _set_state_music() -> void:
 	_music_layer_targets[track] = 0.28 if _music_state < 2 else 0.32
 
 func stop_all_loops() -> void:
+	_clear_voice_caption()
 	_scene_audio_epoch += 1
 	_static_level = 0.0
 	_siren_on = false
@@ -523,23 +550,27 @@ func _play_speech(kind: String, stream: AudioStream, pos: Vector3, volume_db: fl
 		_fire_voice_last = now
 		_fire_voice_severity = severity
 		_log_fire(kind, true, pos)
+	stream = voice_for_locale(stream)
 	_speech_kind = kind
 	_speech_last[kind] = now
 	_speech_priority = priority
 	speech_player.stop()
 	speech_player_3d.stop()
 	radio_player.stop()
+	_clear_voice_caption()
 	if pos == Vector3.INF:
 		speech_player.stream = stream
 		speech_player.bus = RADIO_FILTER_BUS if filtered else RADIO_VOICE_BUS
 		speech_player.volume_db = volume_db
 		speech_player.play()
+		_publish_voice_caption(speech_player, stream)
 	else:
 		speech_player_3d.stream = stream
 		speech_player_3d.bus = RADIO_FILTER_BUS if filtered else RADIO_VOICE_BUS
 		speech_player_3d.global_position = pos
 		speech_player_3d.volume_db = volume_db
 		speech_player_3d.play()
+		_publish_voice_caption(speech_player_3d, stream)
 
 func has_bark(kind: String) -> bool:
 	return _bark_voices.has(kind) and not _bark_voices[kind].is_empty()
@@ -550,9 +581,88 @@ func play_radio_voice(channel: int) -> void:
 		return
 	var pool: Array = _radio_voices[channel]
 	var pick := _pick_voice("ch%d" % channel, pool.size())
-	radio_player.stream = pool[pick]
+	_clear_voice_caption()
+	var stream = voice_for_locale(pool[pick])
+	radio_player.stream = stream
 	radio_player.pitch_scale = 1.0
 	radio_player.play()
+	_publish_voice_caption(radio_player, stream)
+
+
+## Production transcripts mirror voice_plan.json + approved revision_plan.json.
+## Missing metadata remains silent rather than inventing a subtitle.
+func _load_voice_captions() -> void:
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(VOICE_CAPTION_PATH))
+	if not parsed is Dictionary:
+		push_warning("Recorded voice subtitle catalog could not be loaded")
+		return
+	voice_captions = parsed
+	L10n.initialize()
+	for caption in voice_captions.values():
+		L10n.register_message(caption.th, caption.en)
+		L10n.register_message(caption.speaker, caption.speaker_en)
+
+func _publish_voice_caption(player: Node, stream: AudioStream) -> void:
+	if not player.playing:
+		return
+	var filename = stream.resource_path.get_file()
+	if not voice_captions.has(filename):
+		return
+	var caption: Dictionary = voice_captions[filename]
+	_caption_player = player
+	_caption_stream = stream
+	voice_caption_changed.emit(caption.speaker, caption.th, stream.get_length())
+
+func _clear_voice_caption() -> void:
+	if _caption_player == null:
+		return
+	_caption_player = null
+	_caption_stream = null
+	voice_caption_changed.emit("", "", 0.0)
+
+func _on_caption_finished(player: Node) -> void:
+	if _caption_player == player:
+		_clear_voice_caption()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and is_inside_tree():
+		_on_voice_language_changed(TranslationServer.get_locale())
+
+func _on_voice_language_changed(locale: String) -> void:
+	var language = locale.get_slice("_", 0)
+	if language == _voice_locale:
+		return
+	_voice_locale = language
+	# Discard the old-language line immediately, including during paused Settings.
+	# These are exclusively speech players; music, work, coughs and ambience keep going.
+	for player in [radio_player, speech_player, speech_player_3d]:
+		if player:
+			player.stop()
+	_clear_voice_caption()
+	_speech_priority = 0
+	_speech_last.clear()
+	_speech_kind = ""
+	_fire_voice_last = -100000
+	_fire_voice_severity = 0
+
+## Keep original pools/identities, selecting the locale only after a line is accepted.
+## ResourceLoader resolves .wav.import/.remap names inside exported PCKs as usual.
+## A missing English recording falls back independently to its Thai recording.
+func voice_for_locale(original: AudioStream, locale: String = "") -> AudioStream:
+	var language = (TranslationServer.get_locale() if locale.is_empty() else locale).get_slice("_", 0)
+	if language != "en":
+		return original
+	var filename = original.resource_path.get_file()
+	if _english_voices.has(filename):
+		return _english_voices[filename]
+	var path = ENGLISH_VOICE_DIR.path_join(filename)
+	if not ResourceLoader.exists(path):
+		return original
+	var translated = ResourceLoader.load(path, "AudioStream")
+	if not translated is AudioStream:
+		return original
+	_english_voices[filename] = translated
+	return translated
 
 func _pick_voice(key: String, size: int) -> int:
 	var pick := randi() % size

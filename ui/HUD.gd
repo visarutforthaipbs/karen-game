@@ -90,12 +90,16 @@ var alert_label: Label
 var tip_card: FacetCard
 var tip_label: Label
 var _tip_serial: int = 0
+var _tip_requested: bool = false
+var _tip_remaining: float = 0.0
 var elder_warning_banner: FacetCard
 var elder_warning_text: Label
+var _elder_warning_serial: int = 0
 var drone_banner: FacetCard
 var drone_text: Label
 var _drone_icon: LowPolyIcon
 var _ranger_face: Control
+var _drone_serial: int = 0
 
 # 20:00 satellite pass
 var satellite_thermal_screen: Control
@@ -103,6 +107,10 @@ var telemetry_card: FacetCard
 var satellite_telemetry_label: Label
 var thermal_legend: FacetCard
 var report_modal: Control
+var _report_focus_scope: ModalFocusScope
+var report_card: FacetCard
+var report_scroll: ScrollContainer
+var report_content: VBoxContainer
 var pause_menu: PauseMenu
 var report_title: Label
 var report_body: Label
@@ -153,6 +161,18 @@ func _ready() -> void:
 	_build_crew_row()
 	_build_vitals_card()
 	_build_banners()
+	if AudioManager.instance and is_instance_valid(AudioManager.instance.subtitle_overlay):
+		var captions = AudioManager.instance.subtitle_overlay.card
+		captions.resized.connect(_queue_fit_tip_layout)
+		captions.visibility_changed.connect(_queue_fit_tip_layout)
+	tip_card.resized.connect(_queue_fit_tip_layout)
+	tip_card.minimum_size_changed.connect(_queue_fit_tip_layout)
+	for warning in [elder_warning_banner, drone_banner, alert_card]:
+		warning.visibility_changed.connect(_queue_fit_tip_layout)
+	for control in [tool_col, crew_row, vitals_card, bottom_layer, banner_stack]:
+		control.resized.connect(_queue_fit_tip_layout)
+		control.visibility_changed.connect(_queue_fit_tip_layout)
+	get_viewport().size_changed.connect(_queue_fit_tip_layout)
 	_build_report()
 	pause_menu = PauseMenu.new()
 	pause_menu.main = get_parent()
@@ -160,7 +180,8 @@ func _ready() -> void:
 	var debug = DebugOverlay.new()
 	debug.main = get_parent()
 	root.add_child(debug)
-	_fade_targets = [status_card, wind_card, state_card, banner_stack, tool_col, crew_row, vitals_card]
+	# Short-lived danger feedback must remain readable under the cursor/player.
+	_fade_targets = [status_card, wind_card, state_card, tool_col, crew_row, vitals_card]
 	_hide_hint_later()
 
 ## MainController hands over the camera and player so panels can get out of the way
@@ -183,6 +204,11 @@ func set_minimal(on: bool) -> void:
 func _process(delta: float) -> void:
 	if not _in_play:
 		return
+	if _tip_requested and tip_card.is_visible_in_tree() and tip_card.modulate.a > 0.9:
+		_tip_remaining -= delta
+		if _tip_remaining <= 0.0:
+			_tip_requested = false
+			tip_card.hide()
 	_update_refill_guidance()
 	var points: Array[Vector2] = [root.get_global_mouse_position()]
 	if _camera and _player and is_instance_valid(_player) and not _camera.is_position_behind(_player.global_position):
@@ -201,12 +227,55 @@ func _process(delta: float) -> void:
 		c.modulate.a = move_toward(c.modulate.a, target, delta * 6.0)
 
 func _hide_hint_later() -> void:
-	await get_tree().create_timer(HINT_SECONDS).timeout
+	await get_tree().create_timer(HINT_SECONDS, false).timeout
 	if is_instance_valid(hint_label):
 		var tw = create_tween()
 		tw.tween_property(hint_label, "modulate:a", 0.0, 1.0)
 		await tw.finished
 		hint_label.visible = false
+
+## A caption can grow when the language or UI scale changes. Keep instructional
+## tips above its actual bounds rather than placing both at the same HUD anchor.
+func _queue_fit_tip_layout() -> void:
+	_fit_tip_layout.call_deferred()
+
+func _fit_tip_layout() -> void:
+	if not is_inside_tree() or is_queued_for_deletion() or not is_instance_valid(tip_card):
+		return
+	# A hidden wrapping label can briefly report its height at zero width when
+	# shown. Shrink back to the settled minimum once its container has laid out.
+	tip_card.size.y = tip_card.get_combined_minimum_size().y
+	if tip_card.size.y > get_viewport().get_visible_rect().size.y * 0.8:
+		# Let the newly shown container finish wrapping before evaluating space.
+		# Hiding it here would prevent its children from settling their widths.
+		tip_card.modulate.a = 0.0
+		return
+	tip_card.modulate.a = 1.0
+	var bottom = get_viewport().get_visible_rect().size.y - 64.0
+	if AudioManager.instance and is_instance_valid(AudioManager.instance.subtitle_overlay):
+		var captions = AudioManager.instance.subtitle_overlay
+		var clearance = -1.0
+		for control in [tool_col, crew_row, vitals_card]:
+			if control.is_visible_in_tree():
+				var top = control.get_global_rect().position.y - 12.0
+				clearance = top if clearance < 0.0 else minf(clearance, top)
+		captions.set_gameplay_bottom_limit(clearance)
+		var caption = captions.card
+		if caption.is_visible_in_tree():
+			bottom = minf(bottom, caption.get_global_rect().position.y - 12.0)
+	tip_card.position.y = bottom - tip_card.size.y
+	# Danger information and the spoken line take priority when a large-text
+	# viewport cannot fit all three. Reading time counts only while shown.
+	var warning_blocks_tip = false
+	for warning in [elder_warning_banner, drone_banner, alert_card]:
+		if warning.is_visible_in_tree() and warning.get_global_rect().end.y + 12.0 > tip_card.position.y:
+			warning_blocks_tip = true
+			break
+	tip_card.visible = _tip_requested and not warning_blocks_tip
+
+func _exit_tree() -> void:
+	if is_instance_valid(AudioManager.instance) and is_instance_valid(AudioManager.instance.subtitle_overlay):
+		AudioManager.instance.subtitle_overlay.set_gameplay_bottom_limit()
 
 # ---------------------------------------------------------------------------
 # Layout helpers
@@ -290,8 +359,7 @@ func _build_status_card() -> void:
 	top.add_child(side)
 	phase_label = _small("", UITheme.STRAW)
 	phase_label.add_theme_font_override("font", UITheme.font("semibold"))
-	phase_label.clip_text = true
-	phase_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	phase_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	side.add_child(phase_label)
 	phase_kicker = _small("14:00 – 20:00", UITheme.MUTED)
 	side.add_child(phase_kicker)
@@ -348,23 +416,23 @@ func _set_mark(mark: LowPolyIcon, ok: bool, warn_color: Color) -> void:
 
 func _refresh_goals(now: int) -> void:
 	var ash_ok = _yield >= _barn_target
-	goal_ash_value.text = "เถ้า %.0f%% · เป้า %d%%" % [_yield, roundi(_barn_target)]
+	goal_ash_value.text = L10n.format("เถ้า %.0f%% · เป้า %d%%", [_yield, roundi(_barn_target)])
 	goal_ash_value.add_theme_color_override("font_color", UITheme.EMERALD if ash_ok else UITheme.CREAM)
 	_set_mark(goal_ash_mark, ash_ok, UITheme.STRAW if _yield >= 60.0 else UITheme.RUBY)
 
 	var heat_ok = _hotspots == 0
-	goal_heat_value.text = "ไม่มีถ่านร้อน · ปลอดภัย" if heat_ok else "ถ่านร้อน %d จุด · ต้องเป็น 0" % _hotspots
+	goal_heat_value.text = "ไม่มีถ่านร้อน · ปลอดภัย" if heat_ok else L10n.format("ถ่านร้อน %d จุด · ต้องเป็น 0", _hotspots)
 	goal_heat_value.add_theme_color_override("font_color", UITheme.EMERALD if heat_ok else UITheme.EMBER)
 	_set_mark(goal_heat_mark, heat_ok, UITheme.EMBER)
 
 	var left = self_cool_minute - now
 	var deadline = "%d:%02d" % [self_cool_minute / 60, self_cool_minute % 60]
 	if left > 0:
-		goal_cool_value.text = "จุดไฟก่อน %s ถ่านเย็นเอง (%d น.)" % [deadline, left]
+		goal_cool_value.text = L10n.format("จุดไฟก่อน %s ถ่านเย็นเอง (%d น.)", [deadline, left])
 		goal_cool_value.add_theme_color_override("font_color", UITheme.CREAM)
 		_set_mark(goal_cool_mark, true, UITheme.STRAW)
 	else:
-		goal_cool_value.text = "เลย %s · ถ่านใหม่ต้องฉีดน้ำ" % deadline
+		goal_cool_value.text = L10n.format("เลย %s · ถ่านใหม่ต้องฉีดน้ำ", deadline)
 		goal_cool_value.add_theme_color_override("font_color", UITheme.STRAW)
 		_set_mark(goal_cool_mark, false, UITheme.STRAW)
 
@@ -634,6 +702,7 @@ func _build_report() -> void:
 	report_modal.add_child(dim)
 
 	var card = UITheme.card(Color(UITheme.PANEL, 0.97), UITheme.STATE, 101)
+	report_card = card
 	card.padding = Vector4(26, 22, 26, 24)
 	card.chamfer = 16.0
 	card.set_anchors_preset(Control.PRESET_CENTER)
@@ -641,8 +710,19 @@ func _build_report() -> void:
 	card.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	card.grow_vertical = Control.GROW_DIRECTION_BOTH
 	report_modal.add_child(card)
+	var shell = UITheme.vbox(12)
+	card.add_child(shell)
+	report_scroll = ScrollContainer.new()
+	report_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	report_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	report_scroll.follow_focus = true
+	report_scroll.focus_mode = Control.FOCUS_ALL
+	report_scroll.gui_input.connect(_on_report_scroll_input)
+	shell.add_child(report_scroll)
 	var box = UITheme.vbox(12)
-	card.add_child(box)
+	report_content = box
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	report_scroll.add_child(box)
 
 	box.add_child(UITheme.header("satellite", "รายงานดาวเทียมโคจรผ่าน 20:00 · NOAA-20 / S-NPP VIIRS", UITheme.STATE))
 	report_title = UITheme.wrap(UITheme.label("", "Title"))
@@ -668,7 +748,46 @@ func _build_report() -> void:
 	continue_button.theme_type_variation = "PrimaryButton"
 	continue_button.custom_minimum_size = Vector2(0, 50)
 	continue_button.pressed.connect(_on_continue_pressed)
-	box.add_child(continue_button)
+	shell.add_child(continue_button)
+	report_scroll.focus_next = report_scroll.get_path_to(continue_button)
+	report_scroll.focus_previous = report_scroll.get_path_to(continue_button)
+	continue_button.focus_next = continue_button.get_path_to(report_scroll)
+	continue_button.focus_previous = continue_button.get_path_to(report_scroll)
+	report_content.minimum_size_changed.connect(_fit_report)
+	get_viewport().size_changed.connect(_fit_report)
+	_fit_report()
+
+## A long list of detected hot spots must never push the continue action off screen.
+func _fit_report() -> void:
+	if not is_instance_valid(report_card):
+		return
+	var area = get_viewport().get_visible_rect().size
+	var width = minf(780.0, area.x - 48.0)
+	var content_height = report_content.get_combined_minimum_size().y
+	var height = maxf(120.0, minf(content_height, area.y - 156.0))
+	report_scroll.custom_minimum_size.y = height
+	report_card.custom_minimum_size.x = width
+	report_card.size = Vector2(width, height + 108.0)
+	report_card.position = (area - report_card.size) * 0.5
+
+func _on_report_scroll_input(event: InputEvent) -> void:
+	var step = 0
+	if event.is_action_pressed("ui_down"):
+		step = 48
+	elif event.is_action_pressed("ui_up"):
+		step = -48
+	elif event is InputEventKey and event.pressed:
+		if event.keycode == KEY_PAGEDOWN:
+			step = int(report_scroll.size.y * 0.8)
+		elif event.keycode == KEY_PAGEUP:
+			step = -int(report_scroll.size.y * 0.8)
+		elif event.keycode == KEY_END:
+			step = int(report_scroll.get_v_scroll_bar().max_value)
+		elif event.keycode == KEY_HOME:
+			step = -int(report_scroll.get_v_scroll_bar().max_value)
+	if step != 0:
+		report_scroll.scroll_vertical += step
+		report_scroll.accept_event()
 
 func _report_tile(title: String, value: String, color: Color) -> FacetCard:
 	var tile = UITheme.card(UITheme.PANEL_HI, color, 110 + report_stats.get_child_count())
@@ -712,7 +831,7 @@ func update_countdown(text: String) -> void:
 	countdown_label.text = text
 
 func update_water(current: float, capacity: float) -> void:
-	water_value.text = "%.0f/%d ล." % [current, roundi(capacity)]
+	water_value.text = L10n.format("%.0f/%d ล.", [current, roundi(capacity)])
 	water_bar.max_value = capacity
 	water_bar.value = current
 	water_bar.fill_color = UITheme.RUBY if current < 1.0 else UITheme.WATER
@@ -738,21 +857,21 @@ func update_scrutiny(scrutiny: int) -> void:
 
 func update_wind(dir: Vector2, speed: float) -> void:
 	var strong = speed > FireGrid.EMBER_JUMP_WIND
-	wind_label.text = "ลม%s ×%.1f%s" % [UITheme.cardinal_th(dir), speed, " · ลูกไฟปลิว!" if strong else ""]
+	wind_label.text = L10n.format("ลม%s ×%.1f%s", [UITheme.cardinal_th(dir), speed, " · ลูกไฟปลิว!" if strong else ""])
 	wind_label.add_theme_color_override("font_color", UITheme.EMBER if strong else UITheme.CREAM)
 	wind_compass.set_wind(dir, strong)
 
 ## Afternoon fuel dryness: tells the player when fire will run and when it will stall
 func update_fuel(dryness: float) -> void:
 	var mood = "เชื้อไฟชื้น ไฟลามช้า" if dryness < 0.6 else ("เชื้อไฟแห้ง ไฟลามเร็ว" if dryness >= 0.9 else "เชื้อไฟกำลังแห้ง")
-	fuel_label.text = "%s · %d%%" % [mood, roundi(dryness * 100.0)]
+	fuel_label.text = L10n.format("%s · %d%%", [mood, roundi(dryness * 100.0)])
 	fuel_label.add_theme_color_override("font_color", UITheme.WATER if dryness < 0.6 else (UITheme.EMBER if dryness >= 0.9 else UITheme.STRAW))
 
 func update_stamina(current: float, max_stamina: float, smoke_exposure: float) -> void:
 	breath_bar.value = current
 	breath_bar.set_markers([{"at": max_stamina, "color": UITheme.DIM}] if max_stamina < 100.0 else [])
 	var coughing = smoke_exposure >= PlayerController.SMOKE_COUGH_THRESHOLD
-	breath_value.text = "ไอ! %d%%" % int(current) if coughing else "%d%%" % int(current)
+	breath_value.text = L10n.format("ไอ! %d%%", int(current)) if coughing else "%d%%" % int(current)
 	breath_hint.text = ("ควันลดลง · ยังไออยู่" if smoke_exposure < _last_exposure else "ออกจากควันเพื่อฟื้นลมหายใจ") if coughing else ("กำลังฟื้นลมหายใจ" if current < max_stamina else "")
 	breath_hint.visible = not breath_hint.text.is_empty()
 	_last_exposure = smoke_exposure
@@ -770,12 +889,11 @@ func update_tool(tool_name: String) -> void:
 
 func show_tip(text: String, duration: float = 10.0) -> void:
 	_tip_serial += 1
-	var serial = _tip_serial
+	_tip_requested = true
+	_tip_remaining = duration
 	tip_label.text = text
 	tip_card.visible = true
-	await get_tree().create_timer(duration).timeout
-	if serial == _tip_serial:
-		tip_card.visible = false
+	_queue_fit_tip_layout()
 
 func show_alert(message: String, duration: float = 3.0) -> void:
 	_alert_serial += 1
@@ -783,7 +901,7 @@ func show_alert(message: String, duration: float = 3.0) -> void:
 	alert_label.text = message
 	alert_card.visible = true
 	alert_card.modulate.a = 1.0
-	await get_tree().create_timer(duration).timeout
+	await get_tree().create_timer(duration, false).timeout
 	if serial != _alert_serial:
 		return
 	var tw = create_tween()
@@ -794,14 +912,19 @@ func show_alert(message: String, duration: float = 3.0) -> void:
 		alert_label.text = ""
 
 func show_elder_wind_warning(new_dir: Vector2, speed: float) -> void:
+	_elder_warning_serial += 1
+	var serial = _elder_warning_serial
 	elder_warning_banner.visible = true
 	var embers = " · ลูกไฟจะข้ามแนวกันไฟ!" if speed > FireGrid.EMBER_JUMP_WIND else ""
-	elder_warning_text.text = "ตาโพ: “อีก 10 วิ ลมจะเปลี่ยนไปพัดทาง%s”%s" % [UITheme.cardinal_th(new_dir), embers]
-	await get_tree().create_timer(7.0).timeout
-	elder_warning_banner.visible = false
+	elder_warning_text.text = L10n.format("ตาโพ: “อีก 10 วิ ลมจะเปลี่ยนไปพัดทาง%s”%s", [UITheme.cardinal_th(new_dir), embers])
+	await get_tree().create_timer(7.0, false).timeout
+	if serial == _elder_warning_serial:
+		elder_warning_banner.visible = false
 
 ## `from_ranger` shows the ranger's portrait instead of the drone icon
 func show_drone_alert(message: String, is_danger: bool = false, from_ranger: bool = false) -> void:
+	_drone_serial += 1
+	var serial = _drone_serial
 	drone_banner.visible = true
 	drone_text.text = message
 	_drone_icon.visible = not from_ranger
@@ -810,8 +933,9 @@ func show_drone_alert(message: String, is_danger: bool = false, from_ranger: boo
 	drone_text.add_theme_color_override("font_color", c)
 	drone_banner.accent = c
 	_drone_icon.color = c
-	await get_tree().create_timer(5.0).timeout
-	drone_banner.visible = false
+	await get_tree().create_timer(5.0, false).timeout
+	if serial == _drone_serial:
+		drone_banner.visible = false
 
 ## 0..1 strength of the sepia inversion post-process
 func set_inversion_strength(strength: float) -> void:
@@ -845,7 +969,7 @@ func show_satellite_sweep_ui(threshold: float = 35.0) -> void:
 	var box = UITheme.vbox(6)
 	thermal_legend.add_child(box)
 	box.add_child(UITheme.header("satellite", "ภาพความร้อนสีเทียม", UITheme.STATE))
-	box.add_child(_legend_row([Color("ffffff"), Color("ffd933")], "≥ %d TU · ถูกตรวจพบเป็นจุดความร้อน" % roundi(threshold)))
+	box.add_child(_legend_row([Color("ffffff"), Color("ffd933")], L10n.format("≥ %d TU · ถูกตรวจพบเป็นจุดความร้อน", roundi(threshold))))
 	box.add_child(_legend_row([Color("f25919"), Color("730d73")], "อุ่น ยังต่ำกว่าเกณฑ์"))
 	box.add_child(_legend_row([Color("0a1038")], "พื้นเย็น / เถ้าที่ดับสนิทแล้ว"))
 	box.add_child(_legend_row([Color("ff1a1a")], "จุดผิดปกติที่ถูกบันทึก"))
@@ -888,34 +1012,34 @@ func show_resolution_report(final_yield: float, detected_hotspots: int, escaped:
 		tone = UITheme.RUBY
 
 	# One line per goal, so the player always sees what decided the round
-	var rice_text = "ยุ้งข้าว +%.0f%%" % rice_change if rice_change > 0.0 else ("ยุ้งข้าวเท่าเดิม" if rice_change == 0.0 else "ยุ้งข้าว %.0f%% หมู่บ้านจะหิว" % rice_change)
-	lines.append("%s เป้าหมาย 1 · เถ้า %.0f%% (เป้า %d%%) → %s" % ["ผ่าน" if ash_ok else "ไม่ผ่าน", final_yield, roundi(target), rice_text])
+	var rice_text = L10n.format("ยุ้งข้าว +%.0f%%", rice_change) if rice_change > 0.0 else ("ยุ้งข้าวเท่าเดิม" if rice_change == 0.0 else L10n.format("ยุ้งข้าว %.0f%% หมู่บ้านจะหิว", rice_change))
+	lines.append(L10n.format("%s เป้าหมาย 1 · เถ้า %.0f%% (เป้า %d%%) → %s", ["ผ่าน" if ash_ok else "ไม่ผ่าน", final_yield, roundi(target), rice_text]))
 	if heat_ok:
 		lines.append("ผ่าน เป้าหมาย 2 · ดาวเทียมไม่พบจุดร้อน")
 	else:
-		lines.append("ไม่ผ่าน เป้าหมาย 2 · ดาวเทียมพบ %d จุด → ความเพ่งเล็ง +%d" % [detected_hotspots, satellite_scrutiny])
+		lines.append(L10n.format("ไม่ผ่าน เป้าหมาย 2 · ดาวเทียมพบ %d จุด → ความเพ่งเล็ง +%d", [detected_hotspots, satellite_scrutiny]))
 	if escaped:
 		lines.append("ไฟลามเข้าป่าอนุรักษ์ เจ้าหน้าที่เปิดการสอบสวน")
 	if state.last_scrutiny_relief > 0:
-		lines.append("เจ้าหน้าที่หันไปสนใจหมู่บ้านอื่น ความเพ่งเล็ง −%d%s" % [state.last_scrutiny_relief, " (เผาสะอาด)" if state.last_scrutiny_relief >= GameState.PLOT_SCRUTINY_DECAY + GameState.CLEAN_BURN_BONUS else ""])
+		lines.append(L10n.format("เจ้าหน้าที่หันไปสนใจหมู่บ้านอื่น ความเพ่งเล็ง −%d%s", [state.last_scrutiny_relief, " (เผาสะอาด)" if state.last_scrutiny_relief >= GameState.PLOT_SCRUTINY_DECAY + GameState.CLEAN_BURN_BONUS else ""]))
 	report_title.text = title
 	report_title.add_theme_color_override("font_color", tone)
-	report_body.text = "\n".join(lines)
+	report_body.text = L10n.join(lines)
 
 	var tips = PackedStringArray()
 	if not ash_ok:
-		tips.append("จุดไฟให้ทั่วแปลงก่อน %d:%02d และฉีดน้ำถ่านคุให้กลายเป็นเถ้า" % [self_cool_minute / 60, self_cool_minute % 60])
+		tips.append(L10n.format("จุดไฟให้ทั่วแปลงก่อน %d:%02d และฉีดน้ำถ่านคุให้กลายเป็นเถ้า", [self_cool_minute / 60, self_cool_minute % 60]))
 	if not heat_ok:
 		tips.append("ช่วง 18:00–20:00 ฉีดน้ำถ่านทุกจุด ดูช่องเป้าหมายข้อ 2 ให้เป็น 0")
 	if escaped:
 		tips.append("ถางแนวกันไฟฝั่งป่าอุทยานให้เสร็จก่อนจุดไฟ")
-	report_tip.text = "เคล็ดลับรอบหน้า: " + " · ".join(tips)
+	report_tip.text = L10n.concat(["เคล็ดลับรอบหน้า: ", L10n.join(tips, " · ")])
 	report_tip.visible = not tips.is_empty() and not state.is_game_over()
 
 	for c in report_stats.get_children():
 		c.queue_free()
 	var ash_color = UITheme.EMERALD if ash_ok else (UITheme.STRAW if final_yield >= 60.0 else UITheme.RUBY)
-	report_stats.add_child(_report_tile("เถ้า (เป้า %d%%)" % roundi(target), "%.1f%%" % final_yield, ash_color))
+	report_stats.add_child(_report_tile(L10n.format("เถ้า (เป้า %d%%)", roundi(target)), "%.1f%%" % final_yield, ash_color))
 	report_stats.add_child(_report_tile("จุดร้อนที่ถูกตรวจพบ", str(detected_hotspots), UITheme.EMERALD if heat_ok else UITheme.RUBY))
 	report_stats.add_child(_report_tile("ไฟลามเข้าป่า", "ใช่" if escaped else "ไม่", UITheme.RUBY if escaped else UITheme.EMERALD))
 	report_stats.add_child(_report_tile("ความเพ่งเล็ง", "%d/100" % scrutiny, UITheme.RUBY if scrutiny >= 75 else UITheme.STATE))
@@ -924,12 +1048,18 @@ func show_resolution_report(final_yield: float, detected_hotspots: int, escaped:
 	if gis_lines.is_empty():
 		report_text.text = "บันทึกจุดความร้อน GISTDA / FIRMS: ไม่มีรายการ"
 	else:
-		report_text.text = "บันทึกจุดความร้อน GISTDA / FIRMS\n" + "\n".join(gis_lines)
+		report_text.text = L10n.concat(["บันทึกจุดความร้อน GISTDA / FIRMS\n", L10n.join(gis_lines)])
 
-	continue_button.text = "เริ่มแคมเปญใหม่" if state.is_game_over() else "กลับหมู่บ้าน · นั่งข้างเตาไฟ"
+	continue_button.text = "ดูบทสรุปของหมู่บ้าน" if state.is_game_over() else "กลับหมู่บ้าน · นั่งข้างเตาไฟ"
+	_fit_report()
+	if not is_instance_valid(_report_focus_scope):
+		_report_focus_scope = ModalFocusScope.begin(report_modal)
 	continue_button.grab_focus()
 
 func _on_continue_pressed() -> void:
+	if is_instance_valid(_report_focus_scope):
+		_report_focus_scope.release()
+		_report_focus_scope = null
 	if AudioManager.instance:
 		AudioManager.instance.stop_all_loops()
 	# Results were already recorded when the satellite pass resolved.
@@ -951,7 +1081,7 @@ func _update_refill_guidance() -> void:
 		return
 	var near: bool = Vector2(_player.global_position.x - _player.refill_point.x, _player.global_position.z - _player.refill_point.z).length() <= _player.REFILL_RADIUS
 	var full: bool = _player.water >= _player.water_capacity
-	refill_hint.text = ("น้ำเต็มแล้ว" if full else "กำลังเติมน้ำ %.0f / %.0f ลิตร" % [_player.water, _player.water_capacity]) if near and _player.input_enabled else ("เติมน้ำที่ถังข้างเถียงนา" if not full else "")
+	refill_hint.text = ("น้ำเต็มแล้ว" if full else L10n.format("กำลังเติมน้ำ %.0f / %.0f ลิตร", [_player.water, _player.water_capacity])) if near and _player.input_enabled else ("เติมน้ำที่ถังข้างเถียงนา" if not full else "")
 	refill_hint.visible = not refill_hint.text.is_empty()
 	var area := get_viewport().get_visible_rect().size
 	var point := _camera.unproject_position(_player.refill_point + Vector3.UP * 1.4)
@@ -964,5 +1094,18 @@ func _update_refill_guidance() -> void:
 	var direction := point - area * 0.5
 	var arrows := ["→", "↘", "↓", "↙", "←", "↖", "↑", "↗"]
 	var arrow: String = arrows[posmod(roundi(direction.angle() / (PI / 4.0)), 8)]
-	refill_marker_text.text = ("เติมน้ำ " + arrow) if offscreen else "เติมน้ำ"
+	refill_marker_text.text = L10n.concat(["เติมน้ำ ", arrow]) if offscreen else "เติมน้ำ"
 	refill_marker.position = Vector2(clampf(point.x, bounds.position.x, bounds.end.x), clampf(point.y, bounds.position.y, bounds.end.y))
+	if _refill_marker_obscured():
+		refill_marker.hide()
+
+func _refill_marker_obscured() -> bool:
+	var marker = refill_marker.get_global_rect()
+	for overlay in [tip_card, report_modal]:
+		if overlay.is_visible_in_tree() and marker.intersects(overlay.get_global_rect()):
+			return true
+	if AudioManager.instance and is_instance_valid(AudioManager.instance.subtitle_overlay):
+		var caption = AudioManager.instance.subtitle_overlay.card
+		if caption.is_visible_in_tree() and marker.intersects(caption.get_global_rect()):
+			return true
+	return false

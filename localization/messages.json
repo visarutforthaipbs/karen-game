@@ -1,0 +1,2092 @@
+[
+  {
+    "id": "text_000",
+    "th": "ตาโพ",
+    "en": "Ta-poh"
+  },
+  {
+    "id": "text_001",
+    "th": "มูนอ",
+    "en": "Mu-naw"
+  },
+  {
+    "id": "text_002",
+    "th": "สำลักควัน กำลังหนีออกจากควัน!",
+    "en": "Choking on smoke—escaping!"
+  },
+  {
+    "id": "text_003",
+    "th": "หลบใต้ร่มไผ่",
+    "en": "Sheltering under bamboo"
+  },
+  {
+    "id": "text_004",
+    "th": "กำลังไอ",
+    "en": "Coughing"
+  },
+  {
+    "id": "text_005",
+    "th": "เดินตาม",
+    "en": "Following"
+  },
+  {
+    "id": "text_006",
+    "th": "เดินตรวจหาถ่านในกองเถ้า",
+    "en": "Searching the ash for embers"
+  },
+  {
+    "id": "text_007",
+    "th": "กำลังไปทำงาน",
+    "en": "Heading to work"
+  },
+  {
+    "id": "text_008",
+    "th": "ถางแนวกันไฟ",
+    "en": "Clearing a firebreak"
+  },
+  {
+    "id": "text_009",
+    "th": "ฉีดน้ำดับถ่าน",
+    "en": "Dousing embers"
+  },
+  {
+    "id": "text_010",
+    "th": "ยังไม่มีโดรนป่าไม้ประจำลุ่มน้ำนี้",
+    "en": "No forestry drones in this watershed yet"
+  },
+  {
+    "id": "text_011",
+    "th": "โดรนป่าไม้ 1 ลำลาดตระเวนหุบเขาช่วงกลางวัน",
+    "en": "One forestry drone patrols the valley by day"
+  },
+  {
+    "id": "text_012",
+    "th": "โดรนป่าไม้ %d ลำบินลาดตระเวนประสานกัน%s",
+    "en": "%d forestry drones patrol together%s"
+  },
+  {
+    "id": "text_013",
+    "th": " ด้วยความเร็วสูง",
+    "en": " at high speed"
+  },
+  {
+    "id": "text_014",
+    "th": "ภัยแล้งทั้งภูมิภาค: ไฟลามเร็วขึ้น %d%% (ความชื้น %d%%)",
+    "en": "Regional drought: fire spreads %d%% faster (%d%% humidity)"
+  },
+  {
+    "id": "text_015",
+    "th": "เกณฑ์ตรวจจับของ VIIRS: %d หน่วยความร้อน (TU)",
+    "en": "VIIRS detection threshold: %d thermal units (TU)"
+  },
+  {
+    "id": "text_016",
+    "th": "กล้องความร้อนภาคพื้น %d ตัวเฝ้าแนวเขตอุทยาน",
+    "en": "%d ground thermal cameras watch the park boundary"
+  },
+  {
+    "id": "text_017",
+    "th": "เจ้าหน้าที่ป่าไม้ %d นายเดินตรวจแนวป่ารอบแปลง 15:30–18:30",
+    "en": "%d forestry rangers patrol the plot boundary, 15:30–18:30"
+  },
+  {
+    "id": "text_018",
+    "th": "ด่านทหารบนถนน: ไปเอาแรงต้องใช้เวลามากขึ้น",
+    "en": "Military road checkpoint: mutual aid takes longer"
+  },
+  {
+    "id": "text_019",
+    "th": "เคอร์ฟิวไม่ผ่อนผัน: ถ้าดาวเทียมจับได้ ความเพ่งเล็งเพิ่ม %d–%d",
+    "en": "Strict curfew: satellite detection adds %d–%d scrutiny"
+  },
+  {
+    "id": "text_020",
+    "th": "ปีนี้เจ้าหน้าที่ยังผ่อนปรนอยู่",
+    "en": "Enforcement is still lenient this year"
+  },
+  {
+    "id": "text_021",
+    "th": "ถางแนวกันไฟรอบแปลงก่อน · กด 2 แล้วคลิกพุ่มไม้ข้างตัว ขะแนจะคราดจนเป็นดินโล่ง",
+    "en": "Clear a firebreak first · Press 2 and click nearby brush. Kha-nae will rake it down to bare soil."
+  },
+  {
+    "id": "text_022",
+    "th": "เชื้อไฟแห้งแล้ว · กด 1 แล้วลากจุดไฟเป็นแนวยาวที่ตีนเนิน (ฝั่งล่างของแปลง) ไฟจะวิ่งขึ้นเนิน",
+    "en": "Fuel is dry · Press 1 and drag a line of fire along the foot of the slope. Fire travels uphill."
+  },
+  {
+    "id": "text_023",
+    "th": "ลูกไฟตกในป่า! กด 3 แล้วคลิกฉีดน้ำที่ลูกไฟภายใน 8 วินาที (ถังพ่นน้ำเอื้อมได้ไกลกว่า)",
+    "en": "An ember landed in the forest! Press 3 and spray it within 8 seconds. The sprayer reaches farther than other tools."
+  },
+  {
+    "id": "text_024",
+    "th": "เลย 17:16 แล้ว · ไฟที่ลุกจากนี้จะไม่ทันเย็นเองก่อน 20:00 ต้องฉีดน้ำทุกจุด",
+    "en": "It is past 17:16 · New fires will not cool on their own before 20:00. You must spray every remaining ember."
+  },
+  {
+    "id": "text_025",
+    "th": "ถึงเวลาดับถ่าน · กด 3 ฉีดน้ำถ่านคุทุกจุดให้หมดก่อน 20:00 น้ำเติมที่ถังข้างเถียงนา · ลมหายใจฟื้นเมื่อออกจากควันและควันสะสมลดลง",
+    "en": "Time to douse embers · Press 3 and spray all embers before 20:00. Refill beside the field hut. Leave the smoke and let smoke exposure fall to recover your breath."
+  },
+  {
+    "id": "text_026",
+    "th": "เสียงรวม",
+    "en": "Master volume"
+  },
+  {
+    "id": "text_027",
+    "th": "ดนตรี",
+    "en": "Music"
+  },
+  {
+    "id": "text_028",
+    "th": "เสียงเอฟเฟกต์",
+    "en": "Sound effects"
+  },
+  {
+    "id": "text_029",
+    "th": "เสียงบรรยากาศ",
+    "en": "Ambience"
+  },
+  {
+    "id": "text_030",
+    "th": "เสียงพูดและวิทยุ",
+    "en": "Voice and radio"
+  },
+  {
+    "id": "text_031",
+    "th": "ขะแน",
+    "en": "Kha-nae"
+  },
+  {
+    "id": "text_032",
+    "th": "กินน้อย",
+    "en": "Light meal"
+  },
+  {
+    "id": "text_033",
+    "th": "กินปกติ",
+    "en": "Regular meal"
+  },
+  {
+    "id": "text_034",
+    "th": "กินอิ่ม",
+    "en": "Full meal"
+  },
+  {
+    "id": "text_035",
+    "th": "ระยะ 1 · ถางแนวกันไฟ (14:00–15:30)",
+    "en": "Phase 1 · Clear firebreaks (14:00–15:30)"
+  },
+  {
+    "id": "text_036",
+    "th": "เชื้อไฟยังชื้น: ถางแนวกันไฟรอบแปลง (กดค้างทีละช่อง) อ่านทิศลมก่อนจุด",
+    "en": "Fuel is still damp: clear a firebreak around the plot (hold on each cell). Check the wind before lighting."
+  },
+  {
+    "id": "text_037",
+    "th": "ระยะ 2 · เผาใหญ่ (15:30–18:00)",
+    "en": "Phase 2 · Main burn (15:30–18:00)"
+  },
+  {
+    "id": "text_038",
+    "th": "เชื้อไฟแห้งสุด: จุดไฟเป็นแนวที่ตีนเนิน ดับลูกไฟที่ตกในป่า และหลบโดรน",
+    "en": "Fuel is driest: light a line at the foot of the slope, douse forest embers and avoid drones."
+  },
+  {
+    "id": "text_039",
+    "th": "ระยะ 3 · อากาศผกผัน เร่งดับถ่านคุ (18:00–19:45)",
+    "en": "Phase 3 · Inversion: douse embers (18:00–19:45)"
+  },
+  {
+    "id": "text_040",
+    "th": "ฉีดน้ำดับตอไผ่และโคนรากที่ยังคุแดง",
+    "en": "Douse glowing bamboo stumps and roots."
+  },
+  {
+    "id": "text_041",
+    "th": "ระยะ 4 · นับถอยหลังดาวเทียม (19:45–20:00)",
+    "en": "Phase 4 · Satellite countdown (19:45–20:00)"
+  },
+  {
+    "id": "text_042",
+    "th": "ตามดับทุกจุดที่ร้อนตั้งแต่ %d TU ขึ้นไป!",
+    "en": "Douse every cell at or above %d TU!"
+  },
+  {
+    "id": "text_043",
+    "th": "%s · ปีที่ %d\n%s",
+    "en": "%s · Year %d\n%s"
+  },
+  {
+    "id": "text_044",
+    "th": "\nเช้านี้ทีมไปเอาแรงช่วยหมู่บ้านอื่น เริ่มเผาช้าไป %d นาที",
+    "en": "\nThe team helped another village this morning. Burning starts %d minutes late."
+  },
+  {
+    "id": "text_045",
+    "th": "เจ้าหน้าที่เดินตรวจเห็นเปลวไฟ! วิทยุแจ้งศูนย์ · ความเพ่งเล็ง +%d",
+    "en": "A ranger saw flames! Radio report · Scrutiny +%d"
+  },
+  {
+    "id": "text_046",
+    "th": "เจ้าหน้าที่เห็นทีมอยู่ข้างกองไฟ! · ความเพ่งเล็ง +%d",
+    "en": "A ranger saw the team beside a fire! · Scrutiny +%d"
+  },
+  {
+    "id": "text_047",
+    "th": "VIIRS ผ่านใน %02d:%02d",
+    "en": "VIIRS in %02d:%02d"
+  },
+  {
+    "id": "text_048",
+    "th": "โดรนบินกลับฐาน — แสงน้อยจนกล้องถ่ายไม่ชัด",
+    "en": "The drone is returning to base—too dark for clear photos."
+  },
+  {
+    "id": "text_049",
+    "th": "เจ้าหน้าที่ป่าไม้เดินตรวจแนวป่ารอบแปลง (ถึง 18:30) — อย่าให้เขาเห็นเปลวไฟ",
+    "en": "Rangers patrol the plot boundary until 18:30—keep flames out of sight."
+  },
+  {
+    "id": "text_050",
+    "th": "18:00 พระอาทิตย์ตก — อากาศผกผันกดควันไว้ติดพื้น ระวังลมหายใจ!",
+    "en": "18:00 sunset · An inversion traps smoke near the ground. Watch your breath!"
+  },
+  {
+    "id": "text_051",
+    "th": "โดรนป่าไม้บินเข้ามาสำรวจ (~45 วิ) — หลบใต้ร่มไผ่หรือชายป่า หรือดับเปลวไฟที่สูง!",
+    "en": "A forestry drone is surveying for about 45 seconds—shelter under bamboo or at the forest edge, or put out tall flames!"
+  },
+  {
+    "id": "text_052",
+    "th": "โดรนกลับไปเปลี่ยนแบตเตอรี่ (~1 นาที) — จุดไฟตอนนี้!",
+    "en": "The drone is changing its battery (about 1 minute)—light your fires now!"
+  },
+  {
+    "id": "text_053",
+    "th": "แฟลชโดรน! ถ่ายภาพเปลวไฟได้ · ความเพ่งเล็ง +%d",
+    "en": "Drone flash! Flames photographed · Scrutiny +%d"
+  },
+  {
+    "id": "text_054",
+    "th": "แฟลชโดรน! ถ่ายภาพทีมกลางที่โล่งได้ · ความเพ่งเล็ง +%d",
+    "en": "Drone flash! Team photographed in the open · Scrutiny +%d"
+  },
+  {
+    "id": "text_055",
+    "th": "กล้องความร้อนที่แนวเขตอุทยานจับได้! · ความเพ่งเล็ง +%d",
+    "en": "A park-boundary thermal camera detected heat! · Scrutiny +%d"
+  },
+  {
+    "id": "text_056",
+    "th": "ลมเปลี่ยนทิศแล้ว! ตรวจแนวกันไฟรอบแปลงอีกครั้ง",
+    "en": "The wind has changed! Check the firebreak around the plot again."
+  },
+  {
+    "id": "text_057",
+    "th": "ปล้องไผ่ระเบิด! แรงไอน้ำดีดลูกไฟไปตามลม",
+    "en": "Bamboo burst! Steam pressure sent embers downwind."
+  },
+  {
+    "id": "text_058",
+    "th": "ลูกไฟตกในป่าอุทยาน! รีบฉีดน้ำดับภายใน 8 วินาที ก่อนไฟลาม",
+    "en": "An ember landed in the protected forest! Spray it within 8 seconds before it spreads."
+  },
+  {
+    "id": "text_059",
+    "th": "ลมแรง — ลูกไฟกระโดดข้ามแนวกันไฟ!",
+    "en": "Strong wind—embers can jump firebreaks!"
+  },
+  {
+    "id": "text_060",
+    "th": "อีก %d นาที ดาวเทียม VIIRS จะโคจรผ่าน!",
+    "en": "VIIRS passes overhead in %d minutes!"
+  },
+  {
+    "id": "text_061",
+    "th": "ระยะ 5 · ดาวเทียมโคจรผ่าน (20:00)",
+    "en": "Phase 5 · Satellite pass (20:00)"
+  },
+  {
+    "id": "text_062",
+    "th": "VIIRS กำลังสแกนความร้อนทั้งแปลง",
+    "en": "VIIRS is scanning the whole plot for heat."
+  },
+  {
+    "id": "text_063",
+    "th": "... และอีก %d จุด",
+    "en": "... and %d more locations"
+  },
+  {
+    "id": "text_064",
+    "th": "อันตราย! ไฟลามเข้าป่าอนุรักษ์แล้ว · ความเพ่งเล็ง +%d",
+    "en": "Danger! Fire spread into the protected forest · Scrutiny +%d"
+  },
+  {
+    "id": "text_065",
+    "th": "น้ำในถังพ่นหมด! ไปเติมที่ถังน้ำข้างเถียงนา",
+    "en": "Your sprayer is empty! Refill at the water barrel beside the field hut."
+  },
+  {
+    "id": "text_066",
+    "th": "%s สำลักควัน! เป่านกหวีดเรียกกลับมา",
+    "en": "%s is choking on smoke! Whistle to call them back."
+  },
+  {
+    "id": "text_067",
+    "th": "เป่านกหวีด — เรียกทีมมารวมที่ตัวเรา!",
+    "en": "Whistle—call the team to you!"
+  },
+  {
+    "id": "text_068",
+    "th": "ส่งตาโพไปถางแนวกันไฟ",
+    "en": "Send Ta-poh to clear a firebreak"
+  },
+  {
+    "id": "text_069",
+    "th": "ส่งมูนอไปดับจุดความร้อน",
+    "en": "Send Mu-naw to douse hot spots"
+  },
+  {
+    "id": "text_070",
+    "th": "ถังหยดไฟ · จุดไฟ",
+    "en": "Drip torch · Light fires"
+  },
+  {
+    "id": "text_071",
+    "th": "มีดพร้าและคราด · ถางแนวกันไฟ",
+    "en": "Machete and rake · Clear firebreaks"
+  },
+  {
+    "id": "text_072",
+    "th": "ถังพ่นน้ำสะพายหลัง · ดับไฟ",
+    "en": "Backpack sprayer · Douse fires"
+  },
+  {
+    "id": "text_073",
+    "th": "ไร่ต่ำ",
+    "en": "Lower field"
+  },
+  {
+    "id": "text_074",
+    "th": "ลาดชันน้อย พุ่มไม้เบาบาง การเฝ้าระวังน้อย",
+    "en": "Gentle slope, sparse brush, little surveillance"
+  },
+  {
+    "id": "text_075",
+    "th": "แปลงที่ 1: ไร่ต่ำ",
+    "en": "Plot 1: Lower field"
+  },
+  {
+    "id": "text_076",
+    "th": "ลาดชันน้อย พุ่มไม้เบาบาง ลมหุบเขาอ่อน ยังไม่มีรายงานโดรนลาดตระเวน",
+    "en": "Gentle slope, sparse brush and light valley winds. No drone patrols reported yet."
+  },
+  {
+    "id": "text_077",
+    "th": "แปลงที่ 2: ป่าไผ่ซาง",
+    "en": "Plot 2: Sang bamboo grove"
+  },
+  {
+    "id": "text_078",
+    "th": "กอไผ่หนาแน่น ปล้องไผ่อัดไอน้ำพร้อมระเบิด เสี่ยงลูกไฟกระเด็นสูง",
+    "en": "Dense bamboo traps steam inside its culms. Bursts can scatter dangerous embers."
+  },
+  {
+    "id": "text_079",
+    "th": "แปลงที่ 3: สันดอยลมแรง",
+    "en": "Plot 3: Windy ridge"
+  },
+  {
+    "id": "text_080",
+    "th": "สันดอยชันรับลมภูเขาที่แปรปรวน ไฟวิ่งขึ้นเนินเร็วมาก",
+    "en": "A steep, exposed ridge with shifting mountain winds. Fire travels uphill very quickly."
+  },
+  {
+    "id": "text_081",
+    "th": "แปลงที่ 4: แนวป่าอุทยาน",
+    "en": "Plot 4: Park boundary"
+  },
+  {
+    "id": "text_082",
+    "th": "ติดป่าอนุรักษ์โดยตรง ลูกไฟหลุดเข้าไปแม้ลูกเดียว เจ้าหน้าที่บุกทันที",
+    "en": "Directly beside protected forest. Even one escaped ember can trigger enforcement."
+  },
+  {
+    "id": "text_083",
+    "th": "แปลงที่ 5: โค้งสุดท้ายก่อนมรสุม",
+    "en": "Plot 5: Last turn before the monsoon"
+  },
+  {
+    "id": "text_084",
+    "th": "แปลงสุดท้ายของฤดู ลาดชันสุดขีด เมฆฝนตั้งเค้า เผาให้สะอาด ไม่อย่างนั้นอดตาย",
+    "en": "The season's final plot: extreme slopes and gathering rain clouds. Burn cleanly to keep the village fed."
+  },
+  {
+    "id": "text_085",
+    "th": "ดอยสูงนิรันดร์",
+    "en": "Endless highlands"
+  },
+  {
+    "id": "text_086",
+    "th": "ดินแดนแห่งการเอาชีวิตรอด ภูมิอากาศสุดขั้วและเครือข่ายเซนเซอร์ดาวเทียมครบชุด",
+    "en": "A land of survival: extreme weather and a full network of satellite sensors."
+  },
+  {
+    "id": "text_087",
+    "th": "ทีมหิว: ลมหายใจสูงสุดเหลือ 70% สหายทำงานช้าลง 15%",
+    "en": "Hungry team: maximum breath is 70%; companions work 15% slower."
+  },
+  {
+    "id": "text_088",
+    "th": "ทีมพออิ่ม: ไม่มีโบนัส ไม่มีบทลงโทษ",
+    "en": "Fed team: no bonuses or penalties."
+  },
+  {
+    "id": "text_089",
+    "th": "ทีมอิ่มท้อง: ลมหายใจฟื้นเร็วขึ้น 50% ทุกคนเดินและทำงานเร็วขึ้น",
+    "en": "Well-fed team: breath recovers 50% faster; everyone moves and works faster."
+  },
+  {
+    "id": "text_090",
+    "th": "กินน้อย\nข้าว 0%",
+    "en": "Light meal\nRice 0%"
+  },
+  {
+    "id": "text_091",
+    "th": "กินปกติ\nข้าว −3%",
+    "en": "Regular meal\nRice −3%"
+  },
+  {
+    "id": "text_092",
+    "th": "กินอิ่ม\nข้าว −7%",
+    "en": "Full meal\nRice −7%"
+  },
+  {
+    "id": "text_093",
+    "th": "ช่วยบ้านห้วยหินลาดปลูกป่า\n→ ยืมถังพ่นน้ำให้ตาโพ",
+    "en": "Help Huai Hin Lat plant trees\n→ Borrow a sprayer for Ta-poh"
+  },
+  {
+    "id": "text_094",
+    "th": "หาบน้ำให้บ้านแม่เลา\n→ ได้ภาชนะใส่น้ำเพิ่ม (+10 ลิตร)",
+    "en": "Carry water for Mae Lao\n→ Gain extra water containers (+10 litres)"
+  },
+  {
+    "id": "text_095",
+    "th": "ช่วยบ้านหนองเต่าเก็บขิง\n→ ได้เมล็ดข้าวพื้นเมืองผลผลิตสูง",
+    "en": "Help Nong Tao harvest ginger\n→ Receive high-yield local rice seed"
+  },
+  {
+    "id": "text_096",
+    "th": "เถ้าเลี้ยงเมล็ดข้าว เมฆบังเตาไฟ",
+    "en": "Ash feeds the rice seed; clouds shelter the hearth."
+  },
+  {
+    "id": "text_097",
+    "th": "ไร่ที่พักไว้เจ็ดปี ยังจำป่าที่มันเคยเป็นได้",
+    "en": "A field rested for seven years still remembers the forest it once was."
+  },
+  {
+    "id": "text_098",
+    "th": "หลายมือช่วยกันทำแนวกันไฟ มือเดียวที่ประมาทพาเจ้าหน้าที่มาถึงบ้าน",
+    "en": "Many hands keep the firebreak safe; one careless hand brings officers to the village."
+  },
+  {
+    "id": "text_099",
+    "th": "เผาเมื่อลมหลับ นอนเมื่อถ่านดับ",
+    "en": "Burn when the wind sleeps; sleep when the embers go out."
+  },
+  {
+    "id": "text_100",
+    "th": "หมู่บ้าน · ข้างเตาไฟยามค่ำ",
+    "en": "Village · By the evening hearth"
+  },
+  {
+    "id": "text_101",
+    "th": "หมู่บ้าน",
+    "en": "Village"
+  },
+  {
+    "id": "text_102",
+    "th": "วิทยุ",
+    "en": "Radio"
+  },
+  {
+    "id": "text_103",
+    "th": "ยุ้งข้าว",
+    "en": "Granary"
+  },
+  {
+    "id": "text_104",
+    "th": "โรงซ่อม",
+    "en": "Workshop"
+  },
+  {
+    "id": "text_105",
+    "th": "กลับเตาไฟ",
+    "en": "Back to the hearth"
+  },
+  {
+    "id": "text_106",
+    "th": "ข้างเตาไฟยามค่ำ",
+    "en": "By the evening hearth"
+  },
+  {
+    "id": "text_107",
+    "th": "ข้าวในยุ้ง",
+    "en": "Rice in storage"
+  },
+  {
+    "id": "text_108",
+    "th": "ความเพ่งเล็งของรัฐ",
+    "en": "State scrutiny"
+  },
+  {
+    "id": "text_109",
+    "th": "วิธีเล่น",
+    "en": "How to play"
+  },
+  {
+    "id": "text_110",
+    "th": "ตั้งค่า",
+    "en": "Settings"
+  },
+  {
+    "id": "text_111",
+    "th": "ดูหมู่บ้าน",
+    "en": "Visit the village"
+  },
+  {
+    "id": "text_112",
+    "th": "วิทยุทรานซิสเตอร์",
+    "en": "Transistor radio"
+  },
+  {
+    "id": "text_113",
+    "th": "88.5 ป่าไม้",
+    "en": "88.5 Forestry"
+  },
+  {
+    "id": "text_114",
+    "th": "94.2 อากาศ",
+    "en": "94.2 Weather"
+  },
+  {
+    "id": "text_115",
+    "th": "101.0 เตหน่ากู",
+    "en": "101.0 Tena harp"
+  },
+  {
+    "id": "text_116",
+    "th": "แปลงที่จะเผาพรุ่งนี้",
+    "en": "Tomorrow's plot"
+  },
+  {
+    "id": "text_117",
+    "th": "เป้าหมายพรุ่งนี้",
+    "en": "Tomorrow's goals"
+  },
+  {
+    "id": "text_118",
+    "th": "โรงซ่อมเครื่องมือ",
+    "en": "Tool workshop"
+  },
+  {
+    "id": "text_119",
+    "th": "ลับมีดพร้า · ใช้ข้าว 10%",
+    "en": "Sharpen machete · Costs 10% rice"
+  },
+  {
+    "id": "text_120",
+    "th": "เปลี่ยนซีลถังพ่นน้ำ · ใช้ข้าว 10%",
+    "en": "Replace sprayer seal · Costs 10% rice"
+  },
+  {
+    "id": "text_121",
+    "th": "แม่หลู · ยุ้งข้าวและเสบียง",
+    "en": "Mae-Lu · Granary and provisions"
+  },
+  {
+    "id": "text_122",
+    "th": "เอาแรง · แลกแรงงานกับหมู่บ้านใกล้เคียง",
+    "en": "Mutual aid · Share work with nearby villages"
+  },
+  {
+    "id": "text_123",
+    "th": "ปีที่ %d · แปลงที่ %d/%d · ฤดูแล้งของไร่หมุนเวียน",
+    "en": "Year %d · Plot %d/%d · Rotational farming dry season"
+  },
+  {
+    "id": "text_124",
+    "th": "ไม่มีรายงาน",
+    "en": "No reports"
+  },
+  {
+    "id": "text_125",
+    "th": "%d ลำ · 15:00–18:00%s",
+    "en": "%d drones · 15:00–18:00%s"
+  },
+  {
+    "id": "text_126",
+    "th": " · ความเร็วสูง",
+    "en": " · High speed"
+  },
+  {
+    "id": "text_127",
+    "th": "ความสูงของเนิน",
+    "en": "Slope height"
+  },
+  {
+    "id": "text_128",
+    "th": "%.1f ม. · ไฟขึ้นเนินเร็ว ×%.1f",
+    "en": "%.1f m · Uphill fire speed ×%.1f"
+  },
+  {
+    "id": "text_129",
+    "th": "ความหนาแน่นของไผ่",
+    "en": "Bamboo density"
+  },
+  {
+    "id": "text_130",
+    "th": "%.0f%% · เสี่ยงปล้องระเบิด",
+    "en": "%.0f%% · Risk of bursting culms"
+  },
+  {
+    "id": "text_131",
+    "th": "ลมหุบเขา",
+    "en": "Valley wind"
+  },
+  {
+    "id": "text_132",
+    "th": " · ลูกไฟข้ามแนวกันไฟได้",
+    "en": " · Embers may jump firebreaks"
+  },
+  {
+    "id": "text_133",
+    "th": "โดรนลาดตระเวน",
+    "en": "Drone patrols"
+  },
+  {
+    "id": "text_134",
+    "th": "กล้องความร้อนภาคพื้น",
+    "en": "Ground thermal cameras"
+  },
+  {
+    "id": "text_135",
+    "th": "%d ตัวที่แนวเขตอุทยาน",
+    "en": "%d cameras at the park boundary"
+  },
+  {
+    "id": "text_136",
+    "th": "ไม่มี",
+    "en": "None"
+  },
+  {
+    "id": "text_137",
+    "th": "เจ้าหน้าที่เดินตรวจ",
+    "en": "Ranger patrols"
+  },
+  {
+    "id": "text_138",
+    "th": "%d นาย · 15:30–18:30",
+    "en": "%d rangers · 15:30–18:30"
+  },
+  {
+    "id": "text_139",
+    "th": "ความเข้มงวดของป่าอนุรักษ์",
+    "en": "Protected-forest enforcement"
+  },
+  {
+    "id": "text_140",
+    "th": "เกณฑ์ดาวเทียม VIIRS",
+    "en": "VIIRS threshold"
+  },
+  {
+    "id": "text_141",
+    "th": "%d TU · ถูกจับได้ เพ่งเล็ง +%d–%d",
+    "en": "%d TU · Detection adds %d–%d scrutiny"
+  },
+  {
+    "id": "text_142",
+    "th": "ภัยแล้งเร่งไฟ",
+    "en": "Drought speeds up fire"
+  },
+  {
+    "id": "text_143",
+    "th": "เผาในหน้าต่างเงาดาวเทียม %s–20:00 น.",
+    "en": "Burn within the satellite window: %s–20:00"
+  },
+  {
+    "id": "text_144",
+    "th": "เผาให้ได้เถ้า ≥%d%% ของแปลง ข้าวจึงจะเต็มยุ้ง",
+    "en": "Turn ≥%d%% of the plot into ash to fill the granary."
+  },
+  {
+    "id": "text_145",
+    "th": "ก่อน 20:00 ดับทุกจุดที่ร้อนตั้งแต่ %d TU ไม่ให้ VIIRS เห็น",
+    "en": "Before 20:00, douse every cell at or above %d TU to avoid VIIRS detection."
+  },
+  {
+    "id": "text_146",
+    "th": "ตาโพถางแนวกันไฟ%s · มูนอตามดับถ่าน",
+    "en": "Ta-poh clears firebreaks%s · Mu-naw douses embers."
+  },
+  {
+    "id": "text_147",
+    "th": " และฉีดน้ำได้",
+    "en": " and can spray water"
+  },
+  {
+    "id": "text_148",
+    "th": "มีดพร้า: ระดับ %d/3 · ถางแนวกันไฟเร็วขึ้น %d%%\nซีลถังพ่นน้ำ: ระดับ %d/3 · ใช้น้ำ %.2f ลิตรต่อครั้ง",
+    "en": "Machete: level %d/3 · Firebreak clearing %d%% faster\nSprayer seal: level %d/3 · Uses %.2f litres per spray"
+  },
+  {
+    "id": "text_149",
+    "th": "อดอยากเมื่อข้าวในยุ้งเหลือ %d%% หรือน้อยกว่า\n%s — %s\nเผาครั้งก่อนได้เถ้า %.0f%% → %s",
+    "en": "Famine at %d%% rice or less\n%s — %s\nLast burn: %.0f%% ash → %s"
+  },
+  {
+    "id": "text_150",
+    "th": "เอาแรงแต่ละครั้งกินเวลาเผาพรุ่งนี้ %d นาที%s · เริ่มเผา %s",
+    "en": "Each mutual-aid visit takes %d minutes from tomorrow's burn%s · Start %s"
+  },
+  {
+    "id": "text_151",
+    "th": " (ด่านทหารทำให้เดินทางช้าลง)",
+    "en": " (the military checkpoint slows travel)"
+  },
+  {
+    "id": "text_152",
+    "th": "เดินขึ้นไร่ · เริ่มเผา %s น.",
+    "en": "Head to the field · Start burning at %s"
+  },
+  {
+    "id": "text_153",
+    "th": "≥%d%% ข้าวเต็มยุ้ง ต่ำกว่า 60%% หมายถึงความหิว",
+    "en": "≥%d%% fills the granary; below 60%% means hunger."
+  },
+  {
+    "id": "text_154",
+    "th": "[FM 88.5 MHz · กรมป่าไม้]\n“...สถานี 4 ถึงทุกหน่วย มาตรการห้ามเผาเด็ดขาดมีผลทั่วทั้งลุ่มน้ำ พื้นที่เฝ้าระวังพรุ่งนี้: %s...”\n\n%s",
+    "en": "[FM 88.5 MHz · Forestry Department]\n“...Station 4 to all units. A total burning ban applies across this watershed. Tomorrow's surveillance area: %s...”\n\n%s"
+  },
+  {
+    "id": "text_155",
+    "th": "\nเมฆฝนฟ้าคะนองก่อตัวเหนือสันดอย พายุก่อนมรสุมจะมาถึงช่วงค่ำ",
+    "en": "\nThunderclouds are gathering above the ridge. A pre-monsoon storm will arrive this evening."
+  },
+  {
+    "id": "text_156",
+    "th": " ลมกระโชกแปรปรวนบนสันดอยที่เปิดโล่ง",
+    "en": " with shifting gusts on the exposed ridge"
+  },
+  {
+    "id": "text_157",
+    "th": "[FM 94.2 MHz · พยากรณ์อากาศบนดอย]\n“...ความชื้นสัมพัทธ์ %d%% ลมหุบเขาช่วงบ่ายพัดไปทาง%s แรง ×%.1f%s คาดว่าลมจะเปลี่ยนทิศทุก %d–%d นาที ชั้นอากาศผกผันจะกดควันไว้ติดพื้นตั้งแต่พระอาทิตย์ตก 18:00 น....”%s",
+    "en": "[FM 94.2 MHz · Highland weather]\n“...Relative humidity %d%%. Afternoon valley winds blow toward the %s at ×%.1f%s. Wind shifts are expected every %d–%d minutes. An inversion will trap smoke near the ground from sunset at 18:00...”%s"
+  },
+  {
+    "id": "text_158",
+    "th": "[FM 101.0 MHz · เตหน่ากูและเพลงพื้นบ้านปกาเกอะญอ]\n“...(เสียงเตหน่ากูเจ็ดสายกับแคนไม้ไผ่ดังก้องในกระท่อม)... ผู้เฒ่าเตือนเราว่า: %s”",
+    "en": "[FM 101.0 MHz · Tena harp and Pga K'nyau folk music]\n“...(A seven-string tena harp and bamboo khaen sound through the hut)... The elders remind us: %s”"
+  },
+  {
+    "id": "text_159",
+    "th": "เก็บเกี่ยวหน้ามรสุม · ปีที่ %d",
+    "en": "Monsoon harvest · Year %d"
+  },
+  {
+    "id": "text_160",
+    "th": "ฝนมาแล้ว แต่ข้าวที่ได้ไม่พอกินถึงปีหน้า",
+    "en": "The rains have come, but this harvest will not last until next year."
+  },
+  {
+    "id": "text_161",
+    "th": "ฝนมาแล้ว ข้าวไร่งอกงามในแปลงเถ้า",
+    "en": "The rains have come. Upland rice thrives in the ash-covered plots."
+  },
+  {
+    "id": "text_162",
+    "th": "แปลง %d",
+    "en": "Plot %d"
+  },
+  {
+    "id": "text_163",
+    "th": "เถ้าเฉลี่ยทั้งฤดู %.0f%%  →  ยุ้งข้าว %+.0f%%\nฝนมรสุมชะความเพ่งเล็งของรัฐออกไป %d",
+    "en": "Season average: %.0f%% ash → Stored rice %+.0f%%\nMonsoon rains wash away %d state scrutiny."
+  },
+  {
+    "id": "text_164",
+    "th": "ปีที่ %d · สิ่งที่รัฐจะนำมา",
+    "en": "Year %d · What enforcement will bring"
+  },
+  {
+    "id": "text_165",
+    "th": "ข้าวในยุ้งเหลือ %.0f%% หลังเก็บเกี่ยว เกณฑ์อดอยากคือ %.0f%% หรือน้อยกว่า · หมู่บ้านอดอยาก",
+    "en": "Rice after harvest: %.0f%%. Famine threshold: %.0f%% or less · Village famine"
+  },
+  {
+    "id": "text_166",
+    "th": "ความเพ่งเล็งถึง 100 · รัฐบุกหมู่บ้าน",
+    "en": "Scrutiny reached 100 · The state raids the village."
+  },
+  {
+    "id": "text_167",
+    "th": "ดูบทสรุปของหมู่บ้าน",
+    "en": "See the village's outcome"
+  },
+  {
+    "id": "text_168",
+    "th": "เริ่มปีที่ %d",
+    "en": "Begin year %d"
+  },
+  {
+    "id": "text_169",
+    "th": "กดปุ่มใดก็ได้เพื่อข้าม",
+    "en": "Press any button to skip"
+  },
+  {
+    "id": "text_170",
+    "th": "ด่านตรวจบนถนนขึ้นดอย",
+    "en": "Checkpoint on the mountain road"
+  },
+  {
+    "id": "text_171",
+    "th": "เจ้าหน้าที่ตรวจบัตรและค้นเครื่องมือทุกชิ้น",
+    "en": "Officers check IDs and search every tool."
+  },
+  {
+    "id": "text_172",
+    "th": "ผ่านด่านได้ · เช้านี้เสียเวลาไปกับเอาแรงและด่านตรวจ %d นาที",
+    "en": "Checkpoint cleared · Mutual aid and inspections cost %d minutes this morning."
+  },
+  {
+    "id": "text_173",
+    "th": "ผ่านด่านได้ · รีบขึ้นไร่ก่อนบ่ายสอง",
+    "en": "Checkpoint cleared · Hurry to the field before 14:00."
+  },
+  {
+    "id": "text_174",
+    "th": "FPS %d · ปี %d แปลง %d",
+    "en": "FPS %d · Year %d, plot %d"
+  },
+  {
+    "id": "text_175",
+    "th": "ช่อง %s",
+    "en": "Cell %s"
+  },
+  {
+    "id": "text_176",
+    "th": "เชื้อไฟแห้ง %.2f · ลม ×%.1f",
+    "en": "Fuel dryness %.2f · Wind ×%.1f"
+  },
+  {
+    "id": "text_177",
+    "th": "ลุกไหม้ %d · จุดร้อน %d · ไฟป่า %d",
+    "en": "Burning %d · Hot spots %d · Forest fires %d"
+  },
+  {
+    "id": "text_178",
+    "th": "เพ่งเล็งรอบนี้ +%d (ดาวเทียม %d โดรน %d กล้อง %d ลามป่า %d เจ้าหน้าที่ %d)",
+    "en": "Scrutiny this burn +%d (satellite %d, drones %d, cameras %d, forest spread %d, rangers %d)"
+  },
+  {
+    "id": "text_179",
+    "th": "F5 +30น. · F6 19:45 · F7 ปีถัดไป · F8 น้ำเต็ม · F9 ลูกไฟ · F10 ถูกปราบ",
+    "en": "F5 +30 min · F6 19:45 · F7 Next year · F8 Full water · F9 Ember · F10 Crackdown"
+  },
+  {
+    "id": "text_180",
+    "th": "คืนหลังดาวเทียมโคจรผ่าน",
+    "en": "The night after the satellite pass"
+  },
+  {
+    "id": "text_181",
+    "th": "เจ้าหน้าที่ป่าไม้บุกหมู่บ้าน",
+    "en": "Forestry officers raid the village."
+  },
+  {
+    "id": "text_182",
+    "th": "ยึดมีด คราด และถังพ่นน้ำ",
+    "en": "Machetes, rakes and sprayers are confiscated."
+  },
+  {
+    "id": "text_183",
+    "th": "ตาโพถูกควบคุมตัว",
+    "en": "Ta-poh is detained."
+  },
+  {
+    "id": "text_184",
+    "th": "ความเพ่งเล็งของรัฐถึงขีดสุด · หมู่บ้านถูกปราบปราม",
+    "en": "State scrutiny has reached its limit · The village is suppressed."
+  },
+  {
+    "id": "text_185",
+    "th": "ฝนมาไม่ทัน ยุ้งข้าวว่างเปล่า",
+    "en": "The rains came too late. The granary is empty."
+  },
+  {
+    "id": "text_186",
+    "th": "ครอบครัวต้องทิ้งดอย",
+    "en": "Families must leave the highlands."
+  },
+  {
+    "id": "text_187",
+    "th": "ลงไปเป็นแรงงานขัดหนี้ในพื้นราบ",
+    "en": "They descend to the lowlands as debt-bound labourers."
+  },
+  {
+    "id": "text_188",
+    "th": "ไร่หมุนเวียนที่ดูแลกันมาหลายชั่วคน ถูกทิ้งไว้ข้างหลัง",
+    "en": "Rotational fields cared for across generations are left behind."
+  },
+  {
+    "id": "text_189",
+    "th": "สรุปการเดินทาง",
+    "en": "Journey summary"
+  },
+  {
+    "id": "text_190",
+    "th": "รัฐปราบปรามหมู่บ้าน",
+    "en": "State crackdown"
+  },
+  {
+    "id": "text_191",
+    "th": "หมู่บ้านอดอยาก ต้องทิ้งดอย",
+    "en": "Famine · The village must leave"
+  },
+  {
+    "id": "text_192",
+    "th": "หมู่บ้านอยู่รอดมาได้ %d แปลง ถึงปีที่ %d ของการเผาใต้เงาดาวเทียม",
+    "en": "The village survived %d plots, reaching year %d of farming beneath the satellite's shadow."
+  },
+  {
+    "id": "text_193",
+    "th": "แปลงที่ผ่าน",
+    "en": "Plots completed"
+  },
+  {
+    "id": "text_194",
+    "th": "เถ้าเฉลี่ย",
+    "en": "Average ash"
+  },
+  {
+    "id": "text_195",
+    "th": "จุดร้อนที่ถูกจับได้",
+    "en": "Detected hot spots"
+  },
+  {
+    "id": "text_196",
+    "th": "ไฟลามเข้าป่า",
+    "en": "Forest-fire escapes"
+  },
+  {
+    "id": "text_197",
+    "th": "ภาพถ่ายจากโดรน",
+    "en": "Drone photographs"
+  },
+  {
+    "id": "text_198",
+    "th": "กล้องความร้อนจับได้",
+    "en": "Thermal-camera detections"
+  },
+  {
+    "id": "text_199",
+    "th": "เจ้าหน้าที่เดินตรวจพบ",
+    "en": "Ranger sightings"
+  },
+  {
+    "id": "text_200",
+    "th": "ลูกไฟที่ดับทัน",
+    "en": "Embers doused in time"
+  },
+  {
+    "id": "text_201",
+    "th": "สถิติใหม่! รอดได้นานที่สุดเท่าที่เคยเล่นมา",
+    "en": "New record! Your longest survival so far."
+  },
+  {
+    "id": "text_202",
+    "th": "สถิติดีที่สุด: รอด %d แปลง (ถึงปีที่ %d)",
+    "en": "Best record: %d plots survived (reached year %d)"
+  },
+  {
+    "id": "text_203",
+    "th": "ชื่อบนกระดานหมู่บ้าน:",
+    "en": "Name on the village board:"
+  },
+  {
+    "id": "text_204",
+    "th": "ติดอันดับที่ %d ของหมู่บ้าน",
+    "en": "Village rank: %d"
+  },
+  {
+    "id": "text_205",
+    "th": "อันดับออนไลน์ #%d (เบตา)",
+    "en": "Online rank #%d (beta)"
+  },
+  {
+    "id": "text_206",
+    "th": "เริ่มแคมเปญใหม่",
+    "en": "Start a new campaign"
+  },
+  {
+    "id": "text_207",
+    "th": "กลับหน้าแรก",
+    "en": "Back to title"
+  },
+  {
+    "id": "text_208",
+    "th": "เถ้า %.0f%% · เป้า %d%%",
+    "en": "Ash %.0f%% · Target %d%%"
+  },
+  {
+    "id": "text_209",
+    "th": "ไม่มีถ่านร้อน · ปลอดภัย",
+    "en": "No hot embers · Safe"
+  },
+  {
+    "id": "text_210",
+    "th": "ถ่านร้อน %d จุด · ต้องเป็น 0",
+    "en": "%d hot spots · Must reach 0"
+  },
+  {
+    "id": "text_211",
+    "th": "จุดไฟก่อน %s ถ่านเย็นเอง (%d น.)",
+    "en": "Light by %s · %d min left"
+  },
+  {
+    "id": "text_212",
+    "th": "เลย %s · ถ่านใหม่ต้องฉีดน้ำ",
+    "en": "Past %s · Spray new embers"
+  },
+  {
+    "id": "text_213",
+    "th": "คลิกซ้าย ใช้ · คลิกขวา สั่งสหาย · Space นกหวีด · ล้อเมาส์ ซูม · Z/C หมุนกล้อง · Tab ซ่อนแผง · Esc หยุดเกม",
+    "en": "Left click Use · Right click Companions · Space Whistle · Wheel Zoom · Z/C Rotate · Tab HUD · Esc Pause"
+  },
+  {
+    "id": "text_214",
+    "th": "ลมหายใจ",
+    "en": "Breath"
+  },
+  {
+    "id": "text_215",
+    "th": "เติมน้ำ",
+    "en": "Refill water"
+  },
+  {
+    "id": "text_216",
+    "th": "เคล็ดลับเผาครั้งแรก",
+    "en": "First-burn tip"
+  },
+  {
+    "id": "text_217",
+    "th": "รายงานดาวเทียมโคจรผ่าน 20:00 · NOAA-20 / S-NPP VIIRS",
+    "en": "20:00 satellite report · NOAA-20 / S-NPP VIIRS"
+  },
+  {
+    "id": "text_218",
+    "th": "%.0f/%d ล.",
+    "en": "%.0f/%d L"
+  },
+  {
+    "id": "text_219",
+    "th": "ลม%s ×%.1f%s",
+    "en": "Wind %s ×%.1f%s"
+  },
+  {
+    "id": "text_220",
+    "th": " · ลูกไฟปลิว!",
+    "en": " · Flying embers!"
+  },
+  {
+    "id": "text_221",
+    "th": "เชื้อไฟชื้น ไฟลามช้า",
+    "en": "Damp fuel · Slow spread"
+  },
+  {
+    "id": "text_222",
+    "th": "เชื้อไฟแห้ง ไฟลามเร็ว",
+    "en": "Dry fuel · Fast spread"
+  },
+  {
+    "id": "text_223",
+    "th": "เชื้อไฟกำลังแห้ง",
+    "en": "Fuel is drying"
+  },
+  {
+    "id": "text_224",
+    "th": "ไอ! %d%%",
+    "en": "Coughing! %d%%"
+  },
+  {
+    "id": "text_225",
+    "th": "ควันลดลง · ยังไออยู่",
+    "en": "Smoke is easing · Still coughing"
+  },
+  {
+    "id": "text_226",
+    "th": "ออกจากควันเพื่อฟื้นลมหายใจ",
+    "en": "Leave the smoke to recover your breath"
+  },
+  {
+    "id": "text_227",
+    "th": "กำลังฟื้นลมหายใจ",
+    "en": "Recovering breath"
+  },
+  {
+    "id": "text_228",
+    "th": " · ลูกไฟจะข้ามแนวกันไฟ!",
+    "en": " · Embers will jump the firebreak!"
+  },
+  {
+    "id": "text_229",
+    "th": "ตาโพ: “อีก 10 วิ ลมจะเปลี่ยนไปพัดทาง%s”%s",
+    "en": "Ta-poh: “In 10 seconds, the wind will turn toward the %s.”%s"
+  },
+  {
+    "id": "text_230",
+    "th": "[ NOAA-20 / S-NPP VIIRS · ดาวเทียมตรวจวัดความร้อนอินฟราเรด ]\nแบนด์ I-4 (3.74 μm) · อัลกอริทึมตรวจจับไฟป่า\nกำลังประเมินสัญญาณความร้อนทั่วแปลง...",
+    "en": "[ NOAA-20 / S-NPP VIIRS · Infrared thermal satellite ]\nI-4 band (3.74 μm) · Wildfire detection algorithm\nAssessing heat across the plot..."
+  },
+  {
+    "id": "text_231",
+    "th": "ภาพความร้อนสีเทียม",
+    "en": "False-colour thermal view"
+  },
+  {
+    "id": "text_232",
+    "th": "≥ %d TU · ถูกตรวจพบเป็นจุดความร้อน",
+    "en": "≥ %d TU · Detected as a hot spot"
+  },
+  {
+    "id": "text_233",
+    "th": "อุ่น ยังต่ำกว่าเกณฑ์",
+    "en": "Warm · Below the threshold"
+  },
+  {
+    "id": "text_234",
+    "th": "พื้นเย็น / เถ้าที่ดับสนิทแล้ว",
+    "en": "Cool ground / Fully extinguished ash"
+  },
+  {
+    "id": "text_235",
+    "th": "จุดผิดปกติที่ถูกบันทึก",
+    "en": "Recorded anomalies"
+  },
+  {
+    "id": "text_236",
+    "th": "รัฐปราบปราม! เจ้าหน้าที่บุกหมู่บ้าน",
+    "en": "Crackdown! Officers raid the village."
+  },
+  {
+    "id": "text_237",
+    "th": "เจ้าหน้าที่ป่าไม้บุกค้นหมู่บ้าน ยึดเครื่องมือทำไร่ และจับกุมผู้เฒ่า · จบเกม",
+    "en": "Forestry officers search the village, confiscate farming tools and arrest an elder · Game over"
+  },
+  {
+    "id": "text_238",
+    "th": "หมู่บ้านอดอยาก!",
+    "en": "Famine!"
+  },
+  {
+    "id": "text_239",
+    "th": "ยุ้งข้าวว่างเปล่า ครอบครัวต้องทิ้งดอยลงไปเป็นแรงงานขัดหนี้ในพื้นราบ · จบเกม",
+    "en": "The empty granary forces families into debt-bound labour in the lowlands · Game over"
+  },
+  {
+    "id": "text_240",
+    "th": "ไฟลามเข้าป่าอนุรักษ์!",
+    "en": "Fire spread into protected forest!"
+  },
+  {
+    "id": "text_241",
+    "th": "สำเร็จ! ข้าวเต็มยุ้ง และดาวเทียมไม่เห็นอะไรเลย",
+    "en": "Success! The granary is full and the satellite saw nothing."
+  },
+  {
+    "id": "text_242",
+    "th": "รอดสายตาดาวเทียม แต่เถ้ายังไม่พอ",
+    "en": "The satellite saw nothing, but there is not enough ash."
+  },
+  {
+    "id": "text_243",
+    "th": "ข้าวเต็มยุ้ง แต่ VIIRS เห็นจุดร้อน",
+    "en": "The granary is full, but VIIRS detected hot spots."
+  },
+  {
+    "id": "text_244",
+    "th": "VIIRS เห็นจุดร้อน และเถ้าไม่พอ",
+    "en": "VIIRS detected hot spots and there is not enough ash."
+  },
+  {
+    "id": "text_245",
+    "th": "ยุ้งข้าว +%.0f%%",
+    "en": "Stored rice +%.0f%%"
+  },
+  {
+    "id": "text_246",
+    "th": "ยุ้งข้าวเท่าเดิม",
+    "en": "Stored rice unchanged"
+  },
+  {
+    "id": "text_247",
+    "th": "ยุ้งข้าว %.0f%% หมู่บ้านจะหิว",
+    "en": "Stored rice %.0f%% · The village will go hungry"
+  },
+  {
+    "id": "text_248",
+    "th": "%s เป้าหมาย 1 · เถ้า %.0f%% (เป้า %d%%) → %s",
+    "en": "%s Goal 1 · Ash %.0f%% (target %d%%) → %s"
+  },
+  {
+    "id": "text_249",
+    "th": "ผ่าน",
+    "en": "Passed"
+  },
+  {
+    "id": "text_250",
+    "th": "ไม่ผ่าน",
+    "en": "Failed"
+  },
+  {
+    "id": "text_251",
+    "th": "ผ่าน เป้าหมาย 2 · ดาวเทียมไม่พบจุดร้อน",
+    "en": "Passed Goal 2 · No satellite hot spots"
+  },
+  {
+    "id": "text_252",
+    "th": "ไม่ผ่าน เป้าหมาย 2 · ดาวเทียมพบ %d จุด → ความเพ่งเล็ง +%d",
+    "en": "Failed Goal 2 · Satellite detected %d hot spots → Scrutiny +%d"
+  },
+  {
+    "id": "text_253",
+    "th": "ไฟลามเข้าป่าอนุรักษ์ เจ้าหน้าที่เปิดการสอบสวน",
+    "en": "Fire spread into protected forest. Officers open an investigation."
+  },
+  {
+    "id": "text_254",
+    "th": "เจ้าหน้าที่หันไปสนใจหมู่บ้านอื่น ความเพ่งเล็ง −%d%s",
+    "en": "Officers turn their attention elsewhere · Scrutiny −%d%s"
+  },
+  {
+    "id": "text_255",
+    "th": " (เผาสะอาด)",
+    "en": " (clean burn)"
+  },
+  {
+    "id": "text_256",
+    "th": "จุดไฟให้ทั่วแปลงก่อน %d:%02d และฉีดน้ำถ่านคุให้กลายเป็นเถ้า",
+    "en": "Light the whole plot before %d:%02d and spray embers into ash."
+  },
+  {
+    "id": "text_257",
+    "th": "ช่วง 18:00–20:00 ฉีดน้ำถ่านทุกจุด ดูช่องเป้าหมายข้อ 2 ให้เป็น 0",
+    "en": "From 18:00–20:00, spray every ember. Bring Goal 2's hot spots down to 0."
+  },
+  {
+    "id": "text_258",
+    "th": "ถางแนวกันไฟฝั่งป่าอุทยานให้เสร็จก่อนจุดไฟ",
+    "en": "Finish the firebreak beside the park before lighting."
+  },
+  {
+    "id": "text_259",
+    "th": "เคล็ดลับรอบหน้า: ",
+    "en": "Next time: "
+  },
+  {
+    "id": "text_260",
+    "th": "เถ้า (เป้า %d%%)",
+    "en": "Ash (target %d%%)"
+  },
+  {
+    "id": "text_261",
+    "th": "จุดร้อนที่ถูกตรวจพบ",
+    "en": "Detected hot spots"
+  },
+  {
+    "id": "text_262",
+    "th": "ใช่",
+    "en": "Yes"
+  },
+  {
+    "id": "text_263",
+    "th": "ไม่",
+    "en": "No"
+  },
+  {
+    "id": "text_264",
+    "th": "ความเพ่งเล็ง",
+    "en": "Scrutiny"
+  },
+  {
+    "id": "text_265",
+    "th": "บันทึกจุดความร้อน GISTDA / FIRMS: ไม่มีรายการ",
+    "en": "GISTDA / FIRMS hot-spot log: No entries"
+  },
+  {
+    "id": "text_266",
+    "th": "บันทึกจุดความร้อน GISTDA / FIRMS\n",
+    "en": "GISTDA / FIRMS hot-spot log\n"
+  },
+  {
+    "id": "text_267",
+    "th": "กลับหมู่บ้าน · นั่งข้างเตาไฟ",
+    "en": "Back to the village · Sit by the hearth"
+  },
+  {
+    "id": "text_268",
+    "th": "น้ำเต็มแล้ว",
+    "en": "Water full"
+  },
+  {
+    "id": "text_269",
+    "th": "กำลังเติมน้ำ %.0f / %.0f ลิตร",
+    "en": "Refilling %.0f / %.0f litres"
+  },
+  {
+    "id": "text_270",
+    "th": "เติมน้ำที่ถังข้างเถียงนา",
+    "en": "Refill at the barrel beside the field hut"
+  },
+  {
+    "id": "text_271",
+    "th": "เติมน้ำ ",
+    "en": "Refill water "
+  },
+  {
+    "id": "text_272",
+    "th": "เผาไร่ให้เป็นเถ้าระหว่าง 14:00–20:00 แล้วดับถ่านให้หมด ก่อนดาวเทียม VIIRS โคจรผ่านตอน 20:00 ทุกแปลงถูกตัดสินจากสองอย่างนี้เท่านั้น",
+    "en": "Burn the field into ash between 14:00 and 20:00, then douse all embers before the VIIRS pass at 20:00. Every plot is judged on these two goals."
+  },
+  {
+    "id": "text_273",
+    "th": "เป้าหมาย 1 · เถ้า",
+    "en": "Goal 1 · Ash"
+  },
+  {
+    "id": "text_274",
+    "th": "เถ้าที่เย็นแล้ว ≥75% ของแปลง",
+    "en": "Cool ash on ≥75% of the plot"
+  },
+  {
+    "id": "text_275",
+    "th": "≥75% ข้าวเข้ายุ้ง +10\n60–75% ข้าวเท่าเดิม\nต่ำกว่า 60% ข้าวลด −25",
+    "en": "≥75%: stored rice +10\n60–75%: no change\nBelow 60%: stored rice −25"
+  },
+  {
+    "id": "text_276",
+    "th": "เป้าหมาย 2 · ความร้อน",
+    "en": "Goal 2 · Heat"
+  },
+  {
+    "id": "text_277",
+    "th": "จุดร้อน 0 จุดตอน 20:00",
+    "en": "0 hot spots at 20:00"
+  },
+  {
+    "id": "text_278",
+    "th": "ถ่านที่ยังคุทุกจุด = จุดร้อน\nถูกจับได้ +15 ความเพ่งเล็ง (ร้อนมากจุด สูงสุด +30)\n(ปีหลัง ๆ โทษหนักขึ้น)",
+    "en": "Every glowing ember is a hot spot.\nDetection adds 15 scrutiny (up to 30 for many hot spots).\nPenalties increase in later years."
+  },
+  {
+    "id": "text_279",
+    "th": "กฎของถ่าน · สำคัญที่สุด",
+    "en": "The ember rule · Most important"
+  },
+  {
+    "id": "text_280",
+    "th": "ไฟลุกราว 6 วินาที แล้วกลายเป็นถ่านคุ ถ่านเย็นเป็นเถ้าเองต้องใช้ราว 4 นาที (2 ชม. 40 นาทีในเกม)",
+    "en": "Flames last about 6 seconds, then become glowing embers. Natural cooling into ash takes about 4 real minutes (2 hours 40 minutes in game)."
+  },
+  {
+    "id": "text_281",
+    "th": "ไฟที่ลุกหลัง %s จะยังร้อนตอน 20:00 ต้องฉีดน้ำ",
+    "en": "Fires lit after %s will still be hot at 20:00. Spray them."
+  },
+  {
+    "id": "text_282",
+    "th": "ฉีดน้ำใส่ถ่านคุ = เป็นเถ้าทันที (ได้เถ้าและไม่มีจุดร้อน)\nอย่าฉีดเปลวไฟที่เพิ่งติด ไฟจะดับกลับเป็นพุ่มไม้ ไม่ได้เถ้า\nลูกไฟตกในป่าอุทยาน = มีเวลา 8 วินาทีให้ฉีดดับ ไม่งั้นนับว่าไฟลามเข้าป่า",
+    "en": "Spraying embers turns them straight into ash (ash gained, no hot spot).\nSpraying fresh flames turns them back into brush: no ash gained.\nAn ember in protected forest must be doused within 8 seconds, or it counts as a forest-fire escape."
+  },
+  {
+    "id": "text_283",
+    "th": "แพ้เมื่อไร",
+    "en": "What ends the game?"
+  },
+  {
+    "id": "text_284",
+    "th": "ข้าวในยุ้งเหลือ 20% = หมู่บ้านอดอยาก · ความเพ่งเล็งถึง 100 = รัฐบุกหมู่บ้าน\nเล่นให้รอดไปทีละปี ปีละ 5 แปลง เผาสะอาด (เถ้า ≥60% และไม่ถูกจับได้) ความเพ่งเล็งลด 20 · เผาแปลงอื่นลด 10 · ฝนมรสุมลด 45 ทุกปี",
+    "en": "Stored rice at 20% means famine; scrutiny at 100 means a raid.\nSurvive one year at a time, five plots per year. A clean burn (≥60% ash, no detection) removes 20 scrutiny; other burns remove 10. Monsoon rains remove 45 each year."
+  },
+  {
+    "id": "text_285",
+    "th": "แผนที่ได้ผล",
+    "en": "A plan that works"
+  },
+  {
+    "id": "text_286",
+    "th": "เชื้อไฟยังชื้น ไฟลามช้า ใช้เวลานี้ถางแนวกันไฟ (ปุ่ม 2 กดค้างทีละช่อง) รอบแปลง ฝั่งใต้ลมให้หนา 2 ช่อง",
+    "en": "Fuel is damp and fire spreads slowly. Clear the perimeter first (tool 2, hold on each cell). Make the downwind firebreak two cells wide."
+  },
+  {
+    "id": "text_287",
+    "th": "เชื้อไฟแห้งสุด จุดไฟเป็นแนวยาว (ปุ่ม 1 ลากค้าง) ที่ตีนเนิน ไฟจะวิ่งขึ้นเนินและตามลม จุดจุดเดียวไฟไม่ทั่วแปลง · ปีที่ 2 ขึ้นไปมีโดรน: บินมาราว 45 วิ ถ่ายรูปได้ครั้งเดียว แล้วกลับไปเปลี่ยนแบต ให้จุดไฟตอนโดรนไม่อยู่ และหลบใต้ร่มไผ่หรือชายป่าตอนโดรนหรือเจ้าหน้าที่มา",
+    "en": "At peak dryness, drag a line of fire along the foot of the slope (tool 1). Fire climbs uphill and follows the wind; one ignition cannot cover the plot. From year 2, drones visit for about 45 seconds, take one photo, then leave to change batteries. Light fires while they are away. Shelter under bamboo or at the forest edge when drones or rangers arrive."
+  },
+  {
+    "id": "text_288",
+    "th": "ถังพ่นน้ำ (ปุ่ม 3) ฉีดถ่านคุทุกจุด น้ำเติมที่ถังข้างเถียงนา · ลมหายใจฟื้นเมื่อออกจากควันและควันสะสมลดลง",
+    "en": "Use the sprayer (tool 3) on every ember. Refill beside the field hut. Leave smoke and let exposure fall to recover your breath."
+  },
+  {
+    "id": "text_289",
+    "th": "ก่อน 20:00",
+    "en": "Before 20:00"
+  },
+  {
+    "id": "text_290",
+    "th": "ดูช่องเป้าหมายบนจอ ให้จุดร้อนเหลือ 0 และเถ้าถึง 75%",
+    "en": "Check the goals on screen: 0 hot spots and 75% ash."
+  },
+  {
+    "id": "text_291",
+    "th": "ปุ่มควบคุม (คีย์บอร์ด / จอย)",
+    "en": "Controls (keyboard / controller)"
+  },
+  {
+    "id": "text_292",
+    "th": "WASD / สติ๊กซ้าย",
+    "en": "WASD / Left stick"
+  },
+  {
+    "id": "text_293",
+    "th": "เดิน",
+    "en": "Move"
+  },
+  {
+    "id": "text_294",
+    "th": "เมาส์ / สติ๊กขวา",
+    "en": "Mouse / Right stick"
+  },
+  {
+    "id": "text_295",
+    "th": "เล็งช่องที่จะทำงาน",
+    "en": "Aim at a work cell"
+  },
+  {
+    "id": "text_296",
+    "th": "คลิกซ้าย / RT, A",
+    "en": "Left click / RT, A"
+  },
+  {
+    "id": "text_297",
+    "th": "ใช้เครื่องมือ",
+    "en": "Use tool"
+  },
+  {
+    "id": "text_298",
+    "th": "1 2 3 / ปุ่มลูกศร, Y",
+    "en": "1 2 3 / D-pad, Y"
+  },
+  {
+    "id": "text_299",
+    "th": "จุดไฟ · ถางแนว · พ่นน้ำ",
+    "en": "Light · Rake · Spray"
+  },
+  {
+    "id": "text_300",
+    "th": "ออกจากเกม · กลับมาเล่นจากบันทึกล่าสุด",
+    "en": "Quit · Resume from your latest save"
+  },
+  {
+    "id": "text_301",
+    "th": "คลิกขวา / LT, X",
+    "en": "Right click / LT, X"
+  },
+  {
+    "id": "text_302",
+    "th": "สั่งตาโพถางพุ่มไม้ · สั่งมูนอดับถ่าน",
+    "en": "Send Ta-poh to clear brush · Send Mu-naw to douse embers"
+  },
+  {
+    "id": "text_303",
+    "th": "เป่านกหวีดเรียกทีมหนีควัน",
+    "en": "Whistle to call the team out of smoke"
+  },
+  {
+    "id": "text_304",
+    "th": "ล้อเมาส์, + - / R3",
+    "en": "Mouse wheel, + − / R3"
+  },
+  {
+    "id": "text_305",
+    "th": "ซูมกล้อง (ซูมออกสุดเห็นทั้งแปลงและหุบเขา)",
+    "en": "Zoom (zoom out fully to see the plot and valley)"
+  },
+  {
+    "id": "text_306",
+    "th": "Z, C / ลูกศรลง",
+    "en": "Z, C / D-pad down"
+  },
+  {
+    "id": "text_307",
+    "th": "หมุนกล้องทีละ 90°",
+    "en": "Rotate camera by 90°"
+  },
+  {
+    "id": "text_308",
+    "th": "ซ่อน / แสดงแผงข้อมูล",
+    "en": "Hide / Show HUD"
+  },
+  {
+    "id": "text_309",
+    "th": "เข้าใจแล้ว",
+    "en": "Got it"
+  },
+  {
+    "id": "text_310",
+    "th": "หยุดเกมชั่วคราว",
+    "en": "Paused"
+  },
+  {
+    "id": "text_311",
+    "th": "เวลาในไร่หยุดที่ %s",
+    "en": "Field time paused at %s"
+  },
+  {
+    "id": "text_312",
+    "th": "เล่นต่อ",
+    "en": "Resume"
+  },
+  {
+    "id": "text_313",
+    "th": "ยอมแพ้แปลงนี้ · ให้ดาวเทียมผ่านเลย",
+    "en": "Give up this plot · Let the satellite pass"
+  },
+  {
+    "id": "text_314",
+    "th": "นับเป็นการเผาตามสภาพตอนนี้ ดาวเทียมจะสแกนทันที",
+    "en": "The satellite scans immediately, judging the plot as it is now."
+  },
+  {
+    "id": "text_315",
+    "th": "ออกไปหน้าแรก (กลับไปก่อนเผาแปลงนี้)",
+    "en": "Back to title (return to before this burn)"
+  },
+  {
+    "id": "text_316",
+    "th": "เสียง",
+    "en": "Audio"
+  },
+  {
+    "id": "text_317",
+    "th": "การแสดงผล",
+    "en": "Display"
+  },
+  {
+    "id": "text_318",
+    "th": "เต็มจอ",
+    "en": "Fullscreen"
+  },
+  {
+    "id": "text_319",
+    "th": "ขนาดตัวหนังสือและแผง",
+    "en": "Text and panel scale"
+  },
+  {
+    "id": "text_320",
+    "th": "ภูมิทัศน์รอบแปลงแบบละเอียด (ปิดเพื่อให้ลื่นขึ้นบน Steam Deck)",
+    "en": "Detailed landscape (turn off for smoother play on Steam Deck)"
+  },
+  {
+    "id": "text_321",
+    "th": "การเล่น",
+    "en": "Gameplay"
+  },
+  {
+    "id": "text_322",
+    "th": "ระยะกล้องเริ่มต้น",
+    "en": "Starting camera distance"
+  },
+  {
+    "id": "text_323",
+    "th": "%d ม.",
+    "en": "%d m"
+  },
+  {
+    "id": "text_324",
+    "th": "แสดงคำแนะนำปุ่มควบคุม",
+    "en": "Show control hints"
+  },
+  {
+    "id": "text_325",
+    "th": "เคล็ดลับระหว่างเผาครั้งแรก",
+    "en": "Show first-burn tips"
+  },
+  {
+    "id": "text_326",
+    "th": "ชื่อบนกระดาน",
+    "en": "Board name"
+  },
+  {
+    "id": "text_327",
+    "th": "แสดงวิธีเล่นอีกครั้ง",
+    "en": "Show how to play again"
+  },
+  {
+    "id": "text_328",
+    "th": "กระดานออนไลน์ (เบตา)",
+    "en": "Online board (beta)"
+  },
+  {
+    "id": "text_329",
+    "th": "ส่งผลการเล่นขึ้นกระดานออนไลน์",
+    "en": "Share my results on the online board"
+  },
+  {
+    "id": "text_330",
+    "th": "ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ",
+    "en": "Only your board name and scores are shared, with no email or personal details. This beta board uses the honour system. Delete your scores at any time."
+  },
+  {
+    "id": "text_331",
+    "th": "ลบคะแนนของฉันออกจากกระดานออนไลน์",
+    "en": "Delete my scores from the online board"
+  },
+  {
+    "id": "text_332",
+    "th": "สำหรับผู้ทดสอบ",
+    "en": "Tester tools"
+  },
+  {
+    "id": "text_333",
+    "th": "เครื่องมือทดสอบ (F3 ข้อมูล · F5–F10 ข้ามเวลา/บังคับเหตุการณ์)",
+    "en": "Test tools (F3 Info · F5–F10 Time / Events)"
+  },
+  {
+    "id": "text_334",
+    "th": "เปิดโฟลเดอร์บันทึกการเล่น",
+    "en": "Open playtest log folder"
+  },
+  {
+    "id": "text_335",
+    "th": "บันทึกและปิด",
+    "en": "Save and close"
+  },
+  {
+    "id": "text_336",
+    "th": "ไร่หมุนเวียนใต้เงาดาวเทียม",
+    "en": "Rotational farming beneath the satellite's shadow"
+  },
+  {
+    "id": "text_337",
+    "th": "เผาไร่ให้เป็นเถ้าระหว่าง 14:00–20:00 แล้วดับถ่านให้หมด ก่อนดาวเทียมโคจรผ่าน",
+    "en": "Burn the field into ash between 14:00 and 20:00, then douse all embers before the satellite passes."
+  },
+  {
+    "id": "text_338",
+    "th": "เริ่มเกมใหม่",
+    "en": "New game"
+  },
+  {
+    "id": "text_339",
+    "th": "ออกจากเกม",
+    "en": "Quit"
+  },
+  {
+    "id": "text_340",
+    "th": "กระดานเกียรติยศหมู่บ้าน",
+    "en": "Village records"
+  },
+  {
+    "id": "text_341",
+    "th": "%d. %s · %d แปลง · ปีที่ %d · เถ้า %.0f%%",
+    "en": "%d. %s · %d plots · Year %d · Ash %.0f%%"
+  },
+  {
+    "id": "text_342",
+    "th": "โหลดเกมที่บันทึกไว้ไม่ได้ (%s) · เริ่มเกมใหม่แทนได้",
+    "en": "Could not load your save (%s) · You can start a new game."
+  },
+  {
+    "id": "text_343",
+    "th": "ไฟล์เสียหาย",
+    "en": "Corrupt file"
+  },
+  {
+    "id": "text_344",
+    "th": "เวอร์ชันเก่า",
+    "en": "Older version"
+  },
+  {
+    "id": "text_345",
+    "th": "ไม่พบไฟล์",
+    "en": "File not found"
+  },
+  {
+    "id": "text_346",
+    "th": "เริ่มเกมใหม่จะลบเกมที่บันทึกไว้ ยืนยันไหม?",
+    "en": "A new game will delete your current save. Start over?"
+  },
+  {
+    "id": "text_347",
+    "th": "ยืนยัน เริ่มใหม่",
+    "en": "Confirm new game"
+  },
+  {
+    "id": "text_348",
+    "th": "ยกเลิก",
+    "en": "Cancel"
+  },
+  {
+    "id": "text_349",
+    "th": "แม่ลู",
+    "en": "Mae-Lu"
+  },
+  {
+    "id": "text_350",
+    "th": "ลมสงบ",
+    "en": "Calm"
+  },
+  {
+    "id": "text_351",
+    "th": "ตะวันออก",
+    "en": "East"
+  },
+  {
+    "id": "text_352",
+    "th": "ตะวันออกเฉียงใต้",
+    "en": "Southeast"
+  },
+  {
+    "id": "text_353",
+    "th": "ใต้",
+    "en": "South"
+  },
+  {
+    "id": "text_354",
+    "th": "ตะวันตกเฉียงใต้",
+    "en": "Southwest"
+  },
+  {
+    "id": "text_355",
+    "th": "ตะวันตก",
+    "en": "West"
+  },
+  {
+    "id": "text_356",
+    "th": "ตะวันตกเฉียงเหนือ",
+    "en": "Northwest"
+  },
+  {
+    "id": "text_357",
+    "th": "เหนือ",
+    "en": "North"
+  },
+  {
+    "id": "text_358",
+    "th": "ตะวันออกเฉียงเหนือ",
+    "en": "Northeast"
+  },
+  {
+    "id": "phase_35_short",
+    "th": "ระยะ 1 · ถางแนวกันไฟ",
+    "en": "Phase 1 · Clear firebreaks"
+  },
+  {
+    "id": "phase_37_short",
+    "th": "ระยะ 2 · เผาใหญ่",
+    "en": "Phase 2 · Main burn"
+  },
+  {
+    "id": "phase_39_short",
+    "th": "ระยะ 3 · อากาศผกผัน เร่งดับถ่านคุ",
+    "en": "Phase 3 · Inversion: douse embers"
+  },
+  {
+    "id": "phase_41_short",
+    "th": "ระยะ 4 · นับถอยหลังดาวเทียม",
+    "en": "Phase 4 · Satellite countdown"
+  },
+  {
+    "id": "phase_61_short",
+    "th": "ระยะ 5 · ดาวเทียมโคจรผ่าน",
+    "en": "Phase 5 · Satellite pass"
+  },
+  {
+    "id": "plot_1_short",
+    "th": "แปลงที่ 1",
+    "en": "Plot 1"
+  },
+  {
+    "id": "plot_2_short",
+    "th": "แปลงที่ 2",
+    "en": "Plot 2"
+  },
+  {
+    "id": "plot_3_short",
+    "th": "แปลงที่ 3",
+    "en": "Plot 3"
+  },
+  {
+    "id": "plot_4_short",
+    "th": "แปลงที่ 4",
+    "en": "Plot 4"
+  },
+  {
+    "id": "plot_5_short",
+    "th": "แปลงที่ 5",
+    "en": "Plot 5"
+  },
+  {
+    "id": "title_settings_bilingual",
+    "th": "ตั้งค่า / Settings",
+    "en": "Settings"
+  },
+  {
+    "id": "ui_deleting_scores",
+    "th": "กำลังลบคะแนนออนไลน์…",
+    "en": "Deleting online scores…"
+  },
+  {
+    "id": "ui_deleted_scores",
+    "th": "ลบคะแนนออนไลน์แล้ว %d รายการ",
+    "en": "Deleted %d online scores."
+  },
+  {
+    "id": "ui_delete_scores_failed",
+    "th": "ลบคะแนนไม่สำเร็จ โปรดลองอีกครั้ง",
+    "en": "Could not delete scores. Please try again."
+  },
+  {
+    "id": "ui_confirm_scan",
+    "th": "ให้ดาวเทียมสแกนแปลงตอนนี้? จะตัดสินจากเถ้าและความร้อนที่มีอยู่ และย้อนกลับไม่ได้",
+    "en": "Scan this plot now? The current ash and heat will decide the result. This cannot be undone."
+  },
+  {
+    "id": "ui_confirm_scan_action",
+    "th": "ยืนยัน ให้สแกนตอนนี้",
+    "en": "Confirm scan now"
+  },
+  {
+    "id": "ui_confirm_return_title",
+    "th": "กลับหน้าแรก? ความคืบหน้าระหว่างเผาแปลงนี้จะหายไป เกมที่บันทึกไว้ก่อนเผาจะยังอยู่",
+    "en": "Return to title? Progress during this burn will be lost. Your save from before the burn will remain."
+  },
+  {
+    "id": "ui_confirm_return_title_action",
+    "th": "ยืนยัน กลับหน้าแรก",
+    "en": "Confirm return to title"
+  },
+  {
+    "th": "ขะแน บ้านเราอยู่กับผืนป่านี้ ไร่หมุนเวียนคือการดูแลแปลงเดิมเป็นรอบ ๆ",
+    "en": "Kha-nae, our home is part of this forest. We tend established fields in cycles.",
+    "id": "opening_000"
+  },
+  {
+    "th": "ปลูกข้าวหนึ่งฤดู แล้วพักแปลงไว้หลายปี ให้พืชกลับมาเติบโต ระหว่างนั้นเราทำกินในแปลงอื่น",
+    "en": "We grow rice for a season, then rest the field for years. Plants return while we farm another plot.",
+    "id": "opening_001"
+  },
+  {
+    "th": "วันนี้เราช่วยกันเตรียมแปลงสำหรับข้าว เถ้าจากเศษพืชคืนธาตุอาหารบางส่วนให้ดิน",
+    "en": "Today we prepare a rice field together. Ash from plant residues returns some nutrients to the soil.",
+    "id": "opening_002"
+  },
+  {
+    "th": "ก่อนจุดไฟ ต้องกวาดใบไม้และเศษกิ่งออกให้เห็นดินโล่ง แนวกันไฟตัดทางเชื้อเพลิงระหว่างไร่กับป่า",
+    "en": "Before lighting, clear leaves and branches to bare soil. The firebreak interrupts fuel between field and forest.",
+    "id": "opening_003"
+  },
+  {
+    "th": "แต่ลูกไฟอาจปลิวข้ามแนวได้ อ่านทิศลม และให้ทีมช่วยเฝ้าขอบป่า",
+    "en": "Embers can still fly across. Read the wind. Let your team help watch the forest edge.",
+    "id": "opening_004"
+  },
+  {
+    "th": "ไฟมอดแล้ว แต่เถ้ายังร้อน งานยังไม่จบ ต้องฉีดน้ำดับถ่านที่ยังคุ",
+    "en": "The flames are gone. The ash is still hot. Douse the remaining embers.",
+    "id": "opening_005"
+  },
+  {
+    "th": "ในเกมนี้ ดาวเทียมจะสแกนตอนสองทุ่ม มันเห็นจุดร้อน แต่ไม่เห็นเหตุผลของคนที่อยู่ข้างล่าง",
+    "en": "In this game, the satellite scans each evening. It sees hot spots, but not the lives beneath them.",
+    "id": "opening_006"
+  },
+  {
+    "th": "เตรียมแนว คุมไฟ ดับความร้อน ให้มีเถ้าที่เย็นพอสำหรับแปลงข้าว และไม่มีจุดร้อนเหลือก่อนสองทุ่ม",
+    "en": "Prepare the boundary. Control the fire. Cool the embers. Leave enough cooled ash, and no hot spots before twenty hundred.",
+    "id": "opening_007"
+  },
+  {
+    "th": "เส้นแบ่งบนสันดอย",
+    "en": "The Line on the Mountain",
+    "id": "opening_008"
+  },
+  {
+    "th": "ผืนดินที่ได้พัก",
+    "en": "Land that rests",
+    "id": "opening_009"
+  },
+  {
+    "th": "ไร่หมุนเวียน",
+    "en": "Rotational farming",
+    "id": "opening_010"
+  },
+  {
+    "th": "ข้าวสำหรับชุมชน",
+    "en": "Rice for the community",
+    "id": "opening_011"
+  },
+  {
+    "th": "ช่วยกันทำงาน",
+    "en": "Working together",
+    "id": "opening_012"
+  },
+  {
+    "th": "เส้นที่เราดูแลด้วยกัน",
+    "en": "A boundary we tend together",
+    "id": "opening_013"
+  },
+  {
+    "th": "แนวกันไฟ",
+    "en": "Firebreak",
+    "id": "opening_014"
+  },
+  {
+    "th": "ไฟมอด งานยังไม่จบ",
+    "en": "Flames out. Work unfinished.",
+    "id": "opening_015"
+  },
+  {
+    "th": "ถ่านคุ · จุดร้อน",
+    "en": "Embers · Hot spots",
+    "id": "opening_016"
+  },
+  {
+    "th": "หยุดภาพ",
+    "en": "Pause film",
+    "id": "opening_017"
+  },
+  {
+    "th": "เล่นภาพต่อ",
+    "en": "Resume film",
+    "id": "opening_018"
+  },
+  {
+    "th": "ตาโพ · ผู้เฒ่าของหมู่บ้าน",
+    "en": "Ta-poh · Village elder",
+    "id": "opening_019"
+  },
+  {
+    "th": "เตรียมแนว · คุมไฟ · ดับความร้อน",
+    "en": "Prepare · Control · Cool",
+    "id": "opening_020"
+  },
+  {
+    "th": "ในเกมนี้: เถ้าที่เย็นแล้ว ≥75% · จุดร้อน 0 จุดก่อน 20:00",
+    "en": "In this game: cooled ash ≥75% · No hot spots before 20:00",
+    "id": "opening_021"
+  },
+  {
+    "th": "เริ่มจากกวาดแนวรอบแปลง เคล็ดลับในไร่จะแนะนำเครื่องมือทีละขั้น",
+    "en": "Begin by clearing the field boundary. Field tips introduce your tools step by step.",
+    "id": "opening_022"
+  },
+  {
+    "th": "เตรียมแปลงแรก",
+    "en": "Prepare the first field",
+    "id": "opening_023"
+  },
+  {
+    "th": "ไฟมอดแล้ว แต่เถ้ายังร้อน งานยังไม่จบ",
+    "en": "The flames are gone. The ash is still hot. Our work is not finished.",
+    "id": "opening_024"
+  },
+  {
+    "th": "ดูเรื่องราวก่อนลงไร่อีกครั้ง",
+    "en": "Replay the introduction",
+    "id": "opening_025"
+  },
+  {
+    "id": "opening_extra_000",
+    "th": "ภาษาไทย",
+    "en": "Thai"
+  },
+  {
+    "id": "opening_extra_001",
+    "th": "ช่วยกันดูแลแปลงข้าวและผืนป่า",
+    "en": "Tend the rice field and forest together."
+  },
+  {
+    "id": "opening_revision_000",
+    "th": "บ้านเราอยู่กับผืนป่านี้ ไร่หมุนเวียนคือการดูแลแปลงเดิมเป็นรอบ ๆ",
+    "en": "Our home is part of this forest. We tend established fields in cycles."
+  },
+  {
+    "id": "opening_revision_001",
+    "th": "เราปลูกข้าวหนึ่งฤดู แล้วพักผืนดินไว้หลายปี ให้พืชกลับมาเติบโต ระหว่างนั้นเราทำกินในแปลงอื่น",
+    "en": "We grow rice for a season, then rest the field for years. Plants return while we farm another plot."
+  },
+  {
+    "id": "opening_revision_005",
+    "th": "ไฟมอดแล้ว แต่เถ้ายังร้อน งานยังไม่จบ ต้องฉีดน้ำให้ถ่านคุเย็นลง",
+    "en": "The flames are gone. The ash is still hot. Douse the remaining embers."
+  },
+  {
+    "id": "opening_revision_007",
+    "th": "เตรียมแนว คุมไฟ ดับความร้อน ให้เหลือพื้นที่เถ้าเย็นพอสำหรับปลูกข้าว และไม่มีจุดร้อนก่อนสองทุ่ม",
+    "en": "Prepare the boundary. Control the fire. Cool the embers. Leave enough cooled ash, and no hot spots before the evening scan."
+  },
+  {
+    "id": "opening_revision_008",
+    "th": "ข้าม",
+    "en": "Skip"
+  },
+  {
+    "id": "opening_revision_009",
+    "th": "ปิด",
+    "en": "Close"
+  },
+  {
+    "id": "opening_revision_010",
+    "th": "กลับ",
+    "en": "Back"
+  },
+  {
+    "id": "opening_r3_005",
+    "th": "เปลวไฟดับแล้ว แต่ถ่านข้างใต้ยังร้อน ต้องฉีดน้ำให้ถ่านคุเย็นลง งานของเราจึงจะเสร็จ",
+    "en": "The flames are gone. The ash is still hot. Douse the remaining embers."
+  },
+  {
+    "id": "opening_r3_007",
+    "th": "เตรียมแนว คุมไฟ ดับความร้อน ให้แปลงพร้อมปลูกข้าว และไม่มีจุดร้อนก่อนสองทุ่ม",
+    "en": "Prepare the boundary. Control the fire. Cool the embers. Leave enough cooled ash, and no hot spots before the evening scan."
+  },
+  {
+    "id": "opening_scan_time",
+    "th": "20:00 · รอบสแกนในเกม",
+    "en": "20:00 · In-game satellite scan"
+  },
+  {
+    "id": "opening_plot_label_0",
+    "th": "ปลูกข้าวฤดูนี้",
+    "en": "Rice this season"
+  },
+  {
+    "id": "opening_plot_label_1",
+    "th": "พักแปลง",
+    "en": "Field resting"
+  },
+  {
+    "id": "opening_plot_label_2",
+    "th": "ฟื้นตัวหลายปี",
+    "en": "Years of regrowth"
+  }
+]

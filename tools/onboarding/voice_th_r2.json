@@ -1,0 +1,101 @@
+{
+  "output_directory": "artifacts/opening_20261003/audio_th_r2",
+  "credit_cap": 3000,
+  "language_code": "tha",
+  "max_cer": 0.0,
+  "purpose": "User approved first-time Ta-poh opening, 2026-10-03. Same reviewed voice as current cast. No clones or new music.",
+  "jobs": [
+    {
+      "id": "intro_th_00_r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "บ้านเราอยู่กับผืนป่านี้ ไร่หมุนเวียนคือการดูแลแปลงเดิมเป็นรอบ ๆ",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_00.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "บ้านเราอยู่กับผืนป่านี้ ไร่หมุนเวียนคือการดูแลแปลงเดิมเป็นรอบ ๆ"
+      }
+    },
+    {
+      "id": "intro_th_01_r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "เราปลูกข้าวหนึ่งฤดู แล้วพักผืนดินไว้หลายปี ให้พืชกลับมาเติบโต ระหว่างนั้นเราทำกินในแปลงอื่น",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_01.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "เราปลูกข้าวหนึ่งฤดู แล้วพักผืนดินไว้หลายปี ให้พืชกลับมาเติบโต ระหว่างนั้นเราทำกินในแปลงอื่น"
+      }
+    },
+    {
+      "id": "intro_th_05_r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ไฟมอดแล้ว แต่เถ้ายังร้อน งานยังไม่จบ ต้องฉีดน้ำให้ถ่านคุเย็นลง",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_05.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ไฟมอดแล้ว แต่เถ้ายังร้อน งานยังไม่จบ ต้องฉีดน้ำให้ถ่านคุเย็นลง"
+      }
+    },
+    {
+      "id": "intro_th_07_r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "เตรียมแนว คุมไฟ ดับความร้อน ให้เหลือพื้นที่เถ้าเย็นพอสำหรับปลูกข้าว และไม่มีจุดร้อนก่อนสองทุ่ม",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/th/intro_07.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "เตรียมแนว คุมไฟ ดับความร้อน ให้เหลือพื้นที่เถ้าเย็นพอสำหรับปลูกข้าว และไม่มีจุดร้อนก่อนสองทุ่ม"
+      }
+    }
+  ]
+}

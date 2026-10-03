@@ -1,0 +1,32 @@
+{
+  "output_directory": "artifacts/opening_20261003/audio_en_r2",
+  "credit_cap": 3000,
+  "language_code": "eng",
+  "max_cer": 0.0,
+  "purpose": "User approved first-time Ta-poh opening, 2026-10-03. Same reviewed voice as current cast. No clones or new music.",
+  "jobs": [
+    {
+      "id": "intro_en_00_r2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "Our home is part of this forest. We tend established fields in cycles.",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "en",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "speed": 1.0,
+        "output_format": "mp3_44100_128"
+      },
+      "install": {
+        "file": "opening/en/intro_00.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "Our home is part of this forest. We tend established fields in cycles."
+      }
+    }
+  ]
+}

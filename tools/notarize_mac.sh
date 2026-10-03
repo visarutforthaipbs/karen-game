@@ -23,8 +23,13 @@ APP="$WORK/$APP_NAME"
 # Hardened runtime + secure timestamp; GDScript needs no JIT entitlement.
 codesign --sign "$IDENTITY" --options runtime --timestamp --force "$APP"
 codesign --verify --strict --verbose=2 "$APP"
-"$APP/Contents/MacOS/Under Two Skies" --headless --quit-after 90 >/dev/null 2>&1 \
-	|| { echo "signed app failed to boot"; exit 1; }
+BOOT_LOG="$OUT_DIR/signed-boot.log"
+"$APP/Contents/MacOS/Under Two Skies" --headless --fixed-fps 60 --quit-after 90 >"$BOOT_LOG" 2>&1 \
+	|| { echo "signed app failed to boot; see $BOOT_LOG"; exit 1; }
+if grep -Eq 'SCRIPT ERROR|Parse Error|ERROR:' "$BOOT_LOG"; then
+	echo "signed app reported runtime errors; see $BOOT_LOG"
+	exit 1
+fi
 
 ditto -c -k --keepParent "$APP" "$WORK/submit.zip"
 RESULT="$(xcrun notarytool submit "$WORK/submit.zip" --keychain-profile "$PROFILE" --wait --output-format json)"
