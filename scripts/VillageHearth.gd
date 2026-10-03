@@ -67,11 +67,17 @@ var _header_row: HBoxContainer
 var _header_stats: HBoxContainer
 var _barn_card: Control
 var _watch_card: Control
+var _caption_reservation: Control
 
 func _ready() -> void:
 	theme = UITheme.get_theme()
 	_build()
 	if AudioManager.instance:
+		var audio = AudioManager.instance
+		audio.voice_caption_changed.connect(_on_voice_caption_changed)
+		var captions = audio.subtitle_overlay
+		captions.card.minimum_size_changed.connect(_queue_caption_reservation)
+		captions.card.visibility_changed.connect(_queue_caption_reservation)
 		AudioManager.instance.stop_all_loops()
 		AudioManager.instance.set_hearth_ambience(true)
 	_tune_radio(1, false)
@@ -168,6 +174,12 @@ func _build() -> void:
 	right.add_child(_build_workshop())
 	right.add_child(_build_exchange())
 
+	# The persistent speech caption sits above Launch. Reserve its height outside
+	# the scroll body so radio never covers rations, goals or focused choices.
+	_caption_reservation = Control.new()
+	_caption_reservation.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_caption_reservation.hide()
+	page.add_child(_caption_reservation)
 	var launch_row = UITheme.hbox(0)
 	launch_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	page.add_child(launch_row)
@@ -215,6 +227,22 @@ func _fit_layout() -> void:
 	_card_columns.columns = 3 if three_width <= available - 14.0 else (2 if two_width <= available - 14.0 else 1)
 	launch_button.custom_minimum_size.x = minf(560.0, maxf(240.0, available - 8.0))
 	_fit_harvest_layout()
+	_queue_caption_reservation()
+
+func _on_voice_caption_changed(_speaker: String, _text: String, _duration: float) -> void:
+	_queue_caption_reservation()
+
+func _queue_caption_reservation() -> void:
+	_fit_caption_reservation.call_deferred()
+
+func _fit_caption_reservation() -> void:
+	if not is_instance_valid(_caption_reservation) or not is_inside_tree():
+		return
+	var audio = AudioManager.instance
+	var card = audio.subtitle_overlay.card if is_instance_valid(audio) else null
+	var shown = is_instance_valid(card) and card.is_visible_in_tree()
+	_caption_reservation.visible = shown
+	_caption_reservation.custom_minimum_size.y = maxf(80.0, card.get_combined_minimum_size().y) if shown else 0.0
 
 func _card(kind: String, title: String, tint: Color, seed_value: int, expand: bool = true) -> VBoxContainer:
 	var card = UITheme.card(Color(UITheme.PANEL, 0.93), tint, seed_value)

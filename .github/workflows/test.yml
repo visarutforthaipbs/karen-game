@@ -76,7 +76,7 @@ jobs:
       - name: Game UI navigation and feedback
         run: |
           set -euo pipefail
-          for t in test_ui_navigation test_menu_ux test_gameplay_ui test_opening; do
+          for t in test_ui_navigation test_menu_ux test_gameplay_ui test_opening test_preparation_captions; do
             ~/godot/godot --headless --path . --script "res://tests/$t.gd" 2>&1 | tee "ui-$t.log"
             ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" "ui-$t.log"
           done

@@ -721,3 +721,8 @@ Clean-checkout audit found eager global font loading before import. Runtime font
 now come from UITheme, including persistent captions. Seven fonts import cleanly;
 Thai glyph, subtitle, locale, localized UI, menu, gameplay UI and smoke checks pass.
 Rebuild and notarize this final source; earlier beta3 candidates are superseded.
+
+Native review also found radio subtitles covering preparation choices.
+VillageHearth dynamically reserves the caption height above pinned Launch;
+modal/clear events release the space and scene teardown removes listeners.
+74 TH/EN geometry/focus/lifecycle checks cover 720/800-height and1.0/1.3 UI scale.

@@ -35,7 +35,7 @@ function page(lang = "th") {
 <a class="skip" href="#main">${t("ข้ามไปดาวน์โหลด","Skip to downloads")}</a>
 <header><a class="brand" href="${home}" aria-label="Under Two Skies"><img src="/images/logo/header-logo.png" width="1856" height="968" alt=""></a><a class="back" href="${home}">${t("← กลับเว็บไซต์เกม","← Back to the game website")}</a><nav class="languages" aria-label="${t("ภาษาเว็บไซต์","Website language")}"><a href="/en/" lang="en" aria-current="${lang === "en" ? "page" : "false"}">EN</a><span aria-hidden="true"> / </span><a href="/" lang="th" aria-current="${lang === "th" ? "page" : "false"}">ไทย</a></nav></header>
 <main id="main"><section class="intro" aria-labelledby="title">
-<p class="eyebrow"><span class="version">${t("เบตา 3 · 0.3.0","Beta 3 · 0.3.0")}</span><span>${t("3 ตุลาคม 2026","3 October 2026")}</span></p>
+<p class="eyebrow"><span class="version">${t("เบตา 3 · 0.3.0","Beta 3 · 0.3.0")}</span><span>${t("4 ตุลาคม 2026","4 October 2026")}</span></p>
 <h1 id="title">${t("ดาวน์โหลด แล้วมาลองเล่นกัน","Download and try a season.")}</h1>
 <p class="lead">${t("ไร่หมุนเวียนใต้เงาดาวเทียม — เบตาภาษาไทย / อังกฤษ","Rotational Farming in the Shadow of the Satellite — Thai / English beta")}<br>${t("ดาวน์โหลดฟรี ไม่ต้องสมัครสมาชิก","Free download. No account needed.")}</p>
 <p class="context">${t("สำหรับคอมพิวเตอร์ · ใช้เมาส์และคีย์บอร์ด หรือจอยเกม · เล่นหนึ่งแปลงประมาณ 9 นาที","Computer required · mouse and keyboard or gamepad · about 9 minutes per plot")}</p>

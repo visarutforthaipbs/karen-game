@@ -33,6 +33,9 @@ to it. The manager independently reproduces and integrates fixes.
 - Radio recordings announced drones, patrols, checkpoints or storms that were
   absent from the current plot. Filter broadcasts against the current campaign
   configuration in both languages, preserving the approved audio and captions.
+- Radio captions covered preparation choices. Dynamically reserve space above
+  the pinned launch action while a subtitle is visible; recover the scroll space
+  when it clears or a modal hides it.
 - Clean imports loaded the global project font before generating its font data.
   Supply fonts through the existing shared UI theme and apply it explicitly to
   persistent captions; clean imports and Thai-glyph caption checks now pass.
@@ -53,6 +56,8 @@ Evidence root: `artifacts/release_beta3_audit_20261003/`.
   suites and 120-frame smoke pass; final integrated main suite is repeated.
 - Catalog: 418 entries, 30 spoken event mappings, 405 source literals; no issues.
 - Build safeguards: 7 unit regressions. PCK validator: 15 byte/payload regressions.
+- Preparation captions: 74 geometry, focus, growth and lifecycle checks across
+  two languages, window heights and UI scales.
 - Radio: 446 context checks, plus 107 locale, 49 subtitle and 20 audio checks.
 - Download Worker: 14 handler checks, including preserved older-release routes,
   HEAD, Range, conditional requests, malformed URLs and bilingual release copy.
@@ -60,7 +65,7 @@ Evidence root: `artifacts/release_beta3_audit_20261003/`.
   catalogs and two font licenses included. Actual final archives must repeat this.
 
 Synthetic/isolated probes do not substitute for native target-device playtesting.
-Some scene-heavy fixtures retain 4–24 ObjectDB references on engine shutdown;
+Some scene-heavy fixtures retain 2–24 ObjectDB references on engine shutdown;
 these are test teardown warnings, not observed gameplay exceptions. Windows and
 Steam Deck device QA, fresh-player testing, English proofreading and Karen
 cultural/listening review remain limits for a later paid Steam release.

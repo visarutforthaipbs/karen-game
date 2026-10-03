@@ -106,6 +106,7 @@ func run() -> void:
 	# Production tuning starts the broadcast after a 0.6–1.2 s settling timer.
 	await create_timer(1.5).timeout
 	check(audio.radio_player.playing and audio.radio_player.stream.resource_path.contains("/en/"), "English radio works in exported preparation")
+	check(current_scene._card_scroll.get_global_rect().end.y < audio.subtitle_overlay.card.get_global_rect().position.y, "exported radio caption leaves preparation choices clear")
 	await capture("04-preparation-en")
 	current_scene._on_launch_pressed()
 	await frames(20)

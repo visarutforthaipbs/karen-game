@@ -27,7 +27,8 @@ Installer archives remain in the R2 bucket, separate from `public/`.
 English downloads: `/en/`; Thai downloads: `/` (also `/th/`). Language switches
 change website instructions; the same beta3 installer is served in both languages.
 The game itself has a saved Thai/English switch for UI, subtitles and speech in Settings.
-Both languages default to Thai on an existing/new profile until the player changes it.
+The game defaults to Thai on an existing/new profile until the player changes it,
+regardless of the website language.
 `website-ux.js` is shared with the promotion site's `public/website-ux.js`:
 advisory OS suggestions, phone/tablet guidance and explicit-click clipboard copy.
 Keep these copies aligned. No analytics or device information is transmitted.
