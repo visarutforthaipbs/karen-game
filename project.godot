@@ -39,10 +39,7 @@ window/stretch/aspect="expand"
 
 import/blender/enabled=false
 
-[gui]
-
-theme/custom_font="res://assets/fonts/Kanit-Regular.ttf"
-
+; UITheme supplies runtime fonts; an eager global font breaks clean imports.
 [internationalization]
 
 locale/include_text_server_data=true

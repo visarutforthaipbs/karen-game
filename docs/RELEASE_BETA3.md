@@ -33,6 +33,9 @@ to it. The manager independently reproduces and integrates fixes.
 - Radio recordings announced drones, patrols, checkpoints or storms that were
   absent from the current plot. Filter broadcasts against the current campaign
   configuration in both languages, preserving the approved audio and captions.
+- Clean imports loaded the global project font before generating its font data.
+  Supply fonts through the existing shared UI theme and apply it explicitly to
+  persistent captions; clean imports and Thai-glyph caption checks now pass.
 
 Two main-suite failures were stale scratch scoreboard backups between fixture
 phases, not a second game defect. Fixtures now clear their own main/temp/backup

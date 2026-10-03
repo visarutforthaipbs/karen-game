@@ -20,6 +20,8 @@ func _run() -> void:
 	await process_frame
 	var audio = root.get_node("AudioManager")
 	var original_locale = TranslationServer.get_locale()
+	check(audio.subtitle_overlay.line_label.get_theme_font("font") == UITheme.font("regular"), "persistent captions use approved Kanit independently of global project font")
+	check(audio.subtitle_overlay.line_label.get_theme_font("font").has_char("ก".unicode_at(0)), "caption font includes Thai glyphs")
 	audio.stop_all_loops()
 	audio.voice_caption_changed.connect(_capture)
 	L10n.set_locale("en")

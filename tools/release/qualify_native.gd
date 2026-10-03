@@ -24,6 +24,10 @@ func frames(count := 8) -> void:
 func capture(name: String) -> void:
 	if DisplayServer.get_name() == "headless":
 		return
+	# Native window geometry may change while other editor/QA windows are open.
+	# Keep each review capture at the same game viewport.
+	root.size = Vector2i(1280, 720)
+	await frames(12)
 	await RenderingServer.frame_post_draw
 	var error = root.get_texture().get_image().save_png(output.path_join(name + ".png"))
 	check(error == OK, "rendered " + name)
@@ -35,6 +39,8 @@ func run() -> void:
 		quit(1)
 		return
 	output = args[0]
+	root.wrap_controls = false
+	root.size = Vector2i(1280, 720)
 	DirAccess.make_dir_recursive_absolute(output)
 	var saves = load("res://scripts/SaveGame.gd")
 	var settings = load("res://scripts/GameSettings.gd")
@@ -52,6 +58,7 @@ func run() -> void:
 	locale.set_language("th")
 	var state = root.get_node("GameState")
 	var audio = root.get_node("AudioManager")
+	check(audio.subtitle_overlay.line_label.get_theme_font("font").has_char("ก".unicode_at(0)), "exported caption font supports Thai")
 	check(ProjectSettings.get_setting("application/config/version") == "0.3.0", "export version is 0.3.0")
 	check(FileAccess.file_exists("res://project.binary") and not FileAccess.file_exists("res://project.godot"), "exported project payload mounted")
 	change_scene_to_file("res://scenes/Title.tscn")

@@ -716,3 +716,8 @@ Radio audit follow-up: recordings now follow actual plot drones, ranger patrols,
 checkpoints and storms in both languages; 446 context checks and voice regression
 suites pass. Final exports must include this fix, superseding the first beta3
 qualification candidate. Download Worker regressions preserve beta1/beta2 links.
+
+Clean-checkout audit found eager global font loading before import. Runtime fonts
+now come from UITheme, including persistent captions. Seven fonts import cleanly;
+Thai glyph, subtitle, locale, localized UI, menu, gameplay UI and smoke checks pass.
+Rebuild and notarize this final source; earlier beta3 candidates are superseded.

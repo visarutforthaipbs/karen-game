@@ -12,6 +12,8 @@ func _ready() -> void:
 	layer = 80
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var surface = Control.new()
+	# This persistent overlay has no themed screen ancestor.
+	surface.theme = UITheme.get_theme()
 	surface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	surface.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(surface)
