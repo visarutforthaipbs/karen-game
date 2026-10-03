@@ -15,7 +15,7 @@ func run() -> void:
 		var doc := GLTFDocument.new()
 		var state := GLTFState.new()
 		assert(doc.append_from_file(path,state)==OK)
-		var model:=doc.generate_scene(state)
+		var model:=doc.generate_scene(state, 60.0)
 		root.add_child(model)
 		var skeleton: Skeleton3D=model.find_children("*","Skeleton3D",true,false)[0]
 		var player: AnimationPlayer=model.find_children("*","AnimationPlayer",true,false)[0]
@@ -27,6 +27,8 @@ func run() -> void:
 			var duration:=player.get_animation(clip).length
 			var worst:=1.0
 			var floor_error:=0.0
+			var floor_min:=INF
+			var floor_max:=-INF
 			for frame in 13:
 				player.play(clip)
 				player.seek(duration*float(frame)/12.0,true)
@@ -52,9 +54,11 @@ func run() -> void:
 								var length:=base[a].distance_to(base[b])
 								if length>.003: worst=maxf(worst,verts[a].distance_to(verts[b])/length)
 				floor_error=maxf(floor_error,absf(minimum))
+				floor_min=minf(floor_min,minimum)
+				floor_max=maxf(floor_max,minimum)
 			var passed:=worst<=3.5 and floor_error<.002
 			failed=failed or not passed
-			result[clip]={"seconds":duration,"samples":13,"max_edge_stretch_over_3mm":worst,"max_ground_error_m":floor_error,"passed":passed}
+			result[clip]={"seconds":duration,"samples":13,"max_edge_stretch_over_3mm":worst,"max_ground_error_m":floor_error,"ground_range_m":[floor_min,floor_max],"passed":passed}
 			print(path.get_file()," ",clip," ",result[clip])
 		reports[path]=result
 		model.queue_free()

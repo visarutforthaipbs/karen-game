@@ -57,10 +57,20 @@ var settings_button: Button
 var harvest_button: Button
 var settings_panel: SettingsPanel
 var how_to_play: HowToPlay
+var village_diorama: VillageDiorama
+var _card_columns: GridContainer
+var _header_row: HBoxContainer
+var _header_stats: HBoxContainer
+var _barn_card: Control
+var _watch_card: Control
+var _village_overlay: Control
 
 func _ready() -> void:
 	theme = UITheme.get_theme()
 	_build()
+	if AudioManager.instance:
+		AudioManager.instance.stop_all_loops()
+		AudioManager.instance.set_hearth_ambience(true)
 	_tune_radio(1, false)
 	_refresh()
 
@@ -98,12 +108,46 @@ func show_settings() -> void:
 		show_how_to_play())
 	add_child(settings_panel)
 
+func show_village() -> void:
+	if _village_overlay:return
+	var home := village_diorama.get_parent()
+	var home_index := village_diorama.get_index()
+	_village_overlay = PanelContainer.new()
+	_village_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(_village_overlay)
+	var box = UITheme.vbox(12)
+	_village_overlay.add_child(box)
+	var bar = UITheme.hbox(12)
+	box.add_child(bar)
+	var title = UITheme.label("หมู่บ้าน · ข้างเตาไฟยามค่ำ", "Title")
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bar.add_child(title)
+	for station in [["หมู่บ้าน",""],["วิทยุ","S8"],["ยุ้งข้าว","S3"],["โรงซ่อม","S9"]]:
+		var button = _button(station[0])
+		button.pressed.connect(village_diorama.focus_station.bind(station[1]))
+		bar.add_child(button)
+	var close = _button("กลับเตาไฟ")
+	bar.add_child(close)
+	close.pressed.connect(func():
+		village_diorama.reparent(home,false)
+		home.move_child(village_diorama,home_index)
+		village_diorama.size_flags_vertical=Control.SIZE_FILL
+		_village_overlay.queue_free()
+		_village_overlay=null
+		village_diorama.focus_station("")
+		launch_button.grab_focus())
+	village_diorama.reparent(box,false)
+	village_diorama.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	close.grab_focus()
+
 # ---------------------------------------------------------------------------
 # Build
 # ---------------------------------------------------------------------------
 
 func _build() -> void:
-	var backdrop = HearthBackdrop.new()
+	var backdrop = ColorRect.new()
+	backdrop.color = Color("101724")
+	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(backdrop)
 
@@ -118,13 +162,22 @@ func _build() -> void:
 	margin.add_child(page)
 
 	page.add_child(_build_header())
+	village_diorama = VillageDiorama.new()
+	village_diorama.name = "VillageDiorama"
+	village_diorama.custom_minimum_size.y = 210
+	village_diorama.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	page.add_child(village_diorama)
 
 	# The cards scroll when the window is short; the launch button below stays pinned
 	var scroll = ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	page.add_child(scroll)
-	var columns = UITheme.hbox(12)
+	var columns = GridContainer.new()
+	_card_columns = columns
+	columns.columns = 3
+	columns.add_theme_constant_override("h_separation",12)
+	columns.add_theme_constant_override("v_separation",12)
 	columns.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.add_child(columns)
@@ -154,6 +207,22 @@ func _build() -> void:
 	launch_button.custom_minimum_size = Vector2(560, 48)
 	launch_button.pressed.connect(_on_launch_pressed)
 	launch_row.add_child(launch_button)
+	resized.connect(_fit_layout)
+	_fit_layout.call_deferred()
+
+func _fit_layout() -> void:
+	if not _card_columns: return
+	var narrow := size.x < 1100
+	_card_columns.columns = 1 if narrow else 3
+	var stats_parent: HBoxContainer = _header_stats if narrow else _header_row
+	for card in [_barn_card,_watch_card]:
+		if card.get_parent()!=stats_parent:card.reparent(stats_parent,false)
+	if not narrow:
+		_header_row.move_child(_barn_card,1)
+		_header_row.move_child(_watch_card,2)
+	_header_stats.visible=narrow
+	village_diorama.custom_minimum_size.y = 160 if size.y < 700 else 210
+	launch_button.custom_minimum_size.x = minf(560,maxf(240,size.x-48))
 
 func _card(kind: String, title: String, tint: Color, seed_value: int, expand: bool = true) -> VBoxContainer:
 	var card = UITheme.card(Color(UITheme.PANEL, 0.93), tint, seed_value)
@@ -169,16 +238,15 @@ func _button(text: String, toggle: bool = false) -> Button:
 	b.text = text
 	b.toggle_mode = toggle
 	b.focus_mode = Control.FOCUS_ALL
-	b.pressed.connect(func():
-		if AudioManager.instance:
-			AudioManager.instance.play_ui_click())
-	b.focus_entered.connect(func():
-		if AudioManager.instance:
-			AudioManager.instance.play_ui_focus())
 	return b
 
 func _build_header() -> Control:
+	var header = UITheme.vbox(6)
 	var row = UITheme.hbox(16)
+	_header_row = row
+	header.add_child(row)
+	_header_stats = UITheme.hbox(12)
+	header.add_child(_header_stats)
 	var titles = UITheme.vbox(0)
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	titles.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -196,12 +264,14 @@ func _build_header() -> Control:
 	titles.add_child(header_label)
 
 	var barn = _header_stat("rice", "ข้าวในยุ้ง", UITheme.STRAW, 201)
+	_barn_card = barn[0]
 	row.add_child(barn[0])
 	barn_value = barn[1]
 	barn_bar = barn[2]
 	barn_bar.set_markers([{"at": GameState.FAMINE_THRESHOLD, "color": UITheme.RUBY}])
 
 	var watch = _header_stat("eye", "ความเพ่งเล็งของรัฐ", UITheme.STATE, 202)
+	_watch_card = watch[0]
 	row.add_child(watch[0])
 	scrutiny_value = watch[1]
 	scrutiny_bar = watch[2]
@@ -221,7 +291,10 @@ func _build_header() -> Control:
 	settings_button.add_theme_font_size_override("font_size", 17)
 	settings_button.pressed.connect(show_settings)
 	row.add_child(settings_button)
-	return row
+	var village_button = _button("ดูหมู่บ้าน")
+	village_button.pressed.connect(show_village)
+	row.add_child(village_button)
+	return header
 
 func _header_stat(kind: String, title: String, tint: Color, seed_value: int) -> Array:
 	var card = UITheme.card(Color(UITheme.STATE_DEEP if tint == UITheme.STATE else UITheme.PANEL, 0.93), tint, seed_value)
@@ -376,6 +449,7 @@ func _stat(label_text: String, value: String, warn: bool = false) -> void:
 
 func _refresh() -> void:
 	var state = GameState.instance
+	if village_diorama: village_diorama.set_reserve(state.rice_barn)
 	var cfg: PlotGenerator.PlotConfig = state.plot_config()
 	var rules: Escalation.YearRules = cfg.rules
 
@@ -519,6 +593,8 @@ func _on_chatter_timeout() -> void:
 # ---------------------------------------------------------------------------
 
 func _on_ration_pressed(level: int) -> void:
+	if AudioManager.instance:
+		AudioManager.instance.play_grain()
 	GameState.instance.ration_level = level
 	_refresh()
 
@@ -531,6 +607,8 @@ func _on_sharpen_pressed() -> void:
 	if state and state.can_afford_upgrade() and state.blade_upgrade_level < 3:
 		state.rice_barn -= state.UPGRADE_RICE_COST
 		state.blade_upgrade_level += 1
+		if AudioManager.instance:
+			AudioManager.instance.play_workshop()
 		_refresh()
 
 func _on_seal_pressed() -> void:
@@ -538,6 +616,8 @@ func _on_seal_pressed() -> void:
 	if state and state.can_afford_upgrade() and state.sprayer_upgrade_level < 3:
 		state.rice_barn -= state.UPGRADE_RICE_COST
 		state.sprayer_upgrade_level += 1
+		if AudioManager.instance:
+			AudioManager.instance.play_workshop()
 		_refresh()
 
 func _on_launch_pressed() -> void:

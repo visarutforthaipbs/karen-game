@@ -31,7 +31,7 @@ func run() -> void:
 		actor.set_script(load("res://scripts/SkeletalChibiAnimator.gd"))
 		actor.character_profile = character
 		actor.separate_equipment = true
-		actor.add_child(doc.generate_scene(state))
+		actor.add_child(doc.generate_scene(state, 60.0))
 		root.add_child(actor)
 		await process_frame
 		if args.size() > 2 and args[2] == "slope": actor.set_environment(ramp,true)

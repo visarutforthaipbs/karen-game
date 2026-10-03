@@ -10,6 +10,7 @@ signal bamboo_exploded(cell_coord: Vector2i, world_pos: Vector3, landing_coord: 
 signal ember_jumped(from_coord: Vector2i, landing_coord: Vector2i)
 ## A spark caught in the protected forest: douse it before it becomes an escape
 signal spot_fire_started(coord: Vector2i)
+signal spot_fire_extinguished(coord: Vector2i)
 
 enum CellType {
 	VEGETATION,      # Unburned upland brush
@@ -1156,6 +1157,7 @@ func douse_cell(gx: int, gy: int) -> bool:
 				spot_fires_doused += 1
 				cell_types[idx] = CellType.FOREST_BORDER
 				cell_heat[idx] = 0.0
+				spot_fire_extinguished.emit(Vector2i(gx, gy))
 			elif cell_timers[idx] * 2 < _burn_duration(x, y):
 				cell_types[idx] = CellType.BAMBOO if cell_was_bamboo[idx] else CellType.VEGETATION
 				cell_heat[idx] = 0.0

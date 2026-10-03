@@ -478,8 +478,6 @@ func _apply_tool_to_cell(coord: Vector2i) -> void:
 				_show_tool_feedback(coord)
 				water = maxf(0.0, water - water_per_douse)
 				water_changed.emit(water, water_capacity)
-				if AudioManager.instance:
-					AudioManager.instance.play_water_spray()
 
 func _work_kind() -> StringName:
 	return [&"ignite", &"rake", &"spray"][int(current_tool)]

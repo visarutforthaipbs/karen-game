@@ -19,6 +19,7 @@ const SILENT_DB: float = -60.0
 const AUDIO_DIR := "res://assets/audio"
 const TAPOH_VOICE_PATH = "res://assets/audio/tapoh_wind_warning.wav"
 const RADIO_VOICE_BUS := "RadioVoice"
+const RADIO_FILTER_BUS := "RadioFilter"
 const MUSIC_BUS := "Music"
 const SFX_BUS := "SFX"
 const AMBIENCE_BUS := "Ambience"
@@ -59,6 +60,27 @@ var _radio_voices: Dictionary = {}
 var _bark_voices: Dictionary = {}  # kind -> Array[AudioStream] (crew barks)
 var _voice_last: Dictionary = {}   # pool key -> last index played
 var radio_player: AudioStreamPlayer
+var speech_player: AudioStreamPlayer
+var speech_player_3d: AudioStreamPlayer3D
+var _speech_priority: int = 0
+var _speech_last: Dictionary = {}
+const FIRE_WARNING_INTERVAL_MS := 8000
+var _speech_kind := ""
+var _fire_voice_last := -100000
+var _fire_voice_severity := 0
+var _fire_alarm_last := -100000
+## Opt-in temporary diagnostics, bounded to prevent production growth.
+var fire_diagnostics := false
+var fire_warning_log: Array[Dictionary] = []
+func _log_fire(kind: String, accepted: bool, pos: Vector3) -> void:
+	if fire_diagnostics:
+		fire_warning_log.append({"kind": kind, "accepted": accepted, "position": pos, "time_ms": Time.get_ticks_msec()})
+		if fire_warning_log.size() > 128: fire_warning_log.pop_front()
+var _scene_audio_epoch: int = 0
+var _variant_streams: Dictionary = {}
+var _variant_last: Dictionary = {}
+var _music_state: int = 0
+var _state_music: bool = false
 
 # Loop players and their target linear volumes
 var crackle_player: AudioStreamPlayer
@@ -80,6 +102,7 @@ func _init() -> void:
 	instance = self
 
 func _ready() -> void:
+	get_tree().node_added.connect(_on_ui_node_added)
 	_ensure_buses()
 	for i in SFX_VOICES:
 		var p = AudioStreamPlayer.new()
@@ -106,10 +129,21 @@ func _ready() -> void:
 	# Ambience beds fade on their own targets; keep them out of the generic loop
 	_targets.erase(ambience_players["wind"])
 	_targets.erase(ambience_players["cicada"])
+	if ResourceLoader.exists(AUDIO_DIR + "/sfxloop_evening.wav"):
+		ambience_players["evening"] = _make_loop_player(_loop_stream("evening", _wind_bed_loop), AMBIENCE_BUS)
+		_targets.erase(ambience_players["evening"])
 	_ensure_radio_bus()
 	radio_player = AudioStreamPlayer.new()
-	radio_player.bus = RADIO_VOICE_BUS
+	radio_player.bus = RADIO_FILTER_BUS
 	add_child(radio_player)
+	speech_player = AudioStreamPlayer.new()
+	speech_player.bus = RADIO_VOICE_BUS
+	add_child(speech_player)
+	speech_player_3d = AudioStreamPlayer3D.new()
+	speech_player_3d.bus = RADIO_FILTER_BUS
+	speech_player_3d.unit_size = 12.0
+	speech_player_3d.max_distance = 100.0
+	add_child(speech_player_3d)
 	_load_recorded_voices()
 	for i in 3:
 		var mp = AudioStreamPlayer.new()
@@ -122,12 +156,24 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	# Release playbacks so nothing is left referenced at shutdown
-	for p in _sfx + music_players + [radio_player] + ambience_players.values():
+	for p in _sfx + music_players + [radio_player, speech_player] + ambience_players.values():
 		p.stop()
 		p.stream = null
+	if speech_player_3d:
+		speech_player_3d.stop()
+		speech_player_3d.stream = null
 	for p in _targets.keys():
 		p.stop()
 		p.stream = null
+	for p in _sfx3d:
+		p.stop()
+		p.stream = null
+	drone_hum_stream = null
+	_music_jobs.clear()
+	_music_streams.clear()
+	_music_layers.clear()
+	_variant_streams.clear()
+	_bark_voices.clear()
 	_cache.clear()
 	_tapoh_voices.clear()
 	_radio_voices.clear()
@@ -153,9 +199,11 @@ func _process(delta: float) -> void:
 		var rate := 2.5 if held_players.values().has(p) else 0.8
 		_fade_player(p, _targets[p], delta, rate)
 	var music_duck := 0.45 if _siren_on else 1.0
+	if _speech_active():
+		music_duck *= 0.5
 	if music_ready:
 		for i in 3:
-			_fade_player(music_players[i], _music_layer_targets[i] * music_duck, delta)
+			_fade_player(music_players[i], _music_layer_targets[i] * music_duck, delta, 0.16 if _state_music else 0.8)
 	for key in ambience_players:
 		_fade_player(ambience_players[key], _ambience_targets.get(key, 0.0), delta)
 	if _ambience_lpf:
@@ -167,6 +215,13 @@ func _process(delta: float) -> void:
 		var bus := AudioServer.get_bus_index("Drones")
 		if bus != -1:
 			AudioServer.set_bus_volume_db(bus, linear_to_db(lerpf(1.0, 0.35, _occlusion)))
+
+## Shared menu sound policy, including dynamically built pause/settings buttons.
+func _on_ui_node_added(node: Node) -> void:
+	if node is BaseButton and not node.has_meta("audio_connected"):
+		node.set_meta("audio_connected", true)
+		node.pressed.connect(play_ui_click)
+		node.focus_entered.connect(play_ui_focus)
 
 ## Fades a looping player toward a linear volume, starting / stopping it as needed
 func _fade_player(p: AudioStreamPlayer, target: float, delta: float, rate: float = 0.8) -> void:
@@ -203,6 +258,10 @@ func set_radio_static(level: float) -> void:
 
 ## 0 calm .. 3 satellite countdown: layers come in as the deadline approaches
 func set_music_intensity(level: int) -> void:
+	_music_state = clampi(level, 0, 3)
+	if _state_music:
+		_set_state_music()
+		return
 	match level:
 		0: _music_layer_targets = [0.30, 0.0, 0.0]
 		1: _music_layer_targets = [0.30, 0.24, 0.0]
@@ -211,9 +270,37 @@ func set_music_intensity(level: int) -> void:
 
 ## Quiet harp-and-khaen bed for the hearth / folk radio
 func play_hearth_music(on: bool) -> void:
+	if radio_player:
+		radio_player.stop()
+	_music_state = 0
 	_music_layer_targets = [0.28, 0.0, 0.0] if on else [0.0, 0.0, 0.0]
 
+func _set_state_music() -> void:
+	_music_layer_targets = [0.0, 0.0, 0.0]
+	var track := 0 if _music_state == 0 else (2 if _music_state == 3 else 1)
+	_music_layer_targets[track] = 0.28 if _music_state < 2 else 0.32
+
 func stop_all_loops() -> void:
+	_scene_audio_epoch += 1
+	_static_level = 0.0
+	_siren_on = false
+	_inversion = 0.0
+	_occlusion_target = 0.0
+	_speech_priority = 0
+	_speech_last.clear()
+	_speech_kind = ""
+	_fire_voice_last = -100000
+	_fire_voice_severity = 0
+	_fire_alarm_last = -100000
+	_step_pos.clear()
+	_step_dist.clear()
+	for p in [radio_player, speech_player, speech_player_3d]:
+		if p:
+			p.stop()
+	for p in _sfx:
+		p.stop()
+	for p in _sfx3d:
+		p.stop()
 	for p in _targets.keys():
 		_targets[p] = 0.0
 	for key in ambience_players:
@@ -241,6 +328,8 @@ func _ensure_buses() -> void:
 	if AudioServer.get_bus_index("Drones") == -1:
 		AudioServer.add_bus()
 		AudioServer.set_bus_name(AudioServer.bus_count - 1, "Drones")
+	AudioServer.set_bus_send(AudioServer.get_bus_index("Drones"), SFX_BUS)
+	AudioServer.set_bus_send(AudioServer.get_bus_index(UI_BUS), SFX_BUS)
 	_drone_lpf = AudioEffectLowPassFilter.new()
 	_drone_lpf.cutoff_hz = 20000.0
 	AudioServer.add_bus_effect(AudioServer.get_bus_index("Drones"), _drone_lpf)
@@ -250,6 +339,7 @@ func set_bus_volume(bus_name: String, linear: float) -> void:
 	var idx := AudioServer.get_bus_index(bus_name)
 	if idx == -1:
 		return
+	AudioServer.set_bus_mute(idx, linear <= 0.0)
 	AudioServer.set_bus_volume_db(idx, linear_to_db(maxf(0.001, clampf(linear, 0.0, 2.0))))
 
 func get_bus_volume(bus_name: String) -> float:
@@ -257,16 +347,20 @@ func get_bus_volume(bus_name: String) -> float:
 	return db_to_linear(AudioServer.get_bus_volume_db(idx)) if idx != -1 else 1.0
 
 ## Ambience bed levels (0..1 wind/cicada) and inversion muffle (0..1)
-func set_ambience(wind: float, cicada: float, inversion: float) -> void:
+func set_ambience(wind: float, cicada: float, inversion: float, evening: float = 0.0) -> void:
 	_ambience_targets["wind"] = clampf(wind, 0.0, 1.0)
 	_ambience_targets["cicada"] = clampf(cicada, 0.0, 1.0)
 	_inversion = clampf(inversion, 0.0, 1.0)
+	_ambience_targets["evening"] = clampf(evening, 0.0, 1.0)
 
 ## Sustained held-work loops (spray / ignite / rake / refill): one loop per
 ## verb with fast fades, instead of retriggering a one-shot every game tick
 func set_held_loop(loop_name: String, on: bool) -> void:
 	if not held_players.has(loop_name):
 		held_players[loop_name] = _make_loop_player(_held_loop_stream(loop_name), SFX_BUS)
+	var was_on: bool = _targets[held_players[loop_name]] > 0.0
+	if loop_name == "spray" and was_on != on:
+		_play("tool_start" if on else "tool_stop", _tool_clack, 1.0, -5.0, SFX_BUS, 120, 0)
 	_targets[held_players[loop_name]] = HELD_LEVELS.get(loop_name, 0.5) if on else 0.0
 
 func _held_loop_stream(loop_name: String) -> AudioStreamWAV:
@@ -289,12 +383,21 @@ func _loop_stream(key: String, builder: Callable) -> AudioStreamWAV:
 		if s:
 			s.loop_mode = AudioStreamWAV.LOOP_FORWARD
 			s.loop_begin = 0
-			s.loop_end = s.data.size() / 2
+			var bytes_per_sample := 2 if s.format == AudioStreamWAV.FORMAT_16_BITS else 1
+			s.loop_end = s.data.size() / (bytes_per_sample * (2 if s.stereo else 1))
 			return s
 	return builder.call()
 
 ## Shared one-shot cache lookup: sfx_<key>.wav drop-in beats the synthesized recipe
 func _stream_for(key: String, builder: Callable) -> AudioStream:
+	if _variant_streams.has(key):
+		var pool: Array = _variant_streams[key]
+		var pick := randi() % pool.size()
+		if pool.size() > 1 and pick == _variant_last.get(key, -1):
+			pick = (pick + 1) % pool.size()
+		_variant_last[key] = pick
+		_cache[key] = pool[pick]
+		return pool[pick]
 	if not _cache.has(key):
 		var override_path := AUDIO_DIR + "/sfx_%s.wav" % key
 		if ResourceLoader.exists(override_path):
@@ -307,18 +410,22 @@ func _stream_for(key: String, builder: Callable) -> AudioStream:
 # Recorded voices (drop-in wavs in assets/audio/, OmniVoice-Thai)
 # ---------------------------------------------------------------------------
 
-## Band-limited "radio speaker" bus so broadcast lines sit under the static
+## Speech slider controls the dry parent; only radio speech gets band limiting.
 func _ensure_radio_bus() -> void:
-	if AudioServer.get_bus_index(RADIO_VOICE_BUS) != -1:
+	if AudioServer.get_bus_index(RADIO_VOICE_BUS) == -1:
+		AudioServer.add_bus()
+		AudioServer.set_bus_name(AudioServer.bus_count - 1, RADIO_VOICE_BUS)
+	if AudioServer.get_bus_index(RADIO_FILTER_BUS) != -1:
 		return
 	AudioServer.add_bus()
 	var idx := AudioServer.bus_count - 1
-	AudioServer.set_bus_name(idx, RADIO_VOICE_BUS)
+	AudioServer.set_bus_name(idx, RADIO_FILTER_BUS)
+	AudioServer.set_bus_send(idx, RADIO_VOICE_BUS)
 	var hp := AudioEffectHighPassFilter.new()
-	hp.cutoff_hz = 420.0
+	hp.cutoff_hz = 250.0
 	AudioServer.add_bus_effect(idx, hp)
 	var lp := AudioEffectLowPassFilter.new()
-	lp.cutoff_hz = 3200.0
+	lp.cutoff_hz = 3800.0
 	AudioServer.add_bus_effect(idx, lp)
 
 ## Scans AUDIO_DIR once at startup; missing files simply leave pools empty.
@@ -330,10 +437,17 @@ func _load_recorded_voices() -> void:
 	if dir == null:
 		return
 	for f in wav_names(dir.get_files()):
+		if not (f.begins_with("tapoh_wind_warning") or f.begins_with("radio_ch") or f.begins_with("ta_poh_call") or f.begins_with("bark_") or f.begins_with("sfx_step_")):
+			continue
 		var stream = ResourceLoader.load(AUDIO_DIR + "/" + f, "", ResourceLoader.CACHE_MODE_IGNORE)
 		if stream == null:
 			continue
-		if f.begins_with("tapoh_wind_warning"):
+		if f.begins_with("sfx_step_") and f.get_basename().get_slice("_", 3).is_valid_int():
+			var key := "step_" + f.get_slice("_", 2)
+			if not _variant_streams.has(key):
+				_variant_streams[key] = []
+			_variant_streams[key].append(stream)
+		elif f.begins_with("tapoh_wind_warning"):
 			_tapoh_voices.append(stream)
 		elif f.begins_with("radio_ch"):
 			var channel := int(f.get_slice("_", 1).trim_prefix("ch"))
@@ -345,9 +459,10 @@ func _load_recorded_voices() -> void:
 			_add_bark("tapoh", stream)
 		elif f.begins_with("bark_"):
 			var kind := f.trim_prefix("bark_").get_slice(".", 0)
-			# bark_maelu_2.wav -> "maelu": strip trailing _<digit> so variants pool
-			if kind.length() > 2 and kind[kind.length() - 2] == "_" and kind[kind.length() - 1].is_valid_int():
-				kind = kind.substr(0, kind.length() - 2)
+			# bark_maelu_2.wav -> "maelu": numeric take suffixes share a pool.
+			var suffix := kind.get_slice("_", kind.get_slice_count("_") - 1)
+			if suffix.is_valid_int():
+				kind = kind.trim_suffix("_" + suffix)
 			_add_bark(kind, stream)
 	var radio_lines := 0
 	for ch in _radio_voices:
@@ -378,26 +493,65 @@ func has_radio_voice(channel: int) -> bool:
 ## Crew bark (recorded drop-in: ta_poh_call*.wav or bark_<kind>*.wav).
 ## Kinds: "tapoh", "embers", "rally_reply", "cough". Silent if no recording.
 func play_bark(kind: String, volume_db: float = -2.0, pos: Vector3 = Vector3.INF) -> void:
-	if not _bark_voices.has(kind) or _bark_voices[kind].is_empty():
+	if not has_bark(kind):
 		return
 	var pool: Array = _bark_voices[kind]
 	var pick := _pick_voice("bark_" + kind, pool.size())
-	if pos != Vector3.INF:
-		_play_at("bark_" + kind + "_%d" % pick, func(): return pool[pick], pos, 1.0, volume_db, 350)
+	var urgent := kind in ["embers", "spot_fire"]
+	_play_speech(kind, pool[pick], pos, volume_db, 3 if urgent else (1 if kind == "maelu" else 2), kind.begins_with("report_"))
+
+func _speech_active() -> bool:
+	return (speech_player and speech_player.playing) or (speech_player_3d and speech_player_3d.playing) or (radio_player and radio_player.playing)
+
+## A dedicated speech pool protects dialogue from footsteps. Expired warnings
+## are dropped instead of queued; urgent lines may interrupt nonurgent speech.
+func _play_speech(kind: String, stream: AudioStream, pos: Vector3, volume_db: float, priority: int, filtered: bool = false) -> void:
+	var now := Time.get_ticks_msec()
+	# Explicit semantic severity: forest ignition may supersede generic flying embers once.
+	var severity := 2 if kind == "spot_fire" else (1 if kind == "embers" else 0)
+	if severity > 0 and now - _fire_voice_last < FIRE_WARNING_INTERVAL_MS and severity <= _fire_voice_severity:
+		_log_fire(kind, false, pos)
+		return
+	if now - int(_speech_last.get(kind, -100000)) < 4000:
+		return
+	var crew_busy := speech_player.playing or speech_player_3d.playing
+	var escalating := severity > _fire_voice_severity and severity > 0 and now - _fire_voice_last < FIRE_WARNING_INTERVAL_MS
+	if crew_busy and priority <= _speech_priority and not (escalating and _speech_kind == "embers"):
+		_log_fire(kind, false, pos)
+		return
+	if severity > 0:
+		_fire_voice_last = now
+		_fire_voice_severity = severity
+		_log_fire(kind, true, pos)
+	_speech_kind = kind
+	_speech_last[kind] = now
+	_speech_priority = priority
+	speech_player.stop()
+	speech_player_3d.stop()
+	radio_player.stop()
+	if pos == Vector3.INF:
+		speech_player.stream = stream
+		speech_player.bus = RADIO_FILTER_BUS if filtered else RADIO_VOICE_BUS
+		speech_player.volume_db = volume_db
+		speech_player.play()
 	else:
-		_play("bark_" + kind + "_%d" % pick, func(): return pool[pick], 1.0, volume_db, SFX_BUS, 350, 2)
+		speech_player_3d.stream = stream
+		speech_player_3d.bus = RADIO_FILTER_BUS if filtered else RADIO_VOICE_BUS
+		speech_player_3d.global_position = pos
+		speech_player_3d.volume_db = volume_db
+		speech_player_3d.play()
 
 func has_bark(kind: String) -> bool:
 	return _bark_voices.has(kind) and not _bark_voices[kind].is_empty()
 
 ## Plays a random recorded broadcast line for a radio channel (skips the last one)
 func play_radio_voice(channel: int) -> void:
-	if not has_radio_voice(channel):
+	if not has_radio_voice(channel) or speech_player.playing or speech_player_3d.playing:
 		return
 	var pool: Array = _radio_voices[channel]
 	var pick := _pick_voice("ch%d" % channel, pool.size())
 	radio_player.stream = pool[pick]
-	radio_player.pitch_scale = randf_range(0.98, 1.02)
+	radio_player.pitch_scale = 1.0
 	radio_player.play()
 
 func _pick_voice(key: String, size: int) -> int:
@@ -415,12 +569,12 @@ func _pick_voice(key: String, size: int) -> int:
 ## voice is stolen only from equal-or-lower priority events (soft-steal: the new
 ## event lands on the oldest slot); lower-priority sounds are dropped instead of
 ## cutting a more important cue.
-func _play(key: String, builder: Callable, pitch: float = 1.0, volume_db: float = 0.0, bus: String = SFX_BUS, min_interval_ms: int = 70, priority: int = 1) -> void:
+func _play(key: String, builder: Callable, pitch: float = 1.0, volume_db: float = 0.0, bus: String = SFX_BUS, min_interval_ms: int = 70, priority: int = 1, stream_key: String = "") -> void:
 	var now := Time.get_ticks_msec()
 	if now - int(_last_played.get(key, -100000)) < min_interval_ms:
 		return
 	_last_played[key] = now
-	var stream := _stream_for(key, builder)
+	var stream := _stream_for(stream_key if stream_key != "" else key, builder)
 	var slot := _alloc_voice(priority)
 	if slot < 0:
 		return
@@ -458,12 +612,12 @@ func play_satellite_ping() -> void:
 	_play("ping", _satellite_ping, 1.0, -2.0)
 
 func play_cough() -> void:
-	_play("cough", _cough, randf_range(0.9, 1.1))
+	_play("cough_khanae", _cough, randf_range(0.96, 1.04), -4.0, SFX_BUS, 1500)
 
 func play_tapoh_warning() -> void:
 	if not _tapoh_voices.is_empty():
 		var pick := _pick_voice("tapoh", _tapoh_voices.size())
-		_play("tapoh_voice_%d" % pick, func(): return _tapoh_voices[pick])
+		_play_speech("wind_warning", _tapoh_voices[pick], Vector3.INF, -2.0, 3)
 	elif has_bark("tapoh"):
 		play_bark("tapoh", -3.0)
 	else:
@@ -562,8 +716,8 @@ func play_bamboo_pop_at(pos: Vector3) -> void:
 func play_ember_landing_at(pos: Vector3) -> void:
 	_play_at("ember_tick", _ember_tick, pos, randf_range(0.9, 1.2), -8.0)
 
-func play_cough_at(pos: Vector3) -> void:
-	_play_at("cough", _cough, pos, randf_range(0.9, 1.1), 0.0, 300)
+func play_cough_at(pos: Vector3, actor: String = "khanae") -> void:
+	_play_at("cough_" + actor, _cough, pos, randf_range(0.96, 1.04), -4.0, 1500)
 
 func play_shutter_at(pos: Vector3) -> void:
 	_play_at("shutter", _shutter, pos, randf_range(0.95, 1.07), -3.0, 120)
@@ -571,12 +725,41 @@ func play_shutter_at(pos: Vector3) -> void:
 ## Ranger radios a sighting in from where he stands: squelch opens, then the report
 func play_ranger_report_at(pos: Vector3, is_flame: bool) -> void:
 	_play_at("squelch", _squelch, pos, 1.0, -4.0, 250)
-	var say := func(): play_bark("report_flame" if is_flame else "report_crew", -2.0, pos)
+	var epoch := _scene_audio_epoch
+	var say := func():
+		if epoch == _scene_audio_epoch:
+			play_bark("report_flame" if is_flame else "report_crew", -2.0, pos)
 	var tree := get_tree()
 	if tree:
 		tree.create_timer(0.3).timeout.connect(say)
 	else:
 		say.call()
+
+func play_spot_fire() -> void:
+	var now := Time.get_ticks_msec()
+	if now - _fire_alarm_last >= FIRE_WARNING_INTERVAL_MS:
+		_fire_alarm_last = now
+		_play("spot_fire", _camera_alarm, 1.0, -8.0, SFX_BUS, 2000, 2)
+	play_bark("spot_fire")
+
+func play_fire_out() -> void:
+	_play("extinguished", _water_spray, 1.0, -5.0, SFX_BUS, 1200, 1)
+	play_bark("fire_out", -3.0)
+
+func play_workshop() -> void:
+	_play("workshop", _tool_clack, 1.0, -4.0, SFX_BUS, 400, 0)
+
+func play_grain() -> void:
+	_play("grain", _step_brush, 1.0, -6.0, SFX_BUS, 400, 0)
+
+func play_truck_arrive() -> void:
+	_play("truck_arrive", _drone_hum_loop, 1.0, -6.0, SFX_BUS, 3000, 0)
+
+func set_hearth_ambience(on: bool) -> void:
+	if not ambience_players.has("hearth"):
+		ambience_players["hearth"] = _make_loop_player(_loop_stream("hearth", _crackle_loop), AMBIENCE_BUS)
+		_targets.erase(ambience_players["hearth"])
+	_ambience_targets["hearth"] = 0.25 if on else 0.0
 
 ## Mae-Lu at the granary
 func play_maelu_line() -> void:
@@ -585,7 +768,7 @@ func play_maelu_line() -> void:
 ## Per-actor footstep cadence by distance travelled (fits any gait or speed)
 var _step_pos: Dictionary = {}
 var _step_dist: Dictionary = {}
-func step_at(actor: String, pos: Vector3, ash: bool = false) -> void:
+func step_at(actor: String, pos: Vector3, ash: bool = false, spatial: bool = true) -> void:
 	if not _step_pos.has(actor):
 		_step_pos[actor] = pos
 		_step_dist[actor] = 0.0
@@ -594,6 +777,9 @@ func step_at(actor: String, pos: Vector3, ash: bool = false) -> void:
 	if _step_dist[actor] < 0.85:
 		return
 	_step_dist[actor] = 0.0
+	if not spatial:
+		_play("step_" + actor, _step_ash if ash else _step_brush, randf_range(0.94, 1.06), -10.0, SFX_BUS, 150, 0, "step_ash" if ash else "step_brush")
+		return
 	if ash:
 		_play_at("step_ash_" + actor, _step_ash, pos, randf_range(0.9, 1.15), -7.0, 150, "step_ash")
 	else:
@@ -1183,12 +1369,15 @@ func _job_encode(layer: int) -> void:
 	_music_streams.append(_to_wav(_music_layers[layer], true))
 
 func _job_publish() -> void:
+	_state_music = ResourceLoader.exists(AUDIO_DIR + "/music_states.tres")
+	if _state_music and _music_layer_targets != [0.0, 0.0, 0.0]:
+		_set_state_music()
 	for i in 3:
 		music_players[i].stream = _music_stream(i)
 	_music_layers.clear()
 	music_ready = true
 
-## Music layers honour sfxloop_music<0|1|2>.wav drop-ins (recorded loops from
+## Music layers honour sfxloop_music<0|1|2>.wav drop-ins (complete state tracks from
 ## ElevenLabs); synthesized layers remain the fallback
 func _music_stream(i: int) -> AudioStreamWAV:
 	return _loop_stream("music%d" % i, func(): return _music_streams[i])

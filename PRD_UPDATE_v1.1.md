@@ -318,3 +318,7 @@ P1-1 (the ranger) and P1-2 (the approved patrol) should be in the playtest build
 12. **P1-2 ranger patrol with a placeholder (approved)** → P1-4 (companions take cover) → P1-3 (checkpoint)
 13. In parallel from day one, CHAR builds P1-1 (the ranger model, rig and animations). GAME swaps it into the patrol and the crackdown ending when installed.
 14. Remaining P1 → P2
+
+## P2-8 delivery note — 2026-10-03
+
+The local game now has a 3D Village Hearth panorama and larger station inspection, with S3/S4 and S8–S16 installed. Existing management actions are retained. Responsive and gameplay checks pass; community cultural review and target-hardware performance remain pending. [Implementation and evidence](tools/asset_pipeline/VILLAGE_COMPLETION_HANDOFF_20261003.md).

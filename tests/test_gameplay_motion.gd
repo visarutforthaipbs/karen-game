@@ -99,7 +99,49 @@ func run() -> void:
 		game.youth._physics_process(1.0/60.0)
 		if game.fire_grid.cell_types[index] == game.fire_grid.CellType.ASH: break
 	check(game.fire_grid.cell_types[index] == game.fire_grid.CellType.ASH, "rigged companion completes ordered douse")
+	# Sustained jet follows the production nozzle and authoritative grid target.
+	game.fire_grid.cell_types[index] = game.fire_grid.CellType.SMOLDERING
+	game.youth.current_state = game.youth.State.PERFORMING_TASK
+	game.youth.target_coord = coord
+	game.youth.target_world_pos = Vector3(999,999,999)
+	game.youth._update_spray_cue()
+	var cue = game.youth._spray_cue
+	check(cue != null and cue.origin.distance_to(game.youth.animator.get_embedded_tool_tip()) < 0.001, "spray originates at production nozzle")
+	check(cue.destination.distance_to(game.fire_grid.get_cell_world_pos(coord.x, coord.y) + Vector3.UP * 0.08) < 0.001, "jet ignores stale task position")
+	game.youth._update_spray_cue()
+	check(game.youth._spray_cue == cue, "held spray reuses emitter")
+	game.youth.rally_to_player()
+	check(game.youth._spray_cue == null and not cue.visible, "rally immediately hides and frees jet")
+	game.youth.current_state = game.youth.State.PERFORMING_TASK
+	game.youth.target_coord = coord
+	game.youth._update_spray_cue()
+	game.fire_grid.cell_types[index] = game.fire_grid.CellType.ASH
+	game.youth._update_spray_cue()
+	check(game.youth._spray_cue == null, "completed or invalid cell stops jet")
+	game.fire_grid.cell_types[index] = game.fire_grid.CellType.SMOLDERING
+	game.youth._update_spray_cue()
+	game.youth.current_state = game.youth.State.FLEEING
+	game.youth._update_spray_cue()
+	check(game.youth._spray_cue == null, "fleeing cancels spray")
+	game.youth.current_state = game.youth.State.PERFORMING_TASK
+	game.youth.target_coord = Vector2i(-1,-1)
+	game.youth._update_spray_cue()
+	check(game.youth._spray_cue == null, "invalid target cannot show success or held jet")
+	game.youth._assign_task(coord)
+	game.youth.global_position = game.fire_grid.get_cell_world_pos(coord.x,coord.y + 1)
+	game.youth.task_progress = 0.0
+	var autonomous_jet := false
+	for frame in 120:
+		game.youth._physics_process(1.0/60.0)
+		autonomous_jet = autonomous_jet or game.youth._spray_cue != null
+		if game.fire_grid.cell_types[index] == game.fire_grid.CellType.ASH: break
+	check(autonomous_jet and game.fire_grid.cell_types[index] == game.fire_grid.CellType.ASH and game.youth._spray_cue == null, "autonomous task shows jet and clears it after authoritative success")
+	game.fire_grid.cell_types[index] = game.fire_grid.CellType.SMOLDERING
+	game.youth.current_state = game.youth.State.PERFORMING_TASK
+	game.youth.target_coord = coord
+	game.youth._update_spray_cue()
 	game._on_satellite_pass()
+	check(game.youth._spray_cue == null, "satellite transition cancels jet")
 	for actor in actors:
 		check(not actor.animator.work_active and actor.animator.work_blend == 0, actor.name + " stops work for satellite pass")
 	game.queue_free()

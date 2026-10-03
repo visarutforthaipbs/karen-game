@@ -46,15 +46,19 @@ func _ready() -> void:
 
 	var lens = MeshInstance3D.new()
 	var lens_mesh = SphereMesh.new()
-	lens_mesh.radius = 0.09
-	lens_mesh.height = 0.18
+	# A small status indicator leaves the actual housing optics visible.
+	lens_mesh.radius = 0.025
+	lens_mesh.height = 0.05
+	lens_mesh.radial_segments = 8
+	lens_mesh.rings = 4
 	_lens_mat = StandardMaterial3D.new()
 	_lens_mat.albedo_color = Color(0.2, 0.0, 0.0)
 	_lens_mat.emission_enabled = true
 	_lens_mat.emission = Color(1.0, 0.1, 0.1)
 	lens_mesh.material = _lens_mat
 	lens.mesh = lens_mesh
-	lens.position = Vector3(0, 2.7, 0.26)
+	lens.name = "StatusIndicator"
+	lens.position = Vector3(0.145, 2.735, 0.255)
 	add_child(lens)
 
 	_lamp = OmniLight3D.new()

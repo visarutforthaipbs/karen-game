@@ -22,7 +22,7 @@ func _ready() -> void:
 	particles.multimesh = MultiMesh.new()
 	particles.multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	var droplet := SphereMesh.new()
-	droplet.radius = 0.025 if kind == &"spray" else 0.035
+	droplet.radius = 0.09 if kind == &"spray" else 0.035
 	droplet.height = droplet.radius * 2
 	droplet.radial_segments = 4
 	droplet.rings = 1
@@ -46,8 +46,8 @@ func _process(delta: float) -> void:
 func _update_particles() -> void:
 	for i in 8:
 		var t := clampf(elapsed / DURATION + i * 0.035, 0, 1)
-		var point := start.lerp(target, t) if kind == &"spray" else target
-		point += Vector3(sin(i * 2.4), 0, cos(i * 2.4)) * (0.035 if kind == &"spray" else 0.15) * t
+		var point := target
+		point += Vector3(sin(i * 2.4), 0, cos(i * 2.4)) * (0.28 if kind == &"spray" else 0.15) * t
 		point.y += sin(t * PI) * (0.10 if kind == &"spray" else 0.16)
 		var size := 1.0 - t * 0.6
 		particles.multimesh.set_instance_transform(i, Transform3D(Basis.IDENTITY.scaled(Vector3.ONE * size), to_local(point)))

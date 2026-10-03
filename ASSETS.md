@@ -24,13 +24,13 @@ review images and remaining GAME integration work are recorded in
 - Triangle budgets matter: brush, bamboo and pines are instanced up to about 1,600 times per plot.
 - Prop tables below retain standard budgets. Explicit quality budgets (for example S1: 6,000 triangles) are in `asset_manifest.json`; they do not raise vegetation budgets.
 
-**Installed asset audit — 2026-10-02:** 45 static GLBs cover 26 of 27 manifest
-IDs, including the four C6 villagers. Only S4's two village-house variants remain
-absent from the prop manifest. There are also six principal rigged GLBs (five
-characters plus the ranger palette variant). All required v1.2 delivery files
-are present. See [the current asset audit](tools/asset_pipeline/ASSET_AUDIT_20261002.md)
-for visual improvements, current tests, remaining procedural assets and evidence.
-Earlier v1.1/v1.2 handoffs remain historical delivery records.
+**Current installed coverage — 2026-10-03:** 56 static GLBs cover all 36
+production manifest IDs, plus six rigged character GLBs and matching portraits.
+The two S4 houses and S8–S16 village props are now placed in the live 3D Hearth;
+S11 supplies the famine granary. The historical tables below contain earlier
+budgets/counts; current exact values and contracts are authoritative in
+`tools/asset_pipeline/asset_manifest.json` and
+[the village completion handoff](tools/asset_pipeline/VILLAGE_COMPLETION_HANDOFF_20261003.md).
 
 ## 1. Characters (already in the character pipeline)
 
@@ -47,8 +47,8 @@ Earlier v1.1/v1.2 handoffs remain historical delivery records.
 Five 256×256 transparent portraits match the installed models. All characters
 retain the approved v3.1 direction and low-poly style. See
 [Meshy cast handoff](tools/character_pipeline/MESHY_CAST_HANDOFF.md) for source
-jobs, reviews, tests, limits and rollback. Meshy is used for characters only;
-non-character assets retain the local pipeline.
+jobs, reviews, tests, limits and rollback. Meshy is used for characters and selected prominent props. Efficient procedural
+vegetation, tiny fittings and local material/geometry repairs remain appropriate.
 
 ## 2. Hillside environment
 

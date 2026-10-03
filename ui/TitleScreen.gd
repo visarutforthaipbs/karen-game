@@ -44,6 +44,7 @@ func _ready() -> void:
 	_build_backdrop()
 	_build_menu()
 	if AudioManager.instance:
+		AudioManager.instance.stop_all_loops()
 		AudioManager.instance.play_hearth_music(true)
 
 # ---------------------------------------------------------------------------
@@ -292,7 +293,7 @@ func _build_menu() -> void:
 	new_button = _menu_button("เริ่มเกมใหม่", _on_new_game, "Button" if SaveGame.exists() else "PrimaryButton")
 	_menu_button("วิธีเล่น", _on_how_to_play)
 	_menu_button("ตั้งค่า", _on_settings)
-	_menu_button("ออกจากเกม", func(): get_tree().quit())
+	_menu_button("ออกจากเกม", func(): InputBindings.request_exit())
 
 	notice_label = UITheme.wrap(UITheme.outlined(UITheme.label("", "Small", UITheme.EMBER), 4))
 	notice_label.custom_minimum_size = Vector2(440, 0)
@@ -319,9 +320,6 @@ func _menu_button(text: String, action: Callable, variation: String = "Button") 
 	b.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	b.add_theme_font_size_override("font_size", 19)
 	b.pressed.connect(action)
-	b.focus_entered.connect(func():
-		if AudioManager.instance and AudioManager.instance.has_method("play_ui_focus"):
-			AudioManager.instance.play_ui_focus())
 	_menu.add_child(b)
 	return b
 

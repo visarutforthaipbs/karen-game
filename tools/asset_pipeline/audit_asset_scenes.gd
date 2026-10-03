@@ -34,20 +34,48 @@ func run() -> void:
 	match args[0]:
 		"main": game = load("res://scenes/Main.tscn").instantiate()
 		"title": game = load("res://scenes/Title.tscn").instantiate()
-		"hearth": game = load("res://scenes/VillageHearth.tscn").instantiate()
+		"hearth", "village": game = load("res://scenes/VillageHearth.tscn").instantiate()
 		"checkpoint": game = load("res://ui/CheckpointScene.gd").new()
 		_: game = load("res://ui/EndingScene.gd").new()
 	view.add_child(game)
 	if game is Control: game.set_deferred("size", Vector2(view.size))
 	for i in 45: await process_frame
+	if args[0]=="checkpoint" and args.size()>2:
+		var doc:=GLTFDocument.new()
+		var gltf_state:=GLTFState.new()
+		assert(doc.append_from_file(args[2],gltf_state)==OK)
+		var imported:=doc.generate_scene(gltf_state)
+		var mesh:=ArrayMesh.new()
+		assert(AssetLibrary._append_meshes(imported,Transform3D.IDENTITY,mesh))
+		imported.free()
+		var replaced:=false
+		for node in game.find_children("*","MeshInstance3D",true,false):
+			if node.position.distance_to(Vector3(4.2,0,-.4))<.001:
+				node.mesh=mesh
+				replaced=true
+		assert(replaced,"Missing S5 checkpoint hook")
 	if args[0] == "title":
 		game.set_process(false)
 		game._pass_t = 5.0
 		game._update_satellite(0)
-	elif args[0] in ["checkpoint","famine","crackdown"]:
+	elif args[0]=="checkpoint":
 		game.set_process(false)
-		game._process(5.5)
+		game._t=0.0
+		for i in 330: game._process(1.0/60.0)
+	elif args[0] in ["famine","crackdown"]:
+		game.set_process(false)
+		game._t=0.0
+		for i in 330:game._process(1.0/60.0)
 	await snap(args[0])
+	if args[0]=="village":
+		game.show_village()
+		await snap("village_overview")
+		for station in ["S8","S3","S9"]:
+			game.village_diorama.focus_station(station)
+			await snap("village_"+station)
+	if args[0]=="checkpoint":
+		for i in 180: game._process(1.0/60.0)
+		await snap("checkpoint_open")
 	if args[0] == "hearth":
 		view.size = Vector2i(960,720)
 		game.size = view.size

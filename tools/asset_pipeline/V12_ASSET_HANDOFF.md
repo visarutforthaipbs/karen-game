@@ -1,5 +1,105 @@
 # v1.2 asset delivery — 2026-10-02
 
+## Meshy utility-prop follow-up — 2026-10-03
+
+Second approved batch installed: **T4 sprayer tank, S2 refill barrels, S6 pickup**.
+90 credits consumed of the approved 105-credit cap; remaining Meshy balance 1326.
+No optional remesh or paid retry used. Original concepts were generated with the
+built-in imagegen tool from fresh four-angle captures of the existing assets.
+These are contemporary utility props, not claimed historical Karen artefacts;
+no invented ethnic motifs or logos were added. Bamboo water containers retain
+their existing role. Characters, tools T1/T2/T3/T5, vegetation, VFX and runtime
+scripts remain unchanged.
+
+Evidence root **M2**: `artifacts/meshy_props_batch2_20261003/`.
+
+| Installed file | Tris / budget | Dimensions X/Y/Z m | Meshy task |
+|---|---:|---|---|
+| T4_sprayer_tank_a.glb | 1304 / 1500 quality | 0.360 / 0.460 / 0.2985 | 01a0ffbc-b020-710a-83c9-fb41a89d8d2d |
+| S2_water_barrels_a.glb | 1470 / 1500 quality | 1.184 / 0.900 / 0.543 | 01a0ffbd-6630-74d5-9229-90c77eb64209 |
+| S6_ranger_truck_a.glb | 1483 / 1500 standard | 2.003 / 1.890 / 3.735 | 01a0ffbd-770f-7613-875a-e8b233116865 |
+
+All static, base-centred, Y up, flat normals and +Z front. No runtime offsets
+change. T4's strap-side yaw required 180 degrees and its geometry was fitted to
+the exact previous bounding envelope. Existing outlet stays
+(0.150,0.055,-0.096750); Player tank placement and hose code are unchanged.
+T4 generated albedo had a dark seam/noisy pixels, so the delivered Meshy geometry
+uses four authored matte materials (yellow, charcoal, buckles, brass). The broad
+shell relief remains; do not confuse this with the rejected textured candidate.
+There are no shipping T4 texture maps. S2 and S6 each retain one 2K textured surface.
+S6 required +90 degrees source yaw and a geometry fit to the exact old footprint
+to preserve ending staging. S2 is about 0.147 m narrower and 0.125 m shallower
+than the previous barrels; height and base origin remain exact, so no hook change
+is needed. S2's bamboo tube mouths are simplified; this is not a certified
+watertight or internally detailed water-container model.
+
+Accepted candidate folders: `T4_style_candidate/`, `S2_candidate/`,
+`S6_fit_candidate/`. Each contains run/validation JSON, script snapshots,
+four-angle preview and installer rollback. Extra pre-normalization and textured
+tank folders are rejected/intermediate evidence, not production.
+Reviews: `held_final/tool_{0,1,2}_{front,back}.png` on actual player sockets;
+`game/assets_{12,22,44}m.png` in Main's lighting for barrel/truck staging.
+The installed truck was also checked in its live ending scene:
+`ending/crackdown.png` and `ending_review.log`; no script errors.
+Originals and hashes: `rollback/` and `baseline_hashes.json`. Provider tasks,
+cost approval, concept hashes, prompts and CPU adapter sources are retained in M2.
+
+Tests after the world-prop and tank installation batches:
+`test_all_world.log` and `test_all_tank.log`, both **RESULT: OK (0 failures)**.
+`test_equipment_motion.log`: **EQUIPMENT RESULT: 0 failures**; maximum hose
+endpoint error 0.0000000149 m, palm/shaft contact metrics unchanged. These checks
+test runtime transforms and transitions, not arbitrary finger-grip perfection.
+Known corrupt-save JSON diagnostics and ObjectDB exit warnings remain.
+All three final candidates passed the existing strict geometry/material validator.
+The previously recorded V3 global-budget discrepancy is outside this batch.
+
+## Meshy cultural-prop follow-up — 2026-10-03
+
+First approved batch: 90 Meshy credits consumed of a 105-credit cap; balance
+1416 after generation. No optional paid remesh or retry used. Three Meshy 7
+single-image tasks, 2K base-colour textures, triangle topology, no PBR or Ultra.
+Built-in imagegen prepared original isolated concepts using the researched
+construction brief; source photographs are research-only. The leaf-roof granary
+is an explicit traditional game adaptation of a photographed metal-roof rice bank.
+References and limitations: `KAREN_PROP_REFERENCE_BRIEF_20261003.md`.
+
+| ID/file | Tris | Height | Provider task | Review evidence under artifacts/meshy_props_20261003/ |
+|---|---:|---:|---|---|
+| S4_village_house_a.glb | 7115 / 8000 | 4 m | 01a0ffac-4d3e-70c7-911e-9c72a45d17ee | S4_a_candidate/preview.png; houses_game/assets_{12,22,44}m.png |
+| S4_village_house_b.glb | 7381 / 8000 | 4 m | 01a0ffad-a9f3-739f-b0c8-1e3127bb051c | S4_b_candidate/preview.png; houses_game/assets_{12,22,44}m.png |
+| S3_granary_a.glb | 5820 / 6000 | 3 m | 01a0ffb0-d87a-733f-bd9f-806518dcf40e | S3_a_front_candidate/preview.png; granary_compare.png; granary_game_front/assets_{12,22,44}m.png |
+
+All three are installed through the existing reviewed installer, one embedded
+textured surface each, flat normals, Y up, base-centred and +Z front. S3 required
+an explicit -90-degree source yaw correction; no runtime placement offset is
+needed. S4a bounds are 5.148 X × 4 Y × 6.210 Z m; S4b 4.461 X × 4 Y × 7.822 Z m.
+Height matches the spec, which does not constrain the footprint. Check clearance
+when placing houses; the stairs are included in the centred bounds.
+
+S3 replaces the previously installed granary; its rollback copy is inside
+S3_a_front_candidate/installation_*/previous.glb. S4a/b are **new deliveries**:
+the manifest already requested them, but neither a previous GLB nor an S4 scene
+call existed. AssetLibrary discovers them; GAME must add village placements.
+The house review pictures are staged in Main's lighting, not evidence of existing
+village placements. S3's enclosed storage hatch does not expose grain contents;
+if the famine vignette needs a visibly open empty interior, request a separate
+open-hatch variant or adjust the hook. No scripts/, ui/ or tests/test_all.gd edits.
+
+House batch test: `test_all_houses.log`, RESULT: OK (0 failures). Granary batch
+test: `test_all_granary.log`, RESULT: OK (0 failures). Existing
+corrupt-save negative-test JSON errors and ObjectDB exit warnings remain in the
+suite logs; do not describe these as clean error-free output.
+
+Installed-set validation: all three delivered meshes pass. The broader validator
+reports pre-existing V3 satellite issues (5335/4000 triangles, max extent 1.903 m
+instead of 2 m and non-grounded origin). V3 was not changed in this batch; its
+runtime bounding-box centring is already GAME-owned. See installed_validation.log.
+
+GPU SSH was unavailable, so cleanup used local Blender 4.5.9 CPU with the existing
+blender_cleanup.py and validator through build_static_mesh_local.py. Candidate
+folders retain script snapshots, hashes, masters, stats, validation and rollback
+records. Characters and tight-budget instanced vegetation were not changed.
+
 Asset production only. Gameplay, UI and `tests/test_all.gd` remain GAME-owned.
 Follow the updated ASSET_REQUESTS_v1.2.md and the user's approval: V3 remains
 base-centred; GAME recentres its bounds at runtime. C6 is a static crowd, no rigs.
@@ -195,3 +295,25 @@ normalised equipment anchor offsets, review paths and four passing batch tests:
 This supersedes the earlier numeric/visual entries for E1/E2/E3/E8, T1/T3/T4/T5,
 S3/S6/S7 and flame; optional mist and ash are now delivered. Cast files, C6,
 E7 wall mating planes, 40-triangle grass and V3 orientation are unchanged.
+
+
+## Meshy expansion — 2026-10-03
+
+V3 repaired locally; V1, V2 and S5 replaced with reviewed Meshy derivatives.
+All 47 installed static props now pass strict quality validation. Two install
+batches each passed `tests/test_all.gd` with zero failures. Counts, provider IDs,
+exact bounds, attachment offsets, rejection evidence and review image paths:
+[MESHY_EXPANSION_HANDOFF_20261003.md](MESHY_EXPANSION_HANDOFF_20261003.md).
+
+S8 radio, S9 workbench, S10 hollow bamboo basket and S11 open empty granary are
+delivered separately in `future_library/`, with reserved contracts in
+`future_asset_manifest.json`. They are not registered or placed in production.
+No character file or runtime script was changed by this expansion.
+
+## Village completion — 2026-10-03
+
+S4 and S8–S16 now have live Village Hearth placements; S11 is installed in the famine ending. The user authorized runtime integration. Five new props and compatible Idle/Talk/Scan overlays are installed, with the borrowed hose and thermal indicator corrected. Full per-ID triangles, dimensions, offsets, credits, review paths and passing checks: [completion handoff](VILLAGE_COMPLETION_HANDOFF_20261003.md). This supersedes earlier notes that GAME still needs to place these village props.
+
+## Follow-up rig/animation delivery — 2026-10-03
+
+The six character files now use refined skin weights and 22 updated motion records; all 34 named clips pass deformation/grounding and game integration checks. Asset geometry, UVs and albedo match the preceding approved cast. Additional spend 12 credits, balance 996. Review paths and exact per-character hashes/metrics: [rig and animation handoff](../character_pipeline/RIG_ANIMATION_HANDOFF_20261003.md).

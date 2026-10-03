@@ -151,6 +151,7 @@ func _ready() -> void:
 	fire_grid.bamboo_exploded.connect(_on_bamboo_exploded)
 	fire_grid.ember_jumped.connect(_on_ember_jumped)
 	fire_grid.spot_fire_started.connect(_on_spot_fire)
+	fire_grid.spot_fire_extinguished.connect(_on_spot_fire_extinguished)
 
 	# Connect GameClock signals
 	game_clock.time_ticked.connect(_on_clock_ticked)
@@ -367,12 +368,12 @@ func _process(delta: float) -> void:
 		if player and fire_grid:
 			var pc = fire_grid.get_cell_coord_at_world_pos(player.global_position)
 			if fire_grid.is_valid_coord(pc.x, pc.y) \
-					and fire_grid.cell_types[fire_grid._coord_to_index(pc.x, pc.y)] == FireGrid.CellType.BAMBOO:
+					and FireGrid.is_cover(fire_grid.cell_types[fire_grid._coord_to_index(pc.x, pc.y)]):
 				under_canopy = true
 		AudioManager.instance.set_canopy_occlusion(1.0 if under_canopy else 0.0)
 		# Ambience bed: cicadas thin out through dusk; inversion muffles the bed
 		var cicada = 1.0 if hours < 17.0 else clampf((18.5 - hours) / 1.5, 0.0, 1.0)
-		AudioManager.instance.set_ambience(0.45, cicada * 0.7, _inversion_level)
+		AudioManager.instance.set_ambience(0.45, cicada * 0.7, _inversion_level, clampf((hours - 17.5) / 1.5, 0.0, 1.0) * 0.55)
 
 	# Pre-monsoon storm front: thunder and lightning as the evening comes on
 	if plot_cfg.storm_front and hours >= 17.0:
@@ -492,8 +493,11 @@ func _on_bamboo_exploded(_coord: Vector2i, _world_pos: Vector3, _landing: Vector
 	if AudioManager.instance:
 		AudioManager.instance.play_bamboo_pop_at(_world_pos)
 		AudioManager.instance.play_bark("embers")
-		get_tree().create_timer(randf_range(0.45, 0.75)).timeout.connect(
-			_on_ember_landed.bind(fire_grid.get_cell_world_pos(_landing.x, _landing.y)))
+		var epoch: int = AudioManager.instance._scene_audio_epoch
+		var landing := fire_grid.get_cell_world_pos(_landing.x, _landing.y)
+		get_tree().create_timer(randf_range(0.45, 0.75)).timeout.connect(func():
+			if not pass_started and AudioManager.instance and epoch == AudioManager.instance._scene_audio_epoch:
+				_on_ember_landed(landing))
 	hud.show_alert("ปล้องไผ่ระเบิด! แรงไอน้ำดีดลูกไฟไปตามลม", 3.5)
 
 ## A flying spark settling after its arc
@@ -508,7 +512,11 @@ func _on_ember_landed(pos: Vector3 = Vector3.ZERO) -> void:
 func _on_spot_fire(_coord: Vector2i) -> void:
 	hud.show_alert("ลูกไฟตกในป่าอุทยาน! รีบฉีดน้ำดับภายใน 8 วินาที ก่อนไฟลาม", 5.0)
 	if AudioManager.instance:
-		AudioManager.instance.play_camera_alarm()
+		AudioManager.instance.play_spot_fire()
+
+func _on_spot_fire_extinguished(_coord: Vector2i) -> void:
+	if AudioManager.instance:
+		AudioManager.instance.play_fire_out()
 
 func _on_ember_jumped(_from: Vector2i, _landing: Vector2i) -> void:
 	if _ember_alert_cooldown > 0.0:
@@ -615,7 +623,7 @@ func _on_tank_empty() -> void:
 
 func _on_companion_coughing(who: CompanionController) -> void:
 	if AudioManager.instance:
-		AudioManager.instance.play_cough_at(who.global_position)
+		AudioManager.instance.play_cough_at(who.global_position, "tapoh" if who.role == CompanionController.Role.ELDER else "munaw")
 	hud.show_alert("%s สำลักควัน! เป่านกหวีดเรียกกลับมา" % who.display_name(), 3.0)
 
 func _on_stamina_changed(curr: float, max_val: float) -> void:

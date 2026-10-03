@@ -54,7 +54,7 @@ func run() -> void:
 				push_error("Cannot import " + record.path)
 				quit(1)
 				return
-			var model = doc.generate_scene(state)
+			var model = doc.generate_scene(state, 60.0)
 			if record.has("crowd_index"):
 				model.free()
 				model = load("res://ui/EndingScene.gd").villager_node(int(record.crowd_index), Color.WHITE)
@@ -94,6 +94,8 @@ func run() -> void:
 				if model.has_method("play_clip"): model.play_clip(record.animation,0)
 				player.play(record.animation)
 				player.seek(float(record.get("time", 0.0)), true)
+				for posed_skeleton in model.find_children("*", "Skeleton3D", true, false):
+					posed_skeleton.force_update_all_bone_transforms()
 			if record.get("vertex_material", true):
 				apply_material(model)
 			if record.get("silhouette", false):

@@ -77,6 +77,11 @@ var breath_value: Label
 var breath_bar: SegmentBar
 var water_value: Label
 var water_bar: SegmentBar
+var breath_hint: Label
+var refill_hint: Label
+var refill_marker: HBoxContainer
+var refill_marker_text: Label
+var _last_exposure := 0.0
 
 # Banners and alerts, stacked under the wind chip
 var banner_stack: VBoxContainer
@@ -172,12 +177,13 @@ func _unhandled_input(event: InputEvent) -> void:
 func set_minimal(on: bool) -> void:
 	minimal = on
 	status_details.visible = not on
-	for c in [wind_card, state_card, tool_col, crew_row, vitals_card]:
+	for c in [wind_card, state_card, tool_col, crew_row, vitals_card, refill_marker]:
 		c.visible = not on
 
 func _process(delta: float) -> void:
 	if not _in_play:
 		return
+	_update_refill_guidance()
 	var points: Array[Vector2] = [root.get_global_mouse_position()]
 	if _camera and _player and is_instance_valid(_player) and not _camera.is_position_behind(_player.global_position):
 		# Cover the whole character, not just its feet
@@ -492,12 +498,28 @@ func _build_vitals_card() -> void:
 	bottom_layer.add_child(vitals_card)
 	var box = UITheme.vbox(5)
 	vitals_card.add_child(box)
+	box.add_child(_small("ลมหายใจ"))
 	var b = _vital_row(box, "lungs", UITheme.EMERALD, 14)
 	breath_bar = b[0]
 	breath_value = b[1]
 	var w = _vital_row(box, "drop", UITheme.WATER, 14)
 	water_bar = w[0]
 	water_value = w[1]
+	breath_hint = UITheme.wrap(_small())
+	breath_hint.add_theme_font_size_override("font_size", 12)
+	box.add_child(breath_hint)
+	refill_hint = UITheme.wrap(_small())
+	refill_hint.add_theme_font_size_override("font_size", 12)
+	box.add_child(refill_hint)
+	refill_marker = UITheme.hbox(5)
+	refill_marker.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	refill_marker.add_child(UITheme.icon("drop", UITheme.WATER, 22.0))
+	refill_marker_text = _small("เติมน้ำ")
+	refill_marker_text.add_theme_color_override("font_shadow_color", Color.BLACK)
+	refill_marker_text.add_theme_constant_override("shadow_offset_x", 2)
+	refill_marker_text.add_theme_constant_override("shadow_offset_y", 2)
+	refill_marker.add_child(refill_marker_text)
+	root.add_child(refill_marker)
 
 func _build_banners() -> void:
 	banner_stack = UITheme.vbox(5)
@@ -731,6 +753,9 @@ func update_stamina(current: float, max_stamina: float, smoke_exposure: float) -
 	breath_bar.set_markers([{"at": max_stamina, "color": UITheme.DIM}] if max_stamina < 100.0 else [])
 	var coughing = smoke_exposure >= PlayerController.SMOKE_COUGH_THRESHOLD
 	breath_value.text = "ไอ! %d%%" % int(current) if coughing else "%d%%" % int(current)
+	breath_hint.text = ("ควันลดลง · ยังไออยู่" if smoke_exposure < _last_exposure else "ออกจากควันเพื่อฟื้นลมหายใจ") if coughing else ("กำลังฟื้นลมหายใจ" if current < max_stamina else "")
+	breath_hint.visible = not breath_hint.text.is_empty()
+	_last_exposure = smoke_exposure
 	breath_bar.fill_color = UITheme.RUBY if coughing else UITheme.EMERALD
 	breath_value.add_theme_color_override("font_color", UITheme.RUBY if coughing else UITheme.CREAM)
 
@@ -807,6 +832,7 @@ func show_satellite_sweep_ui(threshold: float = 35.0) -> void:
 	# The thermal image is the show now: keep only the clock and state cards, fully opaque
 	set_minimal(false)
 	_in_play = false
+	refill_marker.hide()
 	for c in _fade_targets:
 		c.modulate.a = 1.0
 	bottom_layer.visible = false
@@ -917,3 +943,26 @@ func _on_continue_pressed() -> void:
 
 static func vector_to_cardinal(v: Vector2) -> String:
 	return UITheme.cardinal_th(v)
+
+## Project the actual refill location; the edge cue appears only for an empty tank.
+func _update_refill_guidance() -> void:
+	if not _player or not _camera or _player.refill_point == Vector3.INF:
+		refill_marker.hide()
+		return
+	var near: bool = Vector2(_player.global_position.x - _player.refill_point.x, _player.global_position.z - _player.refill_point.z).length() <= _player.REFILL_RADIUS
+	var full: bool = _player.water >= _player.water_capacity
+	refill_hint.text = ("น้ำเต็มแล้ว" if full else "กำลังเติมน้ำ %.0f / %.0f ลิตร" % [_player.water, _player.water_capacity]) if near and _player.input_enabled else ("เติมน้ำที่ถังข้างเถียงนา" if not full else "")
+	refill_hint.visible = not refill_hint.text.is_empty()
+	var area := get_viewport().get_visible_rect().size
+	var point := _camera.unproject_position(_player.refill_point + Vector3.UP * 1.4)
+	var behind := _camera.is_position_behind(_player.refill_point)
+	var bounds := Rect2(Vector2(24, 240), area - Vector2(180, 420))
+	var offscreen := behind or not bounds.has_point(point)
+	refill_marker.visible = not minimal and (not offscreen or _player.water <= 0.0)
+	if behind:
+		point = area * 0.5 - (point - area * 0.5)
+	var direction := point - area * 0.5
+	var arrows := ["→", "↘", "↓", "↙", "←", "↖", "↑", "↗"]
+	var arrow: String = arrows[posmod(roundi(direction.angle() / (PI / 4.0)), 8)]
+	refill_marker_text.text = ("เติมน้ำ " + arrow) if offscreen else "เติมน้ำ"
+	refill_marker.position = Vector2(clampf(point.x, bounds.position.x, bounds.end.x), clampf(point.y, bounds.position.y, bounds.end.y))

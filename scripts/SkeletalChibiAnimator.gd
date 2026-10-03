@@ -21,6 +21,7 @@ var coughing := false
 var terrain: Node3D
 var _motion_time := 0.0
 var _work_hold := 0.0
+var _gait_running := false
 var _bone_ids: Dictionary = {}
 var _rest_axes: Dictionary = {}
 
@@ -208,9 +209,22 @@ func update_animation(delta: float, velocity: Vector3, face_dir: Vector3 = Vecto
 	if facing.length_squared() > 0.001:
 		rotation.y = lerp_angle(rotation.y, atan2(facing.x, facing.z), minf(delta * 12.0, 1.0))
 	if not _action_playing:
-		var next := ("Run" if speed >= 4.6 and animation_player.has_animation("Run") else "Walk") if _is_moving else "Idle"
+		# Hysteresis prevents a speed modifier near the boundary from restarting
+		# Walk/Run every frame. Preserve the step phase when changing gait.
+		if not _is_moving or speed <= 4.2:
+			_gait_running = false
+		elif speed >= 4.6:
+			_gait_running = true
+		var next := ("Run" if _gait_running and animation_player.has_animation("Run") else "Walk") if _is_moving else "Idle"
 		if animation_player.current_animation != next:
+			var previous := animation_player.current_animation
+			var phase := 0.0
+			var changing_gait := previous in ["Walk", "Run"] and next in ["Walk", "Run"]
+			if changing_gait:
+				phase = fposmod(animation_player.current_animation_position / animation_player.get_animation(previous).length, 1.0)
 			animation_player.play(next, 0.15)
+			if changing_gait:
+				animation_player.seek(phase * animation_player.get_animation(next).length, true)
 		animation_player.speed_scale = clampf(speed / (2.8 if next == "Run" else 2.0), 0.65, 3.2) if _is_moving else 1.0
 	skeleton.reset_bone_poses()
 	animation_player.advance(delta)
@@ -289,11 +303,11 @@ func _apply_work_pose() -> void:
 	var direction := Vector3(0, -0.4, 0.9).normalized()
 	match work_kind:
 		&"rake":
-			right = Vector3(0.0, 0.52 + 0.006 * cycle, 0.025 + 0.018 * cycle)
+			right = Vector3(0.0, 0.52 + 0.006 * cycle, 0.025 + 0.035 * cycle)
 			direction = Vector3(0.70, -0.30, 0.64).normalized()
 		&"spray":
 			right = Vector3(-0.22, 0.50, 0.22)
-			direction = Vector3(0, -0.10, 1).normalized()
+			direction = Vector3(0.035 * cycle, -0.10, 1).normalized()
 		&"ignite":
 			right = Vector3(-0.25, 0.39, 0.14)
 			direction = Vector3(-0.10, -0.42, 0.9).normalized()
@@ -304,7 +318,7 @@ func _apply_work_pose() -> void:
 		if work_kind == &"rake":
 			right.x = -0.07
 			right.y += 0.03
-			right.z = 0.12 + 0.018 * cycle
+			right.z = 0.12 + 0.035 * cycle
 		if character_profile == "munaw":
 			right.x = -0.21
 	# Carry the grip with the baked gait grounding offset, not a fixed world height.

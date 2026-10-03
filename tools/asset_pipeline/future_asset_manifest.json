@@ -1,0 +1,53 @@
+{
+  "_doc": "Historical S8\u2013S11 source-library contracts; promoted to production asset_manifest.json and integrated on 2026-10-03 following user authorization. Kept for reproducibility of the original builds.",
+  "assets": {
+    "S8": {
+      "name": "transistor_radio",
+      "route": "meshy",
+      "category": "hard",
+      "fit": "width",
+      "meters": 0.35,
+      "tris": 800,
+      "quality_tris": 1500,
+      "variants": 1,
+      "render_mode": "materials",
+      "desc": "unmarked portable transistor receiver with blank dial and chunky handle"
+    },
+    "S9": {
+      "name": "repair_workbench",
+      "route": "meshy",
+      "category": "hard",
+      "fit": "width",
+      "meters": 1.4,
+      "tris": 1500,
+      "quality_tris": 3000,
+      "variants": 1,
+      "render_mode": "materials",
+      "desc": "plain timber repair bench, seal tray and sharpening stone; tools remain separate"
+    },
+    "S10": {
+      "name": "rice_basket",
+      "route": "meshy",
+      "category": "hard",
+      "fit": "height",
+      "meters": 0.6,
+      "tris": 800,
+      "quality_tris": 1500,
+      "variants": 1,
+      "render_mode": "materials",
+      "desc": "open tapered bamboo basket based on documented Pgakenyaw objects; rice use a proposed game adaptation, no calibrated measurement claim"
+    },
+    "S11": {
+      "name": "empty_granary",
+      "route": "meshy",
+      "category": "hard",
+      "fit": "height",
+      "meters": 3.0,
+      "tris": 1500,
+      "quality_tris": 6000,
+      "variants": 1,
+      "render_mode": "materials",
+      "desc": "S3-family raised bamboo granary with open door and bare interior for future famine presentation"
+    }
+  }
+}

@@ -5,6 +5,12 @@ func _initialize() -> void:
 func run() -> void:
 	var output := OS.get_cmdline_user_args()[0]
 	DirAccess.make_dir_recursive_absolute(output)
+	# A review must not load or overwrite the player's actual campaign/settings.
+	var review_save := output.path_join("review_save")
+	DirAccess.make_dir_recursive_absolute(review_save)
+	SaveGame.dir = review_save
+	GameSettings.dir = review_save
+	PlaytestLog.dir = review_save
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(1280, 800)
 	viewport.own_world_3d = true

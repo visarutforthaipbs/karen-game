@@ -23,6 +23,9 @@ var _guard: Node3D
 var _cued: Dictionary = {}
 
 func _ready() -> void:
+	if AudioManager.instance:
+		AudioManager.instance.stop_all_loops()
+		AudioManager.instance.set_ambience(0.25, 0.20, 0.0)
 	theme = UITheme.get_theme()
 	_build_stage()
 	_build_overlay()

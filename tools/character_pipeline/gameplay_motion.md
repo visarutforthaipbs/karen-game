@@ -158,3 +158,7 @@ slopes and terrace transitions, and satellite stopping. Refill and whistle are
 currently gameplay/SFX events; any added gesture must not impose a new movement
 lock. Final v3.1 rig calibration remains after the visual/cultural lock required
 by the supplied direction.
+
+## Current complete-cast upgrade — 2026-10-03
+
+Joint weights refined for all six character files; 34 clips reviewed and 22 records replaced. Walk/Run transitions now preserve phase, rake/spray motion has restrained polish, and the ranger tablet clears the torso. Actor speeds and work accounting are unchanged. Imported animations bake at 60 fps; all-clip deformation/grounding and runtime/equipment checks pass. [Delivery and remaining contact/finger/face limits](RIG_ANIMATION_HANDOFF_20261003.md).

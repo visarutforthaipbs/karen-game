@@ -1,8 +1,11 @@
 # Meshy character pipeline
 
 User decision: 2026-10-02. Meshy is the generation provider for new character
-assets. Non-character props, environments and effects retain the local asset
-pipeline. The complete reviewed replacement cast is installed; see
+assets. Updated user decision, 2026-10-03: selected prominent props may also use
+Meshy generation, retaining local cleanup/validation and procedural routes for
+small or heavily instanced assets. See the
+[remaining-credit plan](../asset_pipeline/MESHY_EXPANSION_PLAN_20261003.md).
+The complete reviewed replacement cast is installed; see
 [MESHY_CAST_HANDOFF.md](MESHY_CAST_HANDOFF.md).
 
 Meshy also provides [cloud auto-rigging](https://docs.meshy.ai/en/api/rigging)
@@ -109,3 +112,22 @@ attempts and raw downloads. See the handoff for exact accepted versions.
 - [Meshy Codex setup](https://www.meshy.ai/th/mcp#client=codex&mode=agent)
 - [Official Meshy MCP server](https://github.com/meshy-dev/meshy-mcp-server)
 - [Codex MCP configuration](https://developers.openai.com/codex/mcp)
+
+
+## Reviewed torso/head motion overlay
+
+`retarget_meshy_overlay.py` accepts an existing Meshy motion GLB and an approved
+game GLB, appending replacement animation accessors while preserving model/skin
+and other animation bytes. Supported clip profiles: Idle, Talk, Scan; 0.15 local
+rotation gain, 12° output envelope, approved limbs/root retained. This does not
+transfer full-body gait, fingers or exact tool motion. Run `check_candidate_clips.gd`,
+`tests/test_v31_candidates.gd` (normal and slope), contract and equipment tests,
+and actual scene review before installing. The first full-body transfer failed;
+that experimental profile is not an accepted route.
+
+Current five-identity/six-file delivery and costs:
+[asset/game completion handoff](../asset_pipeline/VILLAGE_COMPLETION_HANDOFF_20261003.md).
+
+## Current full motion and skin route
+
+The subsequent user-authorized pass improves all six skins and reviews 34 clips, replacing 22 clip records. `retarget_meshy_motion.py` builds gait/gesture candidates and `refine_skin_weights.py` refines calibrated joint weights. This intentionally changes skin weights, while independently preserving rest geometry/UVs/albedo and named skeleton landmarks. New motion is imported at 60 fps; use matching inspector bake rate. [Current costs, tests and rollback](RIG_ANIMATION_HANDOFF_20261003.md). Earlier preservation statements describe the quiet overlay-only pass.

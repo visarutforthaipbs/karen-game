@@ -35,6 +35,7 @@ var _clear_for: float = 0.0
 var target_coord: Vector2i = Vector2i(-1, -1)
 var target_world_pos: Vector3 = Vector3.ZERO
 var task_progress: float = 0.0
+var _spray_cue: Node3D
 const REQUIRED_TASK_WORK: float = 1.4
 
 # Smoke asphyxiation (PRD §4.3)
@@ -53,11 +54,15 @@ var animator: Node3D
 var status_text: String = ""
 var _borrowed_equipment: Node3D
 var _borrowed_wand: MeshInstance3D
+var _borrowed_hose: MeshInstance3D
 
 func configure_borrowed_sprayer(enabled: bool) -> void:
 	can_douse = enabled
 	if not animator or not animator.has_method("get_hand_socket"):
 		return
+	if _borrowed_hose:
+		_borrowed_hose.queue_free()
+		_borrowed_hose = null
 	if _borrowed_equipment:
 		_borrowed_equipment.queue_free()
 		_borrowed_wand.queue_free()
@@ -80,10 +85,25 @@ func configure_borrowed_sprayer(enabled: bool) -> void:
 	animator.get_left_hand_socket().add_child(_borrowed_wand)
 	_borrowed_wand.scale = Vector3.ONE / animator.base_scale
 	# Same grip convention as the player's hand tools: the handle sits 0.22 m up
-	_borrowed_wand.position.y = -0.22 if AssetLibrary.has_asset("T5") else 0.0
+	_borrowed_wand.position.y = -0.22 / animator.base_scale if AssetLibrary.has_asset("T5") else 0.0
 	_borrowed_wand.visible = false
+	_borrowed_hose = MeshInstance3D.new()
+	_borrowed_hose.name = "BorrowedSprayerHose"
+	_borrowed_hose.set_script(load("res://scripts/SprayerHose.gd"))
+	add_child(_borrowed_hose)
+	_borrowed_hose.tank = tank
+	_borrowed_hose.wand = _borrowed_wand
+	_borrowed_hose.active = true
+	# Ta-poh's authored bamboo tank uses its own fitting, not T4's yellow-tank outlet.
+	if animator.get("separate_equipment"):
+		_borrowed_hose.tank_outlet = Vector3(-0.11, -0.10, -0.04)
+	elif not AssetLibrary.has_asset("T4"):
+		_borrowed_hose.tank_outlet = Vector3(0.12, -0.15, 0)
+	if not AssetLibrary.has_asset("T5"):
+		_borrowed_hose.wand_inlet = Vector3.ZERO
 
 func cancel_animation_work() -> void:
+	_stop_spray_cue()
 	if animator and animator.has_method("cancel_work"):
 		animator.cancel_work()
 
@@ -145,6 +165,7 @@ func _physics_process(delta: float) -> void:
 			if _borrowed_wand:
 				_borrowed_wand.visible = working and kind == &"spray"
 		animator.update_animation(delta, velocity, facing)
+	_update_spray_cue()
 
 func _effective_speed() -> float:
 	return move_speed * speed_multiplier * (0.6 if is_coughing else 1.0)
@@ -533,6 +554,7 @@ func _process_perform_task(delta: float) -> void:
 		current_state = State.IDLE_FOLLOW
 		return
 
+	target_world_pos = fire_grid.get_cell_world_pos(target_coord.x, target_coord.y)
 	var idx = fire_grid._coord_to_index(target_coord.x, target_coord.y)
 	var type = fire_grid.cell_types[idx]
 	var clearing = type == FireGrid.CellType.VEGETATION or type == FireGrid.CellType.BAMBOO
@@ -550,7 +572,7 @@ func _process_perform_task(delta: float) -> void:
 			if fire_grid.douse_cell(target_coord.x, target_coord.y):
 				_show_tool_feedback(&"spray")
 				if AudioManager.instance:
-					AudioManager.instance.play_water_spray()
+					AudioManager.instance._play_at("spray", AudioManager.instance._water_spray, global_position, randf_range(0.96, 1.04), -8.0)
 
 		current_state = State.IDLE_FOLLOW
 
@@ -572,3 +594,29 @@ func _show_tool_feedback(kind: StringName) -> void:
 	elif _borrowed_wand and kind == &"spray":
 		origin = _borrowed_wand.to_global(Vector3(0, 0.68, 0))
 	load("res://scripts/CharacterToolFeedback.gd").spawn(get_parent(), origin, target_world_pos, kind)
+
+func _spray_origin() -> Vector3:
+	if role == Role.YOUTH and animator:
+		return animator.get_embedded_tool_tip()
+	if _borrowed_wand:
+		return _borrowed_wand.to_global(Vector3(0, 0.68, 0))
+	return global_position + Vector3.UP * 0.7
+
+func _stop_spray_cue() -> void:
+	if is_instance_valid(_spray_cue):
+		_spray_cue.hide()
+		_spray_cue.queue_free()
+	_spray_cue = null
+
+func _update_spray_cue() -> void:
+	var spraying := current_state == State.PERFORMING_TASK and fire_grid != null and fire_grid.is_valid_coord(target_coord.x, target_coord.y)
+	if spraying:
+		spraying = fire_grid.cell_types[fire_grid._coord_to_index(target_coord.x, target_coord.y)] in [FireGrid.CellType.BURNING, FireGrid.CellType.SMOLDERING]
+	if not spraying:
+		_stop_spray_cue()
+		return
+	var destination := fire_grid.get_cell_world_pos(target_coord.x, target_coord.y)
+	if not is_instance_valid(_spray_cue):
+		_spray_cue = load("res://scripts/CompanionSprayCue.gd").new()
+		add_child(_spray_cue)
+	_spray_cue.update_jet(_spray_origin(), destination)

@@ -42,6 +42,11 @@ func _attach(bone: String,id: String,basis: Basis,palm_offset: Vector3,grip: Vec
 
 func play_clip(clip: String,blend: float=.15) -> void:
 	assert(animation_player.has_animation(clip),"Unknown Ranger clip "+clip)
+	# A one-shot gesture must not inherit a fast running playback rate.
+	animation_player.speed_scale=1.0
+	# Imported constant tracks can be omitted. Clear the old gesture's pose so
+	# an unkeyed head/arm does not remain in that pose when returning to patrol.
+	skeleton.reset_bone_poses()
 	_tablet.visible=show_equipment and clip=="Photograph"
 	_flashlight.visible=show_equipment and clip!="Photograph" and clip!="RadioTalk"
 	animation_player.play(clip,blend)
@@ -52,7 +57,10 @@ func update_animation(_delta: float,velocity: Vector3,_face: Vector3=Vector3.ZER
 	var current:=animation_player.current_animation
 	var speed:=Vector2(velocity.x,velocity.z).length()
 	if current in ["Photograph","Point","RadioTalk"] and animation_player.is_playing(): return
-	if current=="Escort" and speed>.05: return
+	if current=="Escort" and speed>.05:
+		animation_player.speed_scale=clampf(speed/1.6,.65,2.5)
+		return
 	if current=="Scan" and speed<=.05: return
 	var next: String="Run" if speed>3.0 else ("Walk" if speed>.05 else "Idle")
 	if current!=next: play_clip(next)
+	animation_player.speed_scale=clampf(speed/(3.0 if next=="Run" else 1.6),.65,2.5) if next!="Idle" else 1.0

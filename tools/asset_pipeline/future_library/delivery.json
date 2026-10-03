@@ -1,0 +1,102 @@
+{
+  "S8": {
+    "file": "S8_transistor_radio_a.glb",
+    "sha256": "0110a56879a2595a11297adbd6ba0263b1b3b214cf6f45015290851ade92882c",
+    "geometry": {
+      "tris": 975,
+      "surfaces": 1,
+      "zero_area": 0,
+      "textured_surfaces": 1,
+      "colored_surfaces": 0,
+      "solid_surfaces": 0,
+      "has_color": false,
+      "min": [
+        -0.17499999701976776,
+        0.0,
+        -0.07654359191656113
+      ],
+      "max": [
+        0.17499999701976776,
+        0.2675759792327881,
+        0.07654359191656113
+      ]
+    },
+    "installed": false,
+    "quality_validation": "975/1500 tris; world size [0.3499999940395355, 0.2675759792327881, 0.15308718383312225]; 1 textured surfaces"
+  },
+  "S9": {
+    "file": "S9_repair_workbench_a.glb",
+    "sha256": "c948614a2a3c3f6df564d2b562aaf92ee540f6b51dcb9cdb9fcde2fa7471e591",
+    "geometry": {
+      "tris": 2729,
+      "surfaces": 1,
+      "zero_area": 0,
+      "textured_surfaces": 1,
+      "colored_surfaces": 0,
+      "solid_surfaces": 0,
+      "has_color": false,
+      "min": [
+        -0.699999988079071,
+        0.0,
+        -0.3479118347167969
+      ],
+      "max": [
+        0.699999988079071,
+        0.8508644700050354,
+        0.34791186451911926
+      ]
+    },
+    "installed": false,
+    "quality_validation": "2729/3000 tris; world size [1.399999976158142, 0.8508644700050354, 0.6958236992359161]; 1 textured surfaces"
+  },
+  "S10": {
+    "file": "S10_rice_basket_a.glb",
+    "sha256": "6c6f5c67d9376dee162c3e9cdfbfb5b55a25dc19be7cde8dc0bbc5981aaa62ee",
+    "geometry": {
+      "tris": 1304,
+      "surfaces": 2,
+      "zero_area": 0,
+      "textured_surfaces": 1,
+      "colored_surfaces": 0,
+      "solid_surfaces": 1,
+      "has_color": false,
+      "min": [
+        -0.35397642850875854,
+        0.0,
+        -0.3546960949897766
+      ],
+      "max": [
+        0.35397645831108093,
+        0.5999999642372131,
+        0.3546960949897766
+      ]
+    },
+    "installed": false,
+    "quality_validation": "1304/1500 tris; world size [0.7079528868198395, 0.5999999642372131, 0.7093921899795532]; 1 textured surfaces"
+  },
+  "S11": {
+    "file": "S11_empty_granary_a.glb",
+    "sha256": "675ab0378f9e90cd08a8c7b686ce3a6af8595ac33a853c0dd37e8edd4d38b0f5",
+    "geometry": {
+      "tris": 5880,
+      "surfaces": 3,
+      "zero_area": 0,
+      "textured_surfaces": 1,
+      "colored_surfaces": 0,
+      "solid_surfaces": 2,
+      "has_color": false,
+      "min": [
+        -1.175159215927124,
+        0.0,
+        -2.158350944519043
+      ],
+      "max": [
+        1.175159215927124,
+        3.0,
+        2.158350944519043
+      ]
+    },
+    "installed": false,
+    "quality_validation": "5880/6000 tris; world size [2.350318431854248, 3.0, 4.316701889038086]; 1 textured surfaces"
+  }
+}

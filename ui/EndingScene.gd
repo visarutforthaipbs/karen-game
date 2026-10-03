@@ -43,6 +43,8 @@ func _ready() -> void:
 		AudioManager.instance.stop_all_loops()
 		# The vignette gets its own sound: the ending stinger + quiet air
 		AudioManager.instance.play_ending_stinger(cause)
+		if cause == "crackdown":
+			AudioManager.instance.play_truck_arrive()
 		AudioManager.instance.set_ambience(0.35, 0.15 if cause == "famine" else 0.0, 0.0)
 
 # ---------------------------------------------------------------------------
@@ -275,7 +277,10 @@ func _stage_famine() -> void:
 	road_node.position = Vector3(0, 0.02, 26.0)
 	_vp.add_child(road_node)
 	_prop(AssetLibrary.mesh_or("S1", LowPoly.field_hut()), Vector3(-5.2, 0, -3.0), 0.6, 1.1)
-	_prop(AssetLibrary.mesh_or("S3", LowPoly.field_hut()), Vector3(5.4, 0, -2.0), -0.5, 0.9 if not AssetLibrary.has_asset("S3") else 1.0) # The empty granary
+	var empty_granary := AssetLibrary.mesh_or("S11", AssetLibrary.mesh_or("S3", LowPoly.field_hut()))
+	# Face the empty doorway toward the dawn camera and keep the access ladder
+	# beside the exodus path; the old closed exterior was mostly out of frame.
+	_prop(empty_granary, Vector3(3.4, 0, -1.4), PI+.32, 0.9 if not AssetLibrary.has_asset("S3") else 1.0)
 	# Families walk down the road with what they can carry
 	var cloths = [Color(0.2, 0.3, 0.5), Color(0.85, 0.82, 0.76), Color(0.55, 0.2, 0.18), Color(0.25, 0.42, 0.3), Color(0.82, 0.8, 0.72)]
 	for i in cloths.size():
@@ -346,6 +351,8 @@ func _process(delta: float) -> void:
 			node.position = a.from.lerp(a.to, u)
 		var vel = (a.to - a.from) / maxf(a.end - a.start, 0.01) if moving else Vector3.ZERO
 		if moving:
+			if AudioManager.instance:
+				AudioManager.instance.step_at("ending_%d" % node.get_instance_id(), node.global_position, false, false)
 			node.rotation.y = lerp_angle(node.rotation.y, atan2(vel.x, vel.z), delta * 6.0)
 		if node.has_method("update_animation"):
 			node.update_animation(delta, vel)

@@ -585,6 +585,10 @@ func _run() -> void:
 	await _flow_checks(gs)
 	await _fire_balance_checks()
 
+	am.stop_all_loops()
+	# Drain stopped audio before tearing down the headless engine.
+	OS.delay_msec(120)
+	await process_frame
 	print("\nRESULT: %s (%d failures)" % ["OK" if fails == 0 else "FAILED", fails])
 	quit(fails)
 

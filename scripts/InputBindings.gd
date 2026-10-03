@@ -17,6 +17,10 @@ extends Node
 const STICK_DEADZONE: float = 0.25
 
 func _ready() -> void:
+	# Desktop close commands must remain available in paused menus and text fields.
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	get_tree().auto_accept_quit = false
+	get_tree().root.close_requested.connect(request_exit)
 	_action("move_left", [_key(KEY_A), _key(KEY_LEFT), _axis(JOY_AXIS_LEFT_X, -1.0)])
 	_action("move_right", [_key(KEY_D), _key(KEY_RIGHT), _axis(JOY_AXIS_LEFT_X, 1.0)])
 	_action("move_up", [_key(KEY_W), _key(KEY_UP), _axis(JOY_AXIS_LEFT_Y, -1.0)])
@@ -70,3 +74,26 @@ func _axis(axis: JoyAxis, value: float) -> InputEventJoypadMotion:
 	e.axis = axis
 	e.axis_value = value
 	return e
+
+## Standard platform shortcuts, separate from gameplay's unmodified W/Q actions.
+static func is_exit_shortcut(event: InputEvent, platform: String) -> bool:
+	if not event is InputEventKey or not event.pressed or event.echo:
+		return false
+	var code: int = event.keycode if event.keycode != 0 else event.physical_keycode
+	if platform == "macOS":
+		return event.meta_pressed and not event.ctrl_pressed and not event.alt_pressed and not event.shift_pressed and code in [KEY_W, KEY_Q]
+	if platform in ["Windows", "Linux", "FreeBSD", "NetBSD", "OpenBSD", "BSD"]:
+		return event.alt_pressed and not event.ctrl_pressed and not event.meta_pressed and not event.shift_pressed and code == KEY_F4
+	return false
+
+func _input(event: InputEvent) -> void:
+	if is_exit_shortcut(event, OS.get_name()):
+		get_viewport().set_input_as_handled()
+		request_exit()
+
+func request_exit() -> void:
+	# Keep the existing Hearth autosave. A partial burn is not a completed plot.
+	var audio := get_node_or_null("/root/AudioManager")
+	if audio:
+		audio.stop_all_loops()
+	get_tree().quit()

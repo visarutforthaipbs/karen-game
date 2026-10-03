@@ -18,6 +18,7 @@ const SCENIC_PITCH_DEG: float = 20.0 # ...and lower toward the horizon to show t
 const ZOOM_STEP: float = 5.0
 const FOLLOW_SHARPNESS: float = 5.0
 
+var _audio_listener: AudioListener3D
 var camera: Camera3D
 var target: PlayerController
 ## Half-extent of the playable ground; the focus point never leaves it
@@ -37,6 +38,10 @@ var _target_distance: float = ZOOM_DEFAULT
 var _target_yaw: float = PI * 0.25
 
 func _ready() -> void:
+	if camera:
+		_audio_listener = AudioListener3D.new()
+		camera.add_child(_audio_listener)
+		_audio_listener.make_current()
 	if target:
 		focus = _ground_point(target.global_position)
 	GameSettings.ensure_loaded()
@@ -45,6 +50,7 @@ func _ready() -> void:
 	_fit_overview()
 	get_viewport().size_changed.connect(_fit_overview)
 	_apply(true)
+	_update_audio_listener()
 
 func _ground_point(p: Vector3) -> Vector3:
 	return Vector3(clampf(p.x, -bounds, bounds), p.y, clampf(p.z, -bounds, bounds))
@@ -61,6 +67,10 @@ func _desired_focus() -> Vector3:
 func _overview() -> float:
 	return clampf(inverse_lerp(ZOOM_DEFAULT, zoom_max, distance), 0.0, 1.0)
 
+func _update_audio_listener() -> void:
+	if _audio_listener and target and camera:
+		_audio_listener.global_transform = Transform3D(camera.global_basis, target.global_position + Vector3.UP * 1.5)
+
 func _process(delta: float) -> void:
 	if not active or not camera:
 		return
@@ -69,6 +79,7 @@ func _process(delta: float) -> void:
 	distance = lerpf(distance, _target_distance, 1.0 - exp(-10.0 * delta))
 	yaw = lerp_angle(yaw, _target_yaw, 1.0 - exp(-9.0 * delta))
 	_apply()
+	_update_audio_listener()
 
 func _apply(_snap: bool = false) -> void:
 	if not camera:

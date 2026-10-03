@@ -7,8 +7,11 @@
 ## 1. Current production route
 
 **User decision, 2026-10-02:** Use Meshy for new character generation. Stop local
-TRELLIS.2 / TripoSR character generation development. Non-character assets stay
-with the existing local asset pipeline. Existing installed characters remain
+TRELLIS.2 / TripoSR character generation development. **Updated user decision,
+2026-10-03:** Meshy may also generate selected prominent props; retain the local
+pipeline for cleanup, validation and efficient procedural assets. See the
+[remaining-credit plan](tools/asset_pipeline/MESHY_EXPANSION_PLAN_20261003.md).
+Existing installed characters remain
 available until reviewed replacements are ready.
 
 Approved reference → Meshy character candidate → low-poly and likeness review
@@ -257,3 +260,31 @@ mesh/skin/animation bytes stay unchanged. Validate the resulting GLB in Godot.
 edge stretch and grounding independently of Blender. The asset contract test
 also checks identical clip lengths for both palettes. See the v1.1 asset handoff
 for evidence and remaining grip/contact limitations.
+
+
+### Meshy motion acceptance lesson — 2026-10-03
+
+A provider-successful animation job is still a candidate. Test one transfer onto
+the approved game skeleton before buying a cast-wide batch, including every
+affected work layer at zero and moving velocity. The Kha-nae Idle pilot failed
+the existing rake edge-stretch gate (5.40 versus 3.5); it was not installed and
+the other five planned jobs were not submitted. Keep the approved cast/clip bytes
+until a retarget profile passes the gameplay deformation and equipment checks.
+Details: [motion and asset handoff](tools/asset_pipeline/MESHY_EXPANSION_HANDOFF_20261003.md).
+
+
+### Compatible motion overlay — 2026-10-03
+
+The full-body pilot remains rejected. `retarget_meshy_overlay.py` now transfers
+local, first-frame-relative Chest/Head motion at a reviewed 0.15 gain over the
+approved Idle/Talk/Scan clip anatomy. Root, hips, limbs, cloth controls, skin,
+textures and other clips are preserved. It is a restrained overlay, not a full
+body motion converter. Keep the 12° overlay envelope and existing 3.5 deformation
+limit; test every baked clip and semantic work layer, terrain/cough variants and
+actual held equipment before installation. Do not apply this profile to arbitrary
+work, walking or crouching clips. The reviewed cast now uses these overlays.
+Reproduction and evidence: [completion handoff](tools/asset_pipeline/VILLAGE_COMPLETION_HANDOFF_20261003.md).
+
+### Full gameplay motion and skin refinement — 2026-10-03
+
+The user authorized improving the complete cast. The current six rigs have intentionally refined joint weights, with rest surfaces/UVs/albedo and landmarks preserved. `retarget_meshy_motion.py` supplies validated bind-relative gait candidates; `refine_skin_weights.py` smooths only existing carriers and protects dominant rigid head/bag/hand/foot regions. Do not repeatedly smooth without the approved original weight reference. The accepted route imports at 60 fps, matching its authored sampling. Every named clip must pass 3.5× stretch and 2 mm grounding; semantic work/slope, equipment and actual game checks remain mandatory. [Current delivery, rejected trials and limitations](tools/character_pipeline/RIG_ANIMATION_HANDOFF_20261003.md).

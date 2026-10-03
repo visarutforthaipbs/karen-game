@@ -1,0 +1,415 @@
+{
+  "output_directory": "artifacts/audio_upgrade_20261003",
+  "credit_cap": 26000,
+  "jobs": [
+    {
+      "id": "sfxloop_crackle",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Steady close dry brush fire bed, dense soft leafy combustion and tiny ember ticks, warm textured low mid crackle, controlled transients, continuous even energy, no explosive pops, no voices, no music, seamless loop, dry location recording.",
+        "duration_seconds": 12,
+        "loop": true
+      },
+      "install": {
+        "file": "sfxloop_crackle.wav",
+        "loop": true,
+        "rms_dbfs": -24
+      }
+    },
+    {
+      "id": "sfxloop_wind",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Subtle afternoon mountain bamboo grove wind, broad soft air and sparse dry leaf rustles, steady gentle breeze, no gust spikes, no birds or insects or voices or music, natural ambience, seamless loop.",
+        "duration_seconds": 18,
+        "loop": true
+      },
+      "install": {
+        "file": "sfxloop_wind.wav",
+        "loop": true,
+        "rms_dbfs": -27
+      }
+    },
+    {
+      "id": "sfxloop_cicada",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Northern Thailand dry season hillside afternoon cicadas, distant soft layered insect chorus with subtle natural movement, comfortable diffuse ambience, no shrill foreground insect, no birds voices music or wind, seamless loop.",
+        "duration_seconds": 18,
+        "loop": true
+      },
+      "install": {
+        "file": "sfxloop_cicada.wav",
+        "loop": true,
+        "rms_dbfs": -29
+      }
+    },
+    {
+      "id": "sfxloop_evening",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Quiet tropical mountain evening, soft distant crickets and small nocturnal insects, spacious restrained natural ambience, no owl no dramatic wildlife no voices no music, consistent soft bed seamless loop.",
+        "duration_seconds": 18,
+        "loop": true
+      },
+      "install": {
+        "file": "sfxloop_evening.wav",
+        "loop": true,
+        "rms_dbfs": -29
+      }
+    },
+    {
+      "id": "sfxloop_spray",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Hand pump backpack water sprayer steady fine water jet hissing into dry grass, consistent close work texture, no electrical motor no dramatic splashes, no voices music, seamless loop.",
+        "duration_seconds": 6,
+        "loop": true
+      },
+      "install": {
+        "file": "sfxloop_spray.wav",
+        "loop": true,
+        "rms_dbfs": -24
+      }
+    },
+    {
+      "id": "sfxloop_torch",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Small handheld drip torch flame steady soft restrained fluttering hiss, close dry work sound, tiny fuel flicker, no bonfire roar no explosive ignition no voices music, seamless loop.",
+        "duration_seconds": 6,
+        "loop": true
+      },
+      "install": {
+        "file": "sfxloop_torch.wav",
+        "loop": true,
+        "rms_dbfs": -27
+      }
+    },
+    {
+      "id": "sfxloop_rake",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Continuous restrained metal rake combing dry soil and brittle grass, irregular small scrapes and foliage movement, close practical agricultural work, no dramatic impacts no voices music, seamless loop.",
+        "duration_seconds": 8,
+        "loop": true
+      },
+      "install": {
+        "file": "sfxloop_rake.wav",
+        "loop": true,
+        "rms_dbfs": -26
+      }
+    },
+    {
+      "id": "sfxloop_refill",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Water slowly pouring from a barrel into a backpack sprayer tank, close gentle bubbling and trickle, steady flow without splashes, no voices music, seamless loop.",
+        "duration_seconds": 6,
+        "loop": true
+      },
+      "install": {
+        "file": "sfxloop_refill.wav",
+        "loop": true,
+        "rms_dbfs": -26
+      }
+    },
+    {
+      "id": "sfxloop_hearth",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Small sheltered village cooking hearth, soft glowing embers and occasional quiet wood ticks, intimate gentle fire, restrained constant energy, no voices insects music, seamless loop.",
+        "duration_seconds": 16,
+        "loop": true
+      },
+      "install": {
+        "file": "sfxloop_hearth.wav",
+        "loop": true,
+        "rms_dbfs": -29
+      }
+    },
+    {
+      "id": "sfx_step_brush_1",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "One single restrained boot footstep on dry hillside soil with brittle grass and light leaves, close dry foley, natural weight and small texture, take 1, no second footstep no walking sequence no voices no ambience music.",
+        "duration_seconds": 1.0,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_step_brush_1.wav",
+        "loop": false,
+        "rms_dbfs": -21
+      }
+    },
+    {
+      "id": "sfx_step_brush_2",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "One single restrained boot footstep on dry hillside soil with brittle grass and light leaves, close dry foley, natural weight and small texture, take 2, no second footstep no walking sequence no voices no ambience music.",
+        "duration_seconds": 1.0,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_step_brush_2.wav",
+        "loop": false,
+        "rms_dbfs": -21
+      }
+    },
+    {
+      "id": "sfx_step_brush_3",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "One single restrained boot footstep on dry hillside soil with brittle grass and light leaves, close dry foley, natural weight and small texture, take 3, no second footstep no walking sequence no voices no ambience music.",
+        "duration_seconds": 1.0,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_step_brush_3.wav",
+        "loop": false,
+        "rms_dbfs": -21
+      }
+    },
+    {
+      "id": "sfx_step_brush_4",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "One single restrained boot footstep on dry hillside soil with brittle grass and light leaves, close dry foley, natural weight and small texture, take 4, no second footstep no walking sequence no voices no ambience music.",
+        "duration_seconds": 1.0,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_step_brush_4.wav",
+        "loop": false,
+        "rms_dbfs": -21
+      }
+    },
+    {
+      "id": "sfx_step_ash_1",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "One single restrained boot footstep on soft burnt ash and gritty dry soil, close dry foley, natural weight and small texture, take 1, no second footstep no walking sequence no voices no ambience music.",
+        "duration_seconds": 1.0,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_step_ash_1.wav",
+        "loop": false,
+        "rms_dbfs": -21
+      }
+    },
+    {
+      "id": "sfx_step_ash_2",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "One single restrained boot footstep on soft burnt ash and gritty dry soil, close dry foley, natural weight and small texture, take 2, no second footstep no walking sequence no voices no ambience music.",
+        "duration_seconds": 1.0,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_step_ash_2.wav",
+        "loop": false,
+        "rms_dbfs": -21
+      }
+    },
+    {
+      "id": "sfx_step_ash_3",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "One single restrained boot footstep on soft burnt ash and gritty dry soil, close dry foley, natural weight and small texture, take 3, no second footstep no walking sequence no voices no ambience music.",
+        "duration_seconds": 1.0,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_step_ash_3.wav",
+        "loop": false,
+        "rms_dbfs": -21
+      }
+    },
+    {
+      "id": "sfx_step_ash_4",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "One single restrained boot footstep on soft burnt ash and gritty dry soil, close dry foley, natural weight and small texture, take 4, no second footstep no walking sequence no voices no ambience music.",
+        "duration_seconds": 1.0,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_step_ash_4.wav",
+        "loop": false,
+        "rms_dbfs": -21
+      }
+    },
+    {
+      "id": "sfx_spot_fire",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Short urgent game warning, two quick woody clicks followed by a rising rough breathy ember hiss, distinctive organic danger cue for escaped fire, under one second, no siren no camera beep no voices no music.",
+        "duration_seconds": 1.2,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_spot_fire.wav",
+        "loop": false,
+        "rms_dbfs": -18
+      }
+    },
+    {
+      "id": "sfx_beep",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Short precise clean satellite deadline warning, two clear restrained electronic pulses with a slight rising pitch, immediate recognizable tactical countdown signal, no musical chord no ambience no voices.",
+        "duration_seconds": 0.7,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_beep.wav",
+        "loop": false,
+        "rms_dbfs": -20
+      }
+    },
+    {
+      "id": "sfx_camera",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Short cold surveillance detection signal, dry mechanical camera tick followed by one restrained crisp electronic chirp, clean immediate feedback, no siren no musical chord no voices.",
+        "duration_seconds": 0.8,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_camera.wav",
+        "loop": false,
+        "rms_dbfs": -20
+      }
+    },
+    {
+      "id": "sfx_extinguished",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Small water hitting hot embers with a brief close steam hiss then settling to quiet, restrained successful extinguishing foley, no fire roar no voices no music.",
+        "duration_seconds": 1.1,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_extinguished.wav",
+        "loop": false,
+        "rms_dbfs": -22
+      }
+    },
+    {
+      "id": "sfx_tool_start",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Single small backpack sprayer lever squeeze and nozzle opening click, short dry mechanical foley, no spray sustain no voices music.",
+        "duration_seconds": 0.65,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_tool_start.wav",
+        "loop": false,
+        "rms_dbfs": -23
+      }
+    },
+    {
+      "id": "sfx_tool_stop",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Single small backpack sprayer lever release, muted valve click with a tiny water drip, short dry mechanical foley no voices music.",
+        "duration_seconds": 0.65,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_tool_stop.wav",
+        "loop": false,
+        "rms_dbfs": -25
+      }
+    },
+    {
+      "id": "sfx_workshop",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Single brief hand sharpening a farming blade on a whetstone, two light gritty strokes with quiet metal handling, dry intimate work foley, no sword clang no voices music.",
+        "duration_seconds": 1.8,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_workshop.wav",
+        "loop": false,
+        "rms_dbfs": -24
+      }
+    },
+    {
+      "id": "sfx_grain",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Gentle single handling of a small woven rice basket with dry grain shifting, soft weave rustle, dry intimate foley no voices music.",
+        "duration_seconds": 1.3,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_grain.wav",
+        "loop": false,
+        "rms_dbfs": -25
+      }
+    },
+    {
+      "id": "sfx_truck_arrive",
+      "tool": "text_to_sound_effects",
+      "arguments": {
+        "text": "Old modest diesel utility truck slows down and stops, gentle idle then parking brake clunk, outdoor distant restrained perspective, no revving chase no voices music.",
+        "duration_seconds": 5,
+        "loop": false
+      },
+      "install": {
+        "file": "sfx_truck_arrive.wav",
+        "loop": false,
+        "rms_dbfs": -24
+      }
+    },
+    {
+      "id": "sfxloop_music0",
+      "tool": "compose_music",
+      "arguments": {
+        "prompt": "Instrumental ambient game underscore, 80 BPM, D minor pentatonic, Calm patient sparse plucked harp-like strings with soft bamboo flute breaths, generous space, warm mutual aid and rural work. Consistent quiet mix, no vocals, no lyrics, no orchestral climax, no modern drum kit. Inspired by rural mountain textures without claiming traditional authenticity. A complete continuous 60 second background state track; stable middle section suitable for a loop.",
+        "music_length_ms": 60000,
+        "force_instrumental": true
+      },
+      "install": {
+        "file": "sfxloop_music0.wav",
+        "loop": true,
+        "rms_dbfs": -24,
+        "music_state": true
+      }
+    },
+    {
+      "id": "sfxloop_music1",
+      "tool": "compose_music",
+      "arguments": {
+        "prompt": "Instrumental ambient game underscore, 80 BPM, D minor pentatonic, Purposeful moderate repeated muted plucked strings and subtle woody hand percussion, steady practical concentration, restrained tension. Consistent quiet mix, no vocals, no lyrics, no orchestral climax, no modern drum kit. Inspired by rural mountain textures without claiming traditional authenticity. A complete continuous 60 second background state track; stable middle section suitable for a loop.",
+        "music_length_ms": 60000,
+        "force_instrumental": true
+      },
+      "install": {
+        "file": "sfxloop_music1.wav",
+        "loop": true,
+        "rms_dbfs": -24,
+        "music_state": true
+      }
+    },
+    {
+      "id": "sfxloop_music2",
+      "tool": "compose_music",
+      "arguments": {
+        "prompt": "Instrumental ambient game underscore, 80 BPM, D minor pentatonic, Restrained urgent low woody pulse and spare plucked motifs, increasing attention without action movie bombast, soft cool sustained reed texture. Consistent quiet mix, no vocals, no lyrics, no orchestral climax, no modern drum kit. Inspired by rural mountain textures without claiming traditional authenticity. A complete continuous 60 second background state track; stable middle section suitable for a loop.",
+        "music_length_ms": 60000,
+        "force_instrumental": true
+      },
+      "install": {
+        "file": "sfxloop_music2.wav",
+        "loop": true,
+        "rms_dbfs": -24,
+        "music_state": true
+      }
+    }
+  ]
+}

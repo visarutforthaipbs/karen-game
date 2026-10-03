@@ -1,0 +1,48 @@
+{
+  "output_directory": "artifacts/audio_upgrade_20261003/voices/revisions",
+  "credit_cap": 2500,
+  "jobs": [
+    {
+      "id": "tapoh_wind_warning_3_rev2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ลมกำลังเปลี่ยนทิศ ย้ายออกจากท้ายไฟก่อน",
+        "voice_id": "RJIgSLB4fDJZtYZRUxqo",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.25
+      },
+      "install": {
+        "file": "tapoh_wind_warning_3.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "tapoh",
+        "text": "ลมกำลังเปลี่ยนทิศ ย้ายออกจากท้ายไฟก่อน"
+      }
+    },
+    {
+      "id": "bark_fire_out_2_rev2",
+      "tool": "text_to_speech",
+      "arguments": {
+        "text": "ตรงนี้ดับแล้ว",
+        "voice_id": "brM9iIbwDREZaWL8luun",
+        "model_id": "eleven_v3",
+        "language": "th",
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.25
+      },
+      "install": {
+        "file": "bark_fire_out_2.wav",
+        "loop": false,
+        "rms_dbfs": -19,
+        "speech": true,
+        "actor": "munaw",
+        "text": "ตรงนี้ดับแล้ว"
+      }
+    }
+  ]
+}

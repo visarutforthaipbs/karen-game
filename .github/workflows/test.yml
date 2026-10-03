@@ -40,7 +40,7 @@ jobs:
         run: |
           set -e
           # tests/test_motion_deformation.gd excluded — requires windowed renderer
-          for t in test_gameplay_motion test_skeletal_character test_equipment_motion test_ranger_assets test_v31_assets; do
+          for t in test_gameplay_motion test_skeletal_character test_equipment_motion test_ranger_assets test_v31_assets test_animation_transitions test_audio_upgrade test_player_guidance test_platform_shortcuts test_village_presentation; do
             ~/godot/godot --headless --path . --fixed-fps 60 --script "res://tests/$t.gd"
           done
 

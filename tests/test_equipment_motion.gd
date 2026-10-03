@@ -75,6 +75,25 @@ func run() -> void:
 	for n in elder.find_children("*","MeshInstance3D",true,false):
 		if n==elder._carried_tool:knives+=1
 	check(knives==1,"Knife duplicated during carry transitions")
+	# Mutual-aid sprayer follows its own animated fittings, not the player's hose.
+	var companion = game.elder
+	companion.configure_borrowed_sprayer(true)
+	var borrowed = companion._borrowed_hose
+	companion._borrowed_wand.visible = true
+	for i in 60:
+		elder.update_animation(1.0/60.0,Vector3(2,0,0),Vector3(sin(i*.1),0,cos(i*.1)))
+		elder.skeleton.force_update_all_bone_transforms()
+		await process_frame
+		borrowed.update_hose()
+		check(borrowed.visible and borrowed.centreline.size()==25,"Borrowed sprayer hose disappeared")
+		check(borrowed.to_global(borrowed.centreline[0]).distance_to(borrowed.tank.to_global(borrowed.tank_outlet))<.0001,"Borrowed hose leaves tank fitting")
+		check(borrowed.to_global(borrowed.centreline[-1]).distance_to(borrowed.wand.to_global(borrowed.wand_inlet))<.0001,"Borrowed hose leaves wand fitting")
+	companion._borrowed_wand.visible = false
+	borrowed.update_hose()
+	check(not borrowed.visible,"Borrowed hose remains visible with wand stowed")
+	companion.configure_borrowed_sprayer(false)
+	await process_frame
+	check(companion._borrowed_hose==null and not is_instance_valid(borrowed),"Disabling mutual aid leaves a hose behind")
 	print("EQUIPMENT METRICS: endpoint error=",largest_endpoint_error,"; min palm separation=",min_separation,"; max shaft error=",max_shaft_error)
 	game.queue_free()
 	await process_frame

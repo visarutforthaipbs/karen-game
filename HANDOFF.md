@@ -432,3 +432,60 @@ were replaced from build 20261002-4107756; macOS notarized again (submission
 81f523fe-7e88-4466-ac71-7c01e105b313, SHA-256 57800e89…). The fc8b3fd files are
 archived in R2 at beta1/archive/fc8b3fd/. Check exported builds with
 `<app> --headless --verbose --quit-after 30 | grep "AudioManager voices"`.
+
+## Asset and 3D Village Hearth completion — 2026-10-03
+
+Installed a responsive 3D Hearth with both houses, granary, four approved characters and S8–S16 furnishings. “ดูหมู่บ้าน” opens station inspection. Rice sack visibility follows reserves; S11 empty granary now appears in famine. Ta-poh borrowed sprayer hose follows wand/tank, and thermal status indicator is smaller. Six approved character GLBs gained restrained chest/head Idle/Talk/Scan overlays while preserving model and tool-contact tracks. 56 static GLBs/36 IDs validate; full game, equipment, village and animation checks pass. Spent 105 Meshy credits, verified balance 1008. Cultural signoff and target-hardware performance remain pending; no public rebuild/deployment. [Detailed handoff](tools/asset_pipeline/VILLAGE_COMPLETION_HANDOFF_20261003.md).
+
+## Cast rig and animation upgrade — 2026-10-03
+
+All six character files now have refined joint weights, preserving approved geometry/UVs/albedo and skeleton landmarks. Reviewed all 34 clips; replaced 22 clip records with compatible gait/gesture improvements. Fixed ranger tablet reach, gait transitions, procedural rake/spray polish and ranger gesture cadence/pose resets. Production model imports use 60 fps; all clip/grounding, work/slope and game tests pass. Spent 12 more Meshy credits; verified balance 996. No public rebuild. [Full delivery and rollback](tools/character_pipeline/RIG_ANIMATION_HANDOFF_20261003.md).
+
+## Sound production pass — 2026-10-03
+
+User authorised ElevenLabs generation and runtime integration after the sound
+audit. Installed 62 new/replacement WAVs: 30 Thai spoken lines, three actor cough
+SFX and 29 effects/ambience/music files. Ta-poh, Mu-naw, Mae-Lu and weather use
+Thai-described library voices; ranger uses the existing Daniel voice consistently.
+Final spoken wording has exact normalized ASR matches; acting/native pronunciation
+review remains open. Unused v1.1 candidate files were not activated.
+
+AudioManager now resets scene sound state, protects/rate-limits speech, sends
+filtered radio through the speech parent and UI/drones through SFX, ducks music
+under speech, loads footstep take banks, and crossfades complete musical state
+tracks instead of stacking unrelated generated songs. FireGrid emits a real
+spot-fire extinguish event; Main adds distinct escaped-fire/success feedback and
+evening ambience. CameraRig's listener follows the player across camera zoom.
+Village actions, checkpoint and ending movement get selective foley/ambience.
+Unrelated ongoing character/village changes were preserved.
+
+Pipeline, file conventions, review limits, backup locations and reproducible
+commands: [Audio pipeline](tools/audio_pipeline/README.md). Exact final installed
+hashes and preview: `artifacts/audio_upgrade_20261003/`. Both the focused audio
+suite and full gameplay suite pass; final 120-frame smoke exits cleanly.
+
+## Player feedback presentation fixes — 2026-10-03
+
+User authorized PF-01/02/03 from `docs/feedback/PRD_PLAYER_FEEDBACK_20261003.md`.
+Installed refill marker/empty-tank edge guidance, explanatory breath states,
+sustained faceted companion nozzle-to-cell spray and an eight-second fire-warning
+family with one protected-forest escalation. Preserved gameplay economics,
+smoke thresholds and companion autonomy. Tests and Metal captures pass;
+subjective tester listening/discoverability follow-up remains. No release build.
+Detailed files, functions, evidence and reproduction:
+[Player feedback implementation](docs/feedback/PLAYER_FEEDBACK_IMPLEMENTATION_20261003.md).
+
+## Desktop exit shortcuts — 2026-10-03
+
+InputBindings now handles macOS Command+W / Command+Q and Windows/Linux Alt+F4
+through global input even while paused or a text field has focus. Root window
+close and Title's exit button use the same audio-cleanup/SceneTree.quit route.
+Keeps the existing Hearth campaign autosave; quitting a partial burn does not
+save it as completed. Plain W/Q retain their gameplay meaning. HowToPlay lists
+the platform shortcut. No release rebuild or commit.
+
+`tests/test_platform_shortcuts.gd` passes platform/modifier/echo/release checks.
+`tests/test_platform_exit.gd -- close|focused|paused` each actually terminates
+with exit 0 on macOS (synthetic input/close signal, not native Windows testing).
+Full gameplay suite passes; required 120-frame smoke exits cleanly. Help layout
+verified at 1280x720. Evidence: `artifacts/platform_shortcuts_20261003/`.

@@ -86,6 +86,7 @@ static func apply(tree: SceneTree) -> void:
 	for bus in volumes:
 		var idx = AudioServer.get_bus_index(bus)
 		if idx != -1:
+			AudioServer.set_bus_mute(idx, volumes[bus] <= 0.0)
 			AudioServer.set_bus_volume_db(idx, linear_to_db(maxf(0.001, volumes[bus])))
 	if DisplayServer.get_name() != "headless":
 		var want = DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED

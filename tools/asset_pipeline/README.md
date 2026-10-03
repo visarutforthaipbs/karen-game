@@ -5,6 +5,12 @@ character pipeline's useful lessons are applied here: prepared references,
 repeatable inference settings, preserved materials, strict geometry validation,
 four-angle renders and installation only after visual review.
 
+**User direction, 2026-10-03:** selected prominent props may use Meshy generation
+with the same budgets, style gates, local cleanup and installation checks.
+Procedural assets and heavily instanced vegetation retain efficient local routes.
+The existing GPU image routes below are alternatives, not a required step after
+Meshy. See [remaining-credit priorities and cost cap](MESHY_EXPANSION_PLAN_20261003.md).
+
 ## Required art direction
 
 **Every route produces stylized low-poly game assets**, including the quality
@@ -131,6 +137,20 @@ existing checkout.
 
 ## Review and install
 
+For an already generated static GLB, the same Blender cleanup, technical validator,
+four-angle renderer and reviewed installer can run on a local CPU without the GPU host:
+
+```bash
+python3 tools/asset_pipeline/build_static_mesh_local.py S4 \
+  --mesh /absolute/path/source.glb --blender /absolute/path/blender \
+  --variant a --task-id PROVIDER_TASK_ID
+```
+
+This builds an isolated candidate and preserves UVs/materials, script snapshots,
+source hashes and provider provenance. Inspect the front and apply `--yaw` when
+needed. It never installs automatically; use the reviewed installer below and
+run the gameplay suite after each installed batch.
+
 Candidates live under `artifacts/prop_candidates/<unique-job>/`, with source hash,
 script snapshots, manifest/profile, stage status/timing, logs, normalized detailed
 master, budgeted GLB, validation results and `preview.png`. The S1 preview includes
@@ -249,3 +269,34 @@ work: [polish handoff](ASSET_POLISH_HANDOFF_20261002.md).
 `validate_polish_vfx.gd` verifies dimensions, neutral channels and atlas padding.
 `review_polish_effects.gd` reviews game materials across lighting states and
 asserts the installed mist/ash hooks. The updated prop, equipment and VFX review tools isolate save paths.
+
+
+## Local cleanup and future library
+
+`build_static_mesh_local.py ID --mesh source.glb --blender /path/to/Blender
+--output-dir fresh_candidate_dir` fits, preserves materials, enforces triangle
+budgets and renders four views without using GPU VRAM or Meshy credits.
+Use `--manifest tools/asset_pipeline/future_asset_manifest.json` for the reserved
+S8–S11 future candidates. The default remains `asset_manifest.json`.
+
+`future_library/` contains reviewed, technically validated GLBs and evidence,
+excluded from Godot resource scanning by `.gdignore`. These are not production
+assets and are not placed by the game. Register and install only when GAME supplies
+appropriate contracts. Current delivery:
+[MESHY_EXPANSION_HANDOFF_20261003.md](MESHY_EXPANSION_HANDOFF_20261003.md).
+
+`review_surveillance_candidates.gd` imports candidates into real drone/camera
+actors to check motor mounts, runtime rotor clearance and the separate warning
+lens. `audit_asset_scenes.gd checkpoint` captures both closed and raised runtime
+barriers using fixed frame steps. These are review tools; they do not alter actors.
+
+
+## Village integration — 2026-10-03
+
+S8–S11 were promoted from the future library to the production manifest; S12–S16
+add sacks, stools, firewood, a lidded basket and repair supplies. The two S4 houses
+and these props appear in `VillageDiorama`, with inspection views in the Hearth;
+S11 is the famine granary. Earlier future-library notes are historical. See
+[VILLAGE_COMPLETION_HANDOFF_20261003.md](VILLAGE_COMPLETION_HANDOFF_20261003.md).
+The user's "do it all" instruction also authorized the documented GAME hook
+edits; the older asset-only restriction did not apply to this integration pass.
