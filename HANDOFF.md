@@ -729,3 +729,31 @@ modal/clear events release the space and scene teardown removes listeners.
 including incoming speech during Tab traversal and stationary manual browsing.
 Exports now use a frozen Git snapshot and reject mid-export source/HEAD drift.
 Ten build safeguards pass; an older mixed-source candidate is superseded.
+
+
+## Beta 3 published — 2026-10-04
+
+The release audit and publication are complete. This supersedes the historical
+“rebuild/notarize” and “installers not yet published” notes above.
+[RELEASE_BETA3.md](docs/RELEASE_BETA3.md) records fixes, test evidence, final hashes
+and remaining platform/human-review limits.
+
+- Installed game source: `6f15bd65cd9a96e86379a82168507d302a6bc74c`, version
+  0.3.0 / beta3. All source CI passed; all three final installers were exported
+  from the frozen Git snapshot and independently inspected.
+- Mac notarization: `e225ea22-89e4-44d0-8a9a-157f139494cc`, Accepted with no issues,
+  stapled and Gatekeeper “Notarized Developer ID”. Credentials stayed in Keychain.
+- R2 `undertwoskies-beta/beta3/`: Windows, notarized Mac, Linux, manifest and
+  checksums. All full public installer hashes/byte counts, HEAD/Range/ETag checks
+  passed; beta1/beta2 remain accessible.
+- Download Worker `55b9dfe0-c7a2-4207-8697-1aee36db3450` is live with bilingual
+  beta3/0.3.0 copy and verified 276/298/266 MB archive sizes.
+- Promo commit `fdcd5b080e9da491d5b6ea6aa661135f055633fd` auto-deployed via GitHub;
+  validation/deployment succeeded and all four live pages match the verified
+  production HTML. Future verified main pushes continue deploying automatically.
+- Release records in `docs/releases/beta3-*.json` contain no credentials or
+  private key paths. Native Windows/Linux/Steam Deck playtesting and final human
+  English/Karen cultural/listening review remain pending before paid Steam release.
+
+Public download: https://undertwoskies-download.undertwoskies-game.workers.dev/
+Promotion: https://undertwoskies-website-promote.undertwoskies-game.workers.dev/th/

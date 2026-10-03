@@ -1,0 +1,42 @@
+{
+  "origin": "https://undertwoskies-website-promote.undertwoskies-game.workers.dev",
+  "commit": "fdcd5b080e9da491d5b6ea6aa661135f055633fd",
+  "routes": [
+    {
+      "route": "/",
+      "status": 200,
+      "matches_verified_dist": true,
+      "sha256": "ee54b4ac955ec9c0b193e308b2a2f7e6f586b64a17699771acf96be17b9c4848",
+      "current_build_feedback": true,
+      "bilingual_coverage": true,
+      "correct_download_language": true
+    },
+    {
+      "route": "/th/",
+      "status": 200,
+      "matches_verified_dist": true,
+      "sha256": "c2cec1c300e1a94eb79c7a578e252091b315f8875fbcee1b584713b8b8c4c0e8",
+      "current_build_feedback": true,
+      "bilingual_coverage": true,
+      "correct_download_language": true
+    },
+    {
+      "route": "/press/",
+      "status": 200,
+      "matches_verified_dist": true,
+      "sha256": "52f4e1d1cb6bc30688e58376aa5792f068f140e1ca727d012629c11bab277247",
+      "current_build_feedback": true,
+      "bilingual_coverage": true,
+      "correct_download_language": true
+    },
+    {
+      "route": "/th/press/",
+      "status": 200,
+      "matches_verified_dist": true,
+      "sha256": "e6196579fdabcc7450766cbc59b8aac7fd7499977f045b5013f61a1c21466ed0",
+      "current_build_feedback": true,
+      "bilingual_coverage": true,
+      "correct_download_language": true
+    }
+  ]
+}

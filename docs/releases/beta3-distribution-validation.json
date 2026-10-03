@@ -1,0 +1,35 @@
+{
+  "origin": "https://undertwoskies-download.undertwoskies-game.workers.dev",
+  "version": "0.3.0-beta.3",
+  "commit": "6f15bd65cd9a96e86379a82168507d302a6bc74c",
+  "files": [
+    {
+      "platform": "Windows",
+      "download_name": "UnderTwoSkies-Windows.zip",
+      "bytes": 275531657,
+      "sha256": "7a4c004aa10aa0b9f380e0e6881fd237ae5895f59014f9aaa1646b3e5eed872f",
+      "head": 200,
+      "range": 206,
+      "conditional": 304
+    },
+    {
+      "platform": "macOS",
+      "download_name": "UnderTwoSkies-macOS.zip",
+      "bytes": 297680164,
+      "sha256": "32a53ae080d887fe90151d220a3c8bc491937ff41978cde543b4000ea5f88618",
+      "head": 200,
+      "range": 206,
+      "conditional": 304
+    },
+    {
+      "platform": "Linux",
+      "download_name": "UnderTwoSkies-Linux.zip",
+      "bytes": 265860887,
+      "sha256": "7230600bf76a6a252ab52f1ff19fbbc1d892ece2fce0886ae6f86503f5377254",
+      "head": 200,
+      "range": 206,
+      "conditional": 304
+    }
+  ],
+  "previous_beta2_head": 200
+}
