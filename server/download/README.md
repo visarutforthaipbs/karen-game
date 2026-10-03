@@ -23,3 +23,11 @@ Deploy with `wrangler deploy --config server/download/wrangler.toml` from the ga
 repository after verifying the intended account. Check the page on desktop and
 390px mobile, loaded logo/fonts, ZIP HEAD/range requests and SHA256SUMS.txt.
 Installer archives remain in the R2 bucket, separate from `public/`.
+
+English downloads: `/en/`; Thai downloads: `/` (also `/th/`). Language switches
+change instructions only; the same Thai game build is served in both languages.
+`website-ux.js` is shared with the promotion site's `public/website-ux.js`:
+advisory OS suggestions, phone/tablet guidance and explicit-click clipboard copy.
+Keep these copies aligned. No analytics or device information is transmitted.
+Requirements must remain labelled as being measured until hardware testing
+provides evidence. Linux/Steam Deck stays labelled untested until native testing.

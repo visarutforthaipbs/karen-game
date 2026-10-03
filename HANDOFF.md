@@ -547,3 +547,25 @@ Desktop and 390px mobile checked (no horizontal overflow, 54px download actions)
 Live fonts/logo loaded, brand asset hashes verified and all ZIP HEAD routes pass.
 Download Worker: d2a64c11-c593-4e85-9dc0-ce8ebd0f2bb5.
 Screenshot: artifacts/release_beta2_20261003/download_brand_live.jpg.
+
+## Website UX across all pages — 2026-10-03
+
+All four promotion routes (English/Thai home and press) now agree on beta 2,
+link to language-matched downloads, include copyable feedback help, and state
+that the game is Thai-only and Linux/Steam Deck is untested. Requirements remain
+explicitly unmeasured rather than inventing minimum GPU/RAM/macOS versions.
+Download Worker adds /en/ (Thai / and /th/), native language links, advisory
+Windows/Mac/Linux highlighting, mobile/tablet advice, and localized feedback.
+Shared website-ux.js copies must stay identical. No device telemetry is sent.
+Verified 390px layout on all six pages, actual clipboard copy in browser,
+Windows/Mac/Linux/iPhone/iPad detection branches, build/link checks across all
+four promotion routes, and live six-page release/locale/feedback checks.
+Live ZIP HEAD and unchanged checksums pass. Verification now catches stale
+beta-1 strings and incorrect download-language destinations.
+Published manually using verified Cloudflare account; GitHub deploy-token
+replacement remains pending, independent of this completed UX update.
+Download Worker version: 11490a68-1e0f-41c1-a12e-718b6f3ae865.
+Promotion Worker version: e141dd1e-b465-405d-a93f-36861577d5d9.
+Promotion source commit: 252eacb.
+Evidence: artifacts/release_beta2_20261003/website_ux_download_en.jpg and
+artifacts/release_beta2_20261003/website_ux_promo_th.jpg.
