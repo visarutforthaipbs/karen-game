@@ -7,3 +7,6 @@ workers_dev = true
 [[r2_buckets]]
 binding = "BUCKET"
 bucket_name = "undertwoskies-beta"
+
+[assets]
+directory = "./public"

@@ -534,3 +534,16 @@ Cloudflare download Worker version: 56d1f3e3-12df-4f9e-8d3e-2b302de61807.
 Screenshot: artifacts/release_beta2_20261003/download_layout_live.jpg.
 Design reference: https://signalvnoise.com/posts/2705-behind-the-scenes-37signalscom-redesign
 Automatic promo deployment credential approval remains a separate pending item.
+
+## Download website brand alignment — 2026-10-03
+
+Replaced the independent light/green styling with the promotion website's exact
+midnight background, cream text, gold actions, straight panel/button edges,
+Kanit/Chakra Petch typography and approved illustrated header logo/favicon.
+Workers Static Assets serves identical local copies of eight approved brand
+files including font licences; no cross-origin font dependency. Design source
+and future alignment rules: server/download/README.md.
+Desktop and 390px mobile checked (no horizontal overflow, 54px download actions).
+Live fonts/logo loaded, brand asset hashes verified and all ZIP HEAD routes pass.
+Download Worker: d2a64c11-c593-4e85-9dc0-ce8ebd0f2bb5.
+Screenshot: artifacts/release_beta2_20261003/download_brand_live.jpg.
