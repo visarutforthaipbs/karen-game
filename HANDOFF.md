@@ -520,3 +520,17 @@ Automatic deployment run 37111096657 failed: stored GitHub API token invalid.
 Replacement token prepared, confirmation pending; do not claim auto-deploy works
 until a successful GitHub deployment proves it. Manual website Worker version:
 0e7ff691-2be7-4d5d-87a1-ad4489cb3f7b.
+
+## Download page layout — 2026-10-03
+
+Published a focused, 37signals-inspired download layout: readable light paper,
+three explicit OS download actions with nearby size/install instructions, native
+expandable platform help and release notes, separate feedback instructions,
+keyboard focus and a skip link. No client JavaScript, fonts or media required.
+Verified desktop rendering, 390px mobile with no horizontal overflow and >48px
+download targets, native Windows-help disclosure, and live ZIP HEAD/range plus
+unchanged checksums. Installer bytes and streaming handler are unchanged.
+Cloudflare download Worker version: 56d1f3e3-12df-4f9e-8d3e-2b302de61807.
+Screenshot: artifacts/release_beta2_20261003/download_layout_live.jpg.
+Design reference: https://signalvnoise.com/posts/2705-behind-the-scenes-37signalscom-redesign
+Automatic promo deployment credential approval remains a separate pending item.

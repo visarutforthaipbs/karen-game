@@ -2,53 +2,51 @@
 // GET /            Thai download/instructions page
 // GET /beta1/<f> or /beta2/<f> streams the file from the R2 bucket (Range supported)
 
+const SITE = "https://undertwoskies-website-promote.undertwoskies-game.workers.dev";
 const FILES = [
-	["UnderTwoSkies-Windows.zip", "Windows 10/11 (x86_64)", "284 MB"],
-	["UnderTwoSkies-macOS.zip", "macOS (Universal) · ผ่านการรับรองจาก Apple", "306 MB"],
-	["UnderTwoSkies-Linux.zip", "Linux / Steam Deck (x86_64)", "274 MB"],
+  { file: "UnderTwoSkies-Windows.zip", name: "Windows", system: "Windows 10 / 11 · x86_64", size: "284 MB", instructions: "แตกไฟล์ ZIP แล้วเปิด UnderTwoSkies.exe", note: `<details class="platform-help"><summary>หาก Windows เตือนก่อนเปิดเกม</summary><p>บิลด์เบตายังไม่ได้เซ็นชื่อดิจิทัล หากดาวน์โหลดจากหน้านี้และต้องการเล่น ให้เลือก <b>More info → Run anyway</b> ในหน้าต่าง “Windows protected your PC”</p></details>` },
+  { file: "UnderTwoSkies-macOS.zip", name: "macOS", system: "Apple Silicon และ Intel · Universal", size: "306 MB", instructions: "แตกไฟล์ ZIP แล้วดับเบิลคลิกเปิดแอป", note: `<p class="platform-note">เซ็นชื่อด้วย Developer ID และผ่านการรับรองจาก Apple แล้ว</p>` },
+  { file: "UnderTwoSkies-Linux.zip", name: "Linux", system: "Linux / Steam Deck · x86_64", size: "274 MB", instructions: "แตกไฟล์ ZIP แล้วเปิด UnderTwoSkies.x86_64", note: `<details class="platform-help"><summary>หากไฟล์ยังเปิดไม่ได้</summary><p>อนุญาตให้ไฟล์ทำงานเป็นโปรแกรมใน Properties → Permissions หรือใช้ <code>chmod +x UnderTwoSkies.x86_64</code> แล้วเปิดอีกครั้ง</p></details>` },
 ];
 
-const PAGE = `<!doctype html>
-<html lang="th"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Under Two Skies — เบตา 2</title>
-<style>
-	body{background:#101318;color:#e8e2d4;font-family:system-ui,'Kanit',sans-serif;margin:0;padding:24px 16px;line-height:1.6}
-	main{max-width:720px;margin:0 auto}
-	h1{color:#e8b54a;margin:0 0 4px;font-size:1.6rem}
-	.sub{color:#9aa08f;margin:0 0 20px}
-	a{color:#e8b54a}
-	.dl{display:block;background:#1b2027;border:1px solid #2c3440;border-radius:10px;padding:14px 16px;margin:10px 0;text-decoration:none}
-	.dl b{color:#e8e2d4}
-	.dl span{color:#9aa08f;font-size:.9rem}
-	.card{background:#161b22;border:1px solid #2c3440;border-radius:10px;padding:14px 16px;margin:18px 0;font-size:.95rem}
-	code{background:#0c0f13;padding:2px 6px;border-radius:6px;font-size:.85rem}
-	h2{font-size:1.05rem;color:#cfe3cf;margin:0 0 8px}
-</style></head><body><main>
-<h1>Under Two Skies <small>เบตา 2</small></h1>
-<p class="sub">ไร่หมุนเวียนใต้เงาดาวเทียม · เบตาภาษาไทย ดาวน์โหลดฟรี ไม่ต้องสมัครสมาชิก</p>
-<p>เกมสำหรับ <b>PC เท่านั้น</b> (ใช้เมาส์+คีย์บอร์ด หรือจอยเกม) · เกมเป็นภาษาไทย · เล่นหนึ่งแปลงใช้เวลา ~9 นาที</p>
-%LINKS%
-<div class="card"><h2>อัปเดตเบตา 2 · 3 ตุลาคม 2026</h2>
-หมู่บ้านสามมิติ · ท่าทางตัวละครและเรนเจอร์ดีขึ้น · เสียงและดนตรีใหม่ · เห็นมูนอฉีดน้ำชัดขึ้น · มีป้ายเติมน้ำและคำอธิบายลมหายใจ · ลดเสียงเตือนลูกไฟซ้ำ
-<br>ออกจากเกม: Mac <b>⌘W / ⌘Q</b> · Windows / Linux <b>Alt+F4</b> · กลับมาเล่นจากบันทึกล่าสุด (การเผาที่ยังไม่จบเริ่มใหม่จากก่อนเผา)</div>
-<p><a href="/beta2/SHA256SUMS.txt">SHA256SUMS.txt</a> สำหรับตรวจสอบไฟล์</p>
-<div class="card"><h2>Windows ขึ้นจอฟ้า "Windows protected your PC"?</h2>
-กด <b>More info</b> แล้ว <b>Run anyway</b> — บิลด์เบตายังไม่ได้เซ็นชื่อดิจิทัล</div>
-<div class="card"><h2>macOS</h2>
-แอปเซ็นชื่อด้วย Developer ID และผ่านการตรวจรับรอง (notarized) จาก Apple แล้ว แตกไฟล์ zip แล้วดับเบิลคลิกเปิดได้เลย</div>
-<div class="card"><h2>หลังเล่นจบ ช่วยส่งผลให้เราหน่อย</h2>
-ในเกม: <b>ตั้งค่า → เปิดโฟลเดอร์บันทึกการเล่น</b> เก็บไฟล์ <code>playtest_log.csv</code> ไว้ ส่งไฟล์และความคิดเห็นได้ที่ดิสคอร์ด ช่อง <b>#feedback</b>: <a href="https://discord.gg/ZJ2ywpJ7Ss">discord.gg/ZJ2ywpJ7Ss</a>
-ช่วยจดสั้น ๆ ด้วยว่า เข้าใจเป้าหมายใน 5 นาทีแรกไหม ติดตรงไหน และ FPS (กด F3 เมื่อเปิดเครื่องมือทดสอบในตั้งค่า)</div>
-<div class="card"><h2>กระดานออนไลน์ (เบตา)</h2>
-ปิดเป็นค่าเริ่มต้น เปิดได้ใน <b>ตั้งค่า → กระดานออนไลน์</b> ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีข้อมูลส่วนตัว ลบคะแนนตัวเองได้ทุกเมื่อ</div>
-<p class="sub">ข้อมูลเกม: <a href="https://undertwoskies-website-promote.undertwoskies-game.workers.dev/th/">เว็บไซต์ Under Two Skies</a></p>
-</main></body></html>`;
-
 function page() {
-	const links = FILES.map(([f, label, size]) =>
-		`<a class="dl" href="/beta2/${f}"><b>${label}</b><br><span>${f} · ${size}</span></a>`).join("\n");
-	return PAGE.replace("%LINKS%", links);
+  const downloads = FILES.map(({file, name, system, size, instructions, note}) => `<article class="platform">
+    <h2>${name}</h2><p class="system">${system}</p>
+    <a class="download" href="/beta2/${file}">ดาวน์โหลดสำหรับ ${name}<span aria-hidden="true">↓</span></a>
+    <p class="file-size">ZIP · ${size}</p><p class="install">${instructions}</p>${note}
+  </article>`).join("\n");
+  return `<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ดาวน์โหลด Under Two Skies เบตา 2 ฟรี สำหรับ Windows, macOS และ Linux พร้อมวิธีติดตั้งและส่งความคิดเห็น">
+<meta name="theme-color" content="#f5f3eb"><title>ดาวน์โหลดเบตา 2 — Under Two Skies</title>
+<style>
+:root{color-scheme:light;--paper:#f5f3eb;--ink:#202d2a;--muted:#56645e;--line:#d6dcd3;--green:#245a48}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.75;font-size:16px}a{color:var(--green);text-underline-offset:4px}a:hover{text-decoration-thickness:2px}a:focus-visible,summary:focus-visible{outline:3px solid #b06125;outline-offset:5px}header,main,footer{max-width:1100px;margin:auto;padding-inline:32px}header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:25px;border-bottom:1px solid var(--line)}.brand{color:var(--ink);font-size:19px;font-weight:800;text-decoration:none;letter-spacing:-.4px}.back{font-size:14px}main{padding-block:50px 36px}.intro{max-width:740px}.eyebrow{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:14px;margin:0 0 16px}.version{border:1px solid var(--line);border-radius:5px;padding:2px 9px;background:#fff}h1{font-size:clamp(30px,4vw,46px);line-height:1.3;letter-spacing:-1px;margin:0 0 15px}h2{font-size:23px;line-height:1.45;margin:0 0 14px}.platform h2{font-size:23px;margin:0}p{margin:0 0 14px}.lead{font-size:19px}.context{color:var(--muted);margin-bottom:30px}.platforms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.platform{background:#fff;border:1px solid var(--line);border-radius:8px;padding:24px;min-width:0}.system{color:var(--muted);font-size:13px;min-height:46px;margin:4px 0 16px}.download{display:flex;justify-content:space-between;gap:8px;align-items:center;background:var(--green);color:#fff;padding:12px 15px;border-radius:5px;font-weight:700;text-decoration:none;font-size:15px;min-height:48px}.download:hover{background:#174435}.file-size{color:var(--muted);font-size:13px;margin:9px 0 17px}.install{font-size:15px}.platform-note,.platform-help{font-size:13px;color:var(--muted);margin:0}.platform-help p{margin:10px 0 0}.checksums{font-size:13px;color:var(--muted);margin:18px 0 0}.lower{display:grid;grid-template-columns:1.1fr 1fr;gap:64px;margin-top:42px;padding-top:32px;border-top:1px solid var(--line)}ol{padding-left:23px;margin:0 0 18px}li{padding-left:5px;margin-bottom:10px}.feedback-link{font-weight:700}.fine{font-size:14px;color:var(--muted)}.notes{border-top:1px solid var(--line);margin-top:24px;padding-top:18px}summary{cursor:pointer;color:var(--green);font-weight:600}details p{margin:12px 0 0}.notes ul{padding-left:20px;font-size:14px}code{font-size:.85em;background:#e9ede6;padding:2px 5px;border-radius:3px;overflow-wrap:anywhere}kbd{font:inherit;font-size:.85em;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 5px;background:#fff}footer{display:flex;justify-content:space-between;gap:20px;padding-block:22px 30px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}.skip{position:absolute;left:16px;top:-100px;background:#fff;padding:10px;z-index:1}.skip:focus{top:10px}
+@media(max-width:780px){header,main,footer{padding-inline:20px}main{padding-top:32px}.platforms{grid-template-columns:1fr}.system{min-height:0}.platform{padding:22px}.lower{grid-template-columns:1fr;gap:30px;margin-top:30px}footer{flex-direction:column;gap:8px}.context{font-size:14px}}
+</style></head><body>
+<a class="skip" href="#main">ข้ามไปดาวน์โหลด</a>
+<header><a class="brand" href="${SITE}/th/">UNDER TWO SKIES</a><a class="back" href="${SITE}/th/">← กลับเว็บไซต์เกม</a></header>
+<main id="main"><section class="intro" aria-labelledby="title">
+<p class="eyebrow"><span class="version">เบตา 2 · 0.2.0</span><span>3 ตุลาคม 2026</span></p>
+<h1 id="title">ดาวน์โหลด แล้วมาลองเล่นกัน</h1>
+<p class="lead">ไร่หมุนเวียนใต้เงาดาวเทียม — เบตาภาษาไทย<br>ดาวน์โหลดฟรี ไม่ต้องสมัครสมาชิก</p>
+<p class="context">สำหรับคอมพิวเตอร์ · ใช้เมาส์และคีย์บอร์ด หรือจอยเกม · เล่นหนึ่งแปลงประมาณ 9 นาที</p>
+</section>
+<section aria-label="เลือกดาวน์โหลดตามระบบของคุณ"><div class="platforms">${downloads}</div>
+<p class="checksums">ต้องการตรวจสอบไฟล์? <a href="/beta2/SHA256SUMS.txt">ดู SHA-256 ของทั้งสามไฟล์</a></p></section>
+<div class="lower"><section aria-labelledby="feedback"><h2 id="feedback">เล่นจบแล้ว ช่วยเล่าให้เราฟัง</h2>
+<p>เข้าใจเป้าหมายใน 5 นาทีแรกไหม? ติดตรงไหน?<br>ความคิดเห็นของคุณช่วยปรับเกมรอบถัดไป</p>
+<ol><li>ในเกม ไปที่ <b>ตั้งค่า → เปิดโฟลเดอร์บันทึกการเล่น</b></li><li>เก็บไฟล์ <code>playtest_log.csv</code> แล้วส่งพร้อมความคิดเห็นในช่อง <b>#feedback</b></li></ol>
+<a class="feedback-link" href="https://discord.gg/ZJ2ywpJ7Ss">ส่งความคิดเห็นใน Discord →</a>
+<p class="fine" style="margin-top:12px">หากต้องการรายงาน FPS เปิดเครื่องมือทดสอบในตั้งค่า แล้วกด F3</p></section>
+<section aria-labelledby="before"><h2 id="before">ก่อนเริ่มเล่น</h2>
+<p>นี่คือบิลด์ทดสอบ เรายังรับฟังความคิดเห็นและปรับปรุงเกมอยู่</p>
+<p class="fine">ออกจากเกม: Mac <kbd>⌘W</kbd> / <kbd>⌘Q</kbd> · Windows / Linux <kbd>Alt+F4</kbd><br>กลับมาเล่นจากบันทึกล่าสุดได้ หากออกระหว่างเผา จะเริ่มใหม่จากบันทึกก่อนเผา</p>
+<details class="notes"><summary>มีอะไรใหม่ในเบตา 2</summary><ul><li>หมู่บ้านสามมิติ และท่าทางตัวละครกับเรนเจอร์ดีขึ้น</li><li>เสียง ดนตรี และบรรยากาศใหม่</li><li>เห็นมูนอฉีดน้ำชัดขึ้น พร้อมป้ายเติมน้ำและคำอธิบายลมหายใจ</li><li>ลดเสียงเตือนลูกไฟซ้ำ</li></ul></details>
+<details class="notes"><summary>กระดานคะแนนออนไลน์</summary><p class="fine">ปิดเป็นค่าเริ่มต้น เปิดได้ใน <b>ตั้งค่า → กระดานออนไลน์</b> ส่งชื่อที่ใช้บนกระดานและคะแนน ลบคะแนนตัวเองได้ทุกเมื่อ</p></details>
+</section></div></main>
+<footer><span>Under Two Skies · เบตาภาษาไทย</span><a href="${SITE}/th/">อ่านเรื่องราวและดูภาพจากเกม →</a></footer>
+</body></html>`;
 }
 
 export default {
