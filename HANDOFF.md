@@ -725,4 +725,7 @@ Rebuild and notarize this final source; earlier beta3 candidates are superseded.
 Native review also found radio subtitles covering preparation choices.
 VillageHearth dynamically reserves the caption height above pinned Launch;
 modal/clear events release the space and scene teardown removes listeners.
-74 TH/EN geometry/focus/lifecycle checks cover 720/800-height and1.0/1.3 UI scale.
+101 TH/EN geometry/focus/lifecycle checks cover 720/800-height and 1.0/1.3 UI scale,
+including incoming speech during Tab traversal and stationary manual browsing.
+Exports now use a frozen Git snapshot and reject mid-export source/HEAD drift.
+Ten build safeguards pass; an older mixed-source candidate is superseded.

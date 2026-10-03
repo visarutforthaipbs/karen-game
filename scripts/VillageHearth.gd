@@ -68,10 +68,12 @@ var _header_stats: HBoxContainer
 var _barn_card: Control
 var _watch_card: Control
 var _caption_reservation: Control
+var _focus_reveal_generation: int = 0
 
 func _ready() -> void:
 	theme = UITheme.get_theme()
 	_build()
+	get_viewport().gui_focus_changed.connect(_reveal_preparation_focus)
 	if AudioManager.instance:
 		var audio = AudioManager.instance
 		audio.voice_caption_changed.connect(_on_voice_caption_changed)
@@ -141,7 +143,9 @@ func _build() -> void:
 	# The cards scroll when the window is short; the launch button below stays pinned
 	var scroll = ScrollContainer.new()
 	_card_scroll = scroll
-	scroll.follow_focus = true
+	# Reveal focus after caption/layout reflow rather than using a queued stale rect.
+	scroll.follow_focus = false
+	scroll.resized.connect(_reveal_preparation_focus.call_deferred)
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	page.add_child(scroll)
@@ -243,6 +247,28 @@ func _fit_caption_reservation() -> void:
 	var shown = is_instance_valid(card) and card.is_visible_in_tree()
 	_caption_reservation.visible = shown
 	_caption_reservation.custom_minimum_size.y = maxf(80.0, card.get_combined_minimum_size().y) if shown else 0.0
+
+func _reveal_preparation_focus(_focused: Control = null) -> void:
+	# Speech can shrink the scroll viewport while a choice already has focus.
+	if not is_inside_tree() or not is_instance_valid(_card_scroll):
+		return
+	_focus_reveal_generation += 1
+	var generation = _focus_reveal_generation
+	# Focus and caption reflow can arrive together. Let both the column layout
+	# and the ScrollContainer scrollbar range settle before revealing the choice.
+	var tree = get_tree()
+	await tree.process_frame
+	await tree.process_frame
+	if not is_inside_tree() or not is_instance_valid(_card_scroll) or generation != _focus_reveal_generation:
+		return
+	var owner = get_viewport().gui_get_focus_owner()
+	if owner and _card_columns.is_ancestor_of(owner):
+		var body = _card_scroll.get_global_rect()
+		var choice = owner.get_global_rect()
+		if choice.position.y < body.position.y:
+			_card_scroll.scroll_vertical += floori(choice.position.y - body.position.y)
+		elif choice.end.y > body.end.y:
+			_card_scroll.scroll_vertical += ceili(choice.end.y - body.end.y)
 
 func _card(kind: String, title: String, tint: Color, seed_value: int, expand: bool = true) -> VBoxContainer:
 	var card = UITheme.card(Color(UITheme.PANEL, 0.93), tint, seed_value)

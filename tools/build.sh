@@ -22,6 +22,12 @@ done
 mkdir -p build
 touch build/.gdignore
 OUT="$(mktemp -d "build/$STAMP-XXXXXX")"
+OUT="$(cd "$OUT" && pwd)"
+# Swarm agents share the checkout. Export a frozen committed snapshot, never
+# partly old and partly new files if another agent edits during an export.
+SOURCE="$OUT/source"
+mkdir -p "$SOURCE"
+git archive "$COMMIT" | tar -xf - -C "$SOURCE"
 run_engine() {
   local log="$1"; shift
   if ! "$GODOT" "$@" >"$log" 2>&1; then
@@ -36,15 +42,7 @@ run_engine() {
     return 1
   fi
 }
-run_engine "$OUT/import.log" --headless --path . --import
-python3 - "$OUT" "$COMMIT" "$("$GODOT" --version)" "${PRESETS[@]}" <<'PY'
-import json, sys
-from pathlib import Path
-Path(sys.argv[1], 'source-manifest.json').write_text(json.dumps({
-    'commit': sys.argv[2], 'godot': sys.argv[3], 'presets': sys.argv[4:],
-    'runtime_sources_committed': True,
-}, indent=2) + '\n')
-PY
+run_engine "$OUT/import.log" --headless --path "$SOURCE" --import
 for p in "${PRESETS[@]}"; do
   case "$p" in
     macOS)   target="$OUT/UnderTwoSkies-macOS.zip" ;;
@@ -53,7 +51,7 @@ for p in "${PRESETS[@]}"; do
     *) echo "unknown preset $p"; exit 1 ;;
   esac
   echo "== $p -> $target"
-  run_engine "$OUT/export-$p.log" --headless --path . --export-release "$p" "$target"
+  run_engine "$OUT/export-$p.log" --headless --path "$SOURCE" --export-release "$p" "$target"
   [ -s "$target" ] || { echo "Missing or empty export: $target" >&2; exit 1; }
   case "$p" in
     macOS) unzip -tq "$target" >/dev/null ;;
@@ -61,4 +59,18 @@ for p in "${PRESETS[@]}"; do
     Windows) (cd "$OUT" && zip -qr UnderTwoSkies-Windows.zip UnderTwoSkies-Windows) ;;
   esac
 done
+if [ "$(git rev-parse HEAD)" != "$COMMIT" ] \
+  || ! git diff --quiet -- "${SOURCE_PATHS[@]}" || ! git diff --cached --quiet -- "${SOURCE_PATHS[@]}" \
+  || [ -n "$(git ls-files --others --exclude-standard -- "${SOURCE_PATHS[@]}")" ]; then
+  echo "Release source changed during export; candidate is not qualified." >&2
+  exit 1
+fi
+python3 - "$OUT" "$COMMIT" "$("$GODOT" --version)" "${PRESETS[@]}" <<'PY'
+import json, sys
+from pathlib import Path
+Path(sys.argv[1], 'source-manifest.json').write_text(json.dumps({
+    'commit': sys.argv[2], 'godot': sys.argv[3], 'presets': sys.argv[4:],
+    'runtime_sources_committed': True, 'source_snapshot': 'git archive',
+}, indent=2) + '\n')
+PY
 echo "Builds in $OUT:"; ls -lh "$OUT"

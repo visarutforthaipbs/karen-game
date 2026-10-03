@@ -10,7 +10,7 @@ import zipfile
 
 BUILDER = Path(__file__).resolve().parents[1] / "build.sh"
 FAKE_ENGINE = '''#!/usr/bin/env python3
-import os, pathlib, sys, zipfile
+import os, pathlib, subprocess, sys, zipfile
 args = sys.argv[1:]
 mode = os.environ.get("EXPORT_TEST_MODE", "ok")
 if "--version" in args:
@@ -19,6 +19,12 @@ elif "--import" in args:
     if mode == "import_exit": sys.exit(42)
     if mode == "import_error": print("SCRIPT ERROR: fixture import failure")
 elif "--export-release" in args:
+    if mode == "source_drift":
+        pathlib.Path("ui").mkdir(exist_ok=True)
+        pathlib.Path("ui/changed.gd").write_text("extends Control\\n")
+    if mode == "head_drift":
+        subprocess.run(["git", "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+                        "commit", "--allow-empty", "-qm", "other agent commit"], check=True)
     if mode == "export_error":
         print("ERROR: fixture export failure")
         sys.exit(0)
@@ -94,6 +100,27 @@ class BuildSafeguards(unittest.TestCase):
         result = self.run_build("ok", "Linux")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("uncommitted runtime files", result.stderr)
+
+    def test_mid_export_edit_cannot_receive_qualified_manifest(self):
+        result = self.run_build("source_drift", "Linux")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("changed during export", result.stderr)
+        self.assertFalse(list(self.root.glob("build/**/source-manifest.json")))
+
+    def test_mid_export_commit_cannot_receive_qualified_manifest(self):
+        result = self.run_build("head_drift", "Linux")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("changed during export", result.stderr)
+        self.assertFalse(list(self.root.glob("build/**/source-manifest.json")))
+
+    def test_engine_uses_committed_snapshot_and_no_worktree_cache(self):
+        (self.root / ".godot").mkdir()
+        (self.root / ".godot/untracked-cache").write_text("prior cached runtime")
+        result = self.run_build("ok", "Linux")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        source = next(self.root.glob("build/*/source"))
+        self.assertTrue((source / "tools/build.sh").exists())
+        self.assertFalse((source / ".godot/untracked-cache").exists())
 
 
 if __name__ == "__main__":

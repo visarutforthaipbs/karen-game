@@ -29,6 +29,7 @@ to it. The manager independently reproduces and integrates fixes.
   internal paths/rejected takes and include current localization/licenses.
 - Build/import and signed-boot scripts could accept errors with engine exit 0.
   Check logs and outputs; require committed runtime source and unique build paths.
+  Export a frozen Git snapshot and reject checkout/HEAD changes during export.
 - The online-score version still identified beta1. It now identifies beta3.
 - Radio recordings announced drones, patrols, checkpoints or storms that were
   absent from the current plot. Filter broadcasts against the current campaign
@@ -55,8 +56,8 @@ Evidence root: `artifacts/release_beta3_audit_20261003/`.
 - Existing gameplay, animation/equipment/ranger/asset/audio/guidance/shortcut
   suites and 120-frame smoke pass; final integrated main suite is repeated.
 - Catalog: 418 entries, 30 spoken event mappings, 405 source literals; no issues.
-- Build safeguards: 7 unit regressions. PCK validator: 15 byte/payload regressions.
-- Preparation captions: 74 geometry, focus, growth and lifecycle checks across
+- Build safeguards: 10 unit regressions. PCK validator: 15 byte/payload regressions.
+- Preparation captions: 101 geometry, focus, growth and lifecycle checks across
   two languages, window heights and UI scales.
 - Radio: 446 context checks, plus 107 locale, 49 subtitle and 20 audio checks.
 - Download Worker: 14 handler checks, including preserved older-release routes,
