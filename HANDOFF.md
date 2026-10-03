@@ -503,3 +503,20 @@ Wrangler account visarutforthaipbs@gmail.com does not list it. Do not upload int
 another account. The download Worker and promotion-site beta-2 copy are prepared
 locally; live beta-1 downloads remain unchanged until verification.
 Distribution map and exact artifact provenance: `docs/RELEASE_BETA2.md`.
+
+## Beta 2 published — 2026-10-03
+
+Authentication refreshed: both Cloudflare MCP and Wrangler confirm
+visarut298@gmail.com / Under Two Skies - Game, account 37985e3dbd0d5cc809f4740dec81dbfc.
+All three beta 2 ZIPs and SHA256SUMS.txt are live in undertwoskies-beta/beta2/.
+Download Worker c60cd882-8adf-49d6-bf61-bca824a76266 is deployed. Full public
+archive streams match all local hashes and sizes; HEAD/range access passes and
+beta 1 remains available. Mac is Apple's accepted, stapled archive.
+Promo commit 92f7874 pushed; GitHub production deployment is enabled.
+Installer hosting/provenance and evidence: docs/RELEASE_BETA2.md.
+
+Promo website manually deployed and both live languages verify beta 2.
+Automatic deployment run 37111096657 failed: stored GitHub API token invalid.
+Replacement token prepared, confirmation pending; do not claim auto-deploy works
+until a successful GitHub deployment proves it. Manual website Worker version:
+0e7ff691-2be7-4d5d-87a1-ad4489cb3f7b.
