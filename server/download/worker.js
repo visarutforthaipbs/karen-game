@@ -1,17 +1,17 @@
 // Under Two Skies — beta download page + R2-backed downloads.
 // GET /            Thai download/instructions page
-// GET /beta1/<f>   streams the file from the R2 bucket (Range supported)
+// GET /beta1/<f> or /beta2/<f> streams the file from the R2 bucket (Range supported)
 
 const FILES = [
-	["UnderTwoSkies-Windows.zip", "Windows 10/11 (x86_64)", "199 MB"],
-	["UnderTwoSkies-macOS.zip", "macOS (Universal) · ผ่านการรับรองจาก Apple", "230 MB"],
-	["UnderTwoSkies-Linux.zip", "Linux / Steam Deck (x86_64)", "189 MB"],
+	["UnderTwoSkies-Windows.zip", "Windows 10/11 (x86_64)", "284 MB"],
+	["UnderTwoSkies-macOS.zip", "macOS (Universal) · ผ่านการรับรองจาก Apple", "306 MB"],
+	["UnderTwoSkies-Linux.zip", "Linux / Steam Deck (x86_64)", "274 MB"],
 ];
 
 const PAGE = `<!doctype html>
 <html lang="th"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Under Two Skies — เบตา 1</title>
+<title>Under Two Skies — เบตา 2</title>
 <style>
 	body{background:#101318;color:#e8e2d4;font-family:system-ui,'Kanit',sans-serif;margin:0;padding:24px 16px;line-height:1.6}
 	main{max-width:720px;margin:0 auto}
@@ -25,11 +25,14 @@ const PAGE = `<!doctype html>
 	code{background:#0c0f13;padding:2px 6px;border-radius:6px;font-size:.85rem}
 	h2{font-size:1.05rem;color:#cfe3cf;margin:0 0 8px}
 </style></head><body><main>
-<h1>Under Two Skies <small>เบตา 1</small></h1>
+<h1>Under Two Skies <small>เบตา 2</small></h1>
 <p class="sub">ไร่หมุนเวียนใต้เงาดาวเทียม · เบตาภาษาไทย ดาวน์โหลดฟรี ไม่ต้องสมัครสมาชิก</p>
 <p>เกมสำหรับ <b>PC เท่านั้น</b> (ใช้เมาส์+คีย์บอร์ด หรือจอยเกม) · เกมเป็นภาษาไทย · เล่นหนึ่งแปลงใช้เวลา ~9 นาที</p>
 %LINKS%
-<p><a href="/beta1/SHA256SUMS.txt">SHA256SUMS.txt</a> สำหรับตรวจสอบไฟล์</p>
+<div class="card"><h2>อัปเดตเบตา 2 · 3 ตุลาคม 2026</h2>
+หมู่บ้านสามมิติ · ท่าทางตัวละครและเรนเจอร์ดีขึ้น · เสียงและดนตรีใหม่ · เห็นมูนอฉีดน้ำชัดขึ้น · มีป้ายเติมน้ำและคำอธิบายลมหายใจ · ลดเสียงเตือนลูกไฟซ้ำ
+<br>ออกจากเกม: Mac <b>⌘W / ⌘Q</b> · Windows / Linux <b>Alt+F4</b> · กลับมาเล่นจากบันทึกล่าสุด (การเผาที่ยังไม่จบเริ่มใหม่จากก่อนเผา)</div>
+<p><a href="/beta2/SHA256SUMS.txt">SHA256SUMS.txt</a> สำหรับตรวจสอบไฟล์</p>
 <div class="card"><h2>Windows ขึ้นจอฟ้า "Windows protected your PC"?</h2>
 กด <b>More info</b> แล้ว <b>Run anyway</b> — บิลด์เบตายังไม่ได้เซ็นชื่อดิจิทัล</div>
 <div class="card"><h2>macOS</h2>
@@ -44,7 +47,7 @@ const PAGE = `<!doctype html>
 
 function page() {
 	const links = FILES.map(([f, label, size]) =>
-		`<a class="dl" href="/beta1/${f}"><b>${label}</b><br><span>${f} · ${size}</span></a>`).join("\n");
+		`<a class="dl" href="/beta2/${f}"><b>${label}</b><br><span>${f} · ${size}</span></a>`).join("\n");
 	return PAGE.replace("%LINKS%", links);
 }
 
@@ -53,7 +56,7 @@ export default {
 		const url = new URL(req.url);
 		if (url.pathname === "/")
 			return new Response(page(), { headers: { "Content-Type": "text/html; charset=utf-8" } });
-		if (!url.pathname.startsWith("/beta1/"))
+		if (!/^\/beta[12]\//.test(url.pathname))
 			return new Response("not found", { status: 404 });
 		if (req.method !== "GET" && req.method !== "HEAD")
 			return new Response("method not allowed", { status: 405 });

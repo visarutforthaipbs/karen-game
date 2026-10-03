@@ -489,3 +489,17 @@ the platform shortcut. No release rebuild or commit.
 with exit 0 on macOS (synthetic input/close signal, not native Windows testing).
 Full gameplay suite passes; required 120-frame smoke exits cleanly. Help layout
 verified at 1280x720. Evidence: `artifacts/platform_shortcuts_20261003/`.
+
+## Beta 2 release preparation — 2026-10-03
+
+Source `3964d38` committed and pushed. All local gameplay/motion/equipment/audio/
+guidance/shortcut/village tests pass. macOS universal, Windows x86_64 and Linux
+x86_64 built under `build/20261003-3964d38/`. Apple accepted submission
+`739abb48-c325-43e5-8642-3bb1a85f9497`; ticket stapled and Gatekeeper reports
+Notarized Developer ID. `SHA256SUMS.txt` and `release-manifest.json` are ready.
+Publishing remains pending authentication to Cloudflare account
+`37985e3dbd0d5cc809f4740dec81dbfc` (owner visarut298@gmail.com); current browser/
+Wrangler account visarutforthaipbs@gmail.com does not list it. Do not upload into
+another account. The download Worker and promotion-site beta-2 copy are prepared
+locally; live beta-1 downloads remain unchanged until verification.
+Distribution map and exact artifact provenance: `docs/RELEASE_BETA2.md`.
