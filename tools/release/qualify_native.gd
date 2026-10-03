@@ -1,5 +1,7 @@
 extends SceneTree
-## Run this external probe with the exported executable, from an empty directory.
+## Run the installed Godot engine with --main-pack <actual export PCK> and
+## --script <this absolute path>, from an empty directory. Release templates
+## ignore --script; test their native executable separately.
 ## All settings/saves/logs and optional rendered captures use the supplied scratch
 ## output folder. It does not submit online scores or modify a player's profile.
 var output: String
@@ -51,7 +53,7 @@ func run() -> void:
 	var state = root.get_node("GameState")
 	var audio = root.get_node("AudioManager")
 	check(ProjectSettings.get_setting("application/config/version") == "0.3.0", "export version is 0.3.0")
-	check(not OS.has_feature("editor"), "running exported executable")
+	check(FileAccess.file_exists("res://project.binary") and not FileAccess.file_exists("res://project.godot"), "exported project payload mounted")
 	change_scene_to_file("res://scenes/Title.tscn")
 	await frames(20)
 	check(current_scene.name == "Title", "export boots title")
@@ -89,8 +91,13 @@ func run() -> void:
 	check(current_scene.name == "VillageHearth" and not paused, "real Back skips film into unpaused preparation")
 	check(settings.intro_seen and saves.exists(), "film completion preference and campaign persist")
 	check(current_scene.how_to_play == null, "preparation has no compulsory guide after film")
+	var radio_claims := PackedStringArray()
+	for recording in audio.eligible_radio_voices(1):
+		radio_claims.append(recording.resource_path.get_file())
+	check(not radio_claims.has("radio_ch1_04.wav"), "Year 1 radio excludes unscheduled drones in exported payload")
 	current_scene._tune_radio(1)
-	await frames(3)
+	# Production tuning starts the broadcast after a 0.6–1.2 s settling timer.
+	await create_timer(1.5).timeout
 	check(audio.radio_player.playing and audio.radio_player.stream.resource_path.contains("/en/"), "English radio works in exported preparation")
 	await capture("04-preparation-en")
 	current_scene._on_launch_pressed()
@@ -130,7 +137,7 @@ func run() -> void:
 	settings.load_settings()
 	check(settings.locale == "th" and settings.intro_seen, "profile preferences survive reload")
 	audio.stop_all_loops()
-	print("NATIVE RELEASE QA: ", checks, " checks; ", failures, " failures; renderer ", DisplayServer.get_name())
+	print("EXPORTED PAYLOAD SCENE QA: ", checks, " checks; ", failures, " failures; renderer ", DisplayServer.get_name())
 	current_scene.queue_free()
 	await frames(3)
 	await create_timer(0.3).timeout

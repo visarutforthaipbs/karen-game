@@ -702,7 +702,8 @@ and explicitly include all three language JSON files and both OFL font notices.
 and fails on engine error logs as well as exit status. `tools/release/validate_pack.py`
 checks actual exported payloads, including embedded Windows/Linux packs, against
 76 approved recordings and current catalogs/licenses. `qualify_native.gd` is an
-external exported-executable probe using isolated saves and actual scene flows.
+external exported-PCK probe using isolated saves and actual scene flows. Release
+export templates ignore --script; native release executables are checked separately.
 Online-board payload version is beta3; project/export version is 0.3.0.
 
 Current website deployment account is Under Two Skies - Game /
@@ -710,3 +711,8 @@ Current website deployment account is Under Two Skies - Game /
 Wrangler profile `undertwoskies-game`; default credentials belong to another
 project. Promo GitHub auto-deploy is working again; prior broken-token notes are
 historical. Versioned R2 prefixes retain beta1/beta2 for rollback.
+
+Radio audit follow-up: recordings now follow actual plot drones, ranger patrols,
+checkpoints and storms in both languages; 446 context checks and voice regression
+suites pass. Final exports must include this fix, superseding the first beta3
+qualification candidate. Download Worker regressions preserve beta1/beta2 links.

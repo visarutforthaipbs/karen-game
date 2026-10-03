@@ -19,13 +19,15 @@ site's `public/` and verify their hashes match. Do not independently restyle thi
 page or introduce another logo. Download clarity still takes priority: keep each
 platform's action, ZIP size and installation instructions together.
 
-Deploy with `wrangler deploy --config server/download/wrangler.toml` from the game
+Deploy with `wrangler deploy --config server/download/wrangler.toml --profile undertwoskies-game` from the game
 repository after verifying the intended account. Check the page on desktop and
 390px mobile, loaded logo/fonts, ZIP HEAD/range requests and SHA256SUMS.txt.
 Installer archives remain in the R2 bucket, separate from `public/`.
 
 English downloads: `/en/`; Thai downloads: `/` (also `/th/`). Language switches
-change instructions only; the same Thai game build is served in both languages.
+change website instructions; the same beta3 installer is served in both languages.
+The game itself has a saved Thai/English switch for UI, subtitles and speech in Settings.
+Both languages default to Thai on an existing/new profile until the player changes it.
 `website-ux.js` is shared with the promotion site's `public/website-ux.js`:
 advisory OS suggestions, phone/tablet guidance and explicit-click clipboard copy.
 Keep these copies aligned. No analytics or device information is transmitted.

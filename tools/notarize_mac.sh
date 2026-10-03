@@ -24,9 +24,9 @@ APP="$WORK/$APP_NAME"
 codesign --sign "$IDENTITY" --options runtime --timestamp --force "$APP"
 codesign --verify --strict --verbose=2 "$APP"
 BOOT_LOG="$OUT_DIR/signed-boot.log"
-"$APP/Contents/MacOS/Under Two Skies" --headless --fixed-fps 60 --quit-after 90 >"$BOOT_LOG" 2>&1 \
+"$APP/Contents/MacOS/Under Two Skies" --headless --verbose --fixed-fps 60 --quit-after 90 --log-file "$BOOT_LOG" >"$OUT_DIR/signed-boot-console.log" 2>&1 \
 	|| { echo "signed app failed to boot; see $BOOT_LOG"; exit 1; }
-if grep -Eq 'SCRIPT ERROR|Parse Error|ERROR:' "$BOOT_LOG"; then
+if grep -Eq 'SCRIPT ERROR|Parse Error|ERROR:' "$BOOT_LOG" "$OUT_DIR/signed-boot-console.log"; then
 	echo "signed app reported runtime errors; see $BOOT_LOG"
 	exit 1
 fi

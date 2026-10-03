@@ -517,6 +517,27 @@ func _add_bark(kind: String, stream: AudioStream) -> void:
 func has_radio_voice(channel: int) -> bool:
 	return _radio_voices.has(channel) and not _radio_voices[channel].is_empty()
 
+## Snapshot of original recordings whose claims apply to this plot/season.
+## Resolve the campaign only for radio broadcasts; crew events keep their pools.
+func eligible_radio_voices(channel: int) -> Array:
+	var originals: Array = _radio_voices.get(channel, [])
+	if originals.is_empty() or channel not in [1, 2]:
+		return originals.duplicate()
+	var state = GameState.instance
+	var cfg = state.plot_config() if is_instance_valid(state) else null
+	var eligible: Array = []
+	for stream in originals:
+		var allowed := true
+		match stream.resource_path.get_file():
+			"radio_ch1_02.wav": allowed = cfg != null and cfg.rules.ranger_count > 0
+			"radio_ch1_04.wav": allowed = cfg != null and cfg.drone_count > 0
+			"radio_ch1_05.wav": allowed = cfg != null and cfg.rules.checkpoints
+			"radio_ch2_03.wav": allowed = cfg != null and cfg.storm_front
+			"radio_ch2_06.wav": allowed = cfg == null or not cfg.storm_front
+		if allowed:
+			eligible.append(stream)
+	return eligible
+
 ## Crew bark (recorded drop-in: ta_poh_call*.wav or bark_<kind>*.wav).
 ## Kinds: "tapoh", "embers", "rally_reply", "cough". Silent if no recording.
 func play_bark(kind: String, volume_db: float = -2.0, pos: Vector3 = Vector3.INF) -> void:
@@ -579,8 +600,15 @@ func has_bark(kind: String) -> bool:
 func play_radio_voice(channel: int) -> void:
 	if not has_radio_voice(channel) or speech_player.playing or speech_player_3d.playing:
 		return
-	var pool: Array = _radio_voices[channel]
-	var pick := _pick_voice("ch%d" % channel, pool.size())
+	var pool := eligible_radio_voices(channel)
+	if pool.is_empty():
+		return
+	# An index belongs to this ordered pool, not every pool for the channel.
+	# Changing year/plot must not reinterpret the previous pool's last index.
+	var names := PackedStringArray()
+	for original in pool:
+		names.append(original.resource_path.get_file())
+	var pick := _pick_voice("ch%d:%s" % [channel, ",".join(names)], pool.size())
 	_clear_voice_caption()
 	var stream = voice_for_locale(pool[pick])
 	radio_player.stream = stream

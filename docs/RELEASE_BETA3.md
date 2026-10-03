@@ -30,6 +30,9 @@ to it. The manager independently reproduces and integrates fixes.
 - Build/import and signed-boot scripts could accept errors with engine exit 0.
   Check logs and outputs; require committed runtime source and unique build paths.
 - The online-score version still identified beta1. It now identifies beta3.
+- Radio recordings announced drones, patrols, checkpoints or storms that were
+  absent from the current plot. Filter broadcasts against the current campaign
+  configuration in both languages, preserving the approved audio and captions.
 
 Two main-suite failures were stale scratch scoreboard backups between fixture
 phases, not a second game defect. Fixtures now clear their own main/temp/backup
@@ -47,6 +50,9 @@ Evidence root: `artifacts/release_beta3_audit_20261003/`.
   suites and 120-frame smoke pass; final integrated main suite is repeated.
 - Catalog: 418 entries, 30 spoken event mappings, 405 source literals; no issues.
 - Build safeguards: 7 unit regressions. PCK validator: 15 byte/payload regressions.
+- Radio: 446 context checks, plus 107 locale, 49 subtitle and 20 audio checks.
+- Download Worker: 14 handler checks, including preserved older-release routes,
+  HEAD, Range, conditional requests, malformed URLs and bilingual release copy.
 - Packaging audit pack: all 713 entries intact, 76 approved voices exact, three
   catalogs and two font licenses included. Actual final archives must repeat this.
 
@@ -60,8 +66,10 @@ cultural/listening review remain limits for a later paid Steam release.
 
 1. Commit qualified runtime sources/assets and run `tools/build.sh`.
 2. Inspect all ZIPs and actual payloads with `tools/release/validate_pack.py`.
-3. Run the exported Mac executable from an empty directory with the external
-   `tools/release/qualify_native.gd` and an absolute scratch output directory.
+3. Run Godot against the actual Mac PCK from an empty directory with
+   `--main-pack`, external `tools/release/qualify_native.gd` and an absolute
+   scratch output directory. Release templates ignore `--script`; test the
+   release app separately using native UI and explicit boot logs.
 4. Sign/notarize with `tools/notarize_mac.sh`; require Accepted, clean log, stapled
    ticket and Gatekeeper “Notarized Developer ID”. Only use the keychain profile.
 5. Generate `release-manifest.json` and `SHA256SUMS.txt` from the final archives.
