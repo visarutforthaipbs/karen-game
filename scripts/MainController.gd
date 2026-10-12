@@ -144,6 +144,12 @@ func _ready() -> void:
 		cam_rig.plot_points.append(corner + Vector3.UP * 3.0) # Treetops
 	add_child(cam_rig)
 
+	# iPhone / iPad (or --perf): one frame-time row per second to user://perf_log.csv
+	var perf_log = load("res://scripts/PerfLog.gd")
+	if perf_log.wanted():
+		var pl = perf_log.new()
+		pl.name = "PerfLog"
+		add_child(pl)
 	# Connect FireGrid signals
 	fire_grid.rice_yield_changed.connect(_on_rice_yield_changed)
 	fire_grid.hotspot_count_changed.connect(_on_hotspot_count_changed)
