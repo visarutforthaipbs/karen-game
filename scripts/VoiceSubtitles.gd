@@ -6,6 +6,7 @@ var card: PanelContainer
 var speaker_label: Label
 var line_label: Label
 var _gameplay_bottom_limit: float = -1.0
+var _side_inset: float = 0.0
 var _modal_depth: int = 0
 
 func _ready() -> void:
@@ -48,13 +49,21 @@ func _ready() -> void:
 	get_parent().voice_caption_changed.connect(_caption_changed)
 
 func _resize() -> void:
-	# Keep the caption above the bottom tool bar; wrap on narrow screens.
-	var width = minf(1050.0, get_viewport().get_visible_rect().size.x - 48.0)
+	# Keep the caption above the bottom tool bar; wrap on narrow screens. On touch
+	# devices the right-edge control stack reserves a symmetric side inset.
+	var width = minf(1050.0, get_viewport().get_visible_rect().size.x - 48.0 - 2.0 * _side_inset)
 	card.offset_left = -width * 0.5
 	card.offset_right = width * 0.5
 	card.offset_top = -142.0
 	card.offset_bottom = -62.0
 	_layout_card.call_deferred()
+
+## Touch controls (scripts/TouchControls.gd) keep captions clear of their
+## right-edge button stack; 0 restores the desktop width.
+func set_gameplay_side_inset(px: float = 0.0) -> void:
+	_side_inset = maxf(0.0, px)
+	if is_instance_valid(card) and card.is_inside_tree():
+		_resize()
 
 ## The burn HUD reserves its actual tool/crew/vital bounds. Other scenes retain
 ## the ordinary bottom margin; no voice or transcript is hidden to make space.

@@ -104,7 +104,7 @@ func _run() -> void:
 	check(torch_r.size.x >= 88.0 and torch_r.size.y >= 88.0, "buttons are >= 88 px touch targets")
 	check(field.encloses(torch_r) and field.encloses(overlay.get_button_rect("pause")), "buttons sit inside the safe field")
 	check(not zone.has_point(torch_r.position), "buttons are outside the joystick zone")
-	check(is_equal_approx(field.end.y - (torch_r.position.y + torch_r.size.y), 16.0), "bottom row rests one 16 px margin above the field edge")
+	check(is_equal_approx(field.end.x - overlay.get_stack_rect().end.x, 16.0), "stack rests one 16 px margin inside the right field edge")
 
 	# ---- joystick: press, deadzone, drag, clamp, release
 	var jc: Vector2 = zone.position + zone.size * 0.5
@@ -260,18 +260,53 @@ func _run() -> void:
 	send_touch(12, zoom_c, false)
 	await frames(2)
 
-	# ---- pause toggles; the overlay keeps running while paused
+	# ---- pause: the pause menu owns the screen; the overlay hides and ignores
+	# touches until the burn resumes (its Resume button is ordinary GUI).
 	var pz: Rect2 = overlay.get_button_rect("pause")
 	send_touch(13, pz.get_center(), true)
 	await create_timer(0.2).timeout
 	check(paused, "pause button pauses the burn")
 	send_touch(13, pz.get_center(), false)
-	await create_timer(0.1).timeout
+	await frames(2)
+	check(not overlay.visible, "overlay hides under the pause menu")
 	send_touch(13, pz.get_center(), true)
 	await create_timer(0.2).timeout
-	check(not paused, "pause button resumes (overlay alive while paused)")
+	check(paused, "hidden overlay ignores touches (pause menu owns them)")
 	send_touch(13, pz.get_center(), false)
-	await create_timer(0.1).timeout
+	main.hud.pause_menu.close()
+	await frames(3)
+	check(not paused and overlay.visible, "closing the pause menu brings the overlay back")
+
+	# ---- iPhone playtest regressions (2026-10-12 report)
+	var vitals: Rect2 = main.hud.vitals_card.get_global_rect()
+	var state_rect: Rect2 = main.hud.state_card.get_global_rect()
+	var clear_of_cards := true
+	for id in ["torch", "blade", "sprayer", "whistle", "ping", "zoom", "rotate", "pause"]:
+		var r: Rect2 = overlay.get_button_rect(id)
+		if r.intersects(vitals) or r.intersects(state_rect):
+			clear_of_cards = false
+		if r.size.x < 88.0 or r.size.y < 88.0:
+			clear_of_cards = false
+	check(clear_of_cards, "P1: button stack never covers the vitals / state cards and stays >= 88 px")
+	var stack: Rect2 = overlay.get_stack_rect()
+	check(stack.end.x <= overlay.get_field_rect().end.x and stack.position.x > overlay.get_field_rect().size.x * 0.75, "stack hugs the right edge")
+	var subs = root.get_node("AudioManager").subtitle_overlay
+	subs._caption_changed("ตาโพ", "ลมเปลี่ยนทิศ", 1.0)
+	await frames(2)
+	check(not subs.card.get_global_rect().intersects(stack), "P2: voice captions stay clear of the button stack")
+	subs._caption_changed("", "", 0.0)
+	main.hud.report_modal.visible = true
+	await frames(2)
+	check(not overlay.visible, "P2: overlay hides over the 20:00 report")
+	main.hud.report_modal.visible = false
+	await frames(2)
+	check(overlay.visible, "overlay returns after the report closes")
+	main.pass_started = true
+	await frames(2)
+	check(not overlay.visible, "overlay hides during the satellite pass")
+	main.pass_started = false
+	await frames(2)
+	check(overlay.visible, "overlay returns after the pass flag clears")
 
 	# ---- removing the overlay never leaves a stuck action
 	send_touch(14, jc2, true)

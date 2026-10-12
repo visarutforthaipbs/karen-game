@@ -17,15 +17,22 @@ const JOY_ZONE_RATIO: float = 0.40   # left share of the safe field = joystick z
 const JOY_RADIUS: float = 110.0      # px at the 1280x720 base canvas
 const JOY_DEADZONE: float = 0.2
 const BUTTON_SIZE: Vector2 = Vector2(96, 96)  # >= UITheme.TOUCH_MIN (44 pt)
+const BUTTON_MIN: float = 88.0       # shrink floor when the right edge is short (4:3 iPad)
 const BUTTON_GAP: float = 12.0
 const BUTTON_MARGIN: float = 16.0
-const BUTTON_COLS: int = 4
+const BUTTON_COLS: int = 2           # right-edge stack: 2 columns x 4 rows
+## Fallback bands (canvas px) when the HUD cards cannot be measured: keep the
+## stack clear of the top-right state card and the bottom-right vitals card.
+const STACK_TOP_FALLBACK: float = 72.0
+const STACK_BOTTOM_FALLBACK: float = 112.0
 ## One-shot actions must stay pressed long enough for the next physics frame to
 ## poll the just_pressed edge (measured in Godot 4.7: the edge lives one frame).
 const ONE_SHOT_FRAMES: int = 2
 
 ## id -> action / icon / short label. Labels reuse Thai literals that already
 ## exist in the UI catalog (HowToPlay control rows, HUD hint, PauseMenu).
+## Order = bottom row first (nearest the resting right thumb): tools lowest,
+## pause highest.
 const BUTTON_DEFS: Array = [
 	{"id": "torch", "action": &"tool_torch", "icon": "flame", "label": "จุดไฟ"},
 	{"id": "blade", "action": &"tool_blade", "icon": "blade", "label": "ถางแนว"},
@@ -62,6 +69,9 @@ var _ping_armed: bool = false
 var _one_shots: Array = []             # [[action: StringName, frames_left: int], ...]
 var _player: Node = null               # PlayerController, written via set()/get()
 var _last_tool: int = -1
+var _button_side: float = BUTTON_SIZE.x
+var _stack_rect: Rect2 = Rect2()
+var _layout_frames: int = 0            # HUD cards settle a few frames after _ready
 
 func _ready() -> void:
 	layer = LAYER
@@ -82,6 +92,25 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	_release_all_actions()
+	_set_caption_inset(0.0)
+
+## Gameplay controls own the screen only during a live burn: not under the pause
+## menu / settings, not over the 20:00 report, not during the satellite pass
+## (iPhone playtest P2: the cluster overlapped the report's Return button).
+func gameplay_controls_wanted() -> bool:
+	if get_tree().paused:
+		return false
+	var scene := get_tree().current_scene
+	if scene == null:
+		return false
+	if scene.get("pass_started") == true:
+		return false
+	var hud = _resolve_hud()
+	if hud != null:
+		var report = hud.get("report_modal")
+		if report is CanvasItem and report.visible:
+			return false
+	return true
 
 # ---------------------------------------------------------------- public API
 
@@ -124,24 +153,66 @@ func _layout() -> void:
 	if _field.size.x <= 0.0 or _field.size.y <= 0.0:
 		_field = Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size)
 	_joy_zone = Rect2(_field.position, Vector2(_field.size.x * JOY_ZONE_RATIO, _field.size.y))
-	var row_width: float = BUTTON_COLS * BUTTON_SIZE.x + (BUTTON_COLS - 1) * BUTTON_GAP
-	var start_x: float = _field.end.x - BUTTON_MARGIN - row_width
-	var base_y: float = _field.end.y - BUTTON_MARGIN - BUTTON_SIZE.y
+	# Right-edge stack between the HUD's top-right state card and bottom-right
+	# vitals card (water / breath must stay readable: iPhone playtest P1).
+	var band_top: float = _field.position.y + STACK_TOP_FALLBACK
+	var band_bottom: float = _field.end.y - STACK_BOTTOM_FALLBACK
+	var hud = _resolve_hud()
+	if hud != null:
+		var state_card = hud.get("state_card")
+		var vitals_card = hud.get("vitals_card")
+		if state_card is Control and state_card.is_inside_tree():
+			band_top = maxf(band_top, state_card.get_global_rect().end.y + BUTTON_GAP)
+		if vitals_card is Control and vitals_card.is_inside_tree():
+			band_bottom = minf(band_bottom, vitals_card.get_global_rect().position.y - BUTTON_GAP)
+	var rows: int = ceili(float(BUTTON_DEFS.size()) / BUTTON_COLS)
+	var band: float = band_bottom - band_top
+	var side: float = BUTTON_SIZE.y
+	if rows * side + (rows - 1) * BUTTON_GAP > band:
+		side = maxf(BUTTON_MIN, (band - (rows - 1) * BUTTON_GAP) / rows)
+	_button_side = side
+	var stack_w: float = BUTTON_COLS * side + (BUTTON_COLS - 1) * BUTTON_GAP
+	var stack_h: float = rows * side + (rows - 1) * BUTTON_GAP
+	var start_x: float = _field.end.x - BUTTON_MARGIN - stack_w
+	var stack_top: float = band_top + maxf(0.0, (band - stack_h) * 0.5)
+	var base_y: float = stack_top + stack_h - side   # bottom row first (thumb rest)
 	var i: int = 0
 	for def in BUTTON_DEFS:
 		var col: int = i % BUTTON_COLS
 		var row: int = i / BUTTON_COLS
 		var rect := Rect2(
-				Vector2(start_x + col * (BUTTON_SIZE.x + BUTTON_GAP),
-						base_y - row * (BUTTON_SIZE.y + BUTTON_GAP)),
-				BUTTON_SIZE)
+				Vector2(start_x + col * (side + BUTTON_GAP), base_y - row * (side + BUTTON_GAP)),
+				Vector2(side, side))
 		_buttons[def.id]["rect"] = rect
 		var panel: Panel = _buttons[def.id]["panel"]
 		panel.position = rect.position
 		panel.size = rect.size
 		i += 1
+	_stack_rect = Rect2(Vector2(start_x, stack_top), Vector2(stack_w, stack_h))
 	_arrange_button_children()
 	_update_joystick_visual()
+	# Voice captions are centred at the bottom; keep them clear of the stack.
+	_set_caption_inset(_field.end.x - start_x + BUTTON_MARGIN)
+
+func get_stack_rect() -> Rect2:
+	return _stack_rect
+
+func _set_caption_inset(px: float) -> void:
+	var audio = get_tree().root.get_node_or_null("AudioManager")
+	if audio == null:
+		return
+	var subs = audio.get("subtitle_overlay")
+	if subs != null and is_instance_valid(subs) and subs.has_method("set_gameplay_side_inset"):
+		subs.set_gameplay_side_inset(px)
+
+func _resolve_hud() -> Node:
+	var scene := get_tree().current_scene
+	if scene == null:
+		return null
+	var hud = scene.get("hud")
+	if hud is Node and is_instance_valid(hud):
+		return hud
+	return scene.get_node_or_null("HUD")
 
 # ------------------------------------------------------------------- widgets
 
@@ -187,7 +258,7 @@ func _build_buttons() -> void:
 func _arrange_button_children() -> void:
 	for id in _buttons:
 		var b: Dictionary = _buttons[id]
-		var w: float = BUTTON_SIZE.x
+		var w: float = _button_side
 		var icon: Control = b["icon"]
 		icon.position = Vector2((w - 30.0) / 2.0, 10.0)
 		icon.size = Vector2(30.0, 30.0)
@@ -212,6 +283,8 @@ func _refresh_button_visuals() -> void:
 # -------------------------------------------------------------------- input
 
 func _input(event: InputEvent) -> void:
+	if not visible:
+		return  # a modal / report / pause menu owns the touches
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			_on_touch_press(event.index, event.position)
@@ -361,6 +434,16 @@ func _release_all_actions() -> void:
 
 func _process(_delta: float) -> void:
 	_release_one_shots()
+	# HUD cards are laid out over the first frames; re-fit the stack to them.
+	if _layout_frames < 3:
+		_layout_frames += 1
+		_layout()
+	var wanted := gameplay_controls_wanted()
+	if wanted != visible:
+		visible = wanted
+		if not wanted:
+			_release_all_actions()
+			_button_fingers.clear()
 	if get_tree().paused:
 		# Paused mid-touch: never leave a stuck action behind.
 		if _joy_finger >= 0:
