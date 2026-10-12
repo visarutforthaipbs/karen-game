@@ -86,7 +86,10 @@ func _layout_card() -> void:
 	if not is_instance_valid(card) or not card.is_inside_tree() or card.is_queued_for_deletion():
 		return
 	var area = card.get_viewport().get_visible_rect().size
-	var bottom = area.y - 62.0
+	# Keep the same clearance above the home indicator as above a plain edge:
+	# screens inset their bottom rows by the safe area (the Village Launch row),
+	# so the caption must rise with them (iPhone playtest cycles 3-4).
+	var bottom = area.y - 62.0 - float(UITheme.safe_area_insets().bottom)
 	if _gameplay_bottom_limit >= 0.0:
 		bottom = minf(bottom, _gameplay_bottom_limit)
 	card.size.y = maxf(80.0, card.get_combined_minimum_size().y)

@@ -126,6 +126,10 @@ func _ready() -> void:
 
 	# Each burn gets its own Environment so lighting / fog changes never leak into the next plot
 	world_environment.environment = world_environment.environment.duplicate(true)
+	# Phones: the bloom pass is a full-resolution blur chain on a GPU-bound frame;
+	# the low-poly scene reads the same without it (glow_bloom is only 0.12).
+	if UITheme.is_mobile():
+		world_environment.environment.glow_enabled = false
 	sky = SkyCycle.new()
 	sky.sun = sun
 	sky.world_environment = world_environment

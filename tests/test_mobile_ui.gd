@@ -320,6 +320,20 @@ func run() -> void:
 	if village_scroll:
 		var r: Array = await swipe_up(village_scroll, text_point(village_scroll), 240.0)
 		check((r[1] > r[0]) == expect_touch, "swipe over the village briefing scrolls on touch (%d -> %d)" % [r[0], r[1]])
+	# iPhone playtest cycles 3-4: with the home-indicator inset the speech caption
+	# landed on the Launch button. Simulate the iPhone insets and show a caption.
+	UITheme.debug_insets = {"left": 59.0, "top": 0.0, "right": 59.0, "bottom": 21.0}
+	hearth._fit_layout()
+	var subs = root.get_node("AudioManager").subtitle_overlay
+	subs._caption_changed("ตาโพ", "ปีนี้ฝนมาช้า ลมแรงจากทางตะวันตก เตรียมแนวกันไฟให้ดีก่อนจุด", 1.0)
+	await settle()
+	var launch_rect: Rect2 = hearth.launch_button.get_global_rect()
+	var cap_rect: Rect2 = subs.card.get_global_rect()
+	check(hearth.launch_button.is_visible_in_tree() and not cap_rect.intersects(launch_rect), "village caption stays clear of Launch under iPhone insets (%s vs %s)" % [cap_rect, launch_rect])
+	subs._caption_changed("", "", 0.0)
+	UITheme.debug_insets = {}
+	hearth._fit_layout()
+	await settle()
 
 	finish(original, scratch)
 

@@ -194,10 +194,16 @@ func _build() -> void:
 	launch_button.custom_minimum_size = Vector2(560, 48)
 	launch_button.pressed.connect(_on_launch_pressed)
 	launch_row.add_child(launch_button)
+	launch_button.item_rect_changed.connect(_limit_caption_above_launch)
 	resized.connect(_fit_layout)
 	_fit_layout.call_deferred()
 
 func _notification(what: int) -> void:
+	if what == NOTIFICATION_EXIT_TREE:
+		# Leaving the Hearth: the caption overlay goes back to its default margin
+		var audio = AudioManager.instance
+		if is_instance_valid(audio) and is_instance_valid(audio.subtitle_overlay):
+			audio.subtitle_overlay.set_gameplay_bottom_limit(-1.0)
 	if what == NOTIFICATION_TRANSLATION_CHANGED and is_inside_tree():
 		# Wait for translated Control minimum sizes; no refresh or autosave needed.
 		_fit_layout.call_deferred()
@@ -248,7 +254,26 @@ func _fit_caption_reservation() -> void:
 	var card = audio.subtitle_overlay.card if is_instance_valid(audio) else null
 	var shown = is_instance_valid(card) and card.is_visible_in_tree()
 	_caption_reservation.visible = shown
-	_caption_reservation.custom_minimum_size.y = maxf(80.0, card.get_combined_minimum_size().y) if shown else 0.0
+	_caption_reservation.custom_minimum_size.y = maxf(80.0, card.get_combined_minimum_size().y) + 8.0 if shown else 0.0
+	_limit_caption_above_launch.call_deferred()
+
+## The speech caption must never sit on the Launch action: hand the overlay the
+## button's top as its bottom limit (the burn HUD does the same for its tool bar).
+## With 88 px touch buttons and the home-indicator inset, the overlay's fixed
+## bottom margin alone is not enough (iPhone playtest cycles 3-4).
+func _limit_caption_above_launch() -> void:
+	if not is_inside_tree():
+		return
+	var audio = AudioManager.instance
+	if not is_instance_valid(audio) or not is_instance_valid(audio.subtitle_overlay):
+		return
+	if is_instance_valid(launch_button) and launch_button.is_visible_in_tree():
+		var top: float = launch_button.get_global_rect().position.y - 8.0
+		var vh: float = get_viewport().get_visible_rect().size.y
+		if top > 0.0 and top <= vh:   # ignore mid-relayout readings
+			audio.subtitle_overlay.set_gameplay_bottom_limit(top)
+	else:
+		audio.subtitle_overlay.set_gameplay_bottom_limit(-1.0)
 
 func _reveal_preparation_focus(_focused: Control = null) -> void:
 	# Speech can shrink the scroll viewport while a choice already has focus.
