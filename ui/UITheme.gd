@@ -291,6 +291,48 @@ static func _on_node_added(node: Node) -> void:
 		var button := node as Button
 		button.custom_minimum_size.x = maxf(button.custom_minimum_size.x, TOUCH_MIN)
 		button.custom_minimum_size.y = maxf(button.custom_minimum_size.y, TOUCH_MIN)
+	elif node is ScrollContainer:
+		install_touch_scroll(node as ScrollContainer)
+
+## Godot 4.7.2's ScrollContainer only drag-scrolls from mouse events, and this
+## project turns mouse emulation off (finger #0 emulation breaks two-thumb play),
+## so menus could not be swiped on the phone (iPhone scrolling audit, 2026-10-13).
+## This handler scrolls a container directly from screen drags. A swipe that
+## starts on a Button stays on the button (MOUSE_FILTER_STOP), so it neither
+## scrolls nor misfires; swipes over text and blank content scroll.
+const TOUCH_SCROLL_META := &"uts_touch_scroll"
+
+static func install_touch_scroll(sc: ScrollContainer) -> void:
+	if sc == null or not is_mobile() or sc.has_meta(TOUCH_SCROLL_META):
+		return
+	sc.set_meta(TOUCH_SCROLL_META, true)
+	sc.gui_input.connect(Callable(UITheme, "_touch_scroll_input").bind(sc))
+
+## Install on every ScrollContainer already under `node` (screens built before
+## the installer ran, or tests that construct UI directly).
+static func apply_touch_scroll(node: Node) -> void:
+	if node == null or not is_mobile():
+		return
+	if node is ScrollContainer:
+		install_touch_scroll(node)
+	for child in node.get_children():
+		apply_touch_scroll(child)
+
+static func _touch_scroll_input(event: InputEvent, sc: ScrollContainer) -> void:
+	if not (event is InputEventScreenDrag) or not is_instance_valid(sc):
+		return
+	var drag := event as InputEventScreenDrag
+	var moved := false
+	if sc.vertical_scroll_mode != ScrollContainer.SCROLL_MODE_DISABLED:
+		var before := sc.scroll_vertical
+		sc.scroll_vertical = before - int(round(drag.relative.y))
+		moved = moved or sc.scroll_vertical != before
+	if sc.horizontal_scroll_mode != ScrollContainer.SCROLL_MODE_DISABLED:
+		var before_h := sc.scroll_horizontal
+		sc.scroll_horizontal = before_h - int(round(drag.relative.x))
+		moved = moved or sc.scroll_horizontal != before_h
+	if moved or absf(drag.relative.y) > 0.0 or absf(drag.relative.x) > 0.0:
+		sc.accept_event()
 
 static func _slider_thumb(color: Color) -> ImageTexture:
 	var image = Image.create(14, 18, false, Image.FORMAT_RGBA8)

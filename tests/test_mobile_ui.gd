@@ -54,6 +54,58 @@ func inset_zero(control: Control) -> bool:
 	return control.offset_left == 0.0 and control.offset_top == 0.0 \
 		and control.offset_right == 0.0 and control.offset_bottom == 0.0
 
+## First visible ScrollContainer under `node` whose content overflows vertically.
+func overflowing_scroll(node: Node) -> ScrollContainer:
+	if node is ScrollContainer and node.is_visible_in_tree():
+		var sc := node as ScrollContainer
+		if sc.get_v_scroll_bar().max_value > sc.size.y + 1.0:
+			return sc
+	for child in node.get_children():
+		var found := overflowing_scroll(child)
+		if found:
+			return found
+	return null
+
+## A point over text / blank content (not a Button) inside the container.
+func text_point(sc: ScrollContainer) -> Vector2:
+	var labels: Array = []
+	collect(sc, "label", labels)
+	var area := sc.get_global_rect()
+	for label in labels:
+		var r: Rect2 = label.get_global_rect()
+		var p := r.get_center()
+		if area.has_point(p) and label.is_visible_in_tree():
+			return p
+	return area.get_center()
+
+func touch(idx: int, pos: Vector2, pressed: bool) -> void:
+	var e := InputEventScreenTouch.new()
+	e.index = idx
+	e.position = pos
+	e.pressed = pressed
+	Input.parse_input_event(e)
+
+func drag(idx: int, pos: Vector2, rel: Vector2) -> void:
+	var e := InputEventScreenDrag.new()
+	e.index = idx
+	e.position = pos
+	e.relative = rel
+	Input.parse_input_event(e)
+
+## Finger swipe upward over content: returns [before, after] scroll offsets.
+func swipe_up(sc: ScrollContainer, start: Vector2, distance: float = 160.0) -> Array:
+	var before := sc.scroll_vertical
+	touch(3, start, true)
+	await process_frame
+	var pos := start
+	for i in 4:
+		pos += Vector2(0, -distance / 4.0)
+		drag(3, pos, Vector2(0, -distance / 4.0))
+		await process_frame
+	touch(3, pos, false)
+	await process_frame
+	return [before, sc.scroll_vertical]
+
 func run() -> void:
 	expect_touch = OS.get_cmdline_user_args().has("--touch")
 	root.size = Vector2i(1280, 720)
@@ -129,6 +181,13 @@ func run() -> void:
 		if not expect_touch and button.custom_minimum_size.y > 60.0:
 			title_targets_ok = false
 	check(title_targets_ok, "title buttons carry the 88 px target only on touch")
+	# iPhone scrolling audit P1: every visible title action fits without a swipe.
+	var title_fits := true
+	for child in title._menu.get_children():
+		if child is Button and child.visible and not root.get_visible_rect().encloses(child.get_global_rect()):
+			title_fits = false
+	check(title_fits, "all visible title actions are inside the 1280x720 viewport without scrolling")
+	check((title._menu is GridContainer) == expect_touch, "title menu is a 2x2 grid only on touch")
 	title.queue_free()
 	await settle()
 
@@ -148,6 +207,12 @@ func run() -> void:
 		if not Rect2(Vector2.ZERO, root.get_visible_rect().size).encloses(button.get_global_rect()):
 			guide_inside = false
 	check(guide_inside, "guide buttons stay inside the canvas")
+	# iPhone scrolling audit P2: a finger swipe over the guide text scrolls it.
+	var guide_scroll := overflowing_scroll(guide)
+	check(guide_scroll != null, "guide content overflows at 1280x720 (scroll region exists)")
+	if guide_scroll:
+		var r: Array = await swipe_up(guide_scroll, text_point(guide_scroll))
+		check((r[1] > r[0]) == expect_touch, "swipe over guide text scrolls on touch (%d -> %d), not on desktop" % [r[0], r[1]])
 	guide.close()
 	await settle()
 
@@ -158,6 +223,32 @@ func run() -> void:
 	check(is_instance_valid(settings.close_button) and settings.close_button.visible, "settings footer visible")
 	check(settings.close_button.custom_minimum_size.y >= (UITheme.TOUCH_MIN if expect_touch else 48.0),
 		"settings close button meets the touch target on mobile")
+	# iPhone scrolling audit P1: swipe over the settings body reveals the lower controls.
+	var settings_scroll := overflowing_scroll(settings)
+	check(settings_scroll != null, "settings body overflows at 1280x720 (scroll region exists)")
+	if settings_scroll:
+		var r: Array = await swipe_up(settings_scroll, text_point(settings_scroll), 240.0)
+		check((r[1] > r[0]) == expect_touch, "swipe over settings text scrolls on touch (%d -> %d)" % [r[0], r[1]])
+		# A swipe that starts on a button must not activate it.
+		var victim: Button = null
+		for b in all_buttons(settings_scroll):
+			if b.is_visible_in_tree() and settings_scroll.get_global_rect().has_point(b.get_global_rect().get_center()):
+				victim = b
+				break
+		if victim:
+			var fired := [false]
+			victim.pressed.connect(func(): fired[0] = true)
+			var start: Vector2 = victim.get_global_rect().get_center()
+			touch(4, start, true)
+			await process_frame
+			var pos := start
+			for i in 4:
+				pos += Vector2(0, -40)
+				drag(4, pos, Vector2(0, -40))
+				await process_frame
+			touch(4, pos, false)
+			await settle()
+			check(not fired[0], "a swipe that starts on a settings button does not activate it")
 	settings.close()
 	await settle()
 
@@ -216,6 +307,19 @@ func run() -> void:
 	main.cam_rig.distance = main.cam_rig.zoom_max
 	await process_frame
 	check(is_equal_approx(sky.view_distance, main.cam_rig.zoom_max), "MainController feeds the live camera distance to the sky each frame")
+
+	# --- 8. Village preparation scrolls by finger (scrolling audit P1) --------
+	state.current_year = 4
+	change_scene_to_file("res://scenes/VillageHearth.tscn")
+	await settle()
+	var hearth = current_scene
+	if hearth and hearth.get("chatter_timer"):
+		hearth.chatter_timer.stop()
+	var village_scroll := overflowing_scroll(hearth)
+	check(village_scroll != null, "village preparation body overflows at 1280x720 (scroll region exists)")
+	if village_scroll:
+		var r: Array = await swipe_up(village_scroll, text_point(village_scroll), 240.0)
+		check((r[1] > r[0]) == expect_touch, "swipe over the village briefing scrolls on touch (%d -> %d)" % [r[0], r[1]])
 
 	finish(original, scratch)
 

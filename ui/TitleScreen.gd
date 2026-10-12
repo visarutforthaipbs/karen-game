@@ -11,7 +11,7 @@ var continue_button: Button
 var new_button: Button
 var notice_label: Label
 var board: VBoxContainer
-var _menu: VBoxContainer
+var _menu: Container  # VBoxContainer on desktop, 2x2 GridContainer on phones
 var menu_scroll: ScrollContainer
 var quit_button: Button
 var _camera: Camera3D
@@ -299,7 +299,18 @@ func _build_menu() -> void:
 	gap.custom_minimum_size = Vector2(0, 8)
 	col.add_child(gap)
 
-	_menu = UITheme.vbox(6 if compact_menu else 10)
+	# Phones: four 88 px actions do not fit under the logo in one column, and a
+	# menu must never depend on scrolling (iPhone scrolling audit P1) — use a
+	# 2 x 2 grid so Continue / New / How to Play / Settings are all visible.
+	if UITheme.is_mobile():
+		var grid := GridContainer.new()
+		grid.columns = 2
+		grid.add_theme_constant_override("h_separation", 10)
+		grid.add_theme_constant_override("v_separation", 10)
+		grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_menu = grid
+	else:
+		_menu = UITheme.vbox(6 if compact_menu else 10)
 	col.add_child(_menu)
 	continue_button = _menu_button("เล่นต่อ", _on_continue, "PrimaryButton")
 	continue_button.visible = SaveGame.exists()
