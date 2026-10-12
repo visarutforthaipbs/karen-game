@@ -68,7 +68,8 @@ var _header_stats: HBoxContainer
 var _barn_card: Control
 var _watch_card: Control
 var _caption_reservation: Control
-var _focus_reveal_generation: int = 0
+var _revealing: bool = false
+var _body_resized_frame: int = -100
 
 func _ready() -> void:
 	theme = UITheme.get_theme()
@@ -147,7 +148,13 @@ func _build() -> void:
 	_card_scroll = scroll
 	# Reveal focus after caption/layout reflow rather than using a queued stale rect.
 	scroll.follow_focus = false
-	scroll.resized.connect(_reveal_preparation_focus.call_deferred)
+	# A caption reservation can shrink the body and re-clamp the scroll to 0 in the
+	# same sort pass (after `resized`): reveal the focused choice right after the
+	# resize AND after a scroll change that lands within a frame of that resize.
+	# Manual scrolling never coincides with a resize, so browsing with a stationary
+	# focus is left alone.
+	scroll.resized.connect(_on_prep_body_resized)
+	scroll.get_v_scroll_bar().value_changed.connect(_on_prep_scroll_changed)
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	page.add_child(scroll)
@@ -275,27 +282,63 @@ func _limit_caption_above_launch() -> void:
 	else:
 		audio.subtitle_overlay.set_gameplay_bottom_limit(-1.0)
 
-func _reveal_preparation_focus(_focused: Control = null) -> void:
+func _reveal_preparation_focus(_focused: Control = null, immediate: bool = false) -> void:
 	# Speech can shrink the scroll viewport while a choice already has focus.
 	if not is_inside_tree() or not is_instance_valid(_card_scroll):
 		return
-	_focus_reveal_generation += 1
-	var generation = _focus_reveal_generation
-	# Focus and caption reflow can arrive together. Let both the column layout
-	# and the ScrollContainer scrollbar range settle before revealing the choice.
-	var tree = get_tree()
-	await tree.process_frame
-	await tree.process_frame
-	if not is_inside_tree() or not is_instance_valid(_card_scroll) or generation != _focus_reveal_generation:
+	if _revealing:
 		return
-	var owner = get_viewport().gui_get_focus_owner()
-	if owner and _card_columns.is_ancestor_of(owner):
+	_revealing = true
+	# The reservation -> body resize -> scrollbar clamp cascade can reset the
+	# scroll to 0 in a single frame (observed under radio chatter). Reveal right
+	# away when asked (deferred, after the container sort), then keep the choice
+	# in view each frame until the layout has been stable for two frames.
+	var tree = get_tree()
+	var stable := 0
+	var last_body := Rect2()
+	var last_choice := Rect2()
+	for frame in 12:
+		if frame > 0 or not immediate:
+			await tree.process_frame
+		if not is_inside_tree() or not is_instance_valid(_card_scroll):
+			break
+		var owner = get_viewport().gui_get_focus_owner()
+		if not (owner and _card_columns.is_ancestor_of(owner)):
+			break
 		var body = _card_scroll.get_global_rect()
 		var choice = owner.get_global_rect()
 		if choice.position.y < body.position.y:
 			_card_scroll.scroll_vertical += floori(choice.position.y - body.position.y)
 		elif choice.end.y > body.end.y:
 			_card_scroll.scroll_vertical += ceili(choice.end.y - body.end.y)
+		if body == last_body and choice == last_choice:
+			stable += 1
+			if stable >= 2:
+				break
+		else:
+			stable = 0
+		last_body = body
+		last_choice = choice
+	_revealing = false
+
+## The scroll body resized (caption reservation, window): bring the focused choice back.
+func _on_prep_body_resized() -> void:
+	if not is_inside_tree():
+		return
+	_body_resized_frame = Engine.get_process_frames()
+	var owner = get_viewport().gui_get_focus_owner()
+	if owner and _card_columns.is_ancestor_of(owner):
+		_reveal_preparation_focus.call_deferred(null, true)
+
+## A scroll change right after a resize is the container re-clamping, not the player.
+func _on_prep_scroll_changed(_value: float) -> void:
+	if _revealing or not is_inside_tree():
+		return
+	if Engine.get_process_frames() - _body_resized_frame > 1:
+		return
+	var owner = get_viewport().gui_get_focus_owner()
+	if owner and _card_columns.is_ancestor_of(owner):
+		_reveal_preparation_focus.call_deferred(null, true)
 
 func _card(kind: String, title: String, tint: Color, seed_value: int, expand: bool = true) -> VBoxContainer:
 	var card = UITheme.card(Color(UITheme.PANEL, 0.93), tint, seed_value)
