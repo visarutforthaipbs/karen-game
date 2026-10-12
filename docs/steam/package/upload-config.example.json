@@ -1,0 +1,10 @@
+{
+  "product": "base",
+  "app_id": null,
+  "build_verified": false,
+  "description": "Under Two Skies — replace with reviewed commit and version",
+  "depots": [
+    {"id": null, "platform": "windows", "content_root": "REPLACE_WITH_REVIEWED_WINDOWS_PAYLOAD"},
+    {"id": null, "platform": "macos", "content_root": "REPLACE_WITH_REVIEWED_NOTARIZED_APP_PARENT"}
+  ]
+}

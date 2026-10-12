@@ -1,0 +1,36 @@
+{
+	"campaign": {
+		"blade_upgrade_level": 0,
+		"current_plot_index": 1,
+		"current_year": 1,
+		"favours": [],
+		"forecast_wind_angle": 1.87642729510044,
+		"hotspot_log": [],
+		"last_barn_target": 75.0,
+		"last_burn_escaped": false,
+		"last_burn_hotspots": 0,
+		"last_burn_yield": 0.0,
+		"last_rice_change": 0.0,
+		"last_scrutiny_relief": 0,
+		"pending_harvest": {},
+		"ration_level": 1,
+		"rice_barn": 100.0,
+		"season_yields": [],
+		"seen_how_to_play": true,
+		"sprayer_upgrade_level": 0,
+		"state_scrutiny": 0,
+		"stats": {
+			"ash_sum": 0.0,
+			"camera_trips": 0,
+			"campaign_id": "1791020309",
+			"drone_photos": 0,
+			"escapes": 0,
+			"hotspots_detected": 0,
+			"plots_completed": 0,
+			"ranger_sightings": 0,
+			"spot_fires": 0,
+			"spot_fires_doused": 0
+		}
+	},
+	"version": 1
+}

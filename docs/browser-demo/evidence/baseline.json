@@ -1,0 +1,74 @@
+{
+  "status": "export_passed",
+  "exit_code": 0,
+  "elapsed_seconds": 4.58,
+  "scope": "isolated copy of current working tree, all_resources baseline, single-threaded Compatibility, no browser runtime test",
+  "command": [
+    "godot",
+    "--headless",
+    "--editor",
+    "--path",
+    "/var/folders/tb/619_zw050jd0m07bpqrll38r0000gn/T/uts-web-feasibility-o292fpk_",
+    "--rendering-method",
+    "gl_compatibility",
+    "--export-release",
+    "Web Feasibility",
+    "/var/folders/tb/619_zw050jd0m07bpqrll38r0000gn/T/uts-web-feasibility-o292fpk_/probe/index.html"
+  ],
+  "files": [
+    {
+      "name": "index.apple-touch-icon.png",
+      "bytes": 23590
+    },
+    {
+      "name": "index.audio.position.worklet.js",
+      "bytes": 2973
+    },
+    {
+      "name": "index.audio.worklet.js",
+      "bytes": 7298
+    },
+    {
+      "name": "index.html",
+      "bytes": 5448
+    },
+    {
+      "name": "index.icon.png",
+      "bytes": 466978
+    },
+    {
+      "name": "index.js",
+      "bytes": 279815
+    },
+    {
+      "name": "index.pck",
+      "bytes": 259360992
+    },
+    {
+      "name": "index.png",
+      "bytes": 21443
+    },
+    {
+      "name": "index.wasm",
+      "bytes": 39514754
+    }
+  ],
+  "compression": [
+    {
+      "name": "index.pck",
+      "raw_bytes": 259360992,
+      "gzip_bytes": 243284983
+    },
+    {
+      "name": "index.wasm",
+      "raw_bytes": 39514754,
+      "gzip_bytes": 10054758
+    },
+    {
+      "name": "index.js",
+      "raw_bytes": 279815,
+      "gzip_bytes": 68471
+    }
+  ],
+  "compression_note": "Offline gzip level 9 calculation; not observed production transfer; no streaming or phone memory measurement."
+}

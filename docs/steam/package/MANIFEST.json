@@ -1,0 +1,186 @@
+{
+  "prepared": "2026-10-03",
+  "git_head": "8b91366b2f1071124247fb243deb8e8b786fcc3d",
+  "status": "Internal preparation candidates; account, rights, localization, demo and release QA pending",
+  "screenshots": "Production scenes; staged camera/clock/ignition, native 1920x1080; no pixel retouch",
+  "video": "Silent review cut, source 30-90s; original excluded due desktop/Discord footage",
+  "source_asset_count": 304,
+  "thai_candidate_count": 382,
+  "files": [
+    {
+      "path": "ACCOUNT_AND_SUBMISSION.md",
+      "bytes": 5042,
+      "sha256": "d00b6812cf82f5fae86540e03bcbbfe3537259f0a7075ea520840e2e6ac86862"
+    },
+    {
+      "path": "DISCLOSURE_AND_RIGHTS.md",
+      "bytes": 4357,
+      "sha256": "8ea5cf645b53b257d2f8588883403c58fab75489552385b3ab98d900d3e71fd0"
+    },
+    {
+      "path": "IMPLEMENTATION_HANDOFF.md",
+      "bytes": 5057,
+      "sha256": "335c2c61c22084ee3347a09f12dd261b831dc4233374a8d51da854ab8f87385b"
+    },
+    {
+      "path": "QA_AND_RELEASE_CHECKLIST.md",
+      "bytes": 3188,
+      "sha256": "6a15f42899d58657ab3d1ceb6c859f3f2b67720849c626bc45c2a7a5144556b8"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3879,
+      "sha256": "0201473d005dd8bceca52a8e53dd790353abdd494edb1f3338fc33aec3960835"
+    },
+    {
+      "path": "STEAM_SALES_PLAN.md",
+      "bytes": 15668,
+      "sha256": "2b3c427ad26207aaf68f29e655ef09bf3ba8c3821a4ae5de6fda7ef3e9c67a48"
+    },
+    {
+      "path": "STORE_COPY.md",
+      "bytes": 7205,
+      "sha256": "ae4ef1e2a582856855d070860296fcd3f860dd9bb4f8e0d61dfdf72447bc8306"
+    },
+    {
+      "path": "VIDEO_AND_MARKETING.md",
+      "bytes": 6681,
+      "sha256": "eff3a17c202722ee8be535e05b4fd30e1caf75e7c93df0ac3a753eaef2990e6e"
+    },
+    {
+      "path": "package/ASSET_RIGHTS_INVENTORY.json",
+      "bytes": 157958,
+      "sha256": "ffb410843815edaa8a160047afa5e8f57c71810dcebc990d57ee2e1e36021eda"
+    },
+    {
+      "path": "package/LOCALIZATION_INVENTORY.json",
+      "bytes": 97467,
+      "sha256": "65d49f1db2eda4b54cb3c8d6134e631227441e85ee1d668be83aafa1f6714a64"
+    },
+    {
+      "path": "package/artwork/header.html",
+      "bytes": 801486,
+      "sha256": "1e43a42566789dadff1fc7ca86769271b70058490e52352f22b518e0344261f2"
+    },
+    {
+      "path": "package/artwork/header.png",
+      "bytes": 253558,
+      "sha256": "b1cc27793c2e29a832453c4bb8d31613c27907749bb24eaa3b5fca3454a14e5d"
+    },
+    {
+      "path": "package/artwork/library_capsule.html",
+      "bytes": 801486,
+      "sha256": "3ce1b5fe4df61bbb85d133adc7d57e58c2e47ed835b9ccd58e116084a2e31a45"
+    },
+    {
+      "path": "package/artwork/library_capsule.png",
+      "bytes": 243092,
+      "sha256": "0adc72fbc87393f529f9698d20ea60ff7446a4420ec0f8db3610e710c41463e5"
+    },
+    {
+      "path": "package/artwork/library_header.html",
+      "bytes": 801486,
+      "sha256": "1e43a42566789dadff1fc7ca86769271b70058490e52352f22b518e0344261f2"
+    },
+    {
+      "path": "package/artwork/library_header.png",
+      "bytes": 253558,
+      "sha256": "b1cc27793c2e29a832453c4bb8d31613c27907749bb24eaa3b5fca3454a14e5d"
+    },
+    {
+      "path": "package/artwork/library_hero.html",
+      "bytes": 822054,
+      "sha256": "cdfd8a0909cb5ba3e66aa52369e87a0a13a24e6454ed8153fae7cea400aefd90"
+    },
+    {
+      "path": "package/artwork/library_hero.png",
+      "bytes": 948684,
+      "sha256": "05930c3d2e98e77cdf2a9926efb2997f315a03abc2beef4f6c90d92092d77a4d"
+    },
+    {
+      "path": "package/artwork/library_logo.html",
+      "bytes": 73230,
+      "sha256": "e45732669e8b9de08849d6715e0a42c318b4230e3e73673756d5cda815cf2ba9"
+    },
+    {
+      "path": "package/artwork/library_logo.png",
+      "bytes": 78150,
+      "sha256": "46dbf32cf8781f7b27017b25e54dc87e4c2056d9448227a66f9e83ed124b28c9"
+    },
+    {
+      "path": "package/artwork/main.html",
+      "bytes": 801487,
+      "sha256": "1c5c8ff473178cf1f57a4be8df9a0a2765112c68f1fda56062a6d42ddc21cc12"
+    },
+    {
+      "path": "package/artwork/main.png",
+      "bytes": 447335,
+      "sha256": "8a3ca349d1ed8f0f9f452940abdda7943484d9aea20f53e3991462fe2ae3ce13"
+    },
+    {
+      "path": "package/artwork/review.html",
+      "bytes": 3584518,
+      "sha256": "c6177b97115ed16b453fef3803db7e5c7457a220e8354307978345cc6c1f1edd"
+    },
+    {
+      "path": "package/artwork/review.png",
+      "bytes": 529599,
+      "sha256": "eead342e77565fee881d8b1a73f8e1b623900206b2f606efdbb6fd10cea1e805"
+    },
+    {
+      "path": "package/artwork/small.html",
+      "bytes": 695997,
+      "sha256": "1201adfa291af67281a92c2f4c0d9031bd9e8a02b64a202dffc6c808078baf4c"
+    },
+    {
+      "path": "package/artwork/small.png",
+      "bytes": 51780,
+      "sha256": "fbbde564191d07cc8de4eb62dff4041513f2a85b721b728472e420bf66c9043c"
+    },
+    {
+      "path": "package/artwork/vertical.html",
+      "bytes": 801486,
+      "sha256": "c817a20f11b8919d8ae9a9e67376e782ab5b9bdc5c232b7a65355406928eb91c"
+    },
+    {
+      "path": "package/artwork/vertical.png",
+      "bytes": 307451,
+      "sha256": "9a3ff7bc7f5e61d3289a52b5ac255c519e9ddc27d53ff9d0a3eb3ff2820278a7"
+    },
+    {
+      "path": "package/screenshots/01_preparation.png",
+      "bytes": 2028678,
+      "sha256": "b895d4cc0e53bac194bc2cc3554d8ed3cd31c563817509e222c4f27bf732b8ac"
+    },
+    {
+      "path": "package/screenshots/02_plot_overview.png",
+      "bytes": 1742894,
+      "sha256": "d176760dc5d2d7d05ba956d1a41da5ca71f090ab4c8eda8540d6e6c230cf5592"
+    },
+    {
+      "path": "package/screenshots/03_controlled_burn.png",
+      "bytes": 2053903,
+      "sha256": "6eedf311d1f286594cf07aa72bec6cb9483c8fe39f2d9a8b33dbbc5ea6462e2a"
+    },
+    {
+      "path": "package/screenshots/04_thermal_view.png",
+      "bytes": 513184,
+      "sha256": "3b6e51f0b3603cb49114c748e304ae064d810eb41426de9bbac3103f8fcecfca"
+    },
+    {
+      "path": "package/screenshots/05_village.png",
+      "bytes": 399629,
+      "sha256": "a0e00e4b66476de5de5cab197a2e6ca270418fe52a70568676f15a1f794d0b39"
+    },
+    {
+      "path": "package/upload-config.example.json",
+      "bytes": 367,
+      "sha256": "1070b74622764e669dde0ef6e855c80ba163c8eaebf6913cc2ab2b059a754ac7"
+    },
+    {
+      "path": "package/video/gameplay-review-cut.mp4",
+      "bytes": 30007918,
+      "sha256": "102060a70c1c7fcb2c5e56ac41c25b7b22f2a93d53ede0be93499b38b48e8e94"
+    }
+  ]
+}

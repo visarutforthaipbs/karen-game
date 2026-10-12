@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-03",
+  "timezone": "Asia/Bangkok",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "source_asset_bytes": {
+    ".DS_Store": 14340,
+    "audio": 60598017,
+    "concept_art": 11911303,
+    "fonts": 1041534,
+    "models": 174535866,
+    "props": 108554857,
+    "reference": 21255625,
+    "ui": 16164783,
+    "vfx": 504948
+  },
+  "source_asset_total_bytes": 394581273,
+  "source_hashes": {
+    "project.godot": "324518ba4ce0fe004b062cba95d693939f704284d365fb4be4f1bb01763d47d7",
+    "export_presets.cfg": "c818bd27985cd5947eb589e240ed05dadd1428e50cbf4578cd99e98e843f1c97",
+    "scripts/GameClock.gd": "add80f46c5bcb5690672d7a433bde1fd52ecf28d845b879c39c6cb35532fe7c1",
+    "scripts/FireGrid.gd": "894767bda7f66fb5b2b343ae0ce962f068032e5d22d8607864599dea2f60f1e5",
+    "scripts/AudioManager.gd": "6dd8bb887bb540b22c174fd1be421fd8b0dc869a88581b0e499e962b0773a61c",
+    "scripts/PlayerController.gd": "dd6bed2e997f6736bb82d160bdf655df026d5abbeca052bfa9e04ba099cc9e76",
+    "scripts/MainController.gd": "1993c6c4024ca04e5cbd792c118d4c11ef1ba94fc5eca8925e38ff90d2cdd758",
+    "scripts/GameSettings.gd": "de310614c2b90acac67cd3dd7385ffcda3980f814c62a629a5d85743191650b7",
+    "scripts/GameState.gd": "a59435071c3bc6a2a09c0b42398cab41a5a9dde554932890efd8d8da5eeb60b9",
+    "scripts/PlotGenerator.gd": "a0ba2fa715f16ab203ec5364d2fc61416d797ce49c591aa64a389db592068d0e",
+    "ui/HUD.gd": "7f02b34cacf3af1dfb8b503e2fefc36fb08f86c640b52f197ff9fd9e1e1dc405",
+    "ui/TitleScreen.gd": "73cdb3f0fac51b3c042314541cf4764bb692a6972c67e06222e92d26b1b1630d",
+    "server/download/worker.js": "1c1f58cc3cf9103c0cd90f74d9f7d219e6c3305bc3f11b3e69fb8add3fc7999a",
+    "server/download/wrangler.toml": "a5f649ca3dfe24660be421e52c3d6cd58899cd26b0fbf0458e245de3293e1993"
+  },
+  "browser_observation": {
+    "environment": "Codex in-app browser on local Mac, localhost server",
+    "observed": [
+      "title rendered",
+      "new game click opened introduction",
+      "skip opened village screen",
+      "start burn loaded hillside and HUD at 14:00"
+    ],
+    "console_warnings_or_errors_observed": 0,
+    "not_tested": [
+      "complete burn",
+      "audible audio verification",
+      "FPS or memory",
+      "production hosting",
+      "any actual phone",
+      "touch controls",
+      "production network loading",
+      "persistence"
+    ]
+  },
+  "headless_smoke": {
+    "exit_code": 0,
+    "fixed_fps": 60,
+    "quit_after_frames": 120
+  },
+  "working_tree_note": "Existing working tree was dirty. Baseline used an isolated copy; project and gameplay code in source workspace were not edited.",
+  "git_head_at_review": "8b91366b2f1071124247fb243deb8e8b786fcc3d",
+  "isolated_source_hashes": {
+    "project.godot": "62d99217cbdae09c379f933b6846aca8a5113224de21c8fdf18ff37f80bfc13f",
+    "export_presets.cfg": "f722bfe31095e35a03e333e5b705cf8e941c55ad6c9ecdcab589975a4ab5b0e4",
+    "scripts/GameClock.gd": "add80f46c5bcb5690672d7a433bde1fd52ecf28d845b879c39c6cb35532fe7c1",
+    "scripts/FireGrid.gd": "894767bda7f66fb5b2b343ae0ce962f068032e5d22d8607864599dea2f60f1e5",
+    "scripts/AudioManager.gd": "6dd8bb887bb540b22c174fd1be421fd8b0dc869a88581b0e499e962b0773a61c",
+    "scripts/PlayerController.gd": "dd6bed2e997f6736bb82d160bdf655df026d5abbeca052bfa9e04ba099cc9e76",
+    "scripts/MainController.gd": "1993c6c4024ca04e5cbd792c118d4c11ef1ba94fc5eca8925e38ff90d2cdd758",
+    "scripts/GameSettings.gd": "de310614c2b90acac67cd3dd7385ffcda3980f814c62a629a5d85743191650b7",
+    "scripts/GameState.gd": "a59435071c3bc6a2a09c0b42398cab41a5a9dde554932890efd8d8da5eeb60b9",
+    "scripts/PlotGenerator.gd": "a0ba2fa715f16ab203ec5364d2fc61416d797ce49c591aa64a389db592068d0e",
+    "ui/HUD.gd": "7f02b34cacf3af1dfb8b503e2fefc36fb08f86c640b52f197ff9fd9e1e1dc405",
+    "ui/TitleScreen.gd": "73cdb3f0fac51b3c042314541cf4764bb692a6972c67e06222e92d26b1b1630d"
+  },
+  "isolated_overrides": [
+    "project.godot: set default and .web renderer to gl_compatibility",
+    "export_presets.cfg: append single-threaded Web Feasibility all_resources preset with existing exclusions and both texture targets"
+  ],
+  "source_drift_after_copy": []
+}

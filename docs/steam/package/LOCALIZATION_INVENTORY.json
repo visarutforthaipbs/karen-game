@@ -1,0 +1,2679 @@
+{
+  "scope": "Quoted Thai source candidates; not exhaustive UI coverage",
+  "items": [
+    {
+      "file": "scripts/CompanionController.gd",
+      "line": 129,
+      "thai_literal": "ตาโพ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/CompanionController.gd",
+      "line": 129,
+      "thai_literal": "มูนอ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/CompanionController.gd",
+      "line": 228,
+      "thai_literal": "สำลักควัน กำลังหนีออกจากควัน!",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/CompanionController.gd",
+      "line": 293,
+      "thai_literal": "หลบใต้ร่มไผ่",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/CompanionController.gd",
+      "line": 329,
+      "thai_literal": "กำลังไอ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/CompanionController.gd",
+      "line": 329,
+      "thai_literal": "เดินตาม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/CompanionController.gd",
+      "line": 465,
+      "thai_literal": "เดินตรวจหาถ่านในกองเถ้า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/CompanionController.gd",
+      "line": 533,
+      "thai_literal": "กำลังไปทำงาน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/CompanionController.gd",
+      "line": 561,
+      "thai_literal": "ถางแนวกันไฟ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/CompanionController.gd",
+      "line": 561,
+      "thai_literal": "ฉีดน้ำดับถ่าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/Escalation.gd",
+      "line": 24,
+      "thai_literal": "ยังไม่มีโดรนป่าไม้ประจำลุ่มน้ำนี้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/Escalation.gd",
+      "line": 26,
+      "thai_literal": "โดรนป่าไม้ 1 ลำลาดตระเวนหุบเขาช่วงกลางวัน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/Escalation.gd",
+      "line": 28,
+      "thai_literal": "โดรนป่าไม้ %d ลำบินลาดตระเวนประสานกัน%s",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/Escalation.gd",
+      "line": 28,
+      "thai_literal": " ด้วยความเร็วสูง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/Escalation.gd",
+      "line": 30,
+      "thai_literal": "ภัยแล้งทั้งภูมิภาค: ไฟลามเร็วขึ้น %d%% (ความชื้น %d%%)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/Escalation.gd",
+      "line": 31,
+      "thai_literal": "เกณฑ์ตรวจจับของ VIIRS: %d หน่วยความร้อน (TU)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/Escalation.gd",
+      "line": 33,
+      "thai_literal": "กล้องความร้อนภาคพื้น %d ตัวเฝ้าแนวเขตอุทยาน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/Escalation.gd",
+      "line": 35,
+      "thai_literal": "เจ้าหน้าที่ป่าไม้ %d นายเดินตรวจแนวป่ารอบแปลง 15:30–18:30",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/Escalation.gd",
+      "line": 37,
+      "thai_literal": "ด่านทหารบนถนน: ไปเอาแรงต้องใช้เวลามากขึ้น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/Escalation.gd",
+      "line": 39,
+      "thai_literal": "เคอร์ฟิวไม่ผ่อนผัน: ถ้าดาวเทียมจับได้ ความเพ่งเล็งเพิ่ม %d–%d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/Escalation.gd",
+      "line": 41,
+      "thai_literal": "ปีนี้เจ้าหน้าที่ยังผ่อนปรนอยู่",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/FirstBurnTips.gd",
+      "line": 8,
+      "thai_literal": "ถางแนวกันไฟรอบแปลงก่อน · กด 2 แล้วคลิกพุ่มไม้ข้างตัว ขะแนจะคราดจนเป็นดินโล่ง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/FirstBurnTips.gd",
+      "line": 9,
+      "thai_literal": "เชื้อไฟแห้งแล้ว · กด 1 แล้วลากจุดไฟเป็นแนวยาวที่ตีนเนิน (ฝั่งล่างของแปลง) ไฟจะวิ่งขึ้นเนิน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/FirstBurnTips.gd",
+      "line": 10,
+      "thai_literal": "ลูกไฟตกในป่า! กด 3 แล้วคลิกฉีดน้ำที่ลูกไฟภายใน 8 วินาที (ถังพ่นน้ำเอื้อมได้ไกลกว่า)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/FirstBurnTips.gd",
+      "line": 11,
+      "thai_literal": "เลย 17:16 แล้ว · ไฟที่ลุกจากนี้จะไม่ทันเย็นเองก่อน 20:00 ต้องฉีดน้ำทุกจุด",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/FirstBurnTips.gd",
+      "line": 12,
+      "thai_literal": "ถึงเวลาดับถ่าน · กด 3 ฉีดน้ำถ่านคุทุกจุดให้หมดก่อน 20:00 น้ำเติมที่ถังข้างเถียงนา · ลมหายใจฟื้นเมื่อออกจากควันและควันสะสมลดลง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/GameSettings.gd",
+      "line": 10,
+      "thai_literal": "เสียงรวม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/GameSettings.gd",
+      "line": 11,
+      "thai_literal": "ดนตรี",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/GameSettings.gd",
+      "line": 12,
+      "thai_literal": "เสียงเอฟเฟกต์",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/GameSettings.gd",
+      "line": 13,
+      "thai_literal": "เสียงบรรยากาศ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/GameSettings.gd",
+      "line": 14,
+      "thai_literal": "เสียงพูดและวิทยุ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/GameSettings.gd",
+      "line": 29,
+      "thai_literal": "ขะแน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/GameState.gd",
+      "line": 20,
+      "thai_literal": "กินน้อย",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/GameState.gd",
+      "line": 20,
+      "thai_literal": "กินปกติ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/GameState.gd",
+      "line": 20,
+      "thai_literal": "กินอิ่ม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 32,
+      "thai_literal": "ระยะ 1 · ถางแนวกันไฟ (14:00–15:30)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 32,
+      "thai_literal": "เชื้อไฟยังชื้น: ถางแนวกันไฟรอบแปลง (กดค้างทีละช่อง) อ่านทิศลมก่อนจุด",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 33,
+      "thai_literal": "ระยะ 2 · เผาใหญ่ (15:30–18:00)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 33,
+      "thai_literal": "เชื้อไฟแห้งสุด: จุดไฟเป็นแนวที่ตีนเนิน ดับลูกไฟที่ตกในป่า และหลบโดรน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 34,
+      "thai_literal": "ระยะ 3 · อากาศผกผัน เร่งดับถ่านคุ (18:00–19:45)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 34,
+      "thai_literal": "ฉีดน้ำดับตอไผ่และโคนรากที่ยังคุแดง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 35,
+      "thai_literal": "ระยะ 4 · นับถอยหลังดาวเทียม (19:45–20:00)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 35,
+      "thai_literal": "ตามดับทุกจุดที่ร้อนตั้งแต่ %d TU ขึ้นไป!",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 188,
+      "thai_literal": "ตาโพ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 188,
+      "thai_literal": "เดินตาม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 189,
+      "thai_literal": "มูนอ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 189,
+      "thai_literal": "เดินตาม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 193,
+      "thai_literal": "%s · ปีที่ %d\\n%s",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 195,
+      "thai_literal": "\\nเช้านี้ทีมไปเอาแรงช่วยหมู่บ้านอื่น เริ่มเผาช้าไป %d นาที",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 309,
+      "thai_literal": "เจ้าหน้าที่เดินตรวจเห็นเปลวไฟ! วิทยุแจ้งศูนย์ · ความเพ่งเล็ง +%d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 309,
+      "thai_literal": "เจ้าหน้าที่เห็นทีมอยู่ข้างกองไฟ! · ความเพ่งเล็ง +%d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 360,
+      "thai_literal": "VIIRS ผ่านใน %02d:%02d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 410,
+      "thai_literal": "โดรนบินกลับฐาน — แสงน้อยจนกล้องถ่ายไม่ชัด",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 417,
+      "thai_literal": "เจ้าหน้าที่ป่าไม้เดินตรวจแนวป่ารอบแปลง (ถึง 18:30) — อย่าให้เขาเห็นเปลวไฟ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 426,
+      "thai_literal": "18:00 พระอาทิตย์ตก — อากาศผกผันกดควันไว้ติดพื้น ระวังลมหายใจ!",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 453,
+      "thai_literal": "โดรนป่าไม้บินเข้ามาสำรวจ (~45 วิ) — หลบใต้ร่มไผ่หรือชายป่า หรือดับเปลวไฟที่สูง!",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 457,
+      "thai_literal": "โดรนกลับไปเปลี่ยนแบตเตอรี่ (~1 นาที) — จุดไฟตอนนี้!",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 466,
+      "thai_literal": "แฟลชโดรน! ถ่ายภาพเปลวไฟได้ · ความเพ่งเล็ง +%d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 466,
+      "thai_literal": "แฟลชโดรน! ถ่ายภาพทีมกลางที่โล่งได้ · ความเพ่งเล็ง +%d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 477,
+      "thai_literal": "กล้องความร้อนที่แนวเขตอุทยานจับได้! · ความเพ่งเล็ง +%d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 488,
+      "thai_literal": "ลมเปลี่ยนทิศแล้ว! ตรวจแนวกันไฟรอบแปลงอีกครั้ง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 501,
+      "thai_literal": "ปล้องไผ่ระเบิด! แรงไอน้ำดีดลูกไฟไปตามลม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 513,
+      "thai_literal": "ลูกไฟตกในป่าอุทยาน! รีบฉีดน้ำดับภายใน 8 วินาที ก่อนไฟลาม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 525,
+      "thai_literal": "ลมแรง — ลูกไฟกระโดดข้ามแนวกันไฟ!",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 534,
+      "thai_literal": "อีก %d นาที ดาวเทียม VIIRS จะโคจรผ่าน!",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 560,
+      "thai_literal": "ระยะ 5 · ดาวเทียมโคจรผ่าน (20:00)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 560,
+      "thai_literal": "VIIRS กำลังสแกนความร้อนทั้งแปลง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 600,
+      "thai_literal": "... และอีก %d จุด",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 616,
+      "thai_literal": "อันตราย! ไฟลามเข้าป่าอนุรักษ์แล้ว · ความเพ่งเล็ง +%d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 622,
+      "thai_literal": "น้ำในถังพ่นหมด! ไปเติมที่ถังน้ำข้างเถียงนา",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 627,
+      "thai_literal": "%s สำลักควัน! เป่านกหวีดเรียกกลับมา",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 646,
+      "thai_literal": "เป่านกหวีด — เรียกทีมมารวมที่ตัวเรา!",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 654,
+      "thai_literal": "ส่งตาโพไปถางแนวกันไฟ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/MainController.gd",
+      "line": 657,
+      "thai_literal": "ส่งมูนอไปดับจุดความร้อน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlayerController.gd",
+      "line": 18,
+      "thai_literal": "ถังหยดไฟ · จุดไฟ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlayerController.gd",
+      "line": 19,
+      "thai_literal": "มีดพร้าและคราด · ถางแนวกันไฟ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlayerController.gd",
+      "line": 20,
+      "thai_literal": "ถังพ่นน้ำสะพายหลัง · ดับไฟ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 8,
+      "thai_literal": "ไร่ต่ำ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 9,
+      "thai_literal": "ลาดชันน้อย พุ่มไม้เบาบาง การเฝ้าระวังน้อย",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 43,
+      "thai_literal": "แปลงที่ 1: ไร่ต่ำ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 44,
+      "thai_literal": "ลาดชันน้อย พุ่มไม้เบาบาง ลมหุบเขาอ่อน ยังไม่มีรายงานโดรนลาดตระเวน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 52,
+      "thai_literal": "แปลงที่ 2: ป่าไผ่ซาง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 53,
+      "thai_literal": "กอไผ่หนาแน่น ปล้องไผ่อัดไอน้ำพร้อมระเบิด เสี่ยงลูกไฟกระเด็นสูง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 61,
+      "thai_literal": "แปลงที่ 3: สันดอยลมแรง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 62,
+      "thai_literal": "สันดอยชันรับลมภูเขาที่แปรปรวน ไฟวิ่งขึ้นเนินเร็วมาก",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 71,
+      "thai_literal": "แปลงที่ 4: แนวป่าอุทยาน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 72,
+      "thai_literal": "ติดป่าอนุรักษ์โดยตรง ลูกไฟหลุดเข้าไปแม้ลูกเดียว เจ้าหน้าที่บุกทันที",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 82,
+      "thai_literal": "แปลงที่ 5: โค้งสุดท้ายก่อนมรสุม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 83,
+      "thai_literal": "แปลงสุดท้ายของฤดู ลาดชันสุดขีด เมฆฝนตั้งเค้า เผาให้สะอาด ไม่อย่างนั้นอดตาย",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 93,
+      "thai_literal": "ดอยสูงนิรันดร์",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/PlotGenerator.gd",
+      "line": 94,
+      "thai_literal": "ดินแดนแห่งการเอาชีวิตรอด ภูมิอากาศสุดขั้วและเครือข่ายเซนเซอร์ดาวเทียมครบชุด",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/SaveGame.gd",
+      "line": 161,
+      "thai_literal": "ขะแน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 9,
+      "thai_literal": "ทีมหิว: ลมหายใจสูงสุดเหลือ 70% สหายทำงานช้าลง 15%",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 10,
+      "thai_literal": "ทีมพออิ่ม: ไม่มีโบนัส ไม่มีบทลงโทษ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 11,
+      "thai_literal": "ทีมอิ่มท้อง: ลมหายใจฟื้นเร็วขึ้น 50% ทุกคนเดินและทำงานเร็วขึ้น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 14,
+      "thai_literal": "กินน้อย\\nข้าว 0%",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 15,
+      "thai_literal": "กินปกติ\\nข้าว −3%",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 16,
+      "thai_literal": "กินอิ่ม\\nข้าว −7%",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 19,
+      "thai_literal": "ช่วยบ้านห้วยหินลาดปลูกป่า\\n→ ยืมถังพ่นน้ำให้ตาโพ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 20,
+      "thai_literal": "หาบน้ำให้บ้านแม่เลา\\n→ ได้ภาชนะใส่น้ำเพิ่ม (+10 ลิตร)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 21,
+      "thai_literal": "ช่วยบ้านหนองเต่าเก็บขิง\\n→ ได้เมล็ดข้าวพื้นเมืองผลผลิตสูง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 24,
+      "thai_literal": "เถ้าเลี้ยงเมล็ดข้าว เมฆบังเตาไฟ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 25,
+      "thai_literal": "ไร่ที่พักไว้เจ็ดปี ยังจำป่าที่มันเคยเป็นได้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 26,
+      "thai_literal": "หลายมือช่วยกันทำแนวกันไฟ มือเดียวที่ประมาทพาเจ้าหน้าที่มาถึงบ้าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 27,
+      "thai_literal": "เผาเมื่อลมหลับ นอนเมื่อถ่านดับ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 122,
+      "thai_literal": "หมู่บ้าน · ข้างเตาไฟยามค่ำ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 125,
+      "thai_literal": "หมู่บ้าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 125,
+      "thai_literal": "วิทยุ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 125,
+      "thai_literal": "ยุ้งข้าว",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 125,
+      "thai_literal": "โรงซ่อม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 129,
+      "thai_literal": "กลับเตาไฟ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 260,
+      "thai_literal": "ข้างเตาไฟยามค่ำ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 266,
+      "thai_literal": "ข้าวในยุ้ง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 273,
+      "thai_literal": "ความเพ่งเล็งของรัฐ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 280,
+      "thai_literal": "วิธีเล่น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 288,
+      "thai_literal": "ตั้งค่า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 294,
+      "thai_literal": "ดูหมู่บ้าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 324,
+      "thai_literal": "วิทยุทรานซิสเตอร์",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 328,
+      "thai_literal": "88.5 ป่าไม้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 328,
+      "thai_literal": "94.2 อากาศ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 328,
+      "thai_literal": "101.0 เตหน่ากู",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 345,
+      "thai_literal": "แปลงที่จะเผาพรุ่งนี้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 369,
+      "thai_literal": "เป้าหมายพรุ่งนี้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 391,
+      "thai_literal": "โรงซ่อมเครื่องมือ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 394,
+      "thai_literal": "ลับมีดพร้า · ใช้ข้าว 10%",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 397,
+      "thai_literal": "เปลี่ยนซีลถังพ่นน้ำ · ใช้ข้าว 10%",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 403,
+      "thai_literal": "แม่หลู · ยุ้งข้าวและเสบียง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 426,
+      "thai_literal": "เอาแรง · แลกแรงงานกับหมู่บ้านใกล้เคียง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 456,
+      "thai_literal": "ปีที่ %d · แปลงที่ %d/%d · ฤดูแล้งของไร่หมุนเวียน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 470,
+      "thai_literal": "ไม่มีรายงาน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 470,
+      "thai_literal": "%d ลำ · 15:00–18:00%s",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 470,
+      "thai_literal": " · ความเร็วสูง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 471,
+      "thai_literal": "ความสูงของเนิน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 471,
+      "thai_literal": "%.1f ม. · ไฟขึ้นเนินเร็ว ×%.1f",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 472,
+      "thai_literal": "ความหนาแน่นของไผ่",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 472,
+      "thai_literal": "%.0f%% · เสี่ยงปล้องระเบิด",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 473,
+      "thai_literal": "ลมหุบเขา",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 473,
+      "thai_literal": " · ลูกไฟข้ามแนวกันไฟได้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 474,
+      "thai_literal": "โดรนลาดตระเวน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 475,
+      "thai_literal": "กล้องความร้อนภาคพื้น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 475,
+      "thai_literal": "%d ตัวที่แนวเขตอุทยาน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 475,
+      "thai_literal": "ไม่มี",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 476,
+      "thai_literal": "เจ้าหน้าที่เดินตรวจ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 476,
+      "thai_literal": "%d นาย · 15:30–18:30",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 476,
+      "thai_literal": "ไม่มี",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 477,
+      "thai_literal": "ความเข้มงวดของป่าอนุรักษ์",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 478,
+      "thai_literal": "เกณฑ์ดาวเทียม VIIRS",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 478,
+      "thai_literal": "%d TU · ถูกจับได้ เพ่งเล็ง +%d–%d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 479,
+      "thai_literal": "ภัยแล้งเร่งไฟ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 485,
+      "thai_literal": "เผาในหน้าต่างเงาดาวเทียม %s–20:00 น.",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 486,
+      "thai_literal": "เผาให้ได้เถ้า ≥%d%% ของแปลง ข้าวจึงจะเต็มยุ้ง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 487,
+      "thai_literal": "ก่อน 20:00 ดับทุกจุดที่ร้อนตั้งแต่ %d TU ไม่ให้ VIIRS เห็น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 488,
+      "thai_literal": "ตาโพถางแนวกันไฟ%s · มูนอตามดับถ่าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 488,
+      "thai_literal": " และฉีดน้ำได้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 490,
+      "thai_literal": "มีดพร้า: ระดับ %d/3 · ถางแนวกันไฟเร็วขึ้น %d%%\\nซีลถังพ่นน้ำ: ระดับ %d/3 · ใช้น้ำ %.2f ลิตรต่อครั้ง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 502,
+      "thai_literal": "อดอยากเมื่อข้าวในยุ้งต่ำกว่า %d%%\\n%s — %s\\nเผาครั้งก่อนได้เถ้า %.0f%% → %s",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 511,
+      "thai_literal": "เอาแรงแต่ละครั้งกินเวลาเผาพรุ่งนี้ %d นาที%s · เริ่มเผา %s",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 513,
+      "thai_literal": " (ด่านทหารทำให้เดินทางช้าลง)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 516,
+      "thai_literal": "เดินขึ้นไร่ · เริ่มเผา %s น.",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 522,
+      "thai_literal": "≥%d%% ข้าวเต็มยุ้ง ต่ำกว่า 60%% หมายถึงความหิว",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 554,
+      "thai_literal": "\\nเมฆฝนฟ้าคะนองก่อตัวเหนือสันดอย พายุก่อนมรสุมจะมาถึงช่วงค่ำ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 555,
+      "thai_literal": " ลมกระโชกแปรปรวนบนสันดอยที่เปิดโล่ง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 659,
+      "thai_literal": "เก็บเกี่ยวหน้ามรสุม · ปีที่ %d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 660,
+      "thai_literal": "ฝนมาแล้ว แต่ข้าวที่ได้ไม่พอกินถึงปีหน้า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 660,
+      "thai_literal": "ฝนมาแล้ว ข้าวไร่งอกงามในแปลงเถ้า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 673,
+      "thai_literal": "แปลง %d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 678,
+      "thai_literal": "เถ้าเฉลี่ยทั้งฤดู %.0f%%  →  ยุ้งข้าว %+.0f%%\\nฝนมรสุมชะความเพ่งเล็งของรัฐออกไป %d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 689,
+      "thai_literal": "ปีที่ %d · สิ่งที่รัฐจะนำมา",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 694,
+      "thai_literal": "ข้าวในยุ้งเหลือ %.0f%% หลังเก็บเกี่ยว ต่ำกว่า %.0f%% · หมู่บ้านอดอยาก",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 694,
+      "thai_literal": "ความเพ่งเล็งถึง 100 · รัฐบุกหมู่บ้าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 699,
+      "thai_literal": "ดูบทสรุปของหมู่บ้าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "scripts/VillageHearth.gd",
+      "line": 699,
+      "thai_literal": "เริ่มปีที่ %d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/CheckpointScene.gd",
+      "line": 173,
+      "thai_literal": "กดปุ่มใดก็ได้เพื่อข้าม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/CheckpointScene.gd",
+      "line": 185,
+      "thai_literal": "ด่านตรวจบนถนนขึ้นดอย",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/CheckpointScene.gd",
+      "line": 187,
+      "thai_literal": "เจ้าหน้าที่ตรวจบัตรและค้นเครื่องมือทุกชิ้น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/CheckpointScene.gd",
+      "line": 189,
+      "thai_literal": "ผ่านด่านได้ · เช้านี้เสียเวลาไปกับเอาแรงและด่านตรวจ %d นาที",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/CheckpointScene.gd",
+      "line": 189,
+      "thai_literal": "ผ่านด่านได้ · รีบขึ้นไร่ก่อนบ่ายสอง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/DebugOverlay.gd",
+      "line": 76,
+      "thai_literal": "FPS %d · ปี %d แปลง %d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/DebugOverlay.gd",
+      "line": 77,
+      "thai_literal": "ช่อง %s",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/DebugOverlay.gd",
+      "line": 78,
+      "thai_literal": "เชื้อไฟแห้ง %.2f · ลม ×%.1f",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/DebugOverlay.gd",
+      "line": 79,
+      "thai_literal": "ลุกไหม้ %d · จุดร้อน %d · ไฟป่า %d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/DebugOverlay.gd",
+      "line": 80,
+      "thai_literal": "เพ่งเล็งรอบนี้ +%d (ดาวเทียม %d โดรน %d กล้อง %d ลามป่า %d เจ้าหน้าที่ %d)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/DebugOverlay.gd",
+      "line": 81,
+      "thai_literal": "F5 +30น. · F6 19:45 · F7 ปีถัดไป · F8 น้ำเต็ม · F9 ลูกไฟ · F10 ถูกปราบ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 252,
+      "thai_literal": "คืนหลังดาวเทียมโคจรผ่าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 253,
+      "thai_literal": "เจ้าหน้าที่ป่าไม้บุกหมู่บ้าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 254,
+      "thai_literal": "ยึดมีด คราด และถังพ่นน้ำ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 255,
+      "thai_literal": "ตาโพถูกควบคุมตัว",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 256,
+      "thai_literal": "ความเพ่งเล็งของรัฐถึงขีดสุด · หมู่บ้านถูกปราบปราม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 297,
+      "thai_literal": "ฝนมาไม่ทัน ยุ้งข้าวว่างเปล่า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 298,
+      "thai_literal": "ครอบครัวต้องทิ้งดอย",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 299,
+      "thai_literal": "ลงไปเป็นแรงงานขัดหนี้ในพื้นราบ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 300,
+      "thai_literal": "ไร่หมุนเวียนที่ดูแลกันมาหลายชั่วคน ถูกทิ้งไว้ข้างหลัง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 321,
+      "thai_literal": "กดปุ่มใดก็ได้เพื่อข้าม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 402,
+      "thai_literal": "สรุปการเดินทาง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 403,
+      "thai_literal": "รัฐปราบปรามหมู่บ้าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 403,
+      "thai_literal": "หมู่บ้านอดอยาก ต้องทิ้งดอย",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 407,
+      "thai_literal": "หมู่บ้านอยู่รอดมาได้ %d แปลง ถึงปีที่ %d ของการเผาใต้เงาดาวเทียม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 417,
+      "thai_literal": "แปลงที่ผ่าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 418,
+      "thai_literal": "เถ้าเฉลี่ย",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 419,
+      "thai_literal": "จุดร้อนที่ถูกจับได้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 420,
+      "thai_literal": "ไฟลามเข้าป่า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 421,
+      "thai_literal": "ภาพถ่ายจากโดรน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 422,
+      "thai_literal": "กล้องความร้อนจับได้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 423,
+      "thai_literal": "เจ้าหน้าที่เดินตรวจพบ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 424,
+      "thai_literal": "ลูกไฟที่ดับทัน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 429,
+      "thai_literal": "สถิติใหม่! รอดได้นานที่สุดเท่าที่เคยเล่นมา",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 429,
+      "thai_literal": "สถิติดีที่สุด: รอด %d แปลง (ถึงปีที่ %d)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 437,
+      "thai_literal": "ชื่อบนกระดานหมู่บ้าน:",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 454,
+      "thai_literal": "ติดอันดับที่ %d ของหมู่บ้าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 464,
+      "thai_literal": "อันดับออนไลน์ #%d (เบตา)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 475,
+      "thai_literal": "เริ่มแคมเปญใหม่",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/EndingScene.gd",
+      "line": 481,
+      "thai_literal": "กลับหน้าแรก",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 351,
+      "thai_literal": "เถ้า %.0f%% · เป้า %d%%",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 356,
+      "thai_literal": "ไม่มีถ่านร้อน · ปลอดภัย",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 356,
+      "thai_literal": "ถ่านร้อน %d จุด · ต้องเป็น 0",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 363,
+      "thai_literal": "จุดไฟก่อน %s ถ่านเย็นเอง (%d น.)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 367,
+      "thai_literal": "เลย %s · ถ่านใหม่ต้องฉีดน้ำ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 413,
+      "thai_literal": "ความเพ่งเล็งของรัฐ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 427,
+      "thai_literal": "คลิกซ้าย ใช้ · คลิกขวา สั่งสหาย · Space นกหวีด · ล้อเมาส์ ซูม · Z/C หมุนกล้อง · Tab ซ่อนแผง · Esc หยุดเกม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 460,
+      "thai_literal": "ตาโพ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 501,
+      "thai_literal": "ลมหายใจ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 517,
+      "thai_literal": "เติมน้ำ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 584,
+      "thai_literal": "เคล็ดลับเผาครั้งแรก",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 647,
+      "thai_literal": "รายงานดาวเทียมโคจรผ่าน 20:00 · NOAA-20 / S-NPP VIIRS",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 701,
+      "thai_literal": "ระยะ 2 · เผาใหญ่ (15:30–18:00)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 715,
+      "thai_literal": "%.0f/%d ล.",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 741,
+      "thai_literal": "ลม%s ×%.1f%s",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 741,
+      "thai_literal": " · ลูกไฟปลิว!",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 747,
+      "thai_literal": "เชื้อไฟชื้น ไฟลามช้า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 747,
+      "thai_literal": "เชื้อไฟแห้ง ไฟลามเร็ว",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 747,
+      "thai_literal": "เชื้อไฟกำลังแห้ง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 755,
+      "thai_literal": "ไอ! %d%%",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 756,
+      "thai_literal": "ควันลดลง · ยังไออยู่",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 756,
+      "thai_literal": "ออกจากควันเพื่อฟื้นลมหายใจ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 756,
+      "thai_literal": "กำลังฟื้นลมหายใจ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 798,
+      "thai_literal": " · ลูกไฟจะข้ามแนวกันไฟ!",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 799,
+      "thai_literal": "ตาโพ: “อีก 10 วิ ลมจะเปลี่ยนไปพัดทาง%s”%s",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 842,
+      "thai_literal": "[ NOAA-20 / S-NPP VIIRS · ดาวเทียมตรวจวัดความร้อนอินฟราเรด ]\\nแบนด์ I-4 (3.74 μm) · อัลกอริทึมตรวจจับไฟป่า\\nกำลังประเมินสัญญาณความร้อนทั่วแปลง...",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 847,
+      "thai_literal": "ภาพความร้อนสีเทียม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 848,
+      "thai_literal": "≥ %d TU · ถูกตรวจพบเป็นจุดความร้อน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 849,
+      "thai_literal": "อุ่น ยังต่ำกว่าเกณฑ์",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 850,
+      "thai_literal": "พื้นเย็น / เถ้าที่ดับสนิทแล้ว",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 851,
+      "thai_literal": "จุดผิดปกติที่ถูกบันทึก",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 868,
+      "thai_literal": "รัฐปราบปราม! เจ้าหน้าที่บุกหมู่บ้าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 869,
+      "thai_literal": "เจ้าหน้าที่ป่าไม้บุกค้นหมู่บ้าน ยึดเครื่องมือทำไร่ และจับกุมผู้เฒ่า · จบเกม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 872,
+      "thai_literal": "หมู่บ้านอดอยาก!",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 873,
+      "thai_literal": "ยุ้งข้าวว่างเปล่า ครอบครัวต้องทิ้งดอยลงไปเป็นแรงงานขัดหนี้ในพื้นราบ · จบเกม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 876,
+      "thai_literal": "ไฟลามเข้าป่าอนุรักษ์!",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 879,
+      "thai_literal": "สำเร็จ! ข้าวเต็มยุ้ง และดาวเทียมไม่เห็นอะไรเลย",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 881,
+      "thai_literal": "รอดสายตาดาวเทียม แต่เถ้ายังไม่พอ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 884,
+      "thai_literal": "ข้าวเต็มยุ้ง แต่ VIIRS เห็นจุดร้อน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 887,
+      "thai_literal": "VIIRS เห็นจุดร้อน และเถ้าไม่พอ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 891,
+      "thai_literal": "ยุ้งข้าว +%.0f%%",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 891,
+      "thai_literal": "ยุ้งข้าวเท่าเดิม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 891,
+      "thai_literal": "ยุ้งข้าว %.0f%% หมู่บ้านจะหิว",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 892,
+      "thai_literal": "%s เป้าหมาย 1 · เถ้า %.0f%% (เป้า %d%%) → %s",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 892,
+      "thai_literal": "ผ่าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 892,
+      "thai_literal": "ไม่ผ่าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 894,
+      "thai_literal": "ผ่าน เป้าหมาย 2 · ดาวเทียมไม่พบจุดร้อน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 896,
+      "thai_literal": "ไม่ผ่าน เป้าหมาย 2 · ดาวเทียมพบ %d จุด → ความเพ่งเล็ง +%d",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 898,
+      "thai_literal": "ไฟลามเข้าป่าอนุรักษ์ เจ้าหน้าที่เปิดการสอบสวน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 900,
+      "thai_literal": "เจ้าหน้าที่หันไปสนใจหมู่บ้านอื่น ความเพ่งเล็ง −%d%s",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 900,
+      "thai_literal": " (เผาสะอาด)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 907,
+      "thai_literal": "จุดไฟให้ทั่วแปลงก่อน %d:%02d และฉีดน้ำถ่านคุให้กลายเป็นเถ้า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 909,
+      "thai_literal": "ช่วง 18:00–20:00 ฉีดน้ำถ่านทุกจุด ดูช่องเป้าหมายข้อ 2 ให้เป็น 0",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 911,
+      "thai_literal": "ถางแนวกันไฟฝั่งป่าอุทยานให้เสร็จก่อนจุดไฟ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 912,
+      "thai_literal": "เคล็ดลับรอบหน้า: ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 918,
+      "thai_literal": "เถ้า (เป้า %d%%)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 919,
+      "thai_literal": "จุดร้อนที่ถูกตรวจพบ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 920,
+      "thai_literal": "ไฟลามเข้าป่า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 920,
+      "thai_literal": "ใช่",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 920,
+      "thai_literal": "ไม่",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 921,
+      "thai_literal": "ความเพ่งเล็ง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 922,
+      "thai_literal": "ข้าวในยุ้ง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 925,
+      "thai_literal": "บันทึกจุดความร้อน GISTDA / FIRMS: ไม่มีรายการ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 927,
+      "thai_literal": "บันทึกจุดความร้อน GISTDA / FIRMS\\n",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 929,
+      "thai_literal": "เริ่มแคมเปญใหม่",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 929,
+      "thai_literal": "กลับหมู่บ้าน · นั่งข้างเตาไฟ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 954,
+      "thai_literal": "น้ำเต็มแล้ว",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 954,
+      "thai_literal": "กำลังเติมน้ำ %.0f / %.0f ลิตร",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 954,
+      "thai_literal": "เติมน้ำที่ถังข้างเถียงนา",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 967,
+      "thai_literal": "เติมน้ำ ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HUD.gd",
+      "line": 967,
+      "thai_literal": "เติมน้ำ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 37,
+      "thai_literal": "วิธีเล่น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 41,
+      "thai_literal": "เผาไร่ให้เป็นเถ้าระหว่าง 14:00–20:00 แล้วดับถ่านให้หมด ก่อนดาวเทียม VIIRS โคจรผ่านตอน 20:00 ทุกแปลงถูกตัดสินจากสองอย่างนี้เท่านั้น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 58,
+      "thai_literal": "เป้าหมาย 1 · เถ้า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 58,
+      "thai_literal": "เถ้าที่เย็นแล้ว ≥75% ของแปลง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 59,
+      "thai_literal": "≥75% ข้าวเข้ายุ้ง +10\\n60–75% ข้าวเท่าเดิม\\nต่ำกว่า 60% ข้าวลด −25",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 60,
+      "thai_literal": "เป้าหมาย 2 · ความร้อน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 60,
+      "thai_literal": "จุดร้อน 0 จุดตอน 20:00",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 61,
+      "thai_literal": "ถ่านที่ยังคุทุกจุด = จุดร้อน\\nถูกจับได้ +15 ความเพ่งเล็ง (ร้อนมากจุด สูงสุด +30)\\n(ปีหลัง ๆ โทษหนักขึ้น)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 68,
+      "thai_literal": "กฎของถ่าน · สำคัญที่สุด",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 69,
+      "thai_literal": "ไฟลุกราว 6 วินาที แล้วกลายเป็นถ่านคุ ถ่านเย็นเป็นเถ้าเองต้องใช้ราว 4 นาที (2 ชม. 40 นาทีในเกม)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 70,
+      "thai_literal": "ไฟที่ลุกหลัง %s จะยังร้อนตอน 20:00 ต้องฉีดน้ำ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 71,
+      "thai_literal": "ฉีดน้ำใส่ถ่านคุ = เป็นเถ้าทันที (ได้เถ้าและไม่มีจุดร้อน)\\nอย่าฉีดเปลวไฟที่เพิ่งติด ไฟจะดับกลับเป็นพุ่มไม้ ไม่ได้เถ้า\\nลูกไฟตกในป่าอุทยาน = มีเวลา 8 วินาทีให้ฉีดดับ ไม่งั้นนับว่าไฟลามเข้าป่า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 78,
+      "thai_literal": "แพ้เมื่อไร",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 79,
+      "thai_literal": "ข้าวในยุ้งเหลือ 20% = หมู่บ้านอดอยาก · ความเพ่งเล็งถึง 100 = รัฐบุกหมู่บ้าน\\nเล่นให้รอดไปทีละปี ปีละ 5 แปลง เผาสะอาด (เถ้า ≥60% และไม่ถูกจับได้) ความเพ่งเล็งลด 20 · เผาแปลงอื่นลด 10 · ฝนมรสุมลด 45 ทุกปี",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 87,
+      "thai_literal": "แผนที่ได้ผล",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 88,
+      "thai_literal": "เชื้อไฟยังชื้น ไฟลามช้า ใช้เวลานี้ถางแนวกันไฟ (ปุ่ม 2 กดค้างทีละช่อง) รอบแปลง ฝั่งใต้ลมให้หนา 2 ช่อง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 89,
+      "thai_literal": "เชื้อไฟแห้งสุด จุดไฟเป็นแนวยาว (ปุ่ม 1 ลากค้าง) ที่ตีนเนิน ไฟจะวิ่งขึ้นเนินและตามลม จุดจุดเดียวไฟไม่ทั่วแปลง · ปีที่ 2 ขึ้นไปมีโดรน: บินมาราว 45 วิ ถ่ายรูปได้ครั้งเดียว แล้วกลับไปเปลี่ยนแบต ให้จุดไฟตอนโดรนไม่อยู่ และหลบใต้ร่มไผ่หรือชายป่าตอนโดรนหรือเจ้าหน้าที่มา",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 90,
+      "thai_literal": "ถังพ่นน้ำ (ปุ่ม 3) ฉีดถ่านคุทุกจุด น้ำเติมที่ถังข้างเถียงนา · ลมหายใจฟื้นเมื่อออกจากควันและควันสะสมลดลง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 91,
+      "thai_literal": "ก่อน 20:00",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 91,
+      "thai_literal": "ดูช่องเป้าหมายบนจอ ให้จุดร้อนเหลือ 0 และเถ้าถึง 75%",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 98,
+      "thai_literal": "ปุ่มควบคุม (คีย์บอร์ด / จอย)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 105,
+      "thai_literal": "WASD / สติ๊กซ้าย",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 105,
+      "thai_literal": "เดิน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 106,
+      "thai_literal": "เมาส์ / สติ๊กขวา",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 106,
+      "thai_literal": "เล็งช่องที่จะทำงาน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 107,
+      "thai_literal": "คลิกซ้าย / RT, A",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 107,
+      "thai_literal": "ใช้เครื่องมือ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 108,
+      "thai_literal": "1 2 3 / ปุ่มลูกศร, Y",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 108,
+      "thai_literal": "จุดไฟ · ถางแนว · พ่นน้ำ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 109,
+      "thai_literal": "ออกจากเกม · กลับมาเล่นจากบันทึกล่าสุด",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 110,
+      "thai_literal": "คลิกขวา / LT, X",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 110,
+      "thai_literal": "สั่งตาโพถางพุ่มไม้ · สั่งมูนอดับถ่าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 111,
+      "thai_literal": "เป่านกหวีดเรียกทีมหนีควัน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 112,
+      "thai_literal": "ล้อเมาส์, + - / R3",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 112,
+      "thai_literal": "ซูมกล้อง (ซูมออกสุดเห็นทั้งแปลงและหุบเขา)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 113,
+      "thai_literal": "Z, C / ลูกศรลง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 113,
+      "thai_literal": "หมุนกล้องทีละ 90°",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 114,
+      "thai_literal": "ซ่อน / แสดงแผงข้อมูล",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/HowToPlay.gd",
+      "line": 124,
+      "thai_literal": "เข้าใจแล้ว",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/PauseMenu.gd",
+      "line": 76,
+      "thai_literal": "หยุดเกมชั่วคราว",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/PauseMenu.gd",
+      "line": 82,
+      "thai_literal": "เวลาในไร่หยุดที่ %s",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/PauseMenu.gd",
+      "line": 83,
+      "thai_literal": "เล่นต่อ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/PauseMenu.gd",
+      "line": 84,
+      "thai_literal": "วิธีเล่น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/PauseMenu.gd",
+      "line": 85,
+      "thai_literal": "ตั้งค่า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/PauseMenu.gd",
+      "line": 86,
+      "thai_literal": "ยอมแพ้แปลงนี้ · ให้ดาวเทียมผ่านเลย",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/PauseMenu.gd",
+      "line": 87,
+      "thai_literal": "นับเป็นการเผาตามสภาพตอนนี้ ดาวเทียมจะสแกนทันที",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/PauseMenu.gd",
+      "line": 89,
+      "thai_literal": "ออกไปหน้าแรก (กลับไปก่อนเผาแปลงนี้)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 32,
+      "thai_literal": "ตั้งค่า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 46,
+      "thai_literal": "เสียง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 53,
+      "thai_literal": "การแสดงผล",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 54,
+      "thai_literal": "เต็มจอ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 57,
+      "thai_literal": "ขนาดตัวหนังสือและแผง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 60,
+      "thai_literal": "ภูมิทัศน์รอบแปลงแบบละเอียด (ปิดเพื่อให้ลื่นขึ้นบน Steam Deck)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 63,
+      "thai_literal": "การเล่น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 64,
+      "thai_literal": "ระยะกล้องเริ่มต้น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 65,
+      "thai_literal": "%d ม.",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 66,
+      "thai_literal": "แสดงคำแนะนำปุ่มควบคุม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 68,
+      "thai_literal": "เคล็ดลับระหว่างเผาครั้งแรก",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 71,
+      "thai_literal": "ชื่อบนกระดาน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 83,
+      "thai_literal": "แสดงวิธีเล่นอีกครั้ง",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 87,
+      "thai_literal": "กระดานออนไลน์ (เบตา)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 88,
+      "thai_literal": "ส่งผลการเล่นขึ้นกระดานออนไลน์",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 92,
+      "thai_literal": "ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 96,
+      "thai_literal": "ลบคะแนนของฉันออกจากกระดานออนไลน์",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 101,
+      "thai_literal": "สำหรับผู้ทดสอบ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 102,
+      "thai_literal": "เครื่องมือทดสอบ (F3 ข้อมูล · F5–F10 ข้ามเวลา/บังคับเหตุการณ์)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 105,
+      "thai_literal": "เปิดโฟลเดอร์บันทึกการเล่น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/SettingsPanel.gd",
+      "line": 114,
+      "thai_literal": "บันทึกและปิด",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleLogo.gd",
+      "line": 15,
+      "thai_literal": "ไร่หมุนเวียนใต้เงาดาวเทียม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 281,
+      "thai_literal": "เผาไร่ให้เป็นเถ้าระหว่าง 14:00–20:00 แล้วดับถ่านให้หมด ก่อนดาวเทียมโคจรผ่าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 291,
+      "thai_literal": "เล่นต่อ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 293,
+      "thai_literal": "เริ่มเกมใหม่",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 294,
+      "thai_literal": "วิธีเล่น",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 295,
+      "thai_literal": "ตั้งค่า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 296,
+      "thai_literal": "ออกจากเกม",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 331,
+      "thai_literal": "กระดานเกียรติยศหมู่บ้าน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 336,
+      "thai_literal": "%d. %s · %d แปลง · ปีที่ %d · เถ้า %.0f%%",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 344,
+      "thai_literal": "กระดานออนไลน์ (เบตา)",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 350,
+      "thai_literal": "%d. %s · %d แปลง · ปีที่ %d · เถ้า %.0f%%",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 357,
+      "thai_literal": "โหลดเกมที่บันทึกไว้ไม่ได้ (%s) · เริ่มเกมใหม่แทนได้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 357,
+      "thai_literal": "ไฟล์เสียหาย",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 357,
+      "thai_literal": "เวอร์ชันเก่า",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 357,
+      "thai_literal": "ไม่พบไฟล์",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 365,
+      "thai_literal": "เริ่มเกมใหม่จะลบเกมที่บันทึกไว้ ยืนยันไหม?",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 415,
+      "thai_literal": "ยืนยัน เริ่มใหม่",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/TitleScreen.gd",
+      "line": 423,
+      "thai_literal": "ยกเลิก",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 198,
+      "thai_literal": "ขะแน",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 198,
+      "thai_literal": "ตาโพ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 198,
+      "thai_literal": "มูนอ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 198,
+      "thai_literal": "แม่ลู",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 233,
+      "thai_literal": "ลมสงบ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 235,
+      "thai_literal": "ตะวันออก",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 235,
+      "thai_literal": "ตะวันออกเฉียงใต้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 235,
+      "thai_literal": "ใต้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 235,
+      "thai_literal": "ตะวันตกเฉียงใต้",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 235,
+      "thai_literal": "ตะวันตก",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 235,
+      "thai_literal": "ตะวันตกเฉียงเหนือ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 235,
+      "thai_literal": "เหนือ",
+      "english": null,
+      "status": "needs classification and translation"
+    },
+    {
+      "file": "ui/UITheme.gd",
+      "line": 235,
+      "thai_literal": "ตะวันออกเฉียงเหนือ",
+      "english": null,
+      "status": "needs classification and translation"
+    }
+  ]
+}

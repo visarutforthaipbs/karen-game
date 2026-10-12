@@ -1,0 +1,1137 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registering global classes... (59 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   1% ] [90m[1mupdate_scripts_classes[22m | AssetLibrary[39m[0m
+[   3% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   5% ] [90m[1mupdate_scripts_classes[22m | CameraRig[39m[0m
+[   6% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   8% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  10% ] [90m[1mupdate_scripts_classes[22m | ChibiAnimator[39m[0m
+[  11% ] [90m[1mupdate_scripts_classes[22m | CompanionController[39m[0m
+[  13% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  15% ] [90m[1mupdate_scripts_classes[22m | Escalation[39m[0m
+[  16% ] [90m[1mupdate_scripts_classes[22m | FireGrid[39m[0m
+[  18% ] [90m[1mupdate_scripts_classes[22m | FirstBurnTips[39m[0m
+[  20% ] [90m[1mupdate_scripts_classes[22m | ForestryDrone[39m[0m
+[  21% ] [90m[1mupdate_scripts_classes[22m | GameClock[39m[0m
+[  23% ] [90m[1mupdate_scripts_classes[22m | GameSettings[39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  26% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  28% ] [90m[1mupdate_scripts_classes[22m | L10n[39m[0m
+[  30% ] [90m[1mupdate_scripts_classes[22m | Landscape[39m[0m
+[  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | LowPoly[39m[0m
+[  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  38% ] [90m[1mupdate_scripts_classes[22m | MainController[39m[0m
+[  40% ] [90m[1mupdate_scripts_classes[22m | OnlineBoard[39m[0m
+[  41% ] [90m[1mupdate_scripts_classes[22m | PlayerController[39m[0m
+[  43% ] [90m[1mupdate_scripts_classes[22m | PlaytestLog[39m[0m
+[  45% ] [90m[1mupdate_scripts_classes[22m | PlotGenerator[39m[0m
+[  46% ] [90m[1mupdate_scripts_classes[22m | RangerFigure[39m[0m
+[  48% ] [90m[1mupdate_scripts_classes[22m | RangerPatrol[39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | SatelliteModel[39m[0m
+[  51% ] [90m[1mupdate_scripts_classes[22m | SatelliteOverpass[39m[0m
+[  53% ] [90m[1mupdate_scripts_classes[22m | SaveGame[39m[0m
+[  55% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  56% ] [90m[1mupdate_scripts_classes[22m | SkyCycle[39m[0m
+[  58% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  60% ] [90m[1mupdate_scripts_classes[22m | ThermalCamera[39m[0m
+[  61% ] [90m[1mupdate_scripts_classes[22m | VillageHearth[39m[0m
+[  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  65% ] [90m[1mupdate_scripts_classes[22m | WindManager[39m[0m
+[  66% ] [90m[1mupdate_scripts_classes[22m | CheckpointScene[39m[0m
+[  68% ] [90m[1mupdate_scripts_classes[22m | DebugOverlay[39m[0m
+[  70% ] [90m[1mupdate_scripts_classes[22m | EndingScene[39m[0m
+[  71% ] [90m[1mupdate_scripts_classes[22m | FacetCard[39m[0m
+[  73% ] [90m[1mupdate_scripts_classes[22m | HearthBackdrop[39m[0m
+[  75% ] [90m[1mupdate_scripts_classes[22m | HowToPlay[39m[0m
+[  76% ] [90m[1mupdate_scripts_classes[22m | GameHUD[39m[0m
+[  78% ] [90m[1mupdate_scripts_classes[22m | LowPolyIcon[39m[0m
+[  80% ] [90m[1mupdate_scripts_classes[22m | ModalFocusScope[39m[0m
+[  81% ] [90m[1mupdate_scripts_classes[22m | OpeningDiorama[39m[0m
+[  83% ] [90m[1mupdate_scripts_classes[22m | OpeningFilm[39m[0m
+[  85% ] [90m[1mupdate_scripts_classes[22m | PauseMenu[39m[0m
+[  86% ] [90m[1mupdate_scripts_classes[22m | SegmentBar[39m[0m
+[  88% ] [90m[1mupdate_scripts_classes[22m | SettingsPanel[39m[0m
+[  90% ] [90m[1mupdate_scripts_classes[22m | TitleLogo[39m[0m
+[  91% ] [90m[1mupdate_scripts_classes[22m | TitleScreen[39m[0m
+[  93% ] [90m[1mupdate_scripts_classes[22m | UITheme[39m[0m
+[  95% ] [90m[1mupdate_scripts_classes[22m | VillageDiorama[39m[0m
+[  96% ] [90m[1mupdate_scripts_classes[22m | WindCompass[39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (323 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | bark_embers.wav[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | bark_embers_2.wav[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | bark_fire_out.wav[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | bark_fire_out_2.wav[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | bark_maelu_1.wav[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | bark_maelu_2.wav[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | bark_rally_reply.wav[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | bark_rally_reply_2.wav[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | bark_report_crew.wav[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | bark_report_flame.wav[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | bark_spot_fire.wav[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | bark_spot_fire_2.wav[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | radio_ch1_01.wav[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | radio_ch1_02.wav[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | radio_ch1_03.wav[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | radio_ch1_04.wav[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | radio_ch1_05.wav[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | radio_ch1_06.wav[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | radio_ch1_07.wav[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | radio_ch1_08.wav[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | radio_ch2_01.wav[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | radio_ch2_02.wav[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | radio_ch2_03.wav[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | radio_ch2_04.wav[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | radio_ch2_05.wav[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | radio_ch2_06.wav[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | tapoh_wind_warning.wav[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | tapoh_wind_warning_2.wav[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | tapoh_wind_warning_3.wav[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | ta_poh_call.wav[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | intro_00.wav[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | intro_01.wav[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | intro_02.wav[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | intro_03.wav[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | intro_04.wav[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | intro_05.wav[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | intro_06.wav[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | intro_07.wav[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | intro_00.wav[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | intro_01.wav[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | intro_02.wav[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | intro_03.wav[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | intro_04.wav[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | intro_05.wav[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | intro_06.wav[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | intro_07.wav[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | khanae_cough.wav[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | maelu_cough.wav[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | munaw_cough.wav[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | munaw_fire_out.wav[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | munaw_spot_fire.wav[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | ranger_cough.wav[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | ranger_patrol_radio.wav[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | tapoh_cough.wav[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | tapoh_whistle_reply.wav[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | bark_embers.wav[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | bark_embers_2.wav[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | bark_fire_out.wav[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | bark_fire_out_2.wav[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | bark_maelu_1.wav[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | bark_maelu_2.wav[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | bark_rally_reply.wav[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | bark_rally_reply_2.wav[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | bark_report_crew.wav[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | bark_report_flame.wav[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | bark_spot_fire.wav[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | bark_spot_fire_2.wav[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | radio_ch1_01.wav[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | radio_ch1_02.wav[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | radio_ch1_03.wav[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | radio_ch1_04.wav[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | radio_ch1_05.wav[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | radio_ch1_06.wav[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | radio_ch1_07.wav[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | radio_ch1_08.wav[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | radio_ch2_01.wav[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | radio_ch2_02.wav[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | radio_ch2_03.wav[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | radio_ch2_04.wav[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | radio_ch2_05.wav[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | radio_ch2_06.wav[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | sfxloop_cicada.wav[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | sfxloop_crackle.wav[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | sfxloop_drone_hum.wav[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | sfxloop_evening.wav[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | sfxloop_hearth.wav[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | sfxloop_music0.wav[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | sfxloop_music1.wav[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | sfxloop_music2.wav[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | sfxloop_rake.wav[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | sfxloop_refill.wav[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | sfxloop_siren.wav[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | sfxloop_spray.wav[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | sfxloop_static.wav[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | sfxloop_torch.wav[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | sfxloop_wind.wav[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | sfx_beep.wav[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | sfx_camera.wav[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | sfx_chime.wav[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | sfx_cough.wav[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | sfx_cough_khanae.wav[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | sfx_cough_munaw.wav[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | sfx_cough_tapoh.wav[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | sfx_day_start.wav[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | sfx_ember_tick.wav[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | sfx_end_crackdown.wav[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | sfx_end_famine.wav[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | sfx_extinguished.wav[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | sfx_grain.wav[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | sfx_ping.wav[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | sfx_pop.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | sfx_shutter.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | sfx_spot_fire.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | sfx_spray.wav[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | sfx_squelch.wav[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | sfx_step_ash.wav[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | sfx_step_ash_1.wav[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | sfx_step_ash_2.wav[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | sfx_step_ash_3.wav[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | sfx_step_ash_4.wav[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | sfx_step_brush.wav[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | sfx_step_brush_1.wav[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | sfx_step_brush_2.wav[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | sfx_step_brush_3.wav[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | sfx_step_brush_4.wav[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | sfx_sting_1.wav[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | sfx_sting_2.wav[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | sfx_sting_3.wav[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | sfx_sting_4.wav[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | sfx_thunder.wav[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | sfx_tool_clack.wav[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | sfx_tool_start.wav[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | sfx_tool_stop.wav[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | sfx_truck_arrive.wav[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | sfx_tune.wav[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | sfx_ui_click.wav[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | sfx_whistle.wav[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | sfx_whistle_alt.wav[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | sfx_wind_shift.wav[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | sfx_workshop.wav[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | tapoh_wind_warning.wav[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | tapoh_wind_warning_2.wav[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | tapoh_wind_warning_3.wav[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | ta_poh_call.wav[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | khanae_pipeline_comparison.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | cast_lineup_20261002.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | khanae_chibi_cute.jpg[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | khanae_front_a_pose.jpg[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | khanae_model_sheet.jpg[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | khanae_projections.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | khanae_shaded_turntable.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | khanae_studio_render.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | khanae_test_turntable.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | khanae_turntable.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | khanae_upright.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | munaw_chibi_cute.jpg[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | munaw_front_a_pose.jpg[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | munaw_model_sheet.jpg[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | munaw_studio_render.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | munaw_turntable.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | tapoh_chibi_cute.jpg[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | tapoh_front_a_pose.jpg[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | tapoh_model_sheet.jpg[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | tapoh_studio_render.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | tapoh_turntable.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | ChakraPetch-Medium.ttf[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | ChakraPetch-SemiBold.ttf[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | Kanit-Bold.ttf[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | Kanit-Light.ttf[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | Kanit-Medium.ttf[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | Kanit-Regular.ttf[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | Kanit-SemiBold.ttf[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | khanae_v2_lowpoly.glb[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | khanae_lowpoly.glb[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | khanae_lowpoly.obj[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | khanae_rigged.glb[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | khanae_rigged_basecolor.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | khanae_rigged_Image_0.jpg[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | khanae_rigged_Image_0.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | khanae_rigged_Image_1.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | khanae_rigged_texture_0.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | khanae_test_lowpoly.glb[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | khanae_test_lowpoly.obj[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | khanae_textured.glb[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | khanae_textured_Image_0.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | khanae_textured_Image_1.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | maelu_rigged.glb[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | maelu_rigged_Image_0.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | maelu_rigged_texture_0.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | munaw_lowpoly.glb[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | munaw_lowpoly.obj[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | munaw_rigged.glb[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | munaw_rigged_basecolor.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | munaw_rigged_CleanBroadDressBands.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | munaw_rigged_Image_0.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | munaw_rigged_Image_1.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | munaw_rigged_texture_0.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | munaw_textured.glb[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | munaw_textured_Image_0.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | munaw_textured_Image_1.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | ranger_rigged.glb[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | ranger_rigged_basecolor.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | ranger_rigged_texture_0.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | ranger_slate_rigged.glb[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | ranger_slate_rigged_basecolor.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | ranger_slate_rigged_texture_0.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | tapoh_lowpoly.glb[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | tapoh_lowpoly.obj[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | tapoh_rigged.glb[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | tapoh_rigged_Image_0.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | tapoh_rigged_Image_1.png[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | tapoh_rigged_texture_0.png[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | tapoh_textured.glb[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | tapoh_textured_Image_0.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | tapoh_textured_Image_1.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | C6_villager_a.glb[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | C6_villager_a_Image_0.jpg[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | C6_villager_b.glb[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | C6_villager_b_Image_0.jpg[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | C6_villager_c.glb[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | C6_villager_c_Image_0.jpg[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | C6_villager_d.glb[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | C6_villager_d_Image_0.jpg[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | E1_pine_a.glb[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | E1_pine_b.glb[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | E1_pine_c.glb[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | E2_bamboo_a.glb[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | E2_bamboo_b.glb[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | E2_bamboo_c.glb[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | E3_brush_a.glb[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | E3_brush_b.glb[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | E3_brush_c.glb[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | E3_brush_d.glb[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | E4_bamboo_stump_a.glb[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | E4_bamboo_stump_b.glb[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | E5_root_collar_a.glb[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | E5_root_collar_b.glb[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | E6_rock_a.glb[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | E6_rock_b.glb[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | E6_rock_c.glb[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | E6_rock_d.glb[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | E7_terrace_wall_a.glb[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | E7_terrace_wall_b.glb[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | E8_log_a.glb[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | E8_log_b.glb[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | E9_grass_tuft_a.glb[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | E9_grass_tuft_b.glb[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | E9_grass_tuft_c.glb[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | S1_field_hut_a.glb[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | S1_field_hut_a_Image_0.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | S1_field_hut_a_Image_1.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | S2_water_barrels_a.glb[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | S2_water_barrels_a_Image_0.jpg[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | S3_granary_a.glb[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | S3_granary_a_Image_0.jpg[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | S4_village_house_a.glb[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | S4_village_house_a_Image_0.jpg[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | S4_village_house_b.glb[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | S4_village_house_b_Image_0.jpg[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | S5_checkpoint_a.glb[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | S5_checkpoint_a_Image_0.jpg[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | S6_ranger_truck_a.glb[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | S6_ranger_truck_a_Image_0.jpg[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | S7_travel_bundle_a.glb[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | S8_transistor_radio_a.glb[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | S8_transistor_radio_a_Image_0.jpg[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | S9_repair_workbench_a.glb[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | S9_repair_workbench_a_Image_0.jpg[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | S10_rice_basket_a.glb[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | S10_rice_basket_a_Image_0.jpg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | S11_empty_granary_a.glb[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | S11_empty_granary_a_Image_0.jpg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | S12_rice_sack_a.glb[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | S13_timber_stool_a.glb[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | S14_firewood_bundle_a.glb[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | S15_lidded_grain_basket_a.glb[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | S15_lidded_grain_basket_a_Image_0.jpg[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | S16_repair_supplies_a.glb[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | T1_drip_torch_a.glb[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | T2_mida_knife_a.glb[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | T3_rake_a.glb[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | T4_sprayer_tank_a.glb[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | T5_sprayer_wand_a.glb[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | T6_ranger_flashlight_a.glb[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | T7_ranger_tablet_a.glb[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | V1_drone_a.glb[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | V1_drone_a_Image_0.jpg[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | V2_thermal_camera_housing_a.glb[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | V3_satellite_a.glb[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | V3_satellite_a_0.jpg[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | V3_satellite_a_Image_0.jpg[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | khanae_apose_v01.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | khanae_user_locked_v02.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | concept_direction_v3_1.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | maelu_apose_v01.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | concept_direction_v3_1.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | munaw_apose_v02.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | munaw_apose_v04.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | apose_v01_rejected_tall.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | apose_v03_rejected_notches.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | concept_direction_v3_1.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | ranger_apose_v02.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | tapoh_apose_v01.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | concept_direction_v3_1.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | hearth_night_1920x1080.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | island.glb[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | island_0.jpg[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | under_two_skies_icon.png[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | under_two_skies_logo.png[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | under_two_skies_logo_dark.png[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | under_two_skies_wordmark.png[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | khanae_256.png[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | maelu_256.png[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | munaw_256.png[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | ranger_256.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | tapoh_256.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | satellite_shadow_blue_hour_1920x1080.png[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | satellite_shadow_blue_hour_v01.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | ash_flake.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | ember.png[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | flame_sheet.png[39m[0m
+[  99% ] [90m[1m_update_scan_actions[22m | mist_sheet.png[39m[0m
+[  99% ] [90m[1m_update_scan_actions[22m | smoke_sheet.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1msavepack[22m | Started Packing (102 steps)[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_embers.wav-f9b85c0382b78d1da0631d06183f1740.sample[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/bark_embers.wav.import[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_embers_2.wav-0be88c0e78ec887de23b6275585195f6.sample[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/bark_embers_2.wav.import[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_fire_out.wav-61fae2f4480a8d1fd433c6626dc41098.sample[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/bark_fire_out.wav.import[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_fire_out_2.wav-a168aad34aaf8f7b20e651b453d721d8.sample[39m[0m
+[   1% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/bark_fire_out_2.wav.import[39m[0m
+[   2% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_maelu_1.wav-01fe5c26051da468b6b70dd51fe23a29.sample[39m[0m
+[   2% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/bark_maelu_1.wav.import[39m[0m
+[   2% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_maelu_2.wav-b8ae049e5d76ba3cf31449310742114d.sample[39m[0m
+[   2% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/bark_maelu_2.wav.import[39m[0m
+[   2% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_rally_reply.wav-c8594d6012b1e9c7ab4d8dae92e61b67.sample[39m[0m
+[   2% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/bark_rally_reply.wav.import[39m[0m
+[   2% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_rally_reply_2.wav-d4974dd29e30ea3c9b46d9546399bf4c.sample[39m[0m
+[   2% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/bark_rally_reply_2.wav.import[39m[0m
+[   3% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_report_crew.wav-3ca8af54765f7835f9a4d62959e59f3b.sample[39m[0m
+[   3% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/bark_report_crew.wav.import[39m[0m
+[   3% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_report_flame.wav-698efe3477658f5112031fc0bf9fd7a7.sample[39m[0m
+[   3% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/bark_report_flame.wav.import[39m[0m
+[   3% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_spot_fire.wav-7b33022447a5c6a0dfaaa8944b05eed5.sample[39m[0m
+[   3% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/bark_spot_fire.wav.import[39m[0m
+[   4% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_spot_fire_2.wav-945860d7eb1d3e0cc7676f6db431ca66.sample[39m[0m
+[   4% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/bark_spot_fire_2.wav.import[39m[0m
+[   4% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_01.wav-6f018594c3c5efdf7c82c57f7d954e48.sample[39m[0m
+[   4% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch1_01.wav.import[39m[0m
+[   4% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_02.wav-21b5b9e7c51e4c1df6fc021a1ff80549.sample[39m[0m
+[   4% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch1_02.wav.import[39m[0m
+[   4% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_03.wav-1732acb1f92ebd4305fdb06f06dd7e8d.sample[39m[0m
+[   4% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch1_03.wav.import[39m[0m
+[   5% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_04.wav-7973407ce585fa24c35a355e93e2959e.sample[39m[0m
+[   5% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch1_04.wav.import[39m[0m
+[   5% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_05.wav-aba09f2a12ccb1c645710718ebefb516.sample[39m[0m
+[   5% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch1_05.wav.import[39m[0m
+[   5% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_06.wav-9ce4c09e2e540f9b115221fa5ca27f22.sample[39m[0m
+[   5% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch1_06.wav.import[39m[0m
+[   5% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_07.wav-2488aea8e87f318434812104a88e2227.sample[39m[0m
+[   5% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch1_07.wav.import[39m[0m
+[   6% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_08.wav-9cd96fe9907f8ab32d99f624178a2b01.sample[39m[0m
+[   6% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch1_08.wav.import[39m[0m
+[   6% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch2_01.wav-7db6dc9a15dd6a2a4f0b3431c3ba9da7.sample[39m[0m
+[   6% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch2_01.wav.import[39m[0m
+[   6% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch2_02.wav-6aa1b37c55ec2489c8f71da6b939a8b4.sample[39m[0m
+[   6% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch2_02.wav.import[39m[0m
+[   7% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch2_03.wav-aa03dcd941e27405b4cd524eeec981b2.sample[39m[0m
+[   7% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch2_03.wav.import[39m[0m
+[   7% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch2_04.wav-2b2b70720a07dab8e2098b2886a0494e.sample[39m[0m
+[   7% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch2_04.wav.import[39m[0m
+[   7% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch2_05.wav-e5ecb304fcbc0fb86ebf50a6443325f0.sample[39m[0m
+[   7% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch2_05.wav.import[39m[0m
+[   7% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch2_06.wav-9058c0250d41f2fbeb6aa003d2fd1277.sample[39m[0m
+[   7% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/radio_ch2_06.wav.import[39m[0m
+[   8% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_wind_warning.wav-f1f3dcae9eba927f0dfc0d7bdf8e2889.sample[39m[0m
+[   8% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/tapoh_wind_warning.wav.import[39m[0m
+[   8% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_wind_warning_2.wav-50589de7ee21284254fdb60ee8d466f7.sample[39m[0m
+[   8% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/tapoh_wind_warning_2.wav.import[39m[0m
+[   8% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_wind_warning_3.wav-4c882f7f9f4972fd52bd84d91a9ff815.sample[39m[0m
+[   8% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/tapoh_wind_warning_3.wav.import[39m[0m
+[   8% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ta_poh_call.wav-a6ec42f58ae009c784805f656557ca2e.sample[39m[0m
+[   8% ] [90m[1msavepack[22m | Storing File: res://assets/audio/en/ta_poh_call.wav.import[39m[0m
+[   9% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_00.wav-ffbb2fd37a6eda6606f2fbce2dab45e4.sample[39m[0m
+[   9% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/en/intro_00.wav.import[39m[0m
+[   9% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_01.wav-f5dff1fd2e5152b3139a8b8768110b38.sample[39m[0m
+[   9% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/en/intro_01.wav.import[39m[0m
+[   9% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_02.wav-ef3d63e394931f5c9b929007a4791c4e.sample[39m[0m
+[   9% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/en/intro_02.wav.import[39m[0m
+[  10% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_03.wav-2a8c1f68ce13652f437df077c9f20f41.sample[39m[0m
+[  10% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/en/intro_03.wav.import[39m[0m
+[  10% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_04.wav-7a4329fab2f4615e642ed4b965bff431.sample[39m[0m
+[  10% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/en/intro_04.wav.import[39m[0m
+[  10% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_05.wav-06da890dd30fe37c8d97c7ec4d0cf457.sample[39m[0m
+[  10% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/en/intro_05.wav.import[39m[0m
+[  10% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_06.wav-f7a0c325016cb72d26022720637f792d.sample[39m[0m
+[  10% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/en/intro_06.wav.import[39m[0m
+[  11% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_07.wav-d654ae9eca48cfc7e62f2dafb1d27f46.sample[39m[0m
+[  11% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/en/intro_07.wav.import[39m[0m
+[  11% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_00.wav-b0929c7cdd3c060035bebca3fa6b77a8.sample[39m[0m
+[  11% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/th/intro_00.wav.import[39m[0m
+[  11% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_01.wav-9c694e0a607b78f62347d86e51fdf286.sample[39m[0m
+[  11% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/th/intro_01.wav.import[39m[0m
+[  11% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_02.wav-06bb61849d6f9af49b78cc340fc3f3ad.sample[39m[0m
+[  11% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/th/intro_02.wav.import[39m[0m
+[  12% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_03.wav-b062436ece3b9d30a2dadadafe7b0835.sample[39m[0m
+[  12% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/th/intro_03.wav.import[39m[0m
+[  12% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_04.wav-371222d46ce369f8ced47bcf465665db.sample[39m[0m
+[  12% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/th/intro_04.wav.import[39m[0m
+[  12% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_05.wav-d19c67957e94332f428f575c4771f36e.sample[39m[0m
+[  12% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/th/intro_05.wav.import[39m[0m
+[  13% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_06.wav-2f2e8e655efc5e67285abbc61a0cacbf.sample[39m[0m
+[  13% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/th/intro_06.wav.import[39m[0m
+[  13% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/intro_07.wav-b68e6be3f43992d877e57e2d90b115c2.sample[39m[0m
+[  13% ] [90m[1msavepack[22m | Storing File: res://assets/audio/opening/th/intro_07.wav.import[39m[0m
+[  13% ] [90m[1msavepack[22m | Storing File: res://assets/audio/v11_candidates/cough_manifest.json[39m[0m
+[  13% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_cough.wav-ff50417e419dfb53b28284dc642781c3.sample[39m[0m
+[  13% ] [90m[1msavepack[22m | Storing File: res://assets/audio/v11_candidates/khanae_cough.wav.import[39m[0m
+[  14% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/maelu_cough.wav-2373663104a737006868af07dd5a1346.sample[39m[0m
+[  14% ] [90m[1msavepack[22m | Storing File: res://assets/audio/v11_candidates/maelu_cough.wav.import[39m[0m
+[  14% ] [90m[1msavepack[22m | Storing File: res://assets/audio/v11_candidates/manifest.json[39m[0m
+[  14% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_cough.wav-7d5bc3733fce4593974b39a67d829691.sample[39m[0m
+[  14% ] [90m[1msavepack[22m | Storing File: res://assets/audio/v11_candidates/munaw_cough.wav.import[39m[0m
+[  14% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_fire_out.wav-ca725495b52906cd5dc5dd2828af0be6.sample[39m[0m
+[  14% ] [90m[1msavepack[22m | Storing File: res://assets/audio/v11_candidates/munaw_fire_out.wav.import[39m[0m
+[  15% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_spot_fire.wav-06be5e7d33743eb918031f5a7385c84b.sample[39m[0m
+[  15% ] [90m[1msavepack[22m | Storing File: res://assets/audio/v11_candidates/munaw_spot_fire.wav.import[39m[0m
+[  15% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ranger_cough.wav-f0698e3fe7f06221aff509b4005f4ae2.sample[39m[0m
+[  15% ] [90m[1msavepack[22m | Storing File: res://assets/audio/v11_candidates/ranger_cough.wav.import[39m[0m
+[  15% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ranger_patrol_radio.wav-7ca9860592ba6f3e329ed42910c62e99.sample[39m[0m
+[  15% ] [90m[1msavepack[22m | Storing File: res://assets/audio/v11_candidates/ranger_patrol_radio.wav.import[39m[0m
+[  16% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_cough.wav-f743b9a53b239162f325848a4c9934bd.sample[39m[0m
+[  16% ] [90m[1msavepack[22m | Storing File: res://assets/audio/v11_candidates/tapoh_cough.wav.import[39m[0m
+[  16% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_whistle_reply.wav-9c89cefaef7bc539a8340c25942e2fe0.sample[39m[0m
+[  16% ] [90m[1msavepack[22m | Storing File: res://assets/audio/v11_candidates/tapoh_whistle_reply.wav.import[39m[0m
+[  16% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_embers.wav-81792fac99a693ad0b4b67cf0718676c.sample[39m[0m
+[  16% ] [90m[1msavepack[22m | Storing File: res://assets/audio/bark_embers.wav.import[39m[0m
+[  16% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_embers_2.wav-f1c7f7b710370806cab043510b0042f0.sample[39m[0m
+[  16% ] [90m[1msavepack[22m | Storing File: res://assets/audio/bark_embers_2.wav.import[39m[0m
+[  17% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_fire_out.wav-66d6ddd3753157f4f9351f5d6961ddde.sample[39m[0m
+[  17% ] [90m[1msavepack[22m | Storing File: res://assets/audio/bark_fire_out.wav.import[39m[0m
+[  17% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_fire_out_2.wav-62b512646504b660c083707f4e1acd2a.sample[39m[0m
+[  17% ] [90m[1msavepack[22m | Storing File: res://assets/audio/bark_fire_out_2.wav.import[39m[0m
+[  17% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_maelu_1.wav-0aaaa13b42a2ce845f7ecfcc12fcfc73.sample[39m[0m
+[  17% ] [90m[1msavepack[22m | Storing File: res://assets/audio/bark_maelu_1.wav.import[39m[0m
+[  17% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_maelu_2.wav-cddc15670a54a78a90b67d1e57ca2908.sample[39m[0m
+[  17% ] [90m[1msavepack[22m | Storing File: res://assets/audio/bark_maelu_2.wav.import[39m[0m
+[  18% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_rally_reply.wav-1b41d58dd19bec145da6cfc900576f92.sample[39m[0m
+[  18% ] [90m[1msavepack[22m | Storing File: res://assets/audio/bark_rally_reply.wav.import[39m[0m
+[  18% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_rally_reply_2.wav-b0bd05fe696d503d5d8824ff32a70498.sample[39m[0m
+[  18% ] [90m[1msavepack[22m | Storing File: res://assets/audio/bark_rally_reply_2.wav.import[39m[0m
+[  18% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_report_crew.wav-db07f5ef9a7252fa46cd2e0df94e5cb8.sample[39m[0m
+[  18% ] [90m[1msavepack[22m | Storing File: res://assets/audio/bark_report_crew.wav.import[39m[0m
+[  19% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_report_flame.wav-c2485f10e3e4481a3e04c1a9c7f44b37.sample[39m[0m
+[  19% ] [90m[1msavepack[22m | Storing File: res://assets/audio/bark_report_flame.wav.import[39m[0m
+[  19% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_spot_fire.wav-a84467013b3c73327a13d5864800eee6.sample[39m[0m
+[  19% ] [90m[1msavepack[22m | Storing File: res://assets/audio/bark_spot_fire.wav.import[39m[0m
+[  19% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/bark_spot_fire_2.wav-b785664f1b271f1bed7d58b43953c3bf.sample[39m[0m
+[  19% ] [90m[1msavepack[22m | Storing File: res://assets/audio/bark_spot_fire_2.wav.import[39m[0m
+[  19% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-5e0d34f4fc56ca519bcc8cf9e214090c-music_states.res[39m[0m
+[  20% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_01.wav-aee4b533dbc32d4450458cdf21e3be05.sample[39m[0m
+[  20% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch1_01.wav.import[39m[0m
+[  20% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_02.wav-595a613128e7dcc93cbd887c9eab8b2a.sample[39m[0m
+[  20% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch1_02.wav.import[39m[0m
+[  20% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_03.wav-d9e371fdf7d98adbd63ea7eea766172f.sample[39m[0m
+[  20% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch1_03.wav.import[39m[0m
+[  20% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_04.wav-e6b8f788a286c171cc1e8b5ae04617e6.sample[39m[0m
+[  20% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch1_04.wav.import[39m[0m
+[  21% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_05.wav-513fd5a6e536378811200f79466c7aa8.sample[39m[0m
+[  21% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch1_05.wav.import[39m[0m
+[  21% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_06.wav-4ca86140a610eea7824532d13693cda6.sample[39m[0m
+[  21% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch1_06.wav.import[39m[0m
+[  21% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_07.wav-18a20b7ce029f9e96b73c0f3e0500d09.sample[39m[0m
+[  21% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch1_07.wav.import[39m[0m
+[  22% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch1_08.wav-0472e6b2337453a8f36622a9824b1d09.sample[39m[0m
+[  22% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch1_08.wav.import[39m[0m
+[  22% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch2_01.wav-1caddbbc21f5a12bfbd096ea0c3e7404.sample[39m[0m
+[  22% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch2_01.wav.import[39m[0m
+[  22% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch2_02.wav-7fca3cc781e818546162e65866bc39e4.sample[39m[0m
+[  22% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch2_02.wav.import[39m[0m
+[  22% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch2_03.wav-a187357251009fe7f7e344f11ce9b32a.sample[39m[0m
+[  22% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch2_03.wav.import[39m[0m
+[  23% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch2_04.wav-e78b15400f0db0c06ef50ccfc7b75d4d.sample[39m[0m
+[  23% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch2_04.wav.import[39m[0m
+[  23% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch2_05.wav-b63f3048df03c927184e8cfc00f9ff29.sample[39m[0m
+[  23% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch2_05.wav.import[39m[0m
+[  23% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/radio_ch2_06.wav-73dbffb784434b67d313cdaaf39d21ca.sample[39m[0m
+[  23% ] [90m[1msavepack[22m | Storing File: res://assets/audio/radio_ch2_06.wav.import[39m[0m
+[  23% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_cicada.wav-d7c22f0b35322efe32c950b44f3e851a.sample[39m[0m
+[  23% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_cicada.wav.import[39m[0m
+[  24% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_crackle.wav-23a0d6c0b28d41442c33d3be02d3fb0d.sample[39m[0m
+[  24% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_crackle.wav.import[39m[0m
+[  24% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_drone_hum.wav-6efede185f45ee6b9bf02da5d0821e7f.sample[39m[0m
+[  24% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_drone_hum.wav.import[39m[0m
+[  24% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_evening.wav-55a410d85a9e7394344e49c55dd0d50a.sample[39m[0m
+[  24% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_evening.wav.import[39m[0m
+[  25% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_hearth.wav-0ce7a1b00935b238973442fcbae887a8.sample[39m[0m
+[  25% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_hearth.wav.import[39m[0m
+[  25% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_music0.wav-d56589a9202525a4ff3479abc0b2c2e4.sample[39m[0m
+[  25% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_music0.wav.import[39m[0m
+[  25% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_music1.wav-dcd79a627a2b860581acde5c22afaf5a.sample[39m[0m
+[  25% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_music1.wav.import[39m[0m
+[  25% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_music2.wav-d2128f7b6827d61adc1c8261ea9010f5.sample[39m[0m
+[  25% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_music2.wav.import[39m[0m
+[  26% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_rake.wav-ac208a9525424c130f56ee3048fc3019.sample[39m[0m
+[  26% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_rake.wav.import[39m[0m
+[  26% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_refill.wav-b6923f5546f90946fb8ea98621c574d5.sample[39m[0m
+[  26% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_refill.wav.import[39m[0m
+[  26% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_siren.wav-c1c4ea51d381ef7859758e58c4cdd6e3.sample[39m[0m
+[  26% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_siren.wav.import[39m[0m
+[  26% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_spray.wav-d4ffd15af444c80e932af92ecee8f3ce.sample[39m[0m
+[  26% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_spray.wav.import[39m[0m
+[  27% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_static.wav-d51b67b4a5c6176681293260b127ea83.sample[39m[0m
+[  27% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_static.wav.import[39m[0m
+[  27% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_torch.wav-9a70447b5138c201a98d44167e41eb18.sample[39m[0m
+[  27% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_torch.wav.import[39m[0m
+[  27% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfxloop_wind.wav-9508005f33b22b236827b31938c18d2a.sample[39m[0m
+[  27% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfxloop_wind.wav.import[39m[0m
+[  28% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_beep.wav-fedcfc8811c38756b741c26ea5b03f6b.sample[39m[0m
+[  28% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_beep.wav.import[39m[0m
+[  28% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_camera.wav-de449809fbfaa1ca6dc07a80c4587472.sample[39m[0m
+[  28% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_camera.wav.import[39m[0m
+[  28% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_chime.wav-7c0062feae5f33299593212901664960.sample[39m[0m
+[  28% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_chime.wav.import[39m[0m
+[  28% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_cough.wav-e0278f463d2d8b80a5a958ae3e6dfa77.sample[39m[0m
+[  28% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_cough.wav.import[39m[0m
+[  29% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_cough_khanae.wav-db05bbb62603e4b1b6d081548aaa4332.sample[39m[0m
+[  29% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_cough_khanae.wav.import[39m[0m
+[  29% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_cough_munaw.wav-7140a9673f48f26dd81cc6bcfbe1b56b.sample[39m[0m
+[  29% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_cough_munaw.wav.import[39m[0m
+[  29% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_cough_tapoh.wav-7bb684ab5590cae623fd55f27e7dfc17.sample[39m[0m
+[  29% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_cough_tapoh.wav.import[39m[0m
+[  29% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_day_start.wav-c33d90b94d615aecfb88c2460b09489f.sample[39m[0m
+[  29% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_day_start.wav.import[39m[0m
+[  30% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_ember_tick.wav-483ea378bf6a1d4214d910cfa4471517.sample[39m[0m
+[  30% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_ember_tick.wav.import[39m[0m
+[  30% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_end_crackdown.wav-d0b4e4a5af999cce5208cea5488b991b.sample[39m[0m
+[  30% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_end_crackdown.wav.import[39m[0m
+[  30% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_end_famine.wav-07ca0eb782a3385bf71700b27d4465f0.sample[39m[0m
+[  30% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_end_famine.wav.import[39m[0m
+[  31% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_extinguished.wav-a67c5c364a82b3665846b5229ffa9cf6.sample[39m[0m
+[  31% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_extinguished.wav.import[39m[0m
+[  31% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_grain.wav-1f628735407b376cef0bb74596cda014.sample[39m[0m
+[  31% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_grain.wav.import[39m[0m
+[  31% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_ping.wav-f757c2ccff2fac7e08a6298b1499f1e9.sample[39m[0m
+[  31% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_ping.wav.import[39m[0m
+[  31% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_pop.wav-0494dc03b5f41fadf7afe86daa3483b5.sample[39m[0m
+[  31% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_pop.wav.import[39m[0m
+[  32% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_shutter.wav-440825c711d9b08bb049cd7a0ef50d76.sample[39m[0m
+[  32% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_shutter.wav.import[39m[0m
+[  32% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_spot_fire.wav-a925f27046979955c57809577c081899.sample[39m[0m
+[  32% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_spot_fire.wav.import[39m[0m
+[  32% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_spray.wav-7d1db7499d4c9c0763efb47f6e5e1719.sample[39m[0m
+[  32% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_spray.wav.import[39m[0m
+[  32% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_squelch.wav-ac201f8558277414c4525c7230aaa414.sample[39m[0m
+[  32% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_squelch.wav.import[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_step_ash.wav-44efb08b59b7ea23a5ade9d3c5c80ac9.sample[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_step_ash.wav.import[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_step_ash_1.wav-b6a5342c11436b6cb0f9637eedc2ad90.sample[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_step_ash_1.wav.import[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_step_ash_2.wav-1e63be66ea5248547fedc5449e0f3667.sample[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_step_ash_2.wav.import[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_step_ash_3.wav-7de3267c4e3ab9dc11dff04c63a75d5f.sample[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_step_ash_3.wav.import[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_step_ash_4.wav-459fbb63f865f295b46fccb25df70bf7.sample[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_step_ash_4.wav.import[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_step_brush.wav-af80ff640da7c73795b9779810a9d125.sample[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_step_brush.wav.import[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_step_brush_1.wav-3711aa21eca99a5e651d63cfeada3057.sample[39m[0m
+[  33% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_step_brush_1.wav.import[39m[0m
+[  34% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_step_brush_2.wav-e58a73a6b133f7b7b456e754a6bf2738.sample[39m[0m
+[  34% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_step_brush_2.wav.import[39m[0m
+[  34% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_step_brush_3.wav-03e7c28b75cbf6602b6123e39df1559d.sample[39m[0m
+[  34% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_step_brush_3.wav.import[39m[0m
+[  34% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_step_brush_4.wav-e816b994b67051a3b1b171efd4d7fddf.sample[39m[0m
+[  34% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_step_brush_4.wav.import[39m[0m
+[  34% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_sting_1.wav-3bb86edf2a4c1b7248ae9e3b72fe2242.sample[39m[0m
+[  34% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_sting_1.wav.import[39m[0m
+[  35% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_sting_2.wav-df78dbd84e68a22dc49b271bad84906b.sample[39m[0m
+[  35% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_sting_2.wav.import[39m[0m
+[  35% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_sting_3.wav-5f76d3c6f2a5cd576b06c865ebd508e8.sample[39m[0m
+[  35% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_sting_3.wav.import[39m[0m
+[  35% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_sting_4.wav-af17954c2d7dce824acdb08c9af11f97.sample[39m[0m
+[  35% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_sting_4.wav.import[39m[0m
+[  36% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_thunder.wav-7de3d93467cd1db1a203f6ffab1f4d3c.sample[39m[0m
+[  36% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_thunder.wav.import[39m[0m
+[  36% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_tool_clack.wav-459a74c201096ae6e90ff4405472cb48.sample[39m[0m
+[  36% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_tool_clack.wav.import[39m[0m
+[  36% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_tool_start.wav-c0d5710e461a22c4c7ba20d0c6eb48bb.sample[39m[0m
+[  36% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_tool_start.wav.import[39m[0m
+[  36% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_tool_stop.wav-894bcc209f7ea74b7e673e1c60391c63.sample[39m[0m
+[  36% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_tool_stop.wav.import[39m[0m
+[  37% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_truck_arrive.wav-fed0ed8d1c04fee287e4af149478f817.sample[39m[0m
+[  37% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_truck_arrive.wav.import[39m[0m
+[  37% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_tune.wav-31e21f4eb8c997d38f69b6dde2a061b2.sample[39m[0m
+[  37% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_tune.wav.import[39m[0m
+[  37% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_ui_click.wav-7431e9881398c6c668bdc5e22a3ddc28.sample[39m[0m
+[  37% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_ui_click.wav.import[39m[0m
+[  37% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_whistle.wav-4768582c6aae86b3691df5b3042bde55.sample[39m[0m
+[  37% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_whistle.wav.import[39m[0m
+[  38% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_whistle_alt.wav-e5fa6435d19a59d36bf7eeffbafa62cb.sample[39m[0m
+[  38% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_whistle_alt.wav.import[39m[0m
+[  38% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_wind_shift.wav-b07140dba77fe663424816be810c52d8.sample[39m[0m
+[  38% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_wind_shift.wav.import[39m[0m
+[  38% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/sfx_workshop.wav-c45d07baf36d0a50c7db8d53e603dd23.sample[39m[0m
+[  38% ] [90m[1msavepack[22m | Storing File: res://assets/audio/sfx_workshop.wav.import[39m[0m
+[  39% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_wind_warning.wav-662895866d67368395404736b637ff43.sample[39m[0m
+[  39% ] [90m[1msavepack[22m | Storing File: res://assets/audio/tapoh_wind_warning.wav.import[39m[0m
+[  39% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_wind_warning_2.wav-fd4a67d75d9b357cbeba9a6ef5d971ee.sample[39m[0m
+[  39% ] [90m[1msavepack[22m | Storing File: res://assets/audio/tapoh_wind_warning_2.wav.import[39m[0m
+[  39% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_wind_warning_3.wav-16f5410bda1a10ba1443cfac74d93ece.sample[39m[0m
+[  39% ] [90m[1msavepack[22m | Storing File: res://assets/audio/tapoh_wind_warning_3.wav.import[39m[0m
+[  39% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ta_poh_call.wav-3a94352144c9aad5f3113064dc73d607.sample[39m[0m
+[  39% ] [90m[1msavepack[22m | Storing File: res://assets/audio/ta_poh_call.wav.import[39m[0m
+[  40% ] [90m[1msavepack[22m | Storing File: res://scripts/VoiceSubtitles.gdc[39m[0m
+[  40% ] [90m[1msavepack[22m | Storing File: res://ui/WindCompass.gdc[39m[0m
+[  40% ] [90m[1msavepack[22m | Storing File: res://ui/EndingScene.gdc[39m[0m
+[  40% ] [90m[1msavepack[22m | Storing File: res://ui/TitleScreen.gdc[39m[0m
+[  41% ] [90m[1msavepack[22m | Storing File: res://ui/LowPolyIcon.gdc[39m[0m
+[  41% ] [90m[1msavepack[22m | Storing File: res://ui/OpeningFilm.gdc[39m[0m
+[  41% ] [90m[1msavepack[22m | Storing File: res://ui/TitleLogo.gdc[39m[0m
+[  42% ] [90m[1msavepack[22m | Storing File: res://ui/SegmentBar.gdc[39m[0m
+[  42% ] [90m[1msavepack[22m | Storing File: res://ui/HowToPlay.gdc[39m[0m
+[  42% ] [90m[1msavepack[22m | Storing File: res://ui/OpeningDiorama.gdc[39m[0m
+[  42% ] [90m[1msavepack[22m | Storing File: res://ui/UITheme.gdc[39m[0m
+[  43% ] [90m[1msavepack[22m | Storing File: res://ui/VillageDiorama.gdc[39m[0m
+[  43% ] [90m[1msavepack[22m | Storing File: res://ui/ModalFocusScope.gdc[39m[0m
+[  43% ] [90m[1msavepack[22m | Storing File: res://ui/HUD.gdc[39m[0m
+[  43% ] [90m[1msavepack[22m | Storing File: res://scripts/WindManager.gdc[39m[0m
+[  44% ] [90m[1msavepack[22m | Storing File: res://ui/DebugOverlay.gdc[39m[0m
+[  44% ] [90m[1msavepack[22m | Storing File: res://ui/SettingsPanel.gdc[39m[0m
+[  44% ] [90m[1msavepack[22m | Storing File: res://ui/CheckpointScene.gdc[39m[0m
+[  45% ] [90m[1msavepack[22m | Storing File: res://ui/FacetCard.gdc[39m[0m
+[  45% ] [90m[1msavepack[22m | Storing File: res://ui/HearthBackdrop.gdc[39m[0m
+[  45% ] [90m[1msavepack[22m | Storing File: res://ui/PauseMenu.gdc[39m[0m
+[  45% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ChakraPetch-Medium.ttf-78a016a08515eee6e20491208eeba7e4.fontdata[39m[0m
+[  45% ] [90m[1msavepack[22m | Storing File: res://assets/fonts/ChakraPetch-Medium.ttf.import[39m[0m
+[  46% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ChakraPetch-SemiBold.ttf-87a6da42122dc6ad3132f6ee6c79d8d9.fontdata[39m[0m
+[  46% ] [90m[1msavepack[22m | Storing File: res://assets/fonts/ChakraPetch-SemiBold.ttf.import[39m[0m
+[  46% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/Kanit-Bold.ttf-ddd0b176e6b43f82b9e8ed4f28d6450b.fontdata[39m[0m
+[  46% ] [90m[1msavepack[22m | Storing File: res://assets/fonts/Kanit-Bold.ttf.import[39m[0m
+[  46% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/Kanit-Light.ttf-3bbdfd48ee2d2652c3fe82f03aaf00d5.fontdata[39m[0m
+[  46% ] [90m[1msavepack[22m | Storing File: res://assets/fonts/Kanit-Light.ttf.import[39m[0m
+[  46% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/Kanit-Medium.ttf-1498d7286760f9d16515794784ebc6bc.fontdata[39m[0m
+[  46% ] [90m[1msavepack[22m | Storing File: res://assets/fonts/Kanit-Medium.ttf.import[39m[0m
+[  47% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/Kanit-Regular.ttf-e51ab0b8a0aaab2525362c9876fb4252.fontdata[39m[0m
+[  47% ] [90m[1msavepack[22m | Storing File: res://assets/fonts/Kanit-Regular.ttf.import[39m[0m
+[  47% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/Kanit-SemiBold.ttf-d2fea1a9464c275b3cabebac17da1bb1.fontdata[39m[0m
+[  47% ] [90m[1msavepack[22m | Storing File: res://assets/fonts/Kanit-SemiBold.ttf.import[39m[0m
+[  47% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_v2_lowpoly.glb-8d48fd727bc3d6ae6c1c75b670ce76fd.scn[39m[0m
+[  47% ] [90m[1msavepack[22m | Storing File: res://assets/models/v2/khanae_v2_lowpoly.glb.import[39m[0m
+[  48% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_lowpoly.glb-90e0a942089ff9b5c294fb311d601d7a.scn[39m[0m
+[  48% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_lowpoly.glb.import[39m[0m
+[  48% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_lowpoly.obj-09bf8d3e9a10c508234b8d0b2923375c.mesh[39m[0m
+[  48% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_lowpoly.obj.import[39m[0m
+[  48% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_rigged.glb-2e30dbccb3ce0016b69bf7b161d01aa6.scn[39m[0m
+[  48% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_rigged.glb.import[39m[0m
+[  48% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_rigged_basecolor.png-0386074f7125b8927bb0eb1542334d5a.ctex[39m[0m
+[  48% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_rigged_basecolor.png.import[39m[0m
+[  49% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_rigged_Image_0.jpg-893e004e828623417f975b6db276d7d2.s3tc.ctex[39m[0m
+[  49% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_rigged_Image_0.jpg-893e004e828623417f975b6db276d7d2.etc2.ctex[39m[0m
+[  49% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_rigged_Image_0.jpg.import[39m[0m
+[  49% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_rigged_Image_0.png-d7a1bfc8a84befac70f9413894e963a3.ctex[39m[0m
+[  49% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_rigged_Image_0.png.import[39m[0m
+[  49% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_rigged_Image_1.png-233e8079b329840ea7b03e10cdcf56d1.ctex[39m[0m
+[  49% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_rigged_Image_1.png.import[39m[0m
+[  50% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_rigged_texture_0.png-22e00ef198e0b7058cc7133e27d7c9c1.ctex[39m[0m
+[  50% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_rigged_texture_0.png.import[39m[0m
+[  50% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_test_lowpoly.glb-5db4f208a7c299c20e38bec25ffbcc8e.scn[39m[0m
+[  50% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_test_lowpoly.glb.import[39m[0m
+[  50% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_test_lowpoly.obj-6dca0ed157e06f2b55730692a05be505.mesh[39m[0m
+[  50% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_test_lowpoly.obj.import[39m[0m
+[  50% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_textured.glb-190e4618e6dfeed7f9fdb4bd7d5b1fd2.scn[39m[0m
+[  50% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_textured.glb.import[39m[0m
+[  51% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_textured_Image_0.png-d6aa1719a1e120589a66aaa042858e4d.ctex[39m[0m
+[  51% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_textured_Image_0.png.import[39m[0m
+[  51% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_textured_Image_1.png-107549d6bce526ff99ce503c27e847ae.ctex[39m[0m
+[  51% ] [90m[1msavepack[22m | Storing File: res://assets/models/khanae_textured_Image_1.png.import[39m[0m
+[  51% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/maelu_rigged.glb-513d467c8f9ec35904e56f4cd4694fd2.scn[39m[0m
+[  51% ] [90m[1msavepack[22m | Storing File: res://assets/models/maelu_rigged.glb.import[39m[0m
+[  51% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/maelu_rigged_Image_0.png-c5666fc4e4bc93ca184728fa9dfe608e.ctex[39m[0m
+[  51% ] [90m[1msavepack[22m | Storing File: res://assets/models/maelu_rigged_Image_0.png.import[39m[0m
+[  52% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/maelu_rigged_texture_0.png-d1116ea997ec2c4c36994b8acee650a5.ctex[39m[0m
+[  52% ] [90m[1msavepack[22m | Storing File: res://assets/models/maelu_rigged_texture_0.png.import[39m[0m
+[  52% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_lowpoly.glb-11a590401340acd36ce3e982364369b2.scn[39m[0m
+[  52% ] [90m[1msavepack[22m | Storing File: res://assets/models/munaw_lowpoly.glb.import[39m[0m
+[  52% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_lowpoly.obj-0e7d0932827b32d39bed60025fe00fec.mesh[39m[0m
+[  52% ] [90m[1msavepack[22m | Storing File: res://assets/models/munaw_lowpoly.obj.import[39m[0m
+[  53% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_rigged.glb-aad70ebab6259992967884075147b79e.scn[39m[0m
+[  53% ] [90m[1msavepack[22m | Storing File: res://assets/models/munaw_rigged.glb.import[39m[0m
+[  53% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_rigged_basecolor.png-819138c06d5f11608b03f2d39b5d9980.ctex[39m[0m
+[  53% ] [90m[1msavepack[22m | Storing File: res://assets/models/munaw_rigged_basecolor.png.import[39m[0m
+[  53% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_rigged_CleanBroadDressBands.png-beb2040208949896d0f43f219a0b8d3c.ctex[39m[0m
+[  53% ] [90m[1msavepack[22m | Storing File: res://assets/models/munaw_rigged_CleanBroadDressBands.png.import[39m[0m
+[  53% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_rigged_Image_0.png-b4b0fb2b6e170e24f14994d8c0d02cde.ctex[39m[0m
+[  53% ] [90m[1msavepack[22m | Storing File: res://assets/models/munaw_rigged_Image_0.png.import[39m[0m
+[  54% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_rigged_Image_1.png-52fe4ee989bc31535f8e08a9ff277055.ctex[39m[0m
+[  54% ] [90m[1msavepack[22m | Storing File: res://assets/models/munaw_rigged_Image_1.png.import[39m[0m
+[  54% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_rigged_texture_0.png-cb042d53540b354be0e94c0fad708206.s3tc.ctex[39m[0m
+[  54% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_rigged_texture_0.png-cb042d53540b354be0e94c0fad708206.etc2.ctex[39m[0m
+[  54% ] [90m[1msavepack[22m | Storing File: res://assets/models/munaw_rigged_texture_0.png.import[39m[0m
+[  54% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_textured.glb-a5694a1e4450a33a2eead5e90af28338.scn[39m[0m
+[  54% ] [90m[1msavepack[22m | Storing File: res://assets/models/munaw_textured.glb.import[39m[0m
+[  54% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_textured_Image_0.png-a7a36163a6b5ff096e33a4451403d72f.ctex[39m[0m
+[  54% ] [90m[1msavepack[22m | Storing File: res://assets/models/munaw_textured_Image_0.png.import[39m[0m
+[  55% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_textured_Image_1.png-299f78e921a454d12962726e3e6eb7c2.ctex[39m[0m
+[  55% ] [90m[1msavepack[22m | Storing File: res://assets/models/munaw_textured_Image_1.png.import[39m[0m
+[  55% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ranger_rigged.glb-aaf19c4071a83d6a549ad74e45972c58.scn[39m[0m
+[  55% ] [90m[1msavepack[22m | Storing File: res://assets/models/ranger_rigged.glb.import[39m[0m
+[  55% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ranger_rigged_basecolor.png-1a0855308435d4b0947ee87c41ee6d55.ctex[39m[0m
+[  55% ] [90m[1msavepack[22m | Storing File: res://assets/models/ranger_rigged_basecolor.png.import[39m[0m
+[  56% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ranger_rigged_texture_0.png-13d4e9fd2b72399ae9da3c1af4fc3fd0.ctex[39m[0m
+[  56% ] [90m[1msavepack[22m | Storing File: res://assets/models/ranger_rigged_texture_0.png.import[39m[0m
+[  56% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ranger_slate_rigged.glb-7c1e8552666db21a8f9632b4189d9cce.scn[39m[0m
+[  56% ] [90m[1msavepack[22m | Storing File: res://assets/models/ranger_slate_rigged.glb.import[39m[0m
+[  56% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ranger_slate_rigged_basecolor.png-62ea68f28bd54f4aa2a7aebf8f0f61ac.ctex[39m[0m
+[  56% ] [90m[1msavepack[22m | Storing File: res://assets/models/ranger_slate_rigged_basecolor.png.import[39m[0m
+[  56% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ranger_slate_rigged_texture_0.png-dba5f77690f5bdfaecb0acbae3eaa57e.ctex[39m[0m
+[  56% ] [90m[1msavepack[22m | Storing File: res://assets/models/ranger_slate_rigged_texture_0.png.import[39m[0m
+[  57% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_lowpoly.glb-fac0657268289f93d31a6864a39c4d2c.scn[39m[0m
+[  57% ] [90m[1msavepack[22m | Storing File: res://assets/models/tapoh_lowpoly.glb.import[39m[0m
+[  57% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_lowpoly.obj-2589e08e1677d7e9158fb7816dbec6a5.mesh[39m[0m
+[  57% ] [90m[1msavepack[22m | Storing File: res://assets/models/tapoh_lowpoly.obj.import[39m[0m
+[  57% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_rigged.glb-ab11b3c767ecd541680c3e48d842b2e4.scn[39m[0m
+[  57% ] [90m[1msavepack[22m | Storing File: res://assets/models/tapoh_rigged.glb.import[39m[0m
+[  57% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_rigged_Image_0.png-8fbbf47ea586e518263c9f136a4ceb3e.ctex[39m[0m
+[  57% ] [90m[1msavepack[22m | Storing File: res://assets/models/tapoh_rigged_Image_0.png.import[39m[0m
+[  58% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_rigged_Image_1.png-fd120e1b522f6c39a65f9c6b3c5835b0.ctex[39m[0m
+[  58% ] [90m[1msavepack[22m | Storing File: res://assets/models/tapoh_rigged_Image_1.png.import[39m[0m
+[  58% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_rigged_texture_0.png-5f1f7255f82379eacf18ebc5a799c2d3.s3tc.ctex[39m[0m
+[  58% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_rigged_texture_0.png-5f1f7255f82379eacf18ebc5a799c2d3.etc2.ctex[39m[0m
+[  58% ] [90m[1msavepack[22m | Storing File: res://assets/models/tapoh_rigged_texture_0.png.import[39m[0m
+[  58% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_textured.glb-d4657bed9a9db6704ab50f3babd6c4d7.scn[39m[0m
+[  58% ] [90m[1msavepack[22m | Storing File: res://assets/models/tapoh_textured.glb.import[39m[0m
+[  59% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_textured_Image_0.png-e9c5131ff0d01c15dc2fee7cb4e8dd12.ctex[39m[0m
+[  59% ] [90m[1msavepack[22m | Storing File: res://assets/models/tapoh_textured_Image_0.png.import[39m[0m
+[  59% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_textured_Image_1.png-21bc0a86e1d55e05ba59ce06e903d8b7.ctex[39m[0m
+[  59% ] [90m[1msavepack[22m | Storing File: res://assets/models/tapoh_textured_Image_1.png.import[39m[0m
+[  59% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/C6_villager_a.glb-d87240b3d13aedc3d6d412b3e7eb4a45.scn[39m[0m
+[  59% ] [90m[1msavepack[22m | Storing File: res://assets/props/C6_villager_a.glb.import[39m[0m
+[  59% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/C6_villager_a_Image_0.jpg-5d48dbbaafd2d186a490e59059abffd5.ctex[39m[0m
+[  59% ] [90m[1msavepack[22m | Storing File: res://assets/props/C6_villager_a_Image_0.jpg.import[39m[0m
+[  60% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/C6_villager_b.glb-656b64844ac1a33cc4188e1c8a84f377.scn[39m[0m
+[  60% ] [90m[1msavepack[22m | Storing File: res://assets/props/C6_villager_b.glb.import[39m[0m
+[  60% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/C6_villager_b_Image_0.jpg-2321dd4b8e9ae863cbb5d3f110b712fe.ctex[39m[0m
+[  60% ] [90m[1msavepack[22m | Storing File: res://assets/props/C6_villager_b_Image_0.jpg.import[39m[0m
+[  60% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/C6_villager_c.glb-86d88c5d05035a7c67c7197aeee9c362.scn[39m[0m
+[  60% ] [90m[1msavepack[22m | Storing File: res://assets/props/C6_villager_c.glb.import[39m[0m
+[  60% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/C6_villager_c_Image_0.jpg-24c7fa4482133df11a5eaafab454a1a5.ctex[39m[0m
+[  60% ] [90m[1msavepack[22m | Storing File: res://assets/props/C6_villager_c_Image_0.jpg.import[39m[0m
+[  61% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/C6_villager_d.glb-c9b23495e51305e68069b3903492f669.scn[39m[0m
+[  61% ] [90m[1msavepack[22m | Storing File: res://assets/props/C6_villager_d.glb.import[39m[0m
+[  61% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/C6_villager_d_Image_0.jpg-ce1793ff4cbd90ec333f0f9899d13ff5.ctex[39m[0m
+[  61% ] [90m[1msavepack[22m | Storing File: res://assets/props/C6_villager_d_Image_0.jpg.import[39m[0m
+[  61% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E1_pine_a.glb-586e63e8e17642fdeb5e04d167d79c99.scn[39m[0m
+[  61% ] [90m[1msavepack[22m | Storing File: res://assets/props/E1_pine_a.glb.import[39m[0m
+[  62% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E1_pine_b.glb-8a94b8cdbbca1664d89ac9928bcd3c0b.scn[39m[0m
+[  62% ] [90m[1msavepack[22m | Storing File: res://assets/props/E1_pine_b.glb.import[39m[0m
+[  62% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E1_pine_c.glb-c2bc141965a2e82a3678c38b5fcfb5b1.scn[39m[0m
+[  62% ] [90m[1msavepack[22m | Storing File: res://assets/props/E1_pine_c.glb.import[39m[0m
+[  62% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E2_bamboo_a.glb-62653dc0451fcd6c617f3a1de6c9743b.scn[39m[0m
+[  62% ] [90m[1msavepack[22m | Storing File: res://assets/props/E2_bamboo_a.glb.import[39m[0m
+[  62% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E2_bamboo_b.glb-e2355a37e0158132a8ae08f201e7d6dc.scn[39m[0m
+[  62% ] [90m[1msavepack[22m | Storing File: res://assets/props/E2_bamboo_b.glb.import[39m[0m
+[  63% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E2_bamboo_c.glb-98d2bb9c6308936bd7a963d2698eb1fd.scn[39m[0m
+[  63% ] [90m[1msavepack[22m | Storing File: res://assets/props/E2_bamboo_c.glb.import[39m[0m
+[  63% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E3_brush_a.glb-f3655a2139b3d95bd86b649267aafd3d.scn[39m[0m
+[  63% ] [90m[1msavepack[22m | Storing File: res://assets/props/E3_brush_a.glb.import[39m[0m
+[  63% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E3_brush_b.glb-25003e61f501ae7cb5e88a11097a9475.scn[39m[0m
+[  63% ] [90m[1msavepack[22m | Storing File: res://assets/props/E3_brush_b.glb.import[39m[0m
+[  63% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E3_brush_c.glb-5e53c34dfa23929c268fe9c1c7ee0617.scn[39m[0m
+[  63% ] [90m[1msavepack[22m | Storing File: res://assets/props/E3_brush_c.glb.import[39m[0m
+[  64% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E3_brush_d.glb-fba6cd1aee1a324fc5f099f60337627e.scn[39m[0m
+[  64% ] [90m[1msavepack[22m | Storing File: res://assets/props/E3_brush_d.glb.import[39m[0m
+[  64% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E4_bamboo_stump_a.glb-5fe8fe97b76045849c591b9fff796d78.scn[39m[0m
+[  64% ] [90m[1msavepack[22m | Storing File: res://assets/props/E4_bamboo_stump_a.glb.import[39m[0m
+[  64% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E4_bamboo_stump_b.glb-e303f956da536f1e78a104acdd3f154d.scn[39m[0m
+[  64% ] [90m[1msavepack[22m | Storing File: res://assets/props/E4_bamboo_stump_b.glb.import[39m[0m
+[  65% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E5_root_collar_a.glb-59f5dee1f2310d59ae7d3acbaf63006a.scn[39m[0m
+[  65% ] [90m[1msavepack[22m | Storing File: res://assets/props/E5_root_collar_a.glb.import[39m[0m
+[  65% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E5_root_collar_b.glb-d79fa30bd5d3f9dea18945ecb73280ae.scn[39m[0m
+[  65% ] [90m[1msavepack[22m | Storing File: res://assets/props/E5_root_collar_b.glb.import[39m[0m
+[  65% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E6_rock_a.glb-d449441f786e1d8572b0ef467d9205d9.scn[39m[0m
+[  65% ] [90m[1msavepack[22m | Storing File: res://assets/props/E6_rock_a.glb.import[39m[0m
+[  65% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E6_rock_b.glb-91bfff0b5e824f1d8d2baf45047d2a92.scn[39m[0m
+[  65% ] [90m[1msavepack[22m | Storing File: res://assets/props/E6_rock_b.glb.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E6_rock_c.glb-d2f6e186f9b7fb7dd3af410a47982402.scn[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://assets/props/E6_rock_c.glb.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E6_rock_d.glb-f304f60e4c09eef8bbc22d7ca013f211.scn[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://assets/props/E6_rock_d.glb.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E7_terrace_wall_a.glb-fbc6c8d54c72794fefc7ce7a6a3f19f9.scn[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://assets/props/E7_terrace_wall_a.glb.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E7_terrace_wall_b.glb-f958ef7ac57fe7de966aa79ebdce4ccb.scn[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://assets/props/E7_terrace_wall_b.glb.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E8_log_a.glb-f5405e1cbe268a420c708e732c99e929.scn[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://assets/props/E8_log_a.glb.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E8_log_b.glb-80e0e5361506743debc1b1fb6cf982b8.scn[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://assets/props/E8_log_b.glb.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E9_grass_tuft_a.glb-36148f66343f1b0785a2f7b0deef8777.scn[39m[0m
+[  66% ] [90m[1msavepack[22m | Storing File: res://assets/props/E9_grass_tuft_a.glb.import[39m[0m
+[  67% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E9_grass_tuft_b.glb-79e342035f7a49a57a8f9cf2a857bd1e.scn[39m[0m
+[  67% ] [90m[1msavepack[22m | Storing File: res://assets/props/E9_grass_tuft_b.glb.import[39m[0m
+[  67% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/E9_grass_tuft_c.glb-60cf0283541e793c99cf78820ba4cb05.scn[39m[0m
+[  67% ] [90m[1msavepack[22m | Storing File: res://assets/props/E9_grass_tuft_c.glb.import[39m[0m
+[  67% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S1_field_hut_a.glb-df120577e1fe642fcf75598f43f509d0.scn[39m[0m
+[  67% ] [90m[1msavepack[22m | Storing File: res://assets/props/S1_field_hut_a.glb.import[39m[0m
+[  67% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S1_field_hut_a_Image_0.png-cad7e0a27a88f2c62a6a86fb328daccd.ctex[39m[0m
+[  67% ] [90m[1msavepack[22m | Storing File: res://assets/props/S1_field_hut_a_Image_0.png.import[39m[0m
+[  68% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S1_field_hut_a_Image_1.png-c8d39ad5c9008ed9dd325c811304708b.ctex[39m[0m
+[  68% ] [90m[1msavepack[22m | Storing File: res://assets/props/S1_field_hut_a_Image_1.png.import[39m[0m
+[  68% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S2_water_barrels_a.glb-6bbcded605a54b4509d2eb5e9f0220ac.scn[39m[0m
+[  68% ] [90m[1msavepack[22m | Storing File: res://assets/props/S2_water_barrels_a.glb.import[39m[0m
+[  68% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S2_water_barrels_a_Image_0.jpg-f9e4e1795b52e3458af67d3f3dec47c0.ctex[39m[0m
+[  68% ] [90m[1msavepack[22m | Storing File: res://assets/props/S2_water_barrels_a_Image_0.jpg.import[39m[0m
+[  68% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S3_granary_a.glb-2e4a13c821c840266242f2736452fb01.scn[39m[0m
+[  68% ] [90m[1msavepack[22m | Storing File: res://assets/props/S3_granary_a.glb.import[39m[0m
+[  69% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S3_granary_a_Image_0.jpg-acf810abbb2d16804ab178136e2d78df.ctex[39m[0m
+[  69% ] [90m[1msavepack[22m | Storing File: res://assets/props/S3_granary_a_Image_0.jpg.import[39m[0m
+[  69% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S4_village_house_a.glb-d5630b5050d832302155f29366ee208b.scn[39m[0m
+[  69% ] [90m[1msavepack[22m | Storing File: res://assets/props/S4_village_house_a.glb.import[39m[0m
+[  69% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S4_village_house_a_Image_0.jpg-4b6e1f787d108fa48e8df1b6ee6d7379.ctex[39m[0m
+[  69% ] [90m[1msavepack[22m | Storing File: res://assets/props/S4_village_house_a_Image_0.jpg.import[39m[0m
+[  70% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S4_village_house_b.glb-8f7bd1793117f2cbdb798cfc365a157c.scn[39m[0m
+[  70% ] [90m[1msavepack[22m | Storing File: res://assets/props/S4_village_house_b.glb.import[39m[0m
+[  70% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S4_village_house_b_Image_0.jpg-9c3d54ed8f757e888d024a4eb5e5a283.ctex[39m[0m
+[  70% ] [90m[1msavepack[22m | Storing File: res://assets/props/S4_village_house_b_Image_0.jpg.import[39m[0m
+[  70% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S5_checkpoint_a.glb-cc432635ef6f71d8847f1ed40563ce18.scn[39m[0m
+[  70% ] [90m[1msavepack[22m | Storing File: res://assets/props/S5_checkpoint_a.glb.import[39m[0m
+[  70% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S5_checkpoint_a_Image_0.jpg-9a50d99704146f37288663c5b8dec51b.ctex[39m[0m
+[  70% ] [90m[1msavepack[22m | Storing File: res://assets/props/S5_checkpoint_a_Image_0.jpg.import[39m[0m
+[  71% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S6_ranger_truck_a.glb-bcec6175ecbdf59452051808760a8569.scn[39m[0m
+[  71% ] [90m[1msavepack[22m | Storing File: res://assets/props/S6_ranger_truck_a.glb.import[39m[0m
+[  71% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S6_ranger_truck_a_Image_0.jpg-3f49f4041f438104fd47bec75a44ab51.ctex[39m[0m
+[  71% ] [90m[1msavepack[22m | Storing File: res://assets/props/S6_ranger_truck_a_Image_0.jpg.import[39m[0m
+[  71% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S7_travel_bundle_a.glb-fbdc4b766c5b328ba5990cb9237d4a7c.scn[39m[0m
+[  71% ] [90m[1msavepack[22m | Storing File: res://assets/props/S7_travel_bundle_a.glb.import[39m[0m
+[  71% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S8_transistor_radio_a.glb-005a563151140d40f5840084095d417f.scn[39m[0m
+[  71% ] [90m[1msavepack[22m | Storing File: res://assets/props/S8_transistor_radio_a.glb.import[39m[0m
+[  72% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S8_transistor_radio_a_Image_0.jpg-95fef36e2a5b8b83dde04d24be5a3d1a.ctex[39m[0m
+[  72% ] [90m[1msavepack[22m | Storing File: res://assets/props/S8_transistor_radio_a_Image_0.jpg.import[39m[0m
+[  72% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S9_repair_workbench_a.glb-6dff91478133bf70b639ba0eabfcd1fb.scn[39m[0m
+[  72% ] [90m[1msavepack[22m | Storing File: res://assets/props/S9_repair_workbench_a.glb.import[39m[0m
+[  72% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S9_repair_workbench_a_Image_0.jpg-4e3f5e44ea888f7b7bb7df9450430f0f.ctex[39m[0m
+[  72% ] [90m[1msavepack[22m | Storing File: res://assets/props/S9_repair_workbench_a_Image_0.jpg.import[39m[0m
+[  73% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S10_rice_basket_a.glb-7c9b2b414045a12975f72a0095f2e60d.scn[39m[0m
+[  73% ] [90m[1msavepack[22m | Storing File: res://assets/props/S10_rice_basket_a.glb.import[39m[0m
+[  73% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S10_rice_basket_a_Image_0.jpg-949116ccff4435a4e6364814b0d44baf.ctex[39m[0m
+[  73% ] [90m[1msavepack[22m | Storing File: res://assets/props/S10_rice_basket_a_Image_0.jpg.import[39m[0m
+[  73% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S11_empty_granary_a.glb-08a654e995ac10b86e07bd88420e3094.scn[39m[0m
+[  73% ] [90m[1msavepack[22m | Storing File: res://assets/props/S11_empty_granary_a.glb.import[39m[0m
+[  73% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S11_empty_granary_a_Image_0.jpg-d33edbf3b587c04a8a4db23cc0669ef5.ctex[39m[0m
+[  73% ] [90m[1msavepack[22m | Storing File: res://assets/props/S11_empty_granary_a_Image_0.jpg.import[39m[0m
+[  74% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S12_rice_sack_a.glb-08986bfa269ed4d52be8e1fc360781df.scn[39m[0m
+[  74% ] [90m[1msavepack[22m | Storing File: res://assets/props/S12_rice_sack_a.glb.import[39m[0m
+[  74% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S13_timber_stool_a.glb-21ad433a4fbd897c54599b16abf3eb9c.scn[39m[0m
+[  74% ] [90m[1msavepack[22m | Storing File: res://assets/props/S13_timber_stool_a.glb.import[39m[0m
+[  74% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S14_firewood_bundle_a.glb-918adaf1cf67c3f05408d9109d1456e3.scn[39m[0m
+[  74% ] [90m[1msavepack[22m | Storing File: res://assets/props/S14_firewood_bundle_a.glb.import[39m[0m
+[  74% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S15_lidded_grain_basket_a.glb-8a172e89bbb778f35a8a5598a4e37745.scn[39m[0m
+[  74% ] [90m[1msavepack[22m | Storing File: res://assets/props/S15_lidded_grain_basket_a.glb.import[39m[0m
+[  75% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S15_lidded_grain_basket_a_Image_0.jpg-04c89ff98ec7bbe5aadfb7bbd4c1b883.ctex[39m[0m
+[  75% ] [90m[1msavepack[22m | Storing File: res://assets/props/S15_lidded_grain_basket_a_Image_0.jpg.import[39m[0m
+[  75% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/S16_repair_supplies_a.glb-e861e3a5aac2254ac4cc3ab55600ee5a.scn[39m[0m
+[  75% ] [90m[1msavepack[22m | Storing File: res://assets/props/S16_repair_supplies_a.glb.import[39m[0m
+[  75% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/T1_drip_torch_a.glb-f3e945022a26aeb6d83d835f916139fa.scn[39m[0m
+[  75% ] [90m[1msavepack[22m | Storing File: res://assets/props/T1_drip_torch_a.glb.import[39m[0m
+[  76% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/T2_mida_knife_a.glb-085e4711c13d14a80b0ca17f9099cb3e.scn[39m[0m
+[  76% ] [90m[1msavepack[22m | Storing File: res://assets/props/T2_mida_knife_a.glb.import[39m[0m
+[  76% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/T3_rake_a.glb-6078c58a3aaaaf8e54ea4b3abe809cbd.scn[39m[0m
+[  76% ] [90m[1msavepack[22m | Storing File: res://assets/props/T3_rake_a.glb.import[39m[0m
+[  76% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/T4_sprayer_tank_a.glb-dcc2388cb190fdbb5b8cee8a377c8bd8.scn[39m[0m
+[  76% ] [90m[1msavepack[22m | Storing File: res://assets/props/T4_sprayer_tank_a.glb.import[39m[0m
+[  76% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/T5_sprayer_wand_a.glb-80a8d7e162131d8feb110c9b8ceead23.scn[39m[0m
+[  76% ] [90m[1msavepack[22m | Storing File: res://assets/props/T5_sprayer_wand_a.glb.import[39m[0m
+[  77% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/T6_ranger_flashlight_a.glb-ec7f41bf664ff65345fe29afc0a59c73.scn[39m[0m
+[  77% ] [90m[1msavepack[22m | Storing File: res://assets/props/T6_ranger_flashlight_a.glb.import[39m[0m
+[  77% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/T7_ranger_tablet_a.glb-72f5db200f8c3049161d78f9d9c81f6f.scn[39m[0m
+[  77% ] [90m[1msavepack[22m | Storing File: res://assets/props/T7_ranger_tablet_a.glb.import[39m[0m
+[  77% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/V1_drone_a.glb-8f90baf026a97ab6c639abfb49dc78fa.scn[39m[0m
+[  77% ] [90m[1msavepack[22m | Storing File: res://assets/props/V1_drone_a.glb.import[39m[0m
+[  77% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/V1_drone_a_Image_0.jpg-2788bc76b7b3d9e3972ed8497f73a45a.ctex[39m[0m
+[  77% ] [90m[1msavepack[22m | Storing File: res://assets/props/V1_drone_a_Image_0.jpg.import[39m[0m
+[  78% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/V2_thermal_camera_housing_a.glb-8af81df929d64c7d100753e113f560a2.scn[39m[0m
+[  78% ] [90m[1msavepack[22m | Storing File: res://assets/props/V2_thermal_camera_housing_a.glb.import[39m[0m
+[  78% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/V3_satellite_a.glb-4c3214d794de7fb4e1fea274e41a771d.scn[39m[0m
+[  78% ] [90m[1msavepack[22m | Storing File: res://assets/props/V3_satellite_a.glb.import[39m[0m
+[  78% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/V3_satellite_a_0.jpg-347a1c460c74adb0ebeb7f1984e27384.ctex[39m[0m
+[  78% ] [90m[1msavepack[22m | Storing File: res://assets/props/V3_satellite_a_0.jpg.import[39m[0m
+[  79% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/V3_satellite_a_Image_0.jpg-4a3e8fface61f6bda67308d1e6653a4d.ctex[39m[0m
+[  79% ] [90m[1msavepack[22m | Storing File: res://assets/props/V3_satellite_a_Image_0.jpg.import[39m[0m
+[  79% ] [90m[1msavepack[22m | Storing File: res://scripts/VillageHearth.gdc[39m[0m
+[  79% ] [90m[1msavepack[22m | Storing File: res://scripts/ThermalCamera.gdc[39m[0m
+[  79% ] [90m[1msavepack[22m | Storing File: res://scripts/SprayerHose.gdc[39m[0m
+[  80% ] [90m[1msavepack[22m | Storing File: res://scripts/PlaytestLog.gdc[39m[0m
+[  80% ] [90m[1msavepack[22m | Storing File: res://scripts/PlayerController.gdc[39m[0m
+[  80% ] [90m[1msavepack[22m | Storing File: res://scripts/SkeletalChibiAnimator.gdc[39m[0m
+[  80% ] [90m[1msavepack[22m | Storing File: res://scripts/SkyCycle.gdc[39m[0m
+[  81% ] [90m[1msavepack[22m | Storing File: res://scripts/SaveGame.gdc[39m[0m
+[  81% ] [90m[1msavepack[22m | Storing File: res://scripts/SatelliteModel.gdc[39m[0m
+[  81% ] [90m[1msavepack[22m | Storing File: res://scripts/SatelliteOverpass.gdc[39m[0m
+[  82% ] [90m[1msavepack[22m | Storing File: res://scripts/RangerPatrol.gdc[39m[0m
+[  82% ] [90m[1msavepack[22m | Storing File: res://scripts/RangerFigure.gdc[39m[0m
+[  82% ] [90m[1msavepack[22m | Storing File: res://scripts/PlotGenerator.gdc[39m[0m
+[  82% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/hearth_night_1920x1080.png-f7ffee151dff11ad99d21e616c4eeee2.ctex[39m[0m
+[  82% ] [90m[1msavepack[22m | Storing File: res://assets/ui/hearth/hearth_night_1920x1080.png.import[39m[0m
+[  83% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/island.glb-3f38848557184165d0acfacc52008a41.scn[39m[0m
+[  83% ] [90m[1msavepack[22m | Storing File: res://assets/ui/logo/island.glb.import[39m[0m
+[  83% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/island_0.jpg-77aa5ec3ffefe0720a0d6d253d76fbdb.ctex[39m[0m
+[  83% ] [90m[1msavepack[22m | Storing File: res://assets/ui/logo/island_0.jpg.import[39m[0m
+[  83% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/under_two_skies_icon.png-b09aebc3f33d6e8e4af0069ed4ff559d.ctex[39m[0m
+[  83% ] [90m[1msavepack[22m | Storing File: res://assets/ui/logo/under_two_skies_icon.png.import[39m[0m
+[  83% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/under_two_skies_logo.png-670a9aaaa0d6a6e195b3e9c464604f07.ctex[39m[0m
+[  83% ] [90m[1msavepack[22m | Storing File: res://assets/ui/logo/under_two_skies_logo.png.import[39m[0m
+[  84% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/under_two_skies_logo_dark.png-6ea52687aa110f4303d7e5e9c93de9dd.ctex[39m[0m
+[  84% ] [90m[1msavepack[22m | Storing File: res://assets/ui/logo/under_two_skies_logo_dark.png.import[39m[0m
+[  84% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/under_two_skies_wordmark.png-c722f3780bf8a23dd11b8928e0dffe48.ctex[39m[0m
+[  84% ] [90m[1msavepack[22m | Storing File: res://assets/ui/logo/under_two_skies_wordmark.png.import[39m[0m
+[  84% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/khanae_256.png-59070d5afb2eb8f68ee428223e38dc07.ctex[39m[0m
+[  84% ] [90m[1msavepack[22m | Storing File: res://assets/ui/portraits/khanae_256.png.import[39m[0m
+[  85% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/maelu_256.png-8ef72113b826f7c49e3efb05c7592ea6.ctex[39m[0m
+[  85% ] [90m[1msavepack[22m | Storing File: res://assets/ui/portraits/maelu_256.png.import[39m[0m
+[  85% ] [90m[1msavepack[22m | Storing File: res://assets/ui/portraits/manifest.json[39m[0m
+[  85% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/munaw_256.png-47d4f9a03abf172fcb1a8811bd32f7ad.ctex[39m[0m
+[  85% ] [90m[1msavepack[22m | Storing File: res://assets/ui/portraits/munaw_256.png.import[39m[0m
+[  85% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ranger_256.png-2e568da2f82dd499bc64d7a03b7f3465.ctex[39m[0m
+[  85% ] [90m[1msavepack[22m | Storing File: res://assets/ui/portraits/ranger_256.png.import[39m[0m
+[  86% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/tapoh_256.png-7660dde2d60b4eb0d41a3b997a0b7cc0.ctex[39m[0m
+[  86% ] [90m[1msavepack[22m | Storing File: res://assets/ui/portraits/tapoh_256.png.import[39m[0m
+[  86% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/satellite_shadow_blue_hour_1920x1080.png-331ead26ab1430e2443b44c4aaf01e9c.ctex[39m[0m
+[  86% ] [90m[1msavepack[22m | Storing File: res://assets/ui/title/satellite_shadow_blue_hour_1920x1080.png.import[39m[0m
+[  86% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/satellite_shadow_blue_hour_v01.png-872cbbb77f32566e88d748beebfd6a73.ctex[39m[0m
+[  86% ] [90m[1msavepack[22m | Storing File: res://assets/ui/title/satellite_shadow_blue_hour_v01.png.import[39m[0m
+[  86% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ash_flake.png-2da1c7fbaf4ef810000c0ff1a835d3be.ctex[39m[0m
+[  86% ] [90m[1msavepack[22m | Storing File: res://assets/vfx/ash_flake.png.import[39m[0m
+[  87% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/ember.png-cfcbedf6829229b89f7c76c3ec86ba0d.ctex[39m[0m
+[  87% ] [90m[1msavepack[22m | Storing File: res://assets/vfx/ember.png.import[39m[0m
+[  87% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/flame_sheet.png-4db7e1b388bd35e7db727ec62de66f0c.ctex[39m[0m
+[  87% ] [90m[1msavepack[22m | Storing File: res://assets/vfx/flame_sheet.png.import[39m[0m
+[  87% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/mist_sheet.png-347e6787ceab59fe5f676e89129b2c08.ctex[39m[0m
+[  87% ] [90m[1msavepack[22m | Storing File: res://assets/vfx/mist_sheet.png.import[39m[0m
+[  88% ] [90m[1msavepack[22m | Storing File: res://.godot/imported/smoke_sheet.png-3ac75843e76f2ee89cfcaf644cf9aa3a.ctex[39m[0m
+[  88% ] [90m[1msavepack[22m | Storing File: res://assets/vfx/smoke_sheet.png.import[39m[0m
+[  88% ] [90m[1msavepack[22m | Storing File: res://localization/messages.json[39m[0m
+[  88% ] [90m[1msavepack[22m | Storing File: res://localization/opening.json[39m[0m
+[  88% ] [90m[1msavepack[22m | Storing File: res://localization/voice_subtitles.json[39m[0m
+[  89% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-29ec82eccc45c521a456bd93927a0e1d-KhanaeChibi.scn[39m[0m
+[  89% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-dbd08ad8796c13ab9f27c29f69c776dc-MaeluChibi.scn[39m[0m
+[  89% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-12f9d8262f84f682f59226bf80839693-MunawChibi.scn[39m[0m
+[  89% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-b43a522291a4b2230e0c8f2c7ebca8a0-RangerChibi.scn[39m[0m
+[  90% ] [90m[1msavepack[22m | Storing File: res://scenes/characters/RangerRig.gdc[39m[0m
+[  90% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-f74fdd702e357ff0584732f4fa423e3b-RangerSlateChibi.scn[39m[0m
+[  90% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-04415964e2eb62aea9c6542063de699b-TapohChibi.scn[39m[0m
+[  91% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-0ae68ea63abd192fe7fa49d390f2b3e1-Checkpoint.scn[39m[0m
+[  91% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-8c61e8acbbc61acb20c7dd1a1c1b4313-Ending.scn[39m[0m
+[  91% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-4a24720ee5e787dbe30abc634fa3679d-Main.scn[39m[0m
+[  91% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-5b90686be88cc2b9c38a430b60915d2f-Title.scn[39m[0m
+[  92% ] [90m[1msavepack[22m | Storing File: res://.godot/exported/133200997/export-582fc3253af2a3762b4e706f18071d11-VillageHearth.scn[39m[0m
+[  92% ] [90m[1msavepack[22m | Storing File: res://scripts/AssetLibrary.gdc[39m[0m
+[  92% ] [90m[1msavepack[22m | Storing File: res://scripts/AudioManager.gdc[39m[0m
+[  92% ] [90m[1msavepack[22m | Storing File: res://scripts/CameraRig.gdc[39m[0m
+[  93% ] [90m[1msavepack[22m | Storing File: res://scripts/CharacterEquipment.gdc[39m[0m
+[  93% ] [90m[1msavepack[22m | Storing File: res://scripts/CharacterToolFeedback.gdc[39m[0m
+[  93% ] [90m[1msavepack[22m | Storing File: res://scripts/ChibiAnimator.gdc[39m[0m
+[  94% ] [90m[1msavepack[22m | Storing File: res://scripts/CompanionController.gdc[39m[0m
+[  94% ] [90m[1msavepack[22m | Storing File: res://scripts/CompanionSprayCue.gdc[39m[0m
+[  94% ] [90m[1msavepack[22m | Storing File: res://scripts/Escalation.gdc[39m[0m
+[  94% ] [90m[1msavepack[22m | Storing File: res://scripts/FireGrid.gdc[39m[0m
+[  95% ] [90m[1msavepack[22m | Storing File: res://scripts/FirstBurnTips.gdc[39m[0m
+[  95% ] [90m[1msavepack[22m | Storing File: res://scripts/ForestryDrone.gdc[39m[0m
+[  95% ] [90m[1msavepack[22m | Storing File: res://scripts/GameClock.gdc[39m[0m
+[  95% ] [90m[1msavepack[22m | Storing File: res://scripts/GameSettings.gdc[39m[0m
+[  96% ] [90m[1msavepack[22m | Storing File: res://scripts/GameState.gdc[39m[0m
+[  96% ] [90m[1msavepack[22m | Storing File: res://scripts/InputBindings.gdc[39m[0m
+[  96% ] [90m[1msavepack[22m | Storing File: res://scripts/L10n.gdc[39m[0m
+[  97% ] [90m[1msavepack[22m | Storing File: res://scripts/Landscape.gdc[39m[0m
+[  97% ] [90m[1msavepack[22m | Storing File: res://scripts/Localization.gdc[39m[0m
+[  97% ] [90m[1msavepack[22m | Storing File: res://scripts/LowPoly.gdc[39m[0m
+[  97% ] [90m[1msavepack[22m | Storing File: res://scripts/MaeluVillageAnimator.gdc[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/MaeluVillagePortrait.gdc[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/MainController.gdc[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/OnlineBoard.gdc[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://assets/audio/music_states.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/VoiceSubtitles.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/WindCompass.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/EndingScene.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/TitleScreen.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/LowPolyIcon.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/OpeningFilm.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/TitleLogo.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/SegmentBar.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/HowToPlay.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/OpeningDiorama.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/UITheme.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/VillageDiorama.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/ModalFocusScope.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/HUD.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/WindManager.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/DebugOverlay.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/SettingsPanel.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/CheckpointScene.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/FacetCard.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/HearthBackdrop.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://ui/PauseMenu.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/VillageHearth.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/ThermalCamera.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/SprayerHose.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/PlaytestLog.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/PlayerController.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/SkeletalChibiAnimator.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/SkyCycle.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/SaveGame.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/SatelliteModel.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/SatelliteOverpass.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/RangerPatrol.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/RangerFigure.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/PlotGenerator.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scenes/characters/KhanaeChibi.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scenes/characters/MaeluChibi.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scenes/characters/MunawChibi.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scenes/characters/RangerChibi.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scenes/characters/RangerRig.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scenes/characters/RangerSlateChibi.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scenes/characters/TapohChibi.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scenes/Checkpoint.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scenes/Ending.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scenes/Main.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scenes/Title.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scenes/VillageHearth.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/AssetLibrary.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/AudioManager.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/CameraRig.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/CharacterEquipment.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/CharacterToolFeedback.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/ChibiAnimator.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/CompanionController.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/CompanionSprayCue.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/Escalation.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/FireGrid.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/FirstBurnTips.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/ForestryDrone.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/GameClock.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/GameSettings.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/GameState.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/InputBindings.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/L10n.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/Landscape.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/Localization.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/LowPoly.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/MaeluVillageAnimator.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/MaeluVillagePortrait.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/MainController.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://scripts/OnlineBoard.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://.godot/global_script_class_cache.cfg[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://assets/ui/logo/under_two_skies_icon.png[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://.godot/uid_cache.bin[39m[0m
+Using text server data from export templates.
+[  98% ] [90m[1msavepack[22m | Storing File: res://icudt_godot.dat[39m[0m
+[  98% ] [90m[1msavepack[22m | Storing File: res://project.binary[39m[0m
+[92m[ DONE ][39m [1msavepack[22m
+[0m
