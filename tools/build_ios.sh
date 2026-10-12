@@ -34,7 +34,7 @@ fi
 COMMIT="$(git rev-parse HEAD)"
 STAMP="$(TZ=Asia/Bangkok date +%Y%m%d-%H%M%S)-$(git rev-parse --short HEAD)"
 mkdir -p build; touch build/.gdignore
-OUT="$(mktemp -d "build/$STAMP-XXXXXX-ios")"; OUT="$(cd "$OUT" && pwd)"
+OUT="$(mktemp -d "build/$STAMP-ios-XXXXXX")"; OUT="$(cd "$OUT" && pwd)"
 SOURCE="$OUT/source"; mkdir -p "$SOURCE"
 git archive "$COMMIT" | tar -xf - -C "$SOURCE"
 
