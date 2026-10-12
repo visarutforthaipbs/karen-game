@@ -9,7 +9,7 @@ extends Node
 ## desktop builds never write it.
 
 const FILE_NAME := "perf_log.csv"
-const HEADER := "run,t,hours,fps,frame_ms_avg,frame_ms_max,process_ms,physics_ms,draw_calls,primitives,objects,nodes,vram_mb,msaa,scale3d,detail,zoom"
+const HEADER := "run,t,hours,fps,frame_ms_avg,frame_ms_max,process_ms,physics_ms,draw_calls,primitives,objects,nodes,vram_mb,msaa,scale3d,detail,zoom,render_cpu_ms,render_gpu_ms"
 
 static func wanted() -> bool:
 	return UITheme.is_mobile() or OS.get_cmdline_user_args().has("--perf")
@@ -39,6 +39,8 @@ func _ready() -> void:
 		_file.store_line(HEADER)
 	else:
 		_file.seek_end()
+	# Split render time (CPU submission vs GPU) for the main viewport
+	RenderingServer.viewport_set_measure_render_time(get_viewport().get_viewport_rid(), true)
 	_file.store_line("# run %s device=%s model=%s os=%s renderer=%s" % [
 		_run_id, OS.get_name(), OS.get_model_name(), OS.get_version(),
 		RenderingServer.get_current_rendering_method()])
@@ -85,6 +87,8 @@ func _write_row() -> void:
 		"%.2f" % (vp.scaling_3d_scale if vp else 1.0),
 		GameSettings.landscape_detail,
 		"%.0f" % zoom,
+		"%.2f" % RenderingServer.viewport_get_measured_render_time_cpu(vp.get_viewport_rid()),
+		"%.2f" % RenderingServer.viewport_get_measured_render_time_gpu(vp.get_viewport_rid()),
 	]
 	_file.store_line(",".join(row))
 	_file.flush()

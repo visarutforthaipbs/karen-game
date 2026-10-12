@@ -307,6 +307,12 @@ func _on_touch_press(index: int, pos: Vector2) -> void:
 		return
 	# World touch: aim + hold use tool (or ping the companion when armed).
 	_aim_finger = index
+	# A new press cancels a pending deferred release of the previous tap.
+	var keep: Array = []
+	for entry in _one_shots:
+		if entry[0] != &"use_tool":
+			keep.append(entry)
+	_one_shots = keep
 	_resolve_player()
 	if _player != null:
 		_player.set("touch_aim_active", true)
@@ -334,7 +340,10 @@ func _on_touch_release(index: int) -> void:
 		_end_joystick()
 	elif index == _aim_finger:
 		_aim_finger = -1
-		Input.action_release("use_tool")
+		# A tap can press and release inside one frame; the controllers poll
+		# use_tool in physics, so hold it for a couple of frames before releasing
+		# (a quick tap must still ignite / cut / spray: iPhone playtest cycle 2).
+		_one_shots.append([&"use_tool", ONE_SHOT_FRAMES])
 	elif _button_fingers.has(index):
 		_button_fingers.erase(index)
 

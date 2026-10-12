@@ -308,6 +308,47 @@ func _run() -> void:
 	await frames(2)
 	check(overlay.visible, "overlay returns after the pass flag clears")
 
+	# ---- a same-frame tap (Mirroring click / quick finger) really ignites a cell
+	var grid = main.fire_grid
+	var torch_btn: Rect2 = overlay.get_button_rect("torch")
+	send_touch(15, torch_btn.get_center(), true)
+	send_touch(15, torch_btn.get_center(), false)
+	await frames(4)
+	check(int(player.current_tool) == 0, "torch selected for the tap test")
+	# Stand next to a brush cell well inside the plot (the start spot is bare path)
+	var target := Vector2i(-1, -1)
+	var target_screen := Vector2.ZERO
+	for gy in range(grid.grid_height / 2 - 6, grid.grid_height / 2 + 6):
+		for gx in range(grid.grid_width / 2 - 6, grid.grid_width / 2 + 6):
+			if grid.cell_types[grid._coord_to_index(gx, gy)] == grid.CellType.VEGETATION and not grid.is_border_coord(gx, gy):
+				target = Vector2i(gx, gy)
+				break
+		if target.x >= 0:
+			break
+	if target.x >= 0:
+		var stand: Vector3 = grid.get_cell_world_pos(target.x, target.y) + Vector3(1.2, 0, 1.2)
+		player.global_position = grid.clamp_to_grid(stand)
+		player.global_position.y = grid.get_ground_height_at_world_pos(player.global_position)
+		player.velocity = Vector3.ZERO
+		await frames(12)   # camera rig settles on the player
+		target_screen = cam.unproject_position(grid.get_cell_world_pos(target.x, target.y))
+		if zone.has_point(target_screen) or overlay.is_over_button(target_screen) or player._flat_distance_to(grid.get_cell_world_pos(target.x, target.y)) > player.tool_reach():
+			target = Vector2i(-1, -1)
+	check(target.x >= 0, "a vegetation cell in reach is visible for the tap test")
+	if target.x >= 0:
+		send_touch(16, target_screen, true)
+		send_touch(16, target_screen, false)   # same frame: press + release
+		await frames(2)
+		check(Input.is_action_pressed("use_tool"), "a same-frame tap holds use_tool for the physics poll")
+		# The terraced ground can resolve the tap to the neighbouring cell; the cell
+		# the game targeted is the one that must burn.
+		var hit: Vector2i = player.target_cell_coord
+		check(grid.is_valid_coord(hit.x, hit.y) and hit.distance_to(target) <= 1.0, "tap resolves to the tapped cell or its terrace neighbour (%s vs %s)" % [hit, target])
+		await create_timer(0.6).timeout
+		var t_now = grid.cell_types[grid._coord_to_index(hit.x, hit.y)] if grid.is_valid_coord(hit.x, hit.y) else -1
+		check(t_now == grid.CellType.BURNING or t_now == grid.CellType.SMOLDERING or t_now == grid.CellType.ASH, "same-frame tap with the torch ignites the targeted cell (type %d)" % t_now)
+		check(not Input.is_action_pressed("use_tool"), "deferred release lets go of use_tool afterwards")
+
 	# ---- removing the overlay never leaves a stuck action
 	send_touch(14, jc2, true)
 	send_drag(14, jc2 + Vector2(105, 0), Vector2(105, 0))
