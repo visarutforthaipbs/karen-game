@@ -337,7 +337,9 @@ func _build_inversion_overlay() -> void:
 	inversion_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	inversion_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var shader = Shader.new()
-	shader.code = INVERSION_SHADER
+	# Phones: the mipmapped screen copy + textureLod blur costs ~14 ms/frame at dusk
+	# on an iPhone 14 Pro (dusk 29 fps vs 49 by day); read the plain screen copy.
+	shader.code = INVERSION_SHADER.replace("filter_linear_mipmap", "filter_linear").replace("textureLod(screen_texture, SCREEN_UV, strength * 0.35)", "texture(screen_texture, SCREEN_UV)") if UITheme.is_mobile() else INVERSION_SHADER
 	_inversion_material = ShaderMaterial.new()
 	_inversion_material.shader = shader
 	inversion_overlay.material = _inversion_material

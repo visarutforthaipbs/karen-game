@@ -438,7 +438,8 @@ static func ash_sprite() -> ImageTexture:
 func _setup_particles() -> void:
 	smoke_particles = CPUParticles3D.new()
 	smoke_particles.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	smoke_particles.amount = 320
+	# Alpha-blended smoke is fill-rate: phones get a thinner plume of the same shape
+	smoke_particles.amount = 180 if UITheme.is_mobile() else 320
 	smoke_particles.lifetime = 7.0
 	smoke_particles.emission_shape = CPUParticles3D.EMISSION_SHAPE_POINTS
 	smoke_particles.direction = Vector3.UP
@@ -473,7 +474,7 @@ func _setup_particles() -> void:
 
 	flame_particles = CPUParticles3D.new()
 	flame_particles.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	flame_particles.amount = 180
+	flame_particles.amount = 120 if UITheme.is_mobile() else 180
 	flame_particles.lifetime = 0.8
 	flame_particles.emission_shape = CPUParticles3D.EMISSION_SHAPE_POINTS
 	flame_particles.direction = Vector3.UP
@@ -551,8 +552,9 @@ func _apply_smoke_regime() -> void:
 		smoke_particles.color_ramp.set_color(1, Color(0.6, 0.58, 0.55, 0.0))
 
 func _setup_fire_lights() -> void:
-	# Pool of warm flickering OmniLights for active fire
-	for i in range(8):
+	# Pool of warm flickering OmniLights for active fire. Phones (Mobile renderer,
+	# per-object light cost): three lights read the same at the plot's camera range.
+	for i in range(3 if UITheme.is_mobile() else 8):
 		var l = OmniLight3D.new()
 		l.light_color = Color(1.0, 0.55, 0.15)
 		l.light_energy = 1.1
