@@ -13,16 +13,37 @@ below is a no-op without a touchscreen / `mobile` feature / `--touch` test flag.
 | `tools/build_ios.sh` — export → Xcode archive → App Store Connect IPA + `source-manifest.json` (SHA-256) | `3adcc0c`, `3528f69` | full run from frozen `c69876a` snapshot |
 | Explicit two-thumb touch controls (`scripts/TouchControls.gd`), mobile UI (safe area, 44 pt targets, Quit hidden, touch guide text TH/EN, auto-pause on app pause / focus loss on touch devices) | `c69876a` | `test_touch_controls` 67 checks, `test_mobile_ui` 31/30 checks (with/without `--touch`), all 22 CI suites green |
 | Voice/radio suite teardown fix (pre-existing flaky "resources still in use at exit") | `781bc71` | 0 leaks in 16/16 runs; CI run 38270361899 success |
+| iPhone playtest round 1 fixes: right-edge button stack clear of vitals/state cards, overlay hidden over report / pause / satellite pass, captions narrowed on touch | `1456fc8` | `test_touch_controls` 76 checks (4 playtest regressions); CI success |
+| Dusk-inversion overview legibility (fog calibrated to camera distance, squared ratio) — affects desktop too | `39014d9` | reproduced + verified with in-engine stills on Mobile (Metal) and Forward+; `test_mobile_ui` 35/34; CI run 38280080276 success |
+
+## Playtest round 1 (2026-10-12, iPhone 14 Pro via iPhone Mirroring, external tester)
+
+Report: `~/.codex/visualizations/2026/10/12/01a130c2-bc4e-7953-afcf-654d142b489f/ios-playtest/REPORT.md`.
+Findings and disposition:
+
+| # | Finding | Fix |
+|---|---|---|
+| P1 | Touch cluster hid water / breath (vitals card) | 2x4 stack on the right edge fitted between state and vitals cards (`1456fc8`) |
+| P1 | ~19:23 overview opaque brown | NOT renderer-specific (identical on Forward+), NOT the HUD sepia overlay; exponential + height fog saturate at the 72 m overview. `SkyCycle.depth_scale()` = clamp((44/d)^2, 0.3, 1) (`39014d9`) |
+| P2 | Cluster drawn over the 20:00 report | Overlay hides when paused / report visible / pass started (`1456fc8`) |
+| P2 | Voice captions over the top button row | `VoiceSubtitles.set_gameplay_side_inset()` on touch devices (`1456fc8`) |
+
+Tester could not establish joystick movement through Mirroring (drag delivery unverified)
+— physical two-thumb play on the device remains the open check.
 
 Real-device evidence (iPhone 14 Pro, dev-signed Debug app from `c69876a`): installed via
 `devicectl`, process alive 30 s after detached launch; app container shows
 `shader_cache/SceneForwardMobileShaderRD/*.metal.cache` (Mobile renderer on Metal rendered
 the 3D scene) and `Documents/campaign.json` + `settings.cfg` (`locale=th`, online board off).
 
-Latest IPA (not uploaded): `UnderTwoSkies.ipa` 264,816,145 bytes,
-sha256 `d761b030ba9a62e55d06ddc924cff961ffcfb03b1294300740eea5b425b74b0b`, Apple
+Latest IPA (not uploaded): `UnderTwoSkies.ipa` 264,817,456 bytes,
+sha256 `e4278347d554fa9f09272d840cbbfe092f31ac821a09dc39f3d7e6296f889bf0`, Apple
 Distribution, profile "iOS Team Store Provisioning Profile: io.github.visarutforthaipbs.undertwoskies",
-`beta-reports-active=true`. Built by `tools/build_ios.sh --dev-app` from `c69876a`.
+`beta-reports-active=true`. Built by `tools/build_ios.sh --dev-app` from `39014d9`
+(`build/20261012-235010-39014d9-ios-1Rw5c0/`); the matching Debug app is installed on the
+paired iPhone 14 Pro. Note: Godot's clean import occasionally SIGSEGVs in threaded font
+reimport (`propagate_notification` from a worker thread); the script refuses the build —
+just re-run it.
 
 ## Known limits (state honestly)
 
