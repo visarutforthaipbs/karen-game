@@ -128,8 +128,13 @@ func _ready() -> void:
 	world_environment.environment = world_environment.environment.duplicate(true)
 	# Phones: the bloom pass is a full-resolution blur chain on a GPU-bound frame;
 	# the low-poly scene reads the same without it (glow_bloom is only 0.12).
+	# The 4-split PSSM directional shadow re-renders the plot per cascade and was
+	# 67% of all primitives on the iPhone (1.08 of 1.61 M); one orthogonal cascade
+	# over the plot's camera range is plenty for flat-shaded low-poly shadows.
 	if UITheme.is_mobile():
 		world_environment.environment.glow_enabled = false
+		sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
+		sun.directional_shadow_max_distance = 90.0
 	sky = SkyCycle.new()
 	sky.sun = sun
 	sky.world_environment = world_environment

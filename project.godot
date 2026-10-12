@@ -55,10 +55,10 @@ locale/include_text_server_data=true
 
 ; Desktop stays Forward+; iOS/Android use the Mobile renderer (Metal/Vulkan).
 renderer/rendering_method.mobile="mobile"
-; Mobile quality profile (iPhone 14 Pro measured GPU-bound at ~25 ms/frame after the
-; geometry and draw-call fixes): render 3D at 85% and cheaper directional shadows.
+; Mobile quality profile (iPhone 14 Pro measured vertex-bound, not fill-bound: an 85%
+; 3D scale changed nothing, so the picture stays full resolution). Cheaper directional
+; shadow atlas/filter here; MainController also uses one shadow cascade on phones.
 ; Desktop keeps the defaults.
-scaling_3d/scale.mobile=0.85
 lights_and_shadows/directional_shadow/size.mobile=2048
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality.mobile=0
 textures/vram_compression/import_etc2_astc=true
