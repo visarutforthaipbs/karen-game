@@ -947,10 +947,27 @@ func show_drone_alert(message: String, is_danger: bool = false, from_ranger: boo
 	if serial == _drone_serial:
 		drone_banner.visible = false
 
-## 0..1 strength of the sepia inversion post-process
+## 0..1 strength of the sepia inversion post-process (base value; the overview
+## zoom eases it through set_inversion_view_scale so the hillside stays legible)
+var _inversion_base: float = 0.0
+var _inversion_view_scale: float = 1.0
+
 func set_inversion_strength(strength: float) -> void:
+	_inversion_base = strength
+	_apply_inversion()
+
+## 0..1 from SkyCycle.depth_scale(): 1 at the authored camera, lower zoomed out
+func set_inversion_view_scale(view_scale: float) -> void:
+	var s := clampf(lerpf(0.4, 1.0, view_scale), 0.0, 1.0)
+	if is_equal_approx(s, _inversion_view_scale):
+		return
+	_inversion_view_scale = s
+	_apply_inversion()
+
+func _apply_inversion() -> void:
 	if not _inversion_material:
 		return
+	var strength := _inversion_base * _inversion_view_scale
 	_inversion_material.set_shader_parameter("strength", strength)
 	inversion_overlay.visible = strength > 0.001
 

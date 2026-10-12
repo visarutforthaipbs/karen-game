@@ -21,8 +21,8 @@ const CALIBRATED_VIEW_DISTANCE: float = 44.0
 ## Squared so the overview (72 m -> 0.37) reads: the height-fog term is
 ## distance-independent, so a plain 1/distance scale left it opaque (measured
 ## in-engine on Metal, Mobile and Forward+ renderers, 2026-10-12).
-const DEPTH_SCALE_EXPONENT: float = 2.0
-const MIN_DEPTH_SCALE: float = 0.3
+const DEPTH_SCALE_EXPONENT: float = 3.0
+const MIN_DEPTH_SCALE: float = 0.2
 var view_distance: float = CALIBRATED_VIEW_DISTANCE
 
 ## 0..1 multiplier applied to the fog densities for the current camera distance

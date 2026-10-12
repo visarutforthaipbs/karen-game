@@ -667,7 +667,10 @@ func _trigger_bamboo_explosion(from_x: int, from_y: int, next_types: Array, next
 	var landing_y = int(round(from_y + spark_vector.y))
 
 	var source_world_pos = get_cell_world_pos(from_x, from_y)
-	bamboo_exploded.emit(Vector2i(from_x, from_y), source_world_pos, Vector2i(landing_x, landing_y))
+	# Listeners place sound / sparks at the landing cell; a spark that flies past the
+	# plot edge must not index outside the grid (was: 'Invalid access of index 1608').
+	var landing_in_grid := Vector2i(clampi(landing_x, 0, grid_width - 1), clampi(landing_y, 0, grid_height - 1))
+	bamboo_exploded.emit(Vector2i(from_x, from_y), source_world_pos, landing_in_grid)
 	_spawn_spark_burst(source_world_pos, spark_vector)
 
 	_ignite_landing(landing_x, landing_y, next_types, next_heat)

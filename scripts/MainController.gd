@@ -379,6 +379,7 @@ func _process(delta: float) -> void:
 	sky.inversion_strength = _inversion_level
 	if cam_rig:
 		sky.view_distance = cam_rig.distance
+		hud.set_inversion_view_scale(sky.depth_scale())
 	sky.apply_time(hours)
 
 	# 19:45 countdown to the orbital pass
