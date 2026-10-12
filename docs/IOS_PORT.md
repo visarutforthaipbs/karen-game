@@ -31,16 +31,38 @@ Findings and disposition:
 Tester could not establish joystick movement through Mirroring (drag delivery unverified)
 — physical two-thumb play on the device remains the open check.
 
+## Scrolling audit (2026-10-13, iPhone 14 Pro, external tester + owner's finger)
+
+Report: `.../ios-playtest/SCROLL_AUDIT.md`. No menu scrolled by touch; title Settings
+below the fold; settings / village / guide content clipped.
+
+Root cause (verified in `scene/gui/scroll_container.cpp` @ 4.7.2-stable): ScrollContainer
+drag-scrolls from mouse events only (zero `InputEventScreenTouch/Drag`), so it depended on
+mouse emulation, which this port disables for two-thumb gameplay.
+
+| # | Finding | Fix (`82de79d`) |
+|---|---|---|
+| P1 | Village ration/workshop choices unreachable | `UITheme.install_touch_scroll()` on every ScrollContainer (node_added installer, touch devices only): finger drags scroll directly |
+| P1 | Title Settings offscreen, menu doesn't scroll | 2x2 GridContainer menu on touch — all four actions fit 1280x720 with no swipe |
+| P1 | Settings lower controls clipped | same touch-scroll installer |
+| P2 | Guide text clipped | same |
+
+Tests (`test_mobile_ui` 44/43): swipes scroll guide / settings / village on touch and not
+on desktop; a swipe starting on a button does not activate it; title actions all inside
+the viewport. The audit's larger recommendation (fit each task per screen, no scroll
+dependency for essential actions in Village / Settings / How to Play) is NOT done — this
+round makes scrolling work; a tabbed/paged mobile layout is a follow-up for the UI lane.
+
 Real-device evidence (iPhone 14 Pro, dev-signed Debug app from `c69876a`): installed via
 `devicectl`, process alive 30 s after detached launch; app container shows
 `shader_cache/SceneForwardMobileShaderRD/*.metal.cache` (Mobile renderer on Metal rendered
 the 3D scene) and `Documents/campaign.json` + `settings.cfg` (`locale=th`, online board off).
 
-Latest IPA (not uploaded): `UnderTwoSkies.ipa` 264,817,456 bytes,
-sha256 `e4278347d554fa9f09272d840cbbfe092f31ac821a09dc39f3d7e6296f889bf0`, Apple
+Latest IPA (not uploaded): `UnderTwoSkies.ipa` 264,820,373 bytes,
+sha256 `c0d3e0e93c405ceed86f99e1ee2ee6eefd56070c271484b34fb3f49504e78fbd`, Apple
 Distribution, profile "iOS Team Store Provisioning Profile: io.github.visarutforthaipbs.undertwoskies",
-`beta-reports-active=true`. Built by `tools/build_ios.sh --dev-app` from `39014d9`
-(`build/20261012-235010-39014d9-ios-1Rw5c0/`); the matching Debug app is installed on the
+`beta-reports-active=true`. Built by `tools/build_ios.sh --dev-app` from `82de79d`
+(`build/20261013-003800-82de79d-ios-zQtB88/`); the matching Debug app is installed on the
 paired iPhone 14 Pro. Note: Godot's clean import occasionally SIGSEGVs in threaded font
 reimport (`propagate_notification` from a worker thread); the script refuses the build —
 just re-run it.
