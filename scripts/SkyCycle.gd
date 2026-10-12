@@ -13,6 +13,21 @@ var inversion_strength: float = 0.0
 var storm_front: bool = false
 ## Height (m) below which inversion smoke pools; set from the hillside
 var inversion_ceiling: float = 6.0
+## Camera distance the fog keys were authored at (CameraRig.ZOOM_DEFAULT). The
+## exponential fog is calibrated so the plot at the focus point keeps the same
+## haze at any zoom: zooming out to the overview used to saturate the fog and
+## paint the whole hillside opaque brown (iPhone playtest P1, also on desktop).
+const CALIBRATED_VIEW_DISTANCE: float = 44.0
+## Squared so the overview (72 m -> 0.37) reads: the height-fog term is
+## distance-independent, so a plain 1/distance scale left it opaque (measured
+## in-engine on Metal, Mobile and Forward+ renderers, 2026-10-12).
+const DEPTH_SCALE_EXPONENT: float = 2.0
+const MIN_DEPTH_SCALE: float = 0.3
+var view_distance: float = CALIBRATED_VIEW_DISTANCE
+
+## 0..1 multiplier applied to the fog densities for the current camera distance
+func depth_scale() -> float:
+	return clampf(pow(CALIBRATED_VIEW_DISTANCE / maxf(view_distance, 1.0), DEPTH_SCALE_EXPONENT), MIN_DEPTH_SCALE, 1.0)
 
 var _flash: float = 0.0
 var _keys: Array[Dictionary] = []
@@ -76,10 +91,12 @@ func apply_time(hours: float) -> void:
 	var fog_color = (a.fog_color as Color).lerp(b.fog_color, t)
 	var sepia = Color(0.62, 0.46, 0.28)
 	env.fog_light_color = fog_color.lerp(sepia, inversion_strength * 0.6)
-	# Inversion: thick, ground-hugging haze that cuts visibility
-	env.fog_density = lerpf(a.fog, b.fog, t) + inversion_strength * 0.02 + (0.002 if storm_front else 0.0)
+	# Inversion: thick, ground-hugging haze that cuts visibility. Densities are
+	# scaled for the camera distance so the overview stays legible (depth_scale).
+	var scale := depth_scale()
+	env.fog_density = (lerpf(a.fog, b.fog, t) + inversion_strength * 0.02 + (0.002 if storm_front else 0.0)) * scale
 	env.fog_height = inversion_ceiling
-	env.fog_height_density = inversion_strength * 0.25
+	env.fog_height_density = inversion_strength * 0.25 * scale
 
 	var sky_mat = env.sky.sky_material as ProceduralSkyMaterial if env.sky else null
 	if sky_mat:

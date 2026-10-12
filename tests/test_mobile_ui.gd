@@ -199,6 +199,24 @@ func run() -> void:
 	await process_frame
 	check(not paused, "app pause can be dismissed")
 
+	# --- 7. Dusk inversion stays legible at the overview zoom (playtest P1) ---
+	var sky = main.sky
+	var env: Environment = main.world_environment.environment
+	sky.inversion_strength = 1.0
+	sky.view_distance = sky.CALIBRATED_VIEW_DISTANCE
+	sky.apply_time(19.4)
+	var fog_default: float = env.fog_density
+	var hfog_default: float = env.fog_height_density
+	check(is_equal_approx(sky.depth_scale(), 1.0), "fog is unscaled at the authored 44 m camera")
+	sky.view_distance = main.cam_rig.zoom_max
+	sky.apply_time(19.4)
+	var expected: float = clampf(pow(sky.CALIBRATED_VIEW_DISTANCE / main.cam_rig.zoom_max, sky.DEPTH_SCALE_EXPONENT), sky.MIN_DEPTH_SCALE, 1.0)
+	check(is_equal_approx(env.fog_density, fog_default * expected) and is_equal_approx(env.fog_height_density, hfog_default * expected), "overview zoom scales distance and height fog by the squared distance ratio")
+	check(expected < 0.5 and expected >= sky.MIN_DEPTH_SCALE, "overview fog lands between the floor and half of the authored density")
+	main.cam_rig.distance = main.cam_rig.zoom_max
+	await process_frame
+	check(is_equal_approx(sky.view_distance, main.cam_rig.zoom_max), "MainController feeds the live camera distance to the sky each frame")
+
 	finish(original, scratch)
 
 func finish(original: Dictionary, scratch: String) -> void:

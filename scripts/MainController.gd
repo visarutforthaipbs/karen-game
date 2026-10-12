@@ -371,6 +371,8 @@ func _process(delta: float) -> void:
 	if inversion_started:
 		_inversion_level = move_toward(_inversion_level, 1.0, delta / 5.0)
 	sky.inversion_strength = _inversion_level
+	if cam_rig:
+		sky.view_distance = cam_rig.distance
 	sky.apply_time(hours)
 
 	# 19:45 countdown to the orbital pass
