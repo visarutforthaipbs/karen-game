@@ -381,11 +381,23 @@ func _make_prop_layers(meshes: Array, material: Material = null) -> Array[MultiM
 		layers.append(inst)
 	return layers
 
-## Shows the prop for cell i on one variant layer (stable per cell) and hides it on the rest
-func _set_prop(layers: Array[MultiMeshInstance3D], i: int, xf: Transform3D, visible_here: bool, hidden: Transform3D) -> void:
+## Packs cell i's prop into the next free slot of its stable variant layer (pick)
+## and advances that layer's counter. Layers are rewritten in full by
+## _update_visuals(), which then sets visible_instance_count per layer, so only
+## real props are drawn. (Before: every layer held one instance per cell and 17 of
+## the 18 were zero-scaled — ~29,000 degenerate instances, ~15 M primitives/frame
+## with the shadow pass; the iPhone 14 Pro ran at ~18 fps.)
+func _set_prop(layers: Array[MultiMeshInstance3D], i: int, xf: Transform3D, visible_here: bool, counts: PackedInt32Array, offset: int) -> void:
+	if not visible_here:
+		return
 	var pick = (i * 7919 + terrain_seed) % layers.size()
-	for k in layers.size():
-		layers[k].multimesh.set_instance_transform(i, xf if visible_here and k == pick else hidden)
+	var slot: int = counts[offset + pick]
+	layers[pick].multimesh.set_instance_transform(slot, xf)
+	counts[offset + pick] = slot + 1
+
+## All prop layer groups in a fixed order with their counter offsets
+func _prop_groups() -> Array:
+	return [pine_layers, bamboo_layers, brush_layers, ember_bamboo_layers, ember_brush_layers, ash_bamboo_layers, ash_brush_layers]
 
 ## Soft round sprite shared by smoke, flames and sparks (no texture assets needed).
 ## Built as a mipmapped image so distant particles stay round instead of turning into squares.
@@ -905,6 +917,17 @@ func _update_visuals() -> void:
 	var now = Time.get_ticks_msec() / 1000.0
 	var show_props = not thermal_view
 
+	# Packed prop layers: one counter per (group, variant layer)
+	var groups: Array = _prop_groups()
+	var offsets := PackedInt32Array()
+	var total_layers := 0
+	for g in groups:
+		offsets.append(total_layers)
+		total_layers += g.size()
+	var counts := PackedInt32Array()
+	counts.resize(total_layers)
+	counts.fill(0)
+
 	for i in range(cell_types.size()):
 		var type = cell_types[i]
 		var prop_xf: Transform3D = prop_transforms[i]
@@ -937,20 +960,26 @@ func _update_visuals() -> void:
 					g_color = COLOR_FOREST_DEEP
 		mm_ground.set_instance_color(i, g_color)
 
-		# 3D Vegetation Props
+		# 3D Vegetation Props (packed: see _set_prop)
 		var visible_props = show_props and not excluded and not scanned
-		_set_prop(pine_layers, i, prop_xf, visible_props and type == CellType.FOREST_BORDER, zero_transform)
-		_set_prop(bamboo_layers, i, prop_xf, visible_props and type == CellType.BAMBOO, zero_transform)
-		_set_prop(brush_layers, i, prop_xf, visible_props and type == CellType.VEGETATION, zero_transform)
+		_set_prop(pine_layers, i, prop_xf, visible_props and type == CellType.FOREST_BORDER, counts, offsets[0])
+		_set_prop(bamboo_layers, i, prop_xf, visible_props and type == CellType.BAMBOO, counts, offsets[1])
+		_set_prop(brush_layers, i, prop_xf, visible_props and type == CellType.VEGETATION, counts, offsets[2])
 		var glowing = visible_props and (type == CellType.BURNING or type == CellType.SMOLDERING)
 		var ashen = visible_props and type == CellType.ASH
 		var was_bamboo: bool = cell_was_bamboo[i]
-		_set_prop(ember_bamboo_layers, i, prop_xf, glowing and was_bamboo, zero_transform)
-		_set_prop(ember_brush_layers, i, prop_xf, glowing and not was_bamboo, zero_transform)
-		_set_prop(ash_bamboo_layers, i, prop_xf, ashen and was_bamboo, zero_transform)
-		_set_prop(ash_brush_layers, i, prop_xf, ashen and not was_bamboo, zero_transform)
+		_set_prop(ember_bamboo_layers, i, prop_xf, glowing and was_bamboo, counts, offsets[3])
+		_set_prop(ember_brush_layers, i, prop_xf, glowing and not was_bamboo, counts, offsets[4])
+		_set_prop(ash_bamboo_layers, i, prop_xf, ashen and was_bamboo, counts, offsets[5])
+		_set_prop(ash_brush_layers, i, prop_xf, ashen and not was_bamboo, counts, offsets[6])
 		var eye_xf = Transform3D(Basis(), prop_xf.origin + Vector3(0, 1.5, 0))
 		mm_eye.set_instance_transform(i, eye_xf if visible_props and highlighted else zero_transform)
+
+	# Draw only the packed prefix of every layer
+	for g in groups.size():
+		var layers: Array = groups[g]
+		for k in layers.size():
+			layers[k].multimesh.visible_instance_count = counts[offsets[g] + k]
 
 	_update_fire_effects()
 
