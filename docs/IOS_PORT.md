@@ -70,11 +70,23 @@ closes them (the headless suites prove the code path: `test_touch_controls` 83 c
 | 3 | `023a4f0` | 30.0 / 26.0 | 21/596 | 662 | 1.70 M | HUD draw batching (`8b7c799`), notch captions + dusk r3 (`dc2b759`) |
 | 4 | `dc2b759` | **40.4** / 25.8 | **8**/568 | 311 | 1.63 M | village Launch caption, GPU profile (`e11c81d`) |
 | 5 | `e11c81d` | 32.8 / 25.3 (more dusk time) | 24/577 | 329 | — | 85% scale = no gain → vertex-bound; 1 shadow cascade (`0d5bcc4`) |
+| 6 | `0d5bcc4` | 42.3 idle / **33.2 real fire** | 9 / 10 | 359 / 319 | 1.09 M | first confirmed real burn via Mirroring; fewer fire lights/particles, cheaper dusk post (`c77dda4`) |
+| 7 | `c77dda4` | **43.0 / 31.0 (real fire)** | **7**/559 | — | — | daytime-with-fire 46.6, dusk 31–33, overview 55 — loop closed |
+
+**Loop closed at cycle 7.** Tester-confirmed on device: real ignition and spread, sprayer
+steam + water consumption, dusk overview legible, all layout/caption/report items, backgrounding
+auto-pause + Resume; no open game defect. Remaining "NOT READY" items are the two gestures
+iPhone Mirroring cannot deliver (a held joystick drag, a finger swipe) and the clean-firebreak
+observation that depends on them — **owner's finger check required** (see Release gate).
+Candidate for TestFlight: `c77dda4`, `UnderTwoSkies.ipa` 264,826,552 bytes,
+sha256 `172586c51da108e474e73406e5c35cd96e03c77d1db1a07d932973ca98baf4fc`.
 
 Root causes found, in order: (1) 29k zero-scale MultiMesh instances (17 of 18 prop layers
 per cell) = 15 M primitives; (2) one draw call per `draw_colored_polygon` → HUD 587 draws;
-(3) 4-cascade PSSM directional shadow = 67% of remaining primitives. Script CPU is within
-noise (4.7 ms with 3D hidden on the Mac).
+(3) 4-cascade PSSM directional shadow = 67% of remaining primitives; (4) with fire: 8 omni
+lights + 500 alpha particles (3 lights / 300 particles on phones); (5) dusk: mipmapped
+screen copy in the inversion post-process. Script CPU is within noise (4.7 ms with 3D
+hidden on the Mac).
 
 Tester-confirmed on device by cycle 5: vitals card clear, buttons hidden over the report,
 captions clear of the stack (incl. notch inset), 2×2 title, dusk overview legible, village
@@ -108,6 +120,11 @@ just re-run it.
 
 ## Release gate for this port
 
+0. **Owner finger check (3 minutes, the only thing Mirroring can't do):** on the installed
+   build — (a) title → How to Play: swipe up on the text, does it scroll? (b) Village: swipe
+   the briefing; (c) burn: hold the left thumb and move — does Khanae walk? (d) blade: tap
+   3 brush cells next to her — do they turn to bare clay? If all four pass, the port is
+   play-ready for a TestFlight beta.
 1. `tools/build_ios.sh --dev-app` from a committed, CI-green commit.
 2. Install the Debug app on the paired device; play a full burn with touch; check notch/home
    indicator, iPad layout, background→foreground (auto-pause) and a phone call.
