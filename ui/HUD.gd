@@ -15,6 +15,7 @@ const WINDOW_START_MIN: int = 14 * 60
 const WINDOW_END_MIN: int = 20 * 60
 
 ## 18:00 inversion post-process (PRD §4.3): sepia, softened, ground-hugging haze, vignette
+const TOUCH_HINT = "แตะแปลงใช้เครื่องมือ · นิ้วซ้ายเดิน · ปุ่มมุมขวาสั่งทีมและหยุดเกม"
 const INVERSION_SHADER = """
 shader_type canvas_item;
 uniform sampler2D screen_texture : hint_screen_texture, filter_linear_mipmap;
@@ -144,6 +145,9 @@ func _ready() -> void:
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.theme = UITheme.get_theme()
 	add_child(root)
+	# Notch / home-indicator padding belongs to the layer itself so every
+	# pinned card inside it moves inward together (no-op on desktop).
+	UITheme.apply_safe_area(root)
 
 	if GameState.instance:
 		_barn_target = GameState.instance.barn_target()
@@ -182,6 +186,7 @@ func _ready() -> void:
 	root.add_child(debug)
 	# Short-lived danger feedback must remain readable under the cursor/player.
 	_fade_targets = [status_card, wind_card, state_card, tool_col, crew_row, vitals_card]
+	UITheme.apply_touch_targets(root)
 	_hide_hint_later()
 
 ## MainController hands over the camera and player so panels can get out of the way
@@ -251,7 +256,7 @@ func _fit_tip_layout() -> void:
 		tip_card.modulate.a = 0.0
 		return
 	tip_card.modulate.a = 1.0
-	var bottom = get_viewport().get_visible_rect().size.y - 64.0
+	var bottom = UITheme.safe_area_rect().size.y - 64.0
 	if AudioManager.instance and is_instance_valid(AudioManager.instance.subtitle_overlay):
 		var captions = AudioManager.instance.subtitle_overlay
 		var clearance = -1.0
@@ -338,7 +343,10 @@ func _build_inversion_overlay() -> void:
 	inversion_overlay.material = _inversion_material
 	inversion_overlay.color = Color.WHITE
 	inversion_overlay.visible = false
-	root.add_child(inversion_overlay)
+	# Full-bleed grade: it sits on the layer, not inside the inset HUD root,
+	# so the notch strip is never left un-graded.
+	add_child(inversion_overlay)
+	move_child(inversion_overlay, 0)
 
 func _build_status_card() -> void:
 	status_card = _chip(UITheme.PANEL, UITheme.STRAW, 11)
@@ -492,7 +500,8 @@ func _build_tool_bar() -> void:
 	tool_col = UITheme.vbox(5)
 	_pin(tool_col, Vector2(0, 1), Vector2(12, -12), 0)
 	bottom_layer.add_child(tool_col)
-	hint_label = UITheme.outlined(_small("คลิกซ้าย ใช้ · คลิกขวา สั่งสหาย · Space นกหวีด · ล้อเมาส์ ซูม · Z/C หมุนกล้อง · Tab ซ่อนแผง · Esc หยุดเกม"), 4)
+	# The one-line control hint follows the device: keys on desktop, thumbs on touch.
+	hint_label = UITheme.outlined(_small(TOUCH_HINT if UITheme.is_mobile() else "คลิกซ้าย ใช้ · คลิกขวา สั่งสหาย · Space นกหวีด · ล้อเมาส์ ซูม · Z/C หมุนกล้อง · Tab ซ่อนแผง · Esc หยุดเกม"), 4)
 	hint_label.visible = GameSettings.show_hints
 	tool_col.add_child(hint_label)
 	tool_label = UITheme.outlined(_small(), 4)
@@ -761,13 +770,14 @@ func _build_report() -> void:
 func _fit_report() -> void:
 	if not is_instance_valid(report_card):
 		return
-	var area = get_viewport().get_visible_rect().size
+	var area = UITheme.safe_area_rect().size
 	var width = minf(780.0, area.x - 48.0)
 	var content_height = report_content.get_combined_minimum_size().y
 	var height = maxf(120.0, minf(content_height, area.y - 156.0))
 	report_scroll.custom_minimum_size.y = height
 	report_card.custom_minimum_size.x = width
-	report_card.size = Vector2(width, height + 108.0)
+	# The touch-sized continue button is covered by the content minimum.
+	report_card.size = Vector2(width, maxf(height + 108.0, report_card.get_combined_minimum_size().y))
 	report_card.position = (area - report_card.size) * 0.5
 
 func _on_report_scroll_input(event: InputEvent) -> void:

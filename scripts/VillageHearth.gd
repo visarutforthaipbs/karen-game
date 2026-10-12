@@ -135,6 +135,8 @@ func _build() -> void:
 	margin.add_theme_constant_override("margin_top", 10)
 	margin.add_theme_constant_override("margin_bottom", 12)
 	add_child(margin)
+	# Top-level page off the notch / home indicator (no-op on desktop).
+	UITheme.apply_safe_area(margin)
 	var page = UITheme.vbox(8)
 	margin.add_child(page)
 

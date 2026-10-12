@@ -37,6 +37,7 @@ const FONT_FILES = {
 
 static var _theme: Theme
 static var _fonts: Dictionary = {}
+static var _touch_targets_installed: bool = false
 
 static func font(weight: String) -> Font:
 	if not _fonts.has(weight):
@@ -70,6 +71,123 @@ static func outline(color: Color, width: int = 2, chamfer: int = CHAMFER) -> Sty
 	sb.border_color = color
 	sb.set_expand_margin_all(3)
 	return sb
+
+# ---------------------------------------------------------------------------
+# Mobile (iPhone / iPad landscape): notch, rounded corners, home indicator
+# ---------------------------------------------------------------------------
+
+## Marks a layer that already carries the safe-area padding, so a nested
+## overlay never pads twice.
+const SAFE_AREA_META := "_uts_safe_area"
+## 44 pt on the iPhone's ~2x canvas maps to 88 canvas pixels.
+const TOUCH_MIN := 88.0
+
+## Touch device? `--touch` lets headless tests force the mobile UI path.
+static func is_mobile() -> bool:
+	return OS.has_feature("mobile") or DisplayServer.is_touchscreen_available() or OS.get_cmdline_user_args().has("--touch")
+
+static func _zero_insets() -> Dictionary:
+	return {"left": 0.0, "top": 0.0, "right": 0.0, "bottom": 0.0}
+
+## Display cutout / rounded corners / home indicator in canvas pixels.
+## Always zero in headless, for a floating desktop window (it does not sit
+## under the cutout) and when the OS reports no safe area, or one equal to
+## the screen. Display pixels are scaled into canvas units via
+## canvas (Window.content_scale_size) / window size.
+static func safe_area_insets() -> Dictionary:
+	var insets := _zero_insets()
+	if DisplayServer.get_name() == "headless":
+		return insets
+	var screen_size := DisplayServer.screen_get_size()
+	if screen_size.x <= 0 or screen_size.y <= 0:
+		return insets
+	# Screen rects and the safe area are reported in the same global space
+	# (on macOS the display itself starts at y = 1428, for example).
+	var screen := Rect2i(DisplayServer.screen_get_position(), screen_size)
+	var safe := DisplayServer.get_display_safe_area()
+	if safe.size.x <= 0 or safe.size.y <= 0:
+		return insets
+	var window_size := DisplayServer.window_get_size()
+	if window_size.x <= 0 or window_size.y <= 0:
+		return insets
+	# A floating window is never under the notch: only a window covering the
+	# display (the mobile/fullscreen case) inherits the OS insets.
+	if window_size.x < screen_size.x * 0.9 or window_size.y < screen_size.y * 0.9:
+		return insets
+	var left := clampf(float(safe.position.x) - float(screen.position.x), 0.0, float(screen_size.x))
+	var top := clampf(float(safe.position.y) - float(screen.position.y), 0.0, float(screen_size.y))
+	var right := clampf(float(screen.end.x) - float(safe.end.x), 0.0, float(screen_size.x))
+	var bottom := clampf(float(screen.end.y) - float(safe.end.y), 0.0, float(screen_size.y))
+	if left + top + right + bottom <= 0.0:
+		return insets
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null or tree.root == null:
+		return insets
+	var canvas: Vector2i = tree.root.content_scale_size
+	if canvas.x <= 0 or canvas.y <= 0:
+		return insets
+	var sx := float(canvas.x) / float(window_size.x)
+	var sy := float(canvas.y) / float(window_size.y)
+	return {"left": left * sx, "top": top * sy, "right": right * sx, "bottom": bottom * sy}
+
+## The visible canvas minus the safe-area insets. Screens that centre a card
+## in the viewport lay out against this instead of the raw visible rect.
+static func safe_area_rect() -> Rect2:
+	var size := Vector2.ZERO
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree and tree.root:
+		size = tree.root.get_visible_rect().size
+	var insets := safe_area_insets()
+	var pad := Vector2(insets.left + insets.right, insets.top + insets.bottom)
+	return Rect2(Vector2(insets.left, insets.top), Vector2(maxf(0.0, size.x - pad.x), maxf(0.0, size.y - pad.y)))
+
+## Pad a top-level UI layer away from the display cutout. Edges pinned to a
+## side of the parent move inward; floating (centre-anchored) children stay
+## put — their parent is already inset. No-op when the layer, or any layer
+## above it, already carries the insets, and a complete no-op on desktop.
+static func apply_safe_area(control: Control) -> void:
+	if control == null or not is_instance_valid(control):
+		return
+	var insets := safe_area_insets()
+	if insets.left + insets.top + insets.right + insets.bottom <= 0.0:
+		return
+	if control.has_meta(SAFE_AREA_META):
+		return
+	var parent := control.get_parent()
+	while parent:
+		if parent is Control and parent.has_meta(SAFE_AREA_META):
+			return
+		parent = parent.get_parent()
+	control.set_meta(SAFE_AREA_META, true)
+	if is_equal_approx(control.anchor_left, 0.0):
+		control.offset_left += insets.left
+	elif is_equal_approx(control.anchor_left, 1.0):
+		control.offset_left -= insets.right
+	if is_equal_approx(control.anchor_right, 1.0):
+		control.offset_right -= insets.right
+	elif is_equal_approx(control.anchor_right, 0.0):
+		control.offset_right += insets.left
+	if is_equal_approx(control.anchor_top, 0.0):
+		control.offset_top += insets.top
+	elif is_equal_approx(control.anchor_top, 1.0):
+		control.offset_top -= insets.bottom
+	if is_equal_approx(control.anchor_bottom, 1.0):
+		control.offset_bottom -= insets.bottom
+	elif is_equal_approx(control.anchor_bottom, 0.0):
+		control.offset_bottom += insets.top
+
+## Raise every Button under `node` to the 44 pt touch target. Desktop is
+## untouched; the shared Theme already gives all buttons an 88 px floor.
+static func apply_touch_targets(node: Node) -> void:
+	if not is_mobile() or node == null:
+		return
+	install_touch_targets()
+	if node is Button:
+		var button := node as Button
+		button.custom_minimum_size.x = maxf(button.custom_minimum_size.x, TOUCH_MIN)
+		button.custom_minimum_size.y = maxf(button.custom_minimum_size.y, TOUCH_MIN)
+	for child in node.get_children():
+		apply_touch_targets(child)
 
 static func get_theme() -> Theme:
 	if _theme:
@@ -148,8 +266,31 @@ static func get_theme() -> Theme:
 	t.set_color("font_selected_color", "LineEdit", CREAM)
 	t.set_color("font_placeholder_color", "LineEdit", MUTED)
 
+	# Touch devices: a Theme cannot express a minimum size, so the 44 pt floor
+	# is applied to every Button as it enters the tree (see install_touch_targets).
+	if is_mobile():
+		install_touch_targets()
+
 	_theme = t
 	return t
+
+## Floors every Button created at runtime — including screens that build
+## their own controls (the Hearth, overlays, touch pads). Installed once, and
+## only on touch devices, so desktop layout is untouched.
+static func install_touch_targets() -> void:
+	if _touch_targets_installed or not is_mobile():
+		return
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return
+	_touch_targets_installed = true
+	tree.node_added.connect(_on_node_added)
+
+static func _on_node_added(node: Node) -> void:
+	if node is Button:
+		var button := node as Button
+		button.custom_minimum_size.x = maxf(button.custom_minimum_size.x, TOUCH_MIN)
+		button.custom_minimum_size.y = maxf(button.custom_minimum_size.y, TOUCH_MIN)
 
 static func _slider_thumb(color: Color) -> ImageTexture:
 	var image = Image.create(14, 18, false, Image.FORMAT_RGBA8)

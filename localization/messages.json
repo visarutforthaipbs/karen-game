@@ -2088,5 +2088,110 @@
     "id": "opening_plot_label_2",
     "th": "ฟื้นตัวหลายปี",
     "en": "Years of regrowth"
+  },
+  {
+    "id": "ui_touch_controls_header",
+    "th": "ปุ่มควบคุม (หน้าจอสัมผัส)",
+    "en": "Controls (touch screen)"
+  },
+  {
+    "id": "ui_touch_joystick",
+    "th": "จอยสัมผัสฝั่งซ้าย",
+    "en": "Left-side thumbstick"
+  },
+  {
+    "id": "ui_touch_field",
+    "th": "แตะ / ลากบนแปลง",
+    "en": "Tap / drag on the plot"
+  },
+  {
+    "id": "ui_touch_field_action",
+    "th": "ใช้เครื่องมือที่ถืออยู่ · แตะเพื่อตัดหนึ่งช่อง ลากเพื่อถางเป็นแนว",
+    "en": "Use the held tool — tap to commit one cut, drag to rake a line"
+  },
+  {
+    "id": "ui_touch_tools",
+    "th": "ปุ่มขวา · ถังหยดไฟ / มีดพร้า / ถังพ่นน้ำ",
+    "en": "Right buttons · drip torch / blade / sprayer"
+  },
+  {
+    "id": "ui_touch_tools_action",
+    "th": "เลือกเครื่องมือที่จะใช้",
+    "en": "Choose which tool to use"
+  },
+  {
+    "id": "ui_touch_whistle",
+    "th": "ปุ่มขวา · นกหวีด",
+    "en": "Right buttons · whistle"
+  },
+  {
+    "id": "ui_touch_order",
+    "th": "ปุ่มขวา · สั่งงาน",
+    "en": "Right buttons · order"
+  },
+  {
+    "id": "ui_touch_order_action",
+    "th": "เลือกคำสั่งก่อน แล้วแตะช่อง: ถางแนวกันไฟ หรือ ดับถ่าน",
+    "en": "Pick an order first, then tap a cell: clear a firebreak or douse embers"
+  },
+  {
+    "id": "ui_touch_zoom",
+    "th": "ปุ่มขวา · ซูม",
+    "en": "Right buttons · zoom"
+  },
+  {
+    "id": "ui_touch_turn",
+    "th": "ปุ่มขวา · หมุน",
+    "en": "Right buttons · rotate"
+  },
+  {
+    "id": "ui_touch_pause",
+    "th": "ปุ่มขวา · หยุด",
+    "en": "Right buttons · pause"
+  },
+  {
+    "id": "ui_touch_btn_torch",
+    "th": "จุดไฟ",
+    "en": "Torch"
+  },
+  {
+    "id": "ui_touch_btn_blade",
+    "th": "ถางแนว",
+    "en": "Blade"
+  },
+  {
+    "id": "ui_touch_btn_sprayer",
+    "th": "พ่นน้ำ",
+    "en": "Sprayer"
+  },
+  {
+    "id": "ui_touch_btn_whistle",
+    "th": "นกหวีด",
+    "en": "Whistle"
+  },
+  {
+    "id": "ui_touch_btn_ping",
+    "th": "สั่งสหาย",
+    "en": "Order crew"
+  },
+  {
+    "id": "ui_touch_btn_zoom",
+    "th": "ซูม",
+    "en": "Zoom"
+  },
+  {
+    "id": "ui_touch_btn_turn",
+    "th": "หมุน",
+    "en": "Rotate"
+  },
+  {
+    "id": "ui_touch_btn_pause",
+    "th": "หยุด",
+    "en": "Pause"
+  },
+  {
+    "id": "ui_touch_hint",
+    "th": "แตะแปลงใช้เครื่องมือ · นิ้วซ้ายเดิน · ปุ่มมุมขวาสั่งทีมและหยุดเกม",
+    "en": "Tap the plot to use the tool · left thumb walks · corner buttons order the crew and pause"
   }
 ]

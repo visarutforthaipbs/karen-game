@@ -47,6 +47,7 @@ func _ready() -> void:
 	GameSettings.apply(get_tree())
 	_build_backdrop()
 	_build_menu()
+	UITheme.apply_touch_targets(self)
 	if AudioManager.instance:
 		AudioManager.instance.stop_all_loops()
 		AudioManager.instance.play_hearth_music(true)
@@ -274,7 +275,7 @@ func _build_menu() -> void:
 	menu_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	menu_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	menu_scroll.follow_focus = true
-	menu_scroll.custom_minimum_size.x = minf(780.0, get_viewport().get_visible_rect().size.x - 100.0)
+	menu_scroll.custom_minimum_size.x = minf(780.0, UITheme.safe_area_rect().size.x - 100.0)
 	menu_scroll.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	margin.add_child(menu_scroll)
 	var compact_menu = get_viewport().get_visible_rect().size.y < 680.0
@@ -306,6 +307,8 @@ func _build_menu() -> void:
 	_menu_button("วิธีเล่น", _on_how_to_play)
 	_menu_button("ตั้งค่า / Settings", _on_settings)
 	quit_button = _menu_button("ออกจากเกม", func(): InputBindings.request_exit())
+	# iOS has no way to quit an app; the gesture closes it instead.
+	quit_button.visible = not UITheme.is_mobile()
 
 	notice_label = UITheme.wrap(UITheme.outlined(UITheme.label("", "Small", UITheme.EMBER), 4))
 	notice_label.custom_minimum_size = Vector2(440, 0)
@@ -322,6 +325,10 @@ func _build_menu() -> void:
 	board.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	board.offset_right = -24.0
 	board.offset_bottom = -16.0
+	# Notch padding: the menu column and the corner board move off the cutout
+	# (both are plain no-ops when the display reports no safe area).
+	UITheme.apply_safe_area(margin)
+	UITheme.apply_safe_area(board)
 
 	(continue_button if continue_button.visible else new_button).grab_focus()
 

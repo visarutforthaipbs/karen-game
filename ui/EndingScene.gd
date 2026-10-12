@@ -314,6 +314,13 @@ func _build_overlay() -> void:
 	_fade.color = Color(0, 0, 0, 1)
 	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_fade)
+	# Captions live on their own layer so the vignette stays full-bleed while
+	# the text and skip hint move off the notch / home indicator.
+	var captions = Control.new()
+	captions.name = "CaptionLayer"
+	captions.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	captions.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(captions)
 	_caption = UITheme.wrap(UITheme.outlined(UITheme.label("", "Title", UITheme.CREAM), 8))
 	_caption.add_theme_font_size_override("font_size", 30)
 	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -321,7 +328,7 @@ func _build_overlay() -> void:
 	_caption.anchor_right = 0.9
 	_caption.anchor_top = 0.78
 	_caption.anchor_bottom = 0.78
-	add_child(_caption)
+	captions.add_child(_caption)
 	_skip_hint = UITheme.outlined(UITheme.label("กดปุ่มใดก็ได้เพื่อข้าม", "Small", UITheme.MUTED), 4)
 	_skip_hint.anchor_left = 1.0
 	_skip_hint.anchor_right = 1.0
@@ -330,7 +337,8 @@ func _build_overlay() -> void:
 	_skip_hint.offset_left = -240.0
 	_skip_hint.offset_top = -40.0
 	_skip_hint.visible = false
-	add_child(_skip_hint)
+	captions.add_child(_skip_hint)
+	UITheme.apply_safe_area(captions)
 
 func _process(delta: float) -> void:
 	if _finished:
@@ -511,20 +519,22 @@ func show_summary() -> void:
 	summary_content.minimum_size_changed.connect(_fit_summary)
 	get_viewport().size_changed.connect(_fit_summary)
 	_fit_summary()
+	UITheme.apply_touch_targets(summary_card)
 	again.grab_focus()
 
 ## Keep actions fixed even if an asynchronous online rank adds another line.
 func _fit_summary() -> void:
 	if not is_instance_valid(summary_card):
 		return
-	var area = get_viewport().get_visible_rect().size
+	var safe = UITheme.safe_area_rect()
+	var area = safe.size
 	var width = minf(760.0, area.x - 48.0)
 	summary_grid.columns = 2 if width < 740.0 else 4
 	var height = maxf(120.0, minf(summary_content.get_combined_minimum_size().y, area.y - 156.0))
 	summary_scroll.custom_minimum_size.y = height
 	summary_card.custom_minimum_size.x = width
-	summary_card.size = Vector2(width, height + 108.0)
-	summary_card.position = (area - summary_card.size) * 0.5
+	summary_card.size = Vector2(width, maxf(height + 108.0, summary_card.get_combined_minimum_size().y))
+	summary_card.position = safe.position + (area - summary_card.size) * 0.5
 
 func _on_summary_scroll_input(event: InputEvent) -> void:
 	var step = 0

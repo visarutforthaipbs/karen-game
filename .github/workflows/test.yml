@@ -81,6 +81,18 @@ jobs:
             ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" "ui-$t.log"
           done
 
+      - name: iPhone/iPad touch controls and mobile UI
+        run: |
+          set -euo pipefail
+          ~/godot/godot --headless --path . --fixed-fps 60 --script res://tests/test_touch_controls.gd -- --touch 2>&1 | tee touch.log
+          ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" touch.log
+          grep -q "TOUCH RESULT: 0" touch.log
+          for flag in "--touch" ""; do
+            ~/godot/godot --headless --path . --script res://tests/test_mobile_ui.gd -- $flag 2>&1 | tee "mobile-ui$flag.log"
+            ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" "mobile-ui$flag.log"
+            grep -q "MOBILE UI RESULT: 0" "mobile-ui$flag.log"
+          done
+
       - name: Smoke run
         run: |
           set -euo pipefail

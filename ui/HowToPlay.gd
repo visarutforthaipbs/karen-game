@@ -20,6 +20,11 @@ var guide_columns: GridContainer
 var controls_grid: GridContainer
 var _focus_scope: ModalFocusScope
 
+## The controls card swaps its table on touch devices (rows are built in
+## _ready, where the OS-dependent keyboard row can be evaluated).
+const KEYBOARD_HEADER = "ปุ่มควบคุม (คีย์บอร์ด / จอย)"
+const TOUCH_HEADER = "ปุ่มควบคุม (หน้าจอสัมผัส)"
+
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	theme = UITheme.get_theme()
@@ -120,14 +125,25 @@ func _ready() -> void:
 	right.add_child(keys)
 	var kb = UITheme.vbox(5)
 	keys.add_child(kb)
-	kb.add_child(UITheme.header("crew", "ปุ่มควบคุม (คีย์บอร์ด / จอย)", UITheme.CREAM))
+	kb.add_child(UITheme.header("crew", TOUCH_HEADER if UITheme.is_mobile() else KEYBOARD_HEADER, UITheme.CREAM))
 	var grid = GridContainer.new()
 	controls_grid = grid
 	grid.columns = 2
 	grid.add_theme_constant_override("h_separation", 16)
 	grid.add_theme_constant_override("v_separation", 3)
 	kb.add_child(grid)
-	for row in [
+	# Touch has no keyboard: left thumb walks, the field takes the tool, the
+	# right-hand buttons arm the rest (one arm-then-tap pair for ping orders).
+	var rows: Array = [[
+		"จอยสัมผัสฝั่งซ้าย", "เดิน"], [
+		"แตะ / ลากบนแปลง", "ใช้เครื่องมือที่ถืออยู่ · แตะเพื่อตัดหนึ่งช่อง ลากเพื่อถางเป็นแนว"], [
+		"ปุ่มขวา · ถังหยดไฟ / มีดพร้า / ถังพ่นน้ำ", "เลือกเครื่องมือที่จะใช้"], [
+		"ปุ่มขวา · นกหวีด", "เป่านกหวีดเรียกทีมหนีควัน"], [
+		"ปุ่มขวา · สั่งงาน", "เลือกคำสั่งก่อน แล้วแตะช่อง: ถางแนวกันไฟ หรือ ดับถ่าน"], [
+		"ปุ่มขวา · ซูม", "ซูมกล้อง (ซูมออกสุดเห็นทั้งแปลงและหุบเขา)"], [
+		"ปุ่มขวา · หมุน", "หมุนกล้องทีละ 90°"], [
+		"ปุ่มขวา · หยุด", "หยุดเกมชั่วคราว"],
+	] if UITheme.is_mobile() else [
 		["WASD / สติ๊กซ้าย", "เดิน"],
 		["เมาส์ / สติ๊กขวา", "เล็งช่องที่จะทำงาน"],
 		["คลิกซ้าย / RT, A", "ใช้เครื่องมือ"],
@@ -138,7 +154,8 @@ func _ready() -> void:
 		["ล้อเมาส์, + - / R3", "ซูมกล้อง (ซูมออกสุดเห็นทั้งแปลงและหุบเขา)"],
 		["Z, C / ลูกศรลง", "หมุนกล้องทีละ 90°"],
 		["Tab / Select", "ซ่อน / แสดงแผงข้อมูล"],
-	]:
+	]
+	for row in rows:
 		var key = UITheme.wrap(UITheme.label(row[0], "Small", UITheme.STRAW))
 		key.custom_minimum_size.x = 140
 		grid.add_child(key)
@@ -167,7 +184,9 @@ func _ready() -> void:
 	replay_button.focus_next = replay_button.get_path_to(scroll)
 	replay_button.focus_previous = replay_button.get_path_to(close_button)
 	get_viewport().size_changed.connect(_fit_layout)
+	UITheme.apply_safe_area(self)
 	_fit_layout()
+	UITheme.apply_touch_targets(self)
 	_focus_scope = ModalFocusScope.begin(self)
 	close_button.grab_focus()
 
@@ -200,13 +219,15 @@ func _step(parent: Control, when: String, what: String) -> void:
 func _fit_layout() -> void:
 	if not is_instance_valid(guide_card):
 		return
-	var area = get_viewport().get_visible_rect().size
+	# Centred inside the notch-safe rectangle, not the raw window.
+	var area = UITheme.safe_area_rect().size
 	var width = minf(1160.0, area.x - 48.0)
 	guide_columns.columns = 1 if width < 1080.0 else 2
 	guide_card.custom_minimum_size.x = width
 	guide_scroll.custom_minimum_size.y = maxf(160.0, minf(560.0, area.y - 156.0))
-	# Explicit bounds avoid stale center-anchor offsets when the UI scale changes.
-	guide_card.size = Vector2(width, guide_scroll.custom_minimum_size.y + 102.0)
+	# Explicit bounds avoid stale center-anchor offsets when the UI scale
+	# changes; the content minimum keeps a touch-sized footer inside the slab.
+	guide_card.size = Vector2(width, maxf(guide_scroll.custom_minimum_size.y + 102.0, guide_card.get_combined_minimum_size().y))
 	guide_card.position = (area - guide_card.size) * 0.5
 
 ## Tab/D-pad focus can enter the guide; arrows and page keys scroll its text.

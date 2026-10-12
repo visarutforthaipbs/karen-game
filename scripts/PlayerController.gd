@@ -71,6 +71,12 @@ const GAMEPAD_AIM_RADIUS: float = 360.0
 var using_gamepad_aim: bool = false
 var gamepad_aim_offset: Vector2 = Vector2(0, -140)
 
+# Touch aim (iPhone/iPad): scripts/TouchControls.gd sets the aim position from a
+# world touch and holds use_tool; the overlay guarantees a world touch is never
+# over GUI, so targeting skips the mouse-hover check. Stays false on desktop.
+var touch_aim_active: bool = false
+var touch_aim_position: Vector2 = Vector2.ZERO
+
 # Visual indicator for targeted grid cell
 var target_indicator: MeshInstance3D
 var animator: Node3D
@@ -87,6 +93,18 @@ func _ready() -> void:
 	_create_target_indicator()
 	_create_tool_rig()
 	_select_tool(ToolType.DRIP_TORCH)
+	_spawn_touch_controls()
+
+## iPhone/iPad landscape port: explicit two-thumb overlay (no mouse emulation).
+## Built only on touch-capable devices or with --touch for the headless tests;
+## when it is absent, desktop input is completely unchanged.
+func _spawn_touch_controls() -> void:
+	var tc = load("res://scripts/TouchControls.gd")
+	if not tc.should_activate():
+		return
+	var overlay = tc.new()
+	overlay.name = "TouchControls"
+	get_tree().current_scene.add_child.call_deferred(overlay)
 
 func _create_target_indicator() -> void:
 	target_indicator = MeshInstance3D.new()
@@ -289,6 +307,9 @@ func _update_gamepad_aim(delta: float) -> void:
 		gamepad_aim_offset = gamepad_aim_offset.limit_length(GAMEPAD_AIM_RADIUS)
 
 func _aim_screen_position(camera: Camera3D) -> Vector2:
+	if touch_aim_active:
+		using_gamepad_aim = false
+		return touch_aim_position
 	if using_gamepad_aim:
 		return camera.unproject_position(global_position) + gamepad_aim_offset
 	return get_viewport().get_mouse_position()
@@ -350,6 +371,8 @@ func _handle_button_actions() -> void:
 		order_pinged.emit(target_cell_coord, target_cell_pos)
 
 func _pointer_over_gui() -> bool:
+	if touch_aim_active:
+		return false # the touch overlay only forwards world touches
 	if using_gamepad_aim:
 		return false
 	var vp = get_viewport()

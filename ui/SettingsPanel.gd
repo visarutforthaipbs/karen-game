@@ -63,10 +63,10 @@ func _ready() -> void:
 	_content_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_content_scroll.follow_focus = true
 	_content_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_content_scroll.custom_minimum_size.y = minf(440.0, maxf(160.0, get_viewport_rect().size.y - 220.0))
+	_content_scroll.custom_minimum_size.y = minf(440.0, maxf(160.0, UITheme.safe_area_rect().size.y - 220.0))
 	page.add_child(_content_scroll)
 	get_viewport().size_changed.connect(func():
-		_content_scroll.custom_minimum_size.y = minf(440.0, maxf(160.0, get_viewport_rect().size.y - 220.0)))
+		_content_scroll.custom_minimum_size.y = minf(440.0, maxf(160.0, UITheme.safe_area_rect().size.y - 220.0)))
 	var cols = UITheme.hbox(18)
 	cols.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_content_scroll.add_child(cols)
@@ -157,6 +157,9 @@ func _ready() -> void:
 	foot.add_child(close_button)
 	_focus_scope = ModalFocusScope.begin(self)
 	close_button.grab_focus()
+	# Notch padding and 44 pt targets for the overlay's own controls.
+	UITheme.apply_safe_area(self)
+	UITheme.apply_touch_targets(self)
 
 func _update_delete_button() -> void:
 	if is_instance_valid(delete_scores_button):

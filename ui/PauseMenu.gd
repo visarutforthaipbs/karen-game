@@ -21,6 +21,8 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
+	# Skipped when HUD.root already carries the insets (the normal case).
+	UITheme.apply_safe_area(self)
 
 func can_pause() -> bool:
 	if main == null or main.get("pass_started"):
@@ -73,6 +75,11 @@ func resume() -> void:
 		_panel.queue_free()
 		_panel = null
 
+## Alias: the app-lifecycle pause (focus loss on iOS) closes it like every
+## other overlay.
+func close() -> void:
+	resume()
+
 func _build_panel() -> Control:
 	var p = Control.new()
 	p.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -110,6 +117,7 @@ func _build_panel() -> Control:
 	_button(box, "ออกไปหน้าแรก (กลับไปก่อนเผาแปลงนี้)", func():
 		_confirm_action("กลับหน้าแรก? ความคืบหน้าระหว่างเผาแปลงนี้จะหายไป เกมที่บันทึกไว้ก่อนเผาจะยังอยู่", "ยืนยัน กลับหน้าแรก", _quit_to_title))
 	box.minimum_size_changed.connect(_fit_panel)
+	UITheme.apply_touch_targets(p)
 	return p
 
 func _button(parent: Control, text: String, action: Callable, variation: String = "Button") -> Button:
@@ -125,7 +133,7 @@ func _button(parent: Control, text: String, action: Callable, variation: String 
 func _fit_panel() -> void:
 	if not is_instance_valid(_pause_card) or _pause_card.is_queued_for_deletion():
 		return
-	var area = get_viewport().get_visible_rect().size
+	var area = UITheme.safe_area_rect().size
 	_pause_card.custom_minimum_size.x = minf(560.0, area.x - 48.0)
 	_pause_card.size = Vector2(_pause_card.custom_minimum_size.x, _pause_box.get_combined_minimum_size().y + 46.0)
 	_pause_card.position = (area - _pause_card.size) * 0.5

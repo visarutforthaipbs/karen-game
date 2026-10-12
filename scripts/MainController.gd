@@ -341,6 +341,26 @@ func _add_scrutiny(amount: int) -> void:
 func _penalty(base: float) -> int:
 	return roundi(base * rules.penalty_mult)
 
+## iOS kills a backgrounded app without warning: a phone call must never cost
+## a burn. Focus loss / app pause parks the run under the pause menu (which
+## freezes the clock, fire, drones and crew) and flushes the settings file.
+## A partial burn is not a completed plot, so nothing is campaign-saved here.
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_APPLICATION_FOCUS_OUT and what != NOTIFICATION_APPLICATION_PAUSED:
+		return
+	GameSettings.save_settings()
+	# Focus loss only matters on phones/tablets (the OS may kill us next); on
+	# desktop, alt-tabbing keeps the Beta 3 behaviour (no surprise pause menu).
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and not UITheme.is_mobile():
+		return
+	if pass_started or not is_node_ready() or hud == null:
+		return
+	var menu = hud.pause_menu
+	if menu == null or not is_instance_valid(menu) or menu.visible:
+		return
+	if menu.can_pause():
+		menu.open()
+
 func _process(delta: float) -> void:
 	var hours = game_clock.get_hours()
 

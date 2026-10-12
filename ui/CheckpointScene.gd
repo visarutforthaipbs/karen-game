@@ -162,6 +162,13 @@ func _build_overlay() -> void:
 	_fade.color = Color(0, 0, 0, 1)
 	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_fade)
+	# Captions on their own layer: the vignette stays full-bleed while the
+	# text and skip hint move off the notch / home indicator.
+	var captions = Control.new()
+	captions.name = "CaptionLayer"
+	captions.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	captions.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(captions)
 	_caption = UITheme.wrap(UITheme.outlined(UITheme.label("", "Title", UITheme.CREAM), 8))
 	_caption.add_theme_font_size_override("font_size", 28)
 	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -169,7 +176,7 @@ func _build_overlay() -> void:
 	_caption.anchor_right = 0.9
 	_caption.anchor_top = 0.8
 	_caption.anchor_bottom = 0.8
-	add_child(_caption)
+	captions.add_child(_caption)
 	_hint = UITheme.outlined(UITheme.label("กดปุ่มใดก็ได้เพื่อข้าม", "Small", UITheme.MUTED), 4)
 	_hint.anchor_left = 1.0
 	_hint.anchor_right = 1.0
@@ -178,7 +185,8 @@ func _build_overlay() -> void:
 	_hint.offset_left = -240.0
 	_hint.offset_top = -40.0
 	_hint.visible = false
-	add_child(_hint)
+	captions.add_child(_hint)
+	UITheme.apply_safe_area(captions)
 
 func caption_at(t: float) -> String:
 	if t < 3.2:
