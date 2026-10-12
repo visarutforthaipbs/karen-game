@@ -191,8 +191,11 @@ func _layout() -> void:
 	_stack_rect = Rect2(Vector2(start_x, stack_top), Vector2(stack_w, stack_h))
 	_arrange_button_children()
 	_update_joystick_visual()
-	# Voice captions are centred at the bottom; keep them clear of the stack.
-	_set_caption_inset(_field.end.x - start_x + BUTTON_MARGIN)
+	# Voice captions are centred on the full viewport (not the safe field), so
+	# reserve the distance from the viewport edge to the stack on both sides;
+	# with a notch inset the stack sits left of the field edge (playtest cycle 3).
+	var vp_w: float = get_viewport().get_visible_rect().size.x
+	_set_caption_inset(vp_w - start_x + BUTTON_MARGIN)
 
 func get_stack_rect() -> Rect2:
 	return _stack_rect

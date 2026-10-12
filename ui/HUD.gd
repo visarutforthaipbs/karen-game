@@ -958,7 +958,7 @@ func set_inversion_strength(strength: float) -> void:
 
 ## 0..1 from SkyCycle.depth_scale(): 1 at the authored camera, lower zoomed out
 func set_inversion_view_scale(view_scale: float) -> void:
-	var s := clampf(lerpf(0.4, 1.0, view_scale), 0.0, 1.0)
+	var s := clampf(lerpf(0.3, 1.0, view_scale), 0.0, 1.0)
 	if is_equal_approx(s, _inversion_view_scale):
 		return
 	_inversion_view_scale = s

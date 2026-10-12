@@ -38,6 +38,9 @@ const FONT_FILES = {
 static var _theme: Theme
 static var _fonts: Dictionary = {}
 static var _touch_targets_installed: bool = false
+## Test-only override for safe_area_insets() ({left, top, right, bottom} in
+## canvas px); empty = use the display's real safe area.
+static var debug_insets: Dictionary = {}
 
 static func font(weight: String) -> Font:
 	if not _fonts.has(weight):
@@ -96,6 +99,8 @@ static func _zero_insets() -> Dictionary:
 ## canvas (Window.content_scale_size) / window size.
 static func safe_area_insets() -> Dictionary:
 	var insets := _zero_insets()
+	if not debug_insets.is_empty():
+		return debug_insets.duplicate()   # tests: simulate a notch / home indicator
 	if DisplayServer.get_name() == "headless":
 		return insets
 	var screen_size := DisplayServer.screen_get_size()

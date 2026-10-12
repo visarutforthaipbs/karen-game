@@ -294,6 +294,17 @@ func _run() -> void:
 	subs._caption_changed("ตาโพ", "ลมเปลี่ยนทิศ", 1.0)
 	await frames(2)
 	check(not subs.card.get_global_rect().intersects(stack), "P2: voice captions stay clear of the button stack")
+	# iPhone notch: the safe field is inset on the right, the stack moves left, and
+	# captions (centred on the full viewport) must still clear it (playtest cycle 3).
+	UITheme.debug_insets = {"left": 59.0, "top": 0.0, "right": 59.0, "bottom": 21.0}
+	overlay._layout()
+	subs._caption_changed("ตาโพ", "ลมเปลี่ยนทิศ ระวังไฟลามข้ามแนวกันไฟ ให้ทุกคนถอยไปทางทิศตะวันตก", 1.0)
+	await frames(2)
+	var notch_stack: Rect2 = overlay.get_stack_rect()
+	check(notch_stack.end.x <= 1280.0 - 59.0 - 15.0, "with a right inset the stack moves left of the notch")
+	check(not subs.card.get_global_rect().intersects(notch_stack), "P2: captions clear the stack under a notch inset too (%s vs %s)" % [subs.card.get_global_rect(), notch_stack])
+	UITheme.debug_insets = {}
+	overlay._layout()
 	subs._caption_changed("", "", 0.0)
 	main.hud.report_modal.visible = true
 	await frames(2)
