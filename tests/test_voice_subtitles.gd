@@ -90,4 +90,19 @@ func _run() -> void:
 	L10n.set_locale(original_locale)
 	audio.stop_all_loops()
 	print("Voice subtitle failures: ", failures)
-	quit(1 if failures else 0)
+	await quiet_quit(1 if failures else 0)
+
+
+## Headless teardown: a playback still running at quit pins its stream in the
+## resource cache ("ERROR: N resources still in use at exit"), which CI treats as a
+## failure. Stop every player and give the mixer real time (process frames are
+## sub-millisecond headless) to release playbacks before quitting.
+func quiet_quit(code: int) -> void:
+	var audio = root.get_node_or_null("AudioManager")
+	if audio:
+		audio.stop_all_loops()
+	for cls in ["AudioStreamPlayer", "AudioStreamPlayer2D", "AudioStreamPlayer3D"]:
+		for p in root.find_children("*", cls, true, false):
+			p.stop()
+	await create_timer(0.3).timeout
+	quit(code)
