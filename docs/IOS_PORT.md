@@ -53,6 +53,33 @@ the viewport. The audit's larger recommendation (fit each task per screen, no sc
 dependency for essential actions in Village / Settings / How to Play) is NOT done — this
 round makes scrolling work; a tabbed/paged mobile layout is a follow-up for the UI lane.
 
+## Fix → build → Codex playtest loop (2026-10-13)
+
+Driver: `~/.hermes/profiles/uts-ops/cache/scratch/ios-tester/` — `BRIEF_TEMPLATE.md` is
+filled per cycle, `codex exec --sandbox danger-full-access` plays the installed dev build
+through iPhone Mirroring (Codex Computer Use MCP) and writes `REPORT_cycleN.md`; the
+on-device `PerfLog` CSV is pulled with `devicectl … copy from … Documents/perf_log.csv`.
+Mirroring delivers taps and clicks but **not** finger drags / swipes, so joystick walking,
+tap-to-ignite and finger scrolling are "unverifiable" in every report — only a real finger
+closes them (the headless suites prove the code path: `test_touch_controls` 83 checks).
+
+| Cycle | Build | fps median / p10 (burn) | >50 ms hitch s | draw calls | prims/frame | Fixes that followed |
+|---|---|---|---|---|---|---|
+| 1 | `75c0c0f` | 17.8 / 17.4 | 356/542 | 619 | 13.2 M | packed MultiMesh props (`19361f9`) |
+| 2 | `19361f9` | 32.1 / 23.1 | 34/583 | 620 | 1.68 M | same-frame tap hold (`023a4f0`), dusk r2 (`b5972b6`) |
+| 3 | `023a4f0` | 30.0 / 26.0 | 21/596 | 662 | 1.70 M | HUD draw batching (`8b7c799`), notch captions + dusk r3 (`dc2b759`) |
+| 4 | `dc2b759` | **40.4** / 25.8 | **8**/568 | 311 | 1.63 M | village Launch caption, GPU profile (`e11c81d`) |
+| 5 | `e11c81d` | 32.8 / 25.3 (more dusk time) | 24/577 | 329 | — | 85% scale = no gain → vertex-bound; 1 shadow cascade (`0d5bcc4`) |
+
+Root causes found, in order: (1) 29k zero-scale MultiMesh instances (17 of 18 prop layers
+per cell) = 15 M primitives; (2) one draw call per `draw_colored_polygon` → HUD 587 draws;
+(3) 4-cascade PSSM directional shadow = 67% of remaining primitives. Script CPU is within
+noise (4.7 ms with 3D hidden on the Mac).
+
+Tester-confirmed on device by cycle 5: vitals card clear, buttons hidden over the report,
+captions clear of the stack (incl. notch inset), 2×2 title, dusk overview legible, village
+caption clear of Launch, background auto-pause + Resume.
+
 Real-device evidence (iPhone 14 Pro, dev-signed Debug app from `c69876a`): installed via
 `devicectl`, process alive 30 s after detached launch; app container shows
 `shader_cache/SceneForwardMobileShaderRD/*.metal.cache` (Mobile renderer on Metal rendered
