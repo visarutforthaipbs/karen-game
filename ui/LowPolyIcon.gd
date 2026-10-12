@@ -19,11 +19,26 @@ func _init() -> void:
 func _draw() -> void:
 	var s = minf(size.x, size.y) / 24.0
 	var origin = (size - Vector2(24, 24) * s) * 0.5
+	# All parts in one triangle array (one draw call per icon, not one per part)
+	var pts := PackedVector2Array()
+	var cols := PackedColorArray()
+	var idx := PackedInt32Array()
 	for part in _shapes(kind):
-		var pts = PackedVector2Array()
+		var poly := PackedVector2Array()
 		for p in part[0]:
-			pts.append(origin + p * s)
-		draw_colored_polygon(pts, _tone(part[1]))
+			poly.append(origin + p * s)
+		var tris: PackedInt32Array = Geometry2D.triangulate_polygon(poly) if poly.size() > 3 else PackedInt32Array([0, 1, 2])
+		if tris.is_empty():
+			continue
+		var base := pts.size()
+		var col := _tone(part[1])
+		for p in poly:
+			pts.append(p)
+			cols.append(col)
+		for t in tris:
+			idx.append(base + t)
+	if not idx.is_empty():
+		RenderingServer.canvas_item_add_triangle_array(get_canvas_item(), idx, pts, cols)
 
 func _tone(t: int) -> Color:
 	match t:

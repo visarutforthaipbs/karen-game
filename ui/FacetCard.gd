@@ -20,6 +20,13 @@ extends PanelContainer
 
 var _polys: Array[PackedVector2Array] = []
 var _colors: PackedColorArray = PackedColorArray()
+# All facets flattened into one triangle array: one canvas command (one draw
+# call) instead of one draw_colored_polygon per facet (Godot 4's RD canvas
+# renderer does not batch polygon commands; the burn HUD alone was ~590 draw
+# calls per frame, which the iPhone 14 Pro paid for in CPU command encoding).
+var _tri_points: PackedVector2Array = PackedVector2Array()
+var _tri_colors: PackedColorArray = PackedColorArray()
+var _tri_indices: PackedInt32Array = PackedInt32Array()
 
 func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -93,14 +100,32 @@ func _rebuild() -> void:
 				for piece in pieces:
 					_polys.append(piece)
 					_colors.append(col)
+	_flatten_facets()
 	queue_redraw()
+
+## Triangulate every facet piece into shared point / colour / index arrays
+func _flatten_facets() -> void:
+	_tri_points = PackedVector2Array()
+	_tri_colors = PackedColorArray()
+	_tri_indices = PackedInt32Array()
+	for k in _polys.size():
+		var poly: PackedVector2Array = _polys[k]
+		var tris: PackedInt32Array = Geometry2D.triangulate_polygon(poly) if poly.size() > 3 else PackedInt32Array([0, 1, 2])
+		if tris.is_empty():
+			continue
+		var base: int = _tri_points.size()
+		for p in poly:
+			_tri_points.append(p)
+			_tri_colors.append(_colors[k])
+		for t in tris:
+			_tri_indices.append(base + t)
 
 func _draw() -> void:
 	if _polys.is_empty():
 		return
 	draw_colored_polygon(_outline(Vector2(0, 5)), Color(0, 0, 0, 0.42))
-	for k in _polys.size():
-		draw_colored_polygon(_polys[k], _colors[k])
+	if not _tri_indices.is_empty():
+		RenderingServer.canvas_item_add_triangle_array(get_canvas_item(), _tri_indices, _tri_points, _tri_colors)
 	var rim = _outline()
 	rim.append(rim[0])
 	draw_polyline(rim, Color(base_color.lightened(0.25), 0.55 * base_color.a + 0.2), 1.0, true)

@@ -34,27 +34,34 @@ func _draw() -> void:
 	var w = (size.x - slant - gap * (n - 1)) / float(n)
 	var h = size.y
 	var filled = clampf(value / max_value, 0.0, 1.0) * n
+	# One triangle array for every quad (empty + fill + lit facet): a single
+	# canvas command instead of up to 3 polygon draw calls per segment.
+	var pts := PackedVector2Array()
+	var cols := PackedColorArray()
+	var idx := PackedInt32Array()
 	for i in n:
 		var x = i * (w + gap)
-		var quad = PackedVector2Array([
-			Vector2(x + slant, 0), Vector2(x + slant + w, 0), Vector2(x + w, h), Vector2(x, h),
-		])
-		draw_colored_polygon(quad, empty_color)
+		_quad(pts, cols, idx, [Vector2(x + slant, 0), Vector2(x + slant + w, 0), Vector2(x + w, h), Vector2(x, h)], empty_color)
 		var amount = clampf(filled - i, 0.0, 1.0)
 		if amount <= 0.0:
 			continue
 		var col = segment_colors[i] if i < segment_colors.size() else fill_color
 		var fw = w * amount
-		var part = PackedVector2Array([
-			Vector2(x + slant, 0), Vector2(x + slant + fw, 0), Vector2(x + fw, h), Vector2(x, h),
-		])
-		draw_colored_polygon(part, col)
+		_quad(pts, cols, idx, [Vector2(x + slant, 0), Vector2(x + slant + fw, 0), Vector2(x + fw, h), Vector2(x, h)], col)
 		# Lit upper facet
-		draw_colored_polygon(PackedVector2Array([
-			Vector2(x + slant, 0), Vector2(x + slant + fw, 0), Vector2(x + slant * 0.5 + fw, h * 0.45), Vector2(x + slant * 0.5, h * 0.45),
-		]), Color(1, 1, 1, 0.16))
+		_quad(pts, cols, idx, [Vector2(x + slant, 0), Vector2(x + slant + fw, 0), Vector2(x + slant * 0.5 + fw, h * 0.45), Vector2(x + slant * 0.5, h * 0.45)], Color(1, 1, 1, 0.16))
+	if not idx.is_empty():
+		RenderingServer.canvas_item_add_triangle_array(get_canvas_item(), idx, pts, cols)
 	for m in markers:
 		var mx = clampf(m.at / max_value, 0.0, 1.0) * (size.x - slant) + slant * 0.5
 		var c: Color = m.color
 		draw_colored_polygon(PackedVector2Array([Vector2(mx - 4, -6), Vector2(mx + 4, -6), Vector2(mx, -1)]), c)
 		draw_line(Vector2(mx, -1), Vector2(mx, h + 2), c, 2.0)
+
+## Append a convex quad (a, b, c, d in order) as two triangles with one colour
+static func _quad(pts: PackedVector2Array, cols: PackedColorArray, idx: PackedInt32Array, q: Array, col: Color) -> void:
+	var base := pts.size()
+	for p in q:
+		pts.append(p)
+		cols.append(col)
+	idx.append_array(PackedInt32Array([base, base + 1, base + 2, base, base + 2, base + 3]))
