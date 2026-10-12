@@ -78,8 +78,13 @@ steam + water consumption, dusk overview legible, all layout/caption/report item
 auto-pause + Resume; no open game defect. Remaining "NOT READY" items are the two gestures
 iPhone Mirroring cannot deliver (a held joystick drag, a finger swipe) and the clean-firebreak
 observation that depends on them — **owner's finger check required** (see Release gate).
-Candidate for TestFlight: `c77dda4`, `UnderTwoSkies.ipa` 264,826,552 bytes,
-sha256 `172586c51da108e474e73406e5c35cd96e03c77d1db1a07d932973ca98baf4fc`.
+CI failed on `c77dda4` (pre-existing `test_ui_navigation` flake: a radio caption shrinking
+the preparation body re-clamped the scroll under a focused choice) — fixed in `aef3780`
+(12/12 clean), CI run 38320516977 success.
+**Candidate for TestFlight: `aef3780`**, `UnderTwoSkies.ipa` 264,827,760 bytes,
+sha256 `3b7452f44d02f2a804d67c1f616bafaaef714244ddf9ddaacbcc7da8ac72e879`
+(`build/20261013-061708-aef3780-ios-mdVGbp/`); the matching Debug app is installed on the
+paired iPhone 14 Pro.
 
 Root causes found, in order: (1) 29k zero-scale MultiMesh instances (17 of 18 prop layers
 per cell) = 15 M primitives; (2) one draw call per `draw_colored_polygon` → HUD 587 draws;
