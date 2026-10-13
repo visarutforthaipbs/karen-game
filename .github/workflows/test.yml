@@ -91,6 +91,9 @@ jobs:
             ~/godot/godot --headless --path . --script res://tests/test_mobile_ui.gd -- $flag 2>&1 | tee "mobile-ui$flag.log"
             ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" "mobile-ui$flag.log"
             grep -q "MOBILE UI RESULT: 0" "mobile-ui$flag.log"
+            ~/godot/godot --headless --path . --script res://tests/test_mobile_pages.gd -- $flag 2>&1 | tee "mobile-pages$flag.log"
+            ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" "mobile-pages$flag.log"
+            grep -q "MOBILE PAGES RESULT: 0" "mobile-pages$flag.log"
           done
 
       - name: Smoke run

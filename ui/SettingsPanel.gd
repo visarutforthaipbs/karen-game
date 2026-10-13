@@ -3,9 +3,16 @@ extends Control
 
 ## Settings overlay (P0-4), shared by the title screen, pause menu and Hearth.
 ## Values live in GameSettings (user://settings.cfg) and apply immediately.
+## Touch devices use the V1 four-tab layout (owner-approved 2026-10-13): one
+## pane at a time, every pane fitting 1280x720 without scrolling, language
+## selector above the tabs and the save button pinned to the bottom. Desktop
+## keeps the long two-column form unchanged.
 
 signal closed
 signal how_to_play_requested
+
+## Tab titles in order; the first three double as the desktop section headers.
+const TAB_TITLES: Array = ["เสียง", "การแสดงผล", "การเล่น", "ออนไลน์ · ข้อมูล"]
 
 var close_button: Button
 var language_picker: OptionButton
@@ -15,6 +22,11 @@ var online_status: Label
 var _focus_scope: ModalFocusScope
 var _delete_pending: bool = false
 var _delete_requester: Callable = OnlineBoard.delete_my_scores
+
+## Touch layout only: null / empty on desktop.
+var tab_bar: HBoxContainer
+var tab_buttons: Array = []
+var tab_panes: Array = []
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -27,10 +39,10 @@ func _ready() -> void:
 	add_child(dim)
 
 	var card = UITheme.card(Color(UITheme.PANEL, 0.98), UITheme.STRAW, 501)
-	card.padding = Vector4(26, 20, 26, 22)
+	card.padding = Vector4(20, 14, 20, 16) if UITheme.is_mobile() else Vector4(26, 20, 26, 22)
 	card.chamfer = 16.0
 	card.set_anchors_preset(Control.PRESET_CENTER)
-	card.custom_minimum_size = Vector2(900, 0)
+	card.custom_minimum_size = Vector2(1100 if UITheme.is_mobile() else 900, 0)
 	card.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	card.grow_vertical = Control.GROW_DIRECTION_BOTH
 	add_child(card)
@@ -56,6 +68,10 @@ func _ready() -> void:
 	language_row.add_child(language_picker)
 	page.add_child(language_row)
 
+	# Touch: the tab bar sits directly under the language row, above the body.
+	if UITheme.is_mobile():
+		_build_tab_bar(page)
+
 	# Keep every setting reachable at increased text size and on smaller
 	# displays. Keyboard/controller focus scrolls the body into view.
 	_content_scroll = ScrollContainer.new()
@@ -63,10 +79,176 @@ func _ready() -> void:
 	_content_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_content_scroll.follow_focus = true
 	_content_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_content_scroll.custom_minimum_size.y = minf(440.0, maxf(160.0, UITheme.safe_area_rect().size.y - 220.0))
+	_content_scroll.custom_minimum_size.y = _body_height()
 	page.add_child(_content_scroll)
 	get_viewport().size_changed.connect(func():
-		_content_scroll.custom_minimum_size.y = minf(440.0, maxf(160.0, UITheme.safe_area_rect().size.y - 220.0)))
+		_content_scroll.custom_minimum_size.y = _body_height())
+	if UITheme.is_mobile():
+		_build_touch_panes()
+	else:
+		_build_desktop_body()
+
+	var foot = UITheme.hbox(0)
+	foot.alignment = BoxContainer.ALIGNMENT_CENTER
+	page.add_child(foot)
+	close_button = Button.new()
+	close_button.theme_type_variation = "PrimaryButton"
+	close_button.text = "บันทึกและปิด"
+	close_button.custom_minimum_size = Vector2(300, 48)
+	close_button.pressed.connect(close)
+	foot.add_child(close_button)
+	_focus_scope = ModalFocusScope.begin(self)
+	close_button.grab_focus()
+	# Notch padding and 44 pt targets for the overlay's own controls.
+	UITheme.apply_safe_area(self)
+	UITheme.apply_touch_targets(self)
+
+## Desktop body: the original two-column form inside one scroll region.
+## Touch body: four panes, one per tab, all built so each fits 1280x720.
+func _body_height() -> float:
+	if UITheme.is_mobile():
+		return maxf(200.0, UITheme.safe_area_rect().size.y - 400.0)
+	return minf(440.0, maxf(160.0, UITheme.safe_area_rect().size.y - 220.0))
+
+func _build_tab_bar(page: VBoxContainer) -> void:
+	tab_bar = UITheme.hbox(10)
+	tab_bar.name = "TabBar"
+	tab_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var group = ButtonGroup.new()
+	for i in TAB_TITLES.size():
+		var tab = Button.new()
+		tab.name = "Tab%d" % (i + 1)
+		tab.text = TAB_TITLES[i]
+		tab.toggle_mode = true
+		tab.button_group = group
+		tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tab.custom_minimum_size.y = UITheme.TOUCH_MIN
+		tab.pressed.connect(_show_tab.bind(i))
+		tab_bar.add_child(tab)
+		tab_buttons.append(tab)
+		var pane = UITheme.vbox(8)
+		pane.name = "Pane%d" % (i + 1)
+		pane.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tab_panes.append(pane)
+	page.add_child(tab_bar)
+
+## Every pane stays in the tree (so a hidden setting is still reachable for
+## the language switch and for tests); only the selected one is visible.
+func _show_tab(index: int) -> void:
+	if tab_panes.is_empty():
+		return
+	var current := wrapi(index, 0, tab_panes.size())
+	for i in tab_panes.size():
+		tab_panes[i].visible = i == current
+		tab_buttons[i].button_pressed = i == current
+
+func _touch_columns() -> Array:
+	var row = UITheme.hbox(18)
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var a = UITheme.vbox(8)
+	a.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var b = UITheme.vbox(8)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(a)
+	row.add_child(b)
+	return [row, a, b]
+
+## The four panes. Same settings, signals and callbacks as the desktop form;
+## the only difference is grouping, so no pane outgrows the 44 pt scroll-less
+## budget at 1280x720.
+func _build_touch_panes() -> void:
+	var stack = UITheme.vbox(0)
+	stack.name = "TabPanes"
+	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_content_scroll.add_child(stack)
+	for pane in tab_panes:
+		stack.add_child(pane)
+
+	# 1 · sound: every volume slider.
+	tab_panes[0].add_child(UITheme.header("radio", TAB_TITLES[0], UITheme.STRAW))
+	for b in GameSettings.VOLUME_BUSES:
+		var bus: String = b[0]
+		tab_panes[0].add_child(_slider_row(b[1], GameSettings.volumes.get(bus, 1.0), 0.0, 1.0, 0.05, func(v):
+			GameSettings.volumes[bus] = v
+			GameSettings.apply(get_tree()), "%d%%", 100.0))
+
+	# 2 · display: fullscreen (meaningless on iOS), text/panel scale, detail.
+	tab_panes[1].add_child(UITheme.header("eye", TAB_TITLES[1], UITheme.STRAW))
+	if OS.get_name() != "iOS":
+		tab_panes[1].add_child(_toggle_row("เต็มจอ", GameSettings.fullscreen, func(on):
+			GameSettings.fullscreen = on
+			GameSettings.apply(get_tree())))
+	tab_panes[1].add_child(_slider_row("ขนาดตัวหนังสือและแผง", GameSettings.ui_scale, 0.85, 1.3, 0.05, func(v):
+		GameSettings.ui_scale = v
+		GameSettings.apply(get_tree()), "×%.2f", 1.0))
+	tab_panes[1].add_child(_toggle_row("ภูมิทัศน์รอบแปลงแบบละเอียด (ปิดเพื่อให้ลื่นขึ้นบน Steam Deck)", GameSettings.landscape_detail == "high", func(on):
+		GameSettings.landscape_detail = "high" if on else "low"))
+
+	# 3 · gameplay: camera and hints left, name and the guide button right.
+	var play = _touch_columns()
+	tab_panes[2].add_child(play[0])
+	play[1].add_child(UITheme.header("crew", TAB_TITLES[2], UITheme.STRAW))
+	play[1].add_child(_slider_row("ระยะกล้องเริ่มต้น", GameSettings.camera_zoom, 26.0, 64.0, 1.0, func(v):
+		GameSettings.camera_zoom = v, "%d ม.", 1.0))
+	play[1].add_child(_toggle_row("แสดงคำแนะนำปุ่มควบคุม", GameSettings.show_hints, func(on):
+		GameSettings.show_hints = on))
+	play[2].add_child(_toggle_row("เคล็ดลับระหว่างเผาครั้งแรก", GameSettings.first_burn_tips, func(on):
+		GameSettings.first_burn_tips = on))
+	play[2].add_child(_board_name_row())
+	var howto = Button.new()
+	howto.text = "แสดงวิธีเล่นอีกครั้ง"
+	howto.pressed.connect(func(): how_to_play_requested.emit())
+	play[2].add_child(howto)
+
+	# 4 · online board + data: privacy note and score removal left, tester
+	# tools right (the score-removal action lives on this last tab).
+	var online = _touch_columns()
+	tab_panes[3].add_child(online[0])
+	online[1].add_child(UITheme.header("satellite", "กระดานออนไลน์ (เบตา)", UITheme.MUTED))
+	online[1].add_child(_toggle_row("ส่งผลการเล่นขึ้นกระดานออนไลน์", GameSettings.online_board, func(on):
+		GameSettings.online_board = on
+		if on:
+			OnlineBoard.ensure_identity()
+		_update_delete_button()))
+	var online_note = UITheme.label("ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ", "Small", UITheme.MUTED)
+	online_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	online[1].add_child(online_note)
+	var wipe = Button.new()
+	delete_scores_button = wipe
+	wipe.text = "ลบคะแนนของฉันออกจากกระดานออนไลน์"
+	_update_delete_button()
+	wipe.pressed.connect(_delete_scores)
+	online[1].add_child(wipe)
+	online_status = UITheme.wrap(UITheme.label("", "Small", UITheme.MUTED))
+	online_status.visible = false
+	online[1].add_child(online_status)
+
+	online[2].add_child(UITheme.header("hammer", "สำหรับผู้ทดสอบ", UITheme.MUTED))
+	online[2].add_child(_toggle_row("เครื่องมือทดสอบ (F3 ข้อมูล · F5–F10 ข้ามเวลา/บังคับเหตุการณ์)", GameSettings.debug_tools, func(on):
+		GameSettings.debug_tools = on))
+	var logs = Button.new()
+	logs.text = "เปิดโฟลเดอร์บันทึกการเล่น"
+	logs.pressed.connect(func(): OS.shell_open(ProjectSettings.globalize_path("user://")))
+	online[2].add_child(logs)
+
+	_show_tab(0)
+
+func _board_name_row() -> HBoxContainer:
+	var name_row = UITheme.hbox(10)
+	var name_label = UITheme.label("ชื่อบนกระดาน", "Small", UITheme.CREAM)
+	name_label.custom_minimum_size = Vector2(170, 0)
+	name_row.add_child(name_label)
+	var name_edit = LineEdit.new()
+	name_edit.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	name_edit.text = GameSettings.player_name
+	name_edit.max_length = SaveGame.NAME_MAX
+	name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_edit.focus_mode = Control.FOCUS_ALL
+	name_edit.text_changed.connect(func(t: String): GameSettings.player_name = t)
+	name_row.add_child(name_edit)
+	return name_row
+
+func _build_desktop_body() -> void:
 	var cols = UITheme.hbox(18)
 	cols.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_content_scroll.add_child(cols)
@@ -101,19 +283,7 @@ func _ready() -> void:
 		GameSettings.show_hints = on))
 	right.add_child(_toggle_row("เคล็ดลับระหว่างเผาครั้งแรก", GameSettings.first_burn_tips, func(on):
 		GameSettings.first_burn_tips = on))
-	var name_row = UITheme.hbox(10)
-	var name_label = UITheme.label("ชื่อบนกระดาน", "Small", UITheme.CREAM)
-	name_label.custom_minimum_size = Vector2(170, 0)
-	name_row.add_child(name_label)
-	var name_edit = LineEdit.new()
-	name_edit.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-	name_edit.text = GameSettings.player_name
-	name_edit.max_length = SaveGame.NAME_MAX
-	name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	name_edit.focus_mode = Control.FOCUS_ALL
-	name_edit.text_changed.connect(func(t: String): GameSettings.player_name = t)
-	name_row.add_child(name_edit)
-	right.add_child(name_row)
+	right.add_child(_board_name_row())
 	var howto = Button.new()
 	howto.text = "แสดงวิธีเล่นอีกครั้ง"
 	howto.pressed.connect(func(): how_to_play_requested.emit())
@@ -145,21 +315,6 @@ func _ready() -> void:
 	logs.text = "เปิดโฟลเดอร์บันทึกการเล่น"
 	logs.pressed.connect(func(): OS.shell_open(ProjectSettings.globalize_path("user://")))
 	right.add_child(logs)
-
-	var foot = UITheme.hbox(0)
-	foot.alignment = BoxContainer.ALIGNMENT_CENTER
-	page.add_child(foot)
-	close_button = Button.new()
-	close_button.theme_type_variation = "PrimaryButton"
-	close_button.text = "บันทึกและปิด"
-	close_button.custom_minimum_size = Vector2(300, 48)
-	close_button.pressed.connect(close)
-	foot.add_child(close_button)
-	_focus_scope = ModalFocusScope.begin(self)
-	close_button.grab_focus()
-	# Notch padding and 44 pt targets for the overlay's own controls.
-	UITheme.apply_safe_area(self)
-	UITheme.apply_touch_targets(self)
 
 func _update_delete_button() -> void:
 	if is_instance_valid(delete_scores_button):

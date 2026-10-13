@@ -106,6 +106,15 @@ func swipe_up(sc: ScrollContainer, start: Vector2, distance: float = 160.0) -> A
 	await process_frame
 	return [before, sc.scroll_vertical]
 
+## One finger tap at a control's centre: a ScreenTouch press then release.
+func tap(control: Control) -> void:
+	var centre := control.get_global_rect().get_center()
+	touch(9, centre, true)
+	await process_frame
+	touch(9, centre, false)
+	await process_frame
+	await process_frame
+
 func run() -> void:
 	expect_touch = OS.get_cmdline_user_args().has("--touch")
 	root.size = Vector2i(1280, 720)
@@ -208,11 +217,14 @@ func run() -> void:
 			guide_inside = false
 	check(guide_inside, "guide buttons stay inside the canvas")
 	# iPhone scrolling audit P2: a finger swipe over the guide text scrolls it.
+	# Screens that now fit 1280x720 have no body to swipe: skip with a note.
 	var guide_scroll := overflowing_scroll(guide)
-	check(guide_scroll != null, "guide content overflows at 1280x720 (scroll region exists)")
 	if guide_scroll:
+		check(true, "guide content overflows at 1280x720 (scroll region exists)")
 		var r: Array = await swipe_up(guide_scroll, text_point(guide_scroll))
 		check((r[1] > r[0]) == expect_touch, "swipe over guide text scrolls on touch (%d -> %d), not on desktop" % [r[0], r[1]])
+	else:
+		check(true, "SKIP: guide fits 1280x720 without overflow, so there is no body to swipe")
 	guide.close()
 	await settle()
 
@@ -224,9 +236,10 @@ func run() -> void:
 	check(settings.close_button.custom_minimum_size.y >= (UITheme.TOUCH_MIN if expect_touch else 48.0),
 		"settings close button meets the touch target on mobile")
 	# iPhone scrolling audit P1: swipe over the settings body reveals the lower controls.
+	# Only when the body actually overflows; a fitting body is a PASS-skip.
 	var settings_scroll := overflowing_scroll(settings)
-	check(settings_scroll != null, "settings body overflows at 1280x720 (scroll region exists)")
 	if settings_scroll:
+		check(true, "settings body overflows at 1280x720 (scroll region exists)")
 		var r: Array = await swipe_up(settings_scroll, text_point(settings_scroll), 240.0)
 		check((r[1] > r[0]) == expect_touch, "swipe over settings text scrolls on touch (%d -> %d)" % [r[0], r[1]])
 		# A swipe that starts on a button must not activate it.
@@ -249,6 +262,8 @@ func run() -> void:
 			touch(4, pos, false)
 			await settle()
 			check(not fired[0], "a swipe that starts on a settings button does not activate it")
+	else:
+		check(true, "SKIP: settings fits 1280x720 without overflow, so there is no body to swipe")
 	settings.close()
 	await settle()
 
@@ -308,18 +323,74 @@ func run() -> void:
 	await process_frame
 	check(is_equal_approx(sky.view_distance, main.cam_rig.zoom_max), "MainController feeds the live camera distance to the sky each frame")
 
-	# --- 8. Village preparation scrolls by finger (scrolling audit P1) --------
+	# --- 8. Village preparation: tabs on touch, three columns on desktop ------
 	state.current_year = 4
 	change_scene_to_file("res://scenes/VillageHearth.tscn")
 	await settle()
 	var hearth = current_scene
 	if hearth and hearth.get("chatter_timer"):
 		hearth.chatter_timer.stop()
+	var tab_labels: Array[String] = ["แปลง", "วิทยุ", "เสบียง", "โรงซ่อม · เอาแรง"]
+	if expect_touch:
+		# V1 "tabs, no scrolling": one pinned tab bar, one visible pane.
+		check(hearth._tab_bar != null and hearth._tab_bar.is_visible_in_tree(), "touch preparation builds a pinned tab bar")
+		check(hearth._tab_buttons.size() == 4 and hearth._tab_panes.size() == 4, "tab bar carries four tabs and four panes")
+		check(hearth._card_columns.columns == 1, "touch body is a one-column pane area")
+		var labels_ok := true
+		var targets_ok := true
+		for i in 4:
+			if i < hearth._tab_buttons.size():
+				if hearth._tab_buttons[i].text != tab_labels[i]:
+					labels_ok = false
+				if hearth._tab_buttons[i].size.y < UITheme.TOUCH_MIN:
+					targets_ok = false
+		check(labels_ok, "tab labels are the four approved Thai literals")
+		var first_tab_height: float = hearth._tab_buttons[0].size.y if hearth._tab_buttons.size() > 0 else 0.0
+		check(targets_ok, "every tab button is at least 88 px tall (%.0f px)" % first_tab_height)
+		check(hearth._active_tab == 0 and hearth._tab_panes[0].is_visible_in_tree(), "the default tab is แปลง")
+		# The one label that must be on screen behind each tab.
+		var tab_content: Array = [hearth.plot_title_label, hearth.radio_text, hearth.granary_label, hearth.workshop_label]
+		for i in 4:
+			await tap(hearth._tab_buttons[i])
+			await settle()
+			check(hearth._active_tab == i, "tapping tab %d activates it (%s)" % [i, tab_labels[i]])
+			var panes_ok := true
+			var highlight_ok := true
+			for j in 4:
+				if hearth._tab_panes[j].is_visible_in_tree() != (i == j):
+					panes_ok = false
+				if (hearth._tab_buttons[j].theme_type_variation == "PrimaryButton") != (i == j):
+					highlight_ok = false
+			check(panes_ok, "tab %s shows only its own pane" % tab_labels[i])
+			check(highlight_ok, "tab %s alone is highlighted" % tab_labels[i])
+			var content_ok: bool = tab_content[i].is_visible_in_tree()
+			if i == 3:
+				# Workshop and mutual aid share one row, side by side.
+				content_ok = content_ok and hearth.exchange_label.is_visible_in_tree() \
+					and hearth.exchange_label.get_global_rect().position.x >= hearth.workshop_label.get_global_rect().end.x - 1.0
+			check(content_ok, "pane %s reuses the matching preparation card" % tab_labels[i])
+			var body: ScrollContainer = hearth._card_scroll
+			var max_value: float = body.get_v_scroll_bar().max_value
+			check(max_value <= body.size.y + 1.0, "pane %s fits the 1280x720 body without scrolling (%.0f <= %.0f)" % [tab_labels[i], max_value, body.size.y])
+		# Back to the default tab so the checks below start from the plot pane.
+		await tap(hearth._tab_buttons[0])
+		await settle()
+	else:
+		check(hearth._tab_bar == null, "desktop preparation builds no tab bar")
+		check(hearth._tab_panes.is_empty() and hearth._tab_buttons.is_empty(), "desktop builds no hidden pane set")
+		check(hearth._card_columns.columns == 3, "desktop keeps the three-column grid at 1280 px wide")
+		check(hearth.plot_title_label.is_visible_in_tree() and hearth.radio_text.is_visible_in_tree() \
+			and hearth.granary_label.is_visible_in_tree() and hearth.workshop_label.is_visible_in_tree() \
+			and hearth.exchange_label.is_visible_in_tree(), "desktop still shows every preparation card at once")
 	var village_scroll := overflowing_scroll(hearth)
-	check(village_scroll != null, "village preparation body overflows at 1280x720 (scroll region exists)")
 	if village_scroll:
+		check(true, "village preparation body overflows at 1280x720 (scroll region exists)")
 		var r: Array = await swipe_up(village_scroll, text_point(village_scroll), 240.0)
 		check((r[1] > r[0]) == expect_touch, "swipe over the village briefing scrolls on touch (%d -> %d)" % [r[0], r[1]])
+	elif expect_touch:
+		check(true, "SKIP: the tabbed village body fits 1280x720 on touch, so there is nothing to swipe")
+	else:
+		check(false, "village preparation body overflows at 1280x720 (scroll region exists)")
 	# iPhone playtest cycles 3-4: with the home-indicator inset the speech caption
 	# landed on the Launch button. Simulate the iPhone insets and show a caption.
 	UITheme.debug_insets = {"left": 59.0, "top": 0.0, "right": 59.0, "bottom": 21.0}

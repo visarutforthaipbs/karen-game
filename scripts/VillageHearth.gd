@@ -28,6 +28,9 @@ const PROVERBS = [
 ]
 
 const ENDING_SCENE = "res://scenes/Ending.tscn"
+## Touch devices (V1 "tabs, no scrolling"): the body becomes four tabs, each
+## showing one pane. Desktop keeps the three-column grid.
+const TAB_LABELS: Array[String] = ["แปลง", "วิทยุ", "เสบียง", "โรงซ่อม · เอาแรง"]
 var header_label: Label
 var barn_value: Label
 var barn_bar: SegmentBar
@@ -63,6 +66,10 @@ var settings_panel: SettingsPanel
 var how_to_play: HowToPlay
 var _card_columns: GridContainer
 var _card_scroll: ScrollContainer
+var _tab_bar: HBoxContainer
+var _tab_buttons: Array[Button] = []
+var _tab_panes: Array[Control] = []
+var _active_tab: int = 0
 var _header_row: HBoxContainer
 var _header_stats: HBoxContainer
 var _barn_card: Control
@@ -123,6 +130,8 @@ func show_settings() -> void:
 # ---------------------------------------------------------------------------
 
 func _build() -> void:
+	# Touch devices get the V1 tabbed body; desktop keeps the 3-column grid.
+	var mobile := UITheme.is_mobile()
 	var backdrop = ColorRect.new()
 	backdrop.color = Color("101724")
 	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -133,15 +142,21 @@ func _build() -> void:
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right"]:
 		margin.add_theme_constant_override("margin_" + side, 20)
-	margin.add_theme_constant_override("margin_top", 10)
-	margin.add_theme_constant_override("margin_bottom", 12)
+	# Compact page chrome on touch: every pixel goes to the active pane.
+	margin.add_theme_constant_override("margin_top", 6 if mobile else 10)
+	margin.add_theme_constant_override("margin_bottom", 8 if mobile else 12)
 	add_child(margin)
 	# Top-level page off the notch / home indicator (no-op on desktop).
 	UITheme.apply_safe_area(margin)
-	var page = UITheme.vbox(8)
+	var page = UITheme.vbox(4 if mobile else 8)
 	margin.add_child(page)
 
 	page.add_child(_build_header())
+
+	# Touch: one pinned tab bar above the body (the three-column grid is
+	# replaced by four single-pane tabs, V1 "tabs, no scrolling").
+	if mobile:
+		page.add_child(_build_tab_bar())
 
 	# The cards scroll when the window is short; the launch button below stays pinned
 	var scroll = ScrollContainer.new()
@@ -160,32 +175,35 @@ func _build() -> void:
 	page.add_child(scroll)
 	var columns = GridContainer.new()
 	_card_columns = columns
-	columns.columns = 3
+	columns.columns = 1 if mobile else 3
 	columns.add_theme_constant_override("h_separation",12)
 	columns.add_theme_constant_override("v_separation",12)
 	columns.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.add_child(columns)
 
-	var left = UITheme.vbox(12)
-	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	left.custom_minimum_size.x = 300
-	columns.add_child(left)
-	left.add_child(_build_radio())
-	left.add_child(_build_granary())
+	if mobile:
+		_build_tab_panes(columns)
+	else:
+		var left = UITheme.vbox(12)
+		left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		left.custom_minimum_size.x = 300
+		columns.add_child(left)
+		left.add_child(_build_radio())
+		left.add_child(_build_granary())
 
-	var centre = _build_plot_brief()
-	centre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	centre.custom_minimum_size.x = 340
-	centre.size_flags_stretch_ratio = 1.05
-	columns.add_child(centre)
+		var centre = _build_plot_brief()
+		centre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		centre.custom_minimum_size.x = 340
+		centre.size_flags_stretch_ratio = 1.05
+		columns.add_child(centre)
 
-	var right = UITheme.vbox(12)
-	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	right.custom_minimum_size.x = 340
-	columns.add_child(right)
-	right.add_child(_build_workshop())
-	right.add_child(_build_exchange())
+		var right = UITheme.vbox(12)
+		right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		right.custom_minimum_size.x = 340
+		columns.add_child(right)
+		right.add_child(_build_workshop())
+		right.add_child(_build_exchange())
 
 	# The persistent speech caption sits above Launch. Reserve its height outside
 	# the scroll body so radio never covers rations, goals or focused choices.
@@ -204,6 +222,59 @@ func _build() -> void:
 	launch_button.item_rect_changed.connect(_limit_caption_above_launch)
 	resized.connect(_fit_layout)
 	_fit_layout.call_deferred()
+
+## Touch layout (V1 "tabs, no scrolling"): a pinned HBox of four tabs that
+## swaps the single visible pane in the body. Desktop never builds it.
+func _build_tab_bar() -> HBoxContainer:
+	var bar = UITheme.hbox(8)
+	_tab_bar = bar
+	var group = ButtonGroup.new()
+	for i in TAB_LABELS.size():
+		var b = _button(TAB_LABELS[i], true)
+		b.button_group = group
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		b.custom_minimum_size = Vector2(0, UITheme.TOUCH_MIN)
+		b.add_theme_font_size_override("font_size", 20)
+		b.pressed.connect(_set_tab.bind(i))
+		bar.add_child(b)
+		_tab_buttons.append(b)
+	return bar
+
+## The panes reuse the desktop builders one for one; only their arrangement
+## differs (workshop and mutual aid share one row instead of a column).
+func _build_tab_panes(columns: GridContainer) -> void:
+	var workshop_row = UITheme.hbox(12)
+	var workshop_card = _build_workshop()
+	workshop_card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	workshop_row.add_child(workshop_card)
+	var exchange_card = _build_exchange()
+	exchange_card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	workshop_row.add_child(exchange_card)
+	var panes: Array[Control] = [_build_plot_brief(), _build_radio(), _build_granary(), workshop_row]
+	_tab_panes = panes
+	for pane in _tab_panes:
+		pane.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		columns.add_child(pane)
+	_set_tab(0, false)
+
+## Show exactly one pane, highlight its tab and start the body from the top.
+func _set_tab(index: int, move_focus: bool = true) -> void:
+	if index < 0 or index >= _tab_panes.size():
+		return
+	_active_tab = index
+	for i in _tab_panes.size():
+		var active := i == index
+		_tab_panes[i].visible = active
+		_tab_buttons[i].set_pressed_no_signal(active)
+		_tab_buttons[i].theme_type_variation = "PrimaryButton" if active else "Button"
+	if is_instance_valid(_card_scroll):
+		_card_scroll.scroll_vertical = 0
+	# Focus must never stay on a pane that just hid (keyboard / controller).
+	if move_focus and is_inside_tree():
+		var owner = get_viewport().gui_get_focus_owner()
+		if owner == null or not is_instance_valid(owner) or not owner.is_visible_in_tree():
+			_tab_buttons[index].grab_focus()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_EXIT_TREE:
@@ -237,13 +308,21 @@ func _fit_layout() -> void:
 		_header_row.move_child(_watch_card, 2)
 	_header_stats.visible = separate_stats
 	# The minimum widths include translated headings/buttons, not a fixed cutoff.
-	var widths: Array[float] = []
-	for column in _card_columns.get_children():
-		widths.append(column.get_combined_minimum_size().x)
-	var gap = float(_card_columns.get_theme_constant("h_separation"))
-	var three_width = widths[0] + widths[1] + widths[2] + 2.0 * gap
-	var two_width = maxf(widths[0], widths[2]) + widths[1] + gap
-	_card_columns.columns = 3 if three_width <= available - 14.0 else (2 if two_width <= available - 14.0 else 1)
+	if UITheme.is_mobile():
+		# Touch: one pane at a time; the tabs never reflow into 3/2/1 columns.
+		_card_columns.columns = 1
+		if plot_stats:
+			# Wide pane: keep one stat pair per cell so the brief fits 1280x720
+			# without a finger scroll; narrow windows keep the label/value pair.
+			plot_stats.columns = 4 if available >= 1120.0 else 2
+	else:
+		var widths: Array[float] = []
+		for column in _card_columns.get_children():
+			widths.append(column.get_combined_minimum_size().x)
+		var gap = float(_card_columns.get_theme_constant("h_separation"))
+		var three_width = widths[0] + widths[1] + widths[2] + 2.0 * gap
+		var two_width = maxf(widths[0], widths[2]) + widths[1] + gap
+		_card_columns.columns = 3 if three_width <= available - 14.0 else (2 if two_width <= available - 14.0 else 1)
 	launch_button.custom_minimum_size.x = minf(560.0, maxf(240.0, available - 8.0))
 	_fit_harvest_layout()
 	_queue_caption_reservation()
@@ -342,9 +421,12 @@ func _on_prep_scroll_changed(_value: float) -> void:
 
 func _card(kind: String, title: String, tint: Color, seed_value: int, expand: bool = true) -> VBoxContainer:
 	var card = UITheme.card(Color(UITheme.PANEL, 0.93), tint, seed_value)
+	if UITheme.is_mobile():
+		# Touch: tighter slabs and gaps so a whole pane fits the body (V1 tabs).
+		card.padding = Vector4(14, 8, 14, 10)
 	if expand:
 		card.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	var box = UITheme.vbox(8)
+	var box = UITheme.vbox(5 if UITheme.is_mobile() else 8)
 	card.add_child(box)
 	var heading = UITheme.header(kind, title, tint)
 	var heading_label = heading.get_child(heading.get_child_count() - 1) as Label
@@ -468,25 +550,25 @@ func _build_plot_brief() -> Control:
 	plot_desc_label = UITheme.wrap(UITheme.label("", "Body"))
 	box.add_child(plot_desc_label)
 	var sep = HSeparator.new()
-	sep.add_theme_constant_override("separation", 6)
+	sep.add_theme_constant_override("separation", 4 if UITheme.is_mobile() else 6)
 	sep.add_theme_stylebox_override("separator", _rule())
 	box.add_child(sep)
 	plot_stats = GridContainer.new()
 	plot_stats.columns = 2
 	plot_stats.add_theme_constant_override("h_separation", 14)
-	plot_stats.add_theme_constant_override("v_separation", 2)
+	plot_stats.add_theme_constant_override("v_separation", 1 if UITheme.is_mobile() else 2)
 	box.add_child(plot_stats)
 
 	var spacer = Control.new()
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	box.add_child(spacer)
 	var goals = UITheme.card(Color(UITheme.INK, 0.6), UITheme.STRAW, 222)
-	goals.padding = Vector4(14, 10, 14, 12)
+	goals.padding = Vector4(12, 6, 12, 8) if UITheme.is_mobile() else Vector4(14, 10, 14, 12)
 	box.add_child(goals)
-	var gb = UITheme.vbox(6)
+	var gb = UITheme.vbox(4 if UITheme.is_mobile() else 6)
 	goals.add_child(gb)
 	gb.add_child(UITheme.label("เป้าหมายพรุ่งนี้", "Kicker"))
-	goal_rows = UITheme.vbox(2)
+	goal_rows = UITheme.vbox(1 if UITheme.is_mobile() else 2)
 	gb.add_child(goal_rows)
 	return box.get_parent()
 

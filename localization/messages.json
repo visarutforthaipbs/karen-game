@@ -2193,5 +2193,35 @@
     "id": "ui_touch_hint",
     "th": "แตะแปลงใช้เครื่องมือ · นิ้วซ้ายเดิน · ปุ่มมุมขวาสั่งทีมและหยุดเกม",
     "en": "Tap the plot to use the tool · left thumb walks · corner buttons order the crew and pause"
+  },
+  {
+    "id": "ui_settings_tab_online",
+    "th": "ออนไลน์ · ข้อมูล",
+    "en": "Online · Data"
+  },
+  {
+    "id": "ui_guide_prev",
+    "th": "ก่อนหน้า",
+    "en": "Previous"
+  },
+  {
+    "id": "ui_guide_next",
+    "th": "ถัดไป",
+    "en": "Next"
+  },
+  {
+    "id": "ui_hearth_tab_plots",
+    "th": "แปลง",
+    "en": "Plots"
+  },
+  {
+    "id": "ui_hearth_tab_rations",
+    "th": "เสบียง",
+    "en": "Provisions"
+  },
+  {
+    "id": "ui_hearth_tab_workshop",
+    "th": "โรงซ่อม · เอาแรง",
+    "en": "Workshop · Mutual aid"
   }
 ]
