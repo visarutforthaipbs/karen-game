@@ -128,7 +128,7 @@ just re-run it.
   Still missing: store metadata, iPhone 6.9"/iPad screenshots, age rating, privacy label
   (OnlineBoard opt-in sends name + score), privacy policy URL, `ITSAppUsesNonExemptEncryption`.
 
-- **Quit-time watchdog kill (0x8BADF00D), fixed in `002bed8` (build 0.3.1, not yet uploaded):**
+- **Quit-time watchdog kill (0x8BADF00D), fixed in `002bed8` (build 0.3.1, uploaded to TestFlight 2026-10-13 14:28 — "Upload succeeded", IPA sha256 `1aa45f49…42b0c0`):**
   two crash logs on 2026-10-13 (dev build 13:19, TestFlight build 13:51 — binary UUID
   `4E345FED` = the uploaded archive). iOS asked the running app to quit (uninstall /
   TestFlight reinstall); Godot's `applicationWillTerminate:` -> `Main::cleanup` freed
