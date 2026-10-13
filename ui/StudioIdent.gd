@@ -55,7 +55,10 @@ func _ready() -> void:
 		l.add_theme_color_override("font_color", UITheme.CREAM)
 		l.modulate.a = 0.0
 		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_name_row.add_child(l)
+		# Containers own their children's positions, so the animated label sits
+		# inside a fixed-size slot and moves within it (animating a container
+		# child's position directly made the text jump every frame).
+		_name_row.add_child(_slot(l))
 		_letters.append(l)
 
 	_rule = ColorRect.new()
@@ -73,7 +76,7 @@ func _ready() -> void:
 	_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sub.modulate.a = 0.0
 	_sub.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	column.add_child(_sub)
+	column.add_child(_slot(_sub))
 
 	_veil = ColorRect.new()
 	_veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -83,6 +86,16 @@ func _ready() -> void:
 	add_child(_veil)
 	if OS.get_cmdline_user_args().has("--no-ident"):
 		_finish()
+
+## Fixed-size slot for an animated label: the container positions the slot, the
+## label moves inside it.
+static func _slot(label: Label) -> Control:
+	var slot := Control.new()
+	slot.custom_minimum_size = label.get_combined_minimum_size()
+	slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	slot.add_child(label)
+	label.position = Vector2.ZERO
+	return slot
 
 static func _ease_out(x: float) -> float:
 	return 1.0 - pow(1.0 - clampf(x, 0.0, 1.0), 3.0)
