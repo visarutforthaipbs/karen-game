@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgl_studio_ident"]
+
+[ext_resource type="Script" path="res://ui/StudioIdent.gd" id="1_ident"]
+
+[node name="StudioIdent" type="Node3D"]
+script = ExtResource("1_ident")
