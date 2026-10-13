@@ -526,6 +526,9 @@ func _build_tool_bar() -> void:
 		ic.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		box.add_child(ic)
 		_tool_slots.append(card)
+	# Touch devices: the right-edge stack names and highlights the tool, and the
+	# 1 / 2 / 3 keys do not exist - the corner only competed with the joystick zone.
+	tool_col.visible = not UITheme.is_mobile()
 
 func _build_crew_row() -> void:
 	crew_row = UITheme.hbox(6)
