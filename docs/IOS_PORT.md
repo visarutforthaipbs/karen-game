@@ -128,6 +128,18 @@ just re-run it.
   Still missing: store metadata, iPhone 6.9"/iPad screenshots, age rating, privacy label
   (OnlineBoard opt-in sends name + score), privacy policy URL, `ITSAppUsesNonExemptEncryption`.
 
+- **Quit-time watchdog kill (0x8BADF00D), fixed in `002bed8` (build 0.3.1, not yet uploaded):**
+  two crash logs on 2026-10-13 (dev build 13:19, TestFlight build 13:51 — binary UUID
+  `4E345FED` = the uploaded archive). iOS asked the running app to quit (uninstall /
+  TestFlight reinstall); Godot's `applicationWillTerminate:` -> `Main::cleanup` freed
+  ShaderMaterials that wait on in-flight Metal pipeline compiles, past the 5 s budget.
+  Fix: `ios/plugins/quick_exit` (Godot iOS plugin) swaps that method for `_exit(0)`;
+  device console shows `[QuickExit] installed: GDTApplicationDelegate=1 GDTAppDelegateService=1`.
+  Verified: hook installed on device, no new crash logs over 10 quit/reinstall cycles.
+  NOT verified: an A/B reproduction — the old build did not crash on demand either (the
+  hang needs uncached first-launch Metal compiles in flight); TestFlight crash stats on
+  0.3.1 are the real-world check.
+
 ## Release gate for this port
 
 0. **Owner finger check (3 minutes, the only thing Mirroring can't do):** on the installed
