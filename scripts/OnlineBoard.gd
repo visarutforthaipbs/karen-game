@@ -10,7 +10,12 @@ const BASE_URL = "https://undertwoskies-board.undertwoskies-game.workers.dev"
 const GAME_VERSION = "beta3"
 const TIMEOUT = 10.0
 
+static func available() -> bool:
+	return not OS.has_feature("appstore_offline") and not OS.get_cmdline_user_args().has("--appstore-offline")
+
 static func enabled() -> bool:
+	if not available():
+		return false
 	GameSettings.ensure_loaded()
 	return GameSettings.online_board
 
@@ -38,6 +43,8 @@ static func _hex(n: int, digits: int) -> String:
 
 ## Creates (once) a random anonymous id and secret and saves them
 static func ensure_identity() -> void:
+	if not available():
+		return
 	GameSettings.ensure_loaded()
 	if GameSettings.client_id != "" and GameSettings.client_secret != "":
 		return
@@ -48,6 +55,8 @@ static func ensure_identity() -> void:
 	GameSettings.save_settings()
 
 static func _make_request(parent: Node) -> HTTPRequest:
+	if not available():
+		return null
 	if parent == null or not is_instance_valid(parent) or not parent.is_inside_tree():
 		return null
 	var http = HTTPRequest.new()

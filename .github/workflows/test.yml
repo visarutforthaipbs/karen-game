@@ -95,6 +95,13 @@ jobs:
             ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" "mobile-pages$flag.log"
             grep -q "MOBILE PAGES RESULT: 0" "mobile-pages$flag.log"
           done
+          # App Store offline variant (iOS preset feature appstore_offline): no leaderboard path
+          ~/godot/godot --headless --path . --script res://tests/test_appstore_offline.gd -- --touch --appstore-offline 2>&1 | tee appstore-offline.log
+          ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" appstore-offline.log
+          grep -q "OFFLINE RESULT: 0" appstore-offline.log
+          ~/godot/godot --headless --path . --script res://tests/test_mobile_pages.gd -- --touch --appstore-offline 2>&1 | tee mobile-pages-offline.log
+          ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" mobile-pages-offline.log
+          grep -q "MOBILE PAGES RESULT: 0" mobile-pages-offline.log
 
       - name: Smoke run
         run: |

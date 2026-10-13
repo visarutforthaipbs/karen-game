@@ -124,7 +124,7 @@ func run() -> void:
 		var titles_ok: bool = settings.tab_buttons.size() == 4
 		var tall_ok: bool = settings.tab_buttons.size() == 4
 		for tab in settings.tab_buttons:
-			titles_ok = titles_ok and tab.text in EXPECTED_TABS
+			titles_ok = titles_ok and (tab.text in EXPECTED_TABS or (not OnlineBoard.available() and tab.text == "ข้อมูล · ช่วยเหลือ"))
 			tall_ok = tall_ok and tab.custom_minimum_size.y >= UITheme.TOUCH_MIN and tab.size.y >= UITheme.TOUCH_MIN
 		check(titles_ok, "tabs read เสียง / การแสดงผล / การเล่น / ออนไลน์ · ข้อมูล")
 		check(tall_ok, "every tab meets the 88 px touch target")
@@ -147,10 +147,21 @@ func run() -> void:
 				"save-and-close visible on pane %d" % (i + 1))
 			check(all_visible_inside(settings) and body_fits(settings._content_scroll),
 				"pane %d fits 1280x720 without scrolling" % (i + 1))
-		check(settings.delete_scores_button.is_visible_in_tree() and inside(settings.delete_scores_button),
-			"score removal is reachable on the last tab")
-		check(button_text_exists(settings, "ส่งผลการเล่นขึ้นกระดานออนไลน์") and has_label(settings, "สำหรับผู้ทดสอบ"),
-			"online board and tester tools live on the last tab")
+		if OnlineBoard.available():
+			check(settings.delete_scores_button.is_visible_in_tree() and inside(settings.delete_scores_button),
+				"score removal is reachable on the last tab")
+			check(button_text_exists(settings, "ส่งผลการเล่นขึ้นกระดานออนไลน์") and has_label(settings, "สำหรับผู้ทดสอบ"),
+				"online board and tester tools live on the last tab")
+		else:
+			# App Store offline build: no leaderboard controls; Data / Help instead
+			var policy = settings.find_child("PrivacyPolicyButton", true, false)
+			var support = settings.find_child("SupportButton", true, false)
+			check(settings.delete_scores_button == null and not button_text_exists(settings, "ส่งผลการเล่นขึ้นกระดานออนไลน์"),
+				"offline build has no online board controls")
+			check(policy != null and policy.is_visible_in_tree() and inside(policy)
+				and support != null and support.is_visible_in_tree() and inside(support),
+				"privacy and support actions are reachable on the last tab")
+			check(has_label(settings, "สำหรับผู้ทดสอบ"), "tester tools still live on the last tab")
 	else:
 		check(settings.tab_bar == null, "desktop settings has no tab bar")
 		check(settings.tab_buttons.is_empty() and settings.tab_panes.is_empty(), "desktop builds no tabs or panes")

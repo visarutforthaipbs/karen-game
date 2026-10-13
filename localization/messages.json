@@ -2223,5 +2223,30 @@
     "id": "ui_hearth_tab_workshop",
     "th": "โรงซ่อม · เอาแรง",
     "en": "Workshop · Mutual aid"
+  },
+  {
+    "id": "appstore_offline_0",
+    "th": "ข้อมูล · ช่วยเหลือ",
+    "en": "Data · Help"
+  },
+  {
+    "id": "appstore_offline_1",
+    "th": "ชื่อในสถิติในเครื่อง",
+    "en": "Name in local records"
+  },
+  {
+    "id": "appstore_offline_2",
+    "th": "เวอร์ชันนี้เล่นแบบออฟไลน์ ไม่มีการส่งคะแนนออนไลน์",
+    "en": "This version is offline-only. Scores are not sent online."
+  },
+  {
+    "id": "appstore_offline_3",
+    "th": "นโยบายความเป็นส่วนตัว",
+    "en": "Privacy policy"
+  },
+  {
+    "id": "appstore_offline_4",
+    "th": "ติดต่อผู้พัฒนา",
+    "en": "Contact support"
   }
 ]

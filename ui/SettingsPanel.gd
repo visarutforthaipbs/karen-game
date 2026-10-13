@@ -118,7 +118,7 @@ func _build_tab_bar(page: VBoxContainer) -> void:
 	for i in TAB_TITLES.size():
 		var tab = Button.new()
 		tab.name = "Tab%d" % (i + 1)
-		tab.text = TAB_TITLES[i]
+		tab.text = "ข้อมูล · ช่วยเหลือ" if i == 3 and not OnlineBoard.available() else TAB_TITLES[i]
 		tab.toggle_mode = true
 		tab.button_group = group
 		tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -204,24 +204,27 @@ func _build_touch_panes() -> void:
 	# tools right (the score-removal action lives on this last tab).
 	var online = _touch_columns()
 	tab_panes[3].add_child(online[0])
-	online[1].add_child(UITheme.header("satellite", "กระดานออนไลน์ (เบตา)", UITheme.MUTED))
-	online[1].add_child(_toggle_row("ส่งผลการเล่นขึ้นกระดานออนไลน์", GameSettings.online_board, func(on):
-		GameSettings.online_board = on
-		if on:
-			OnlineBoard.ensure_identity()
-		_update_delete_button()))
-	var online_note = UITheme.label("ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ", "Small", UITheme.MUTED)
-	online_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	online[1].add_child(online_note)
-	var wipe = Button.new()
-	delete_scores_button = wipe
-	wipe.text = "ลบคะแนนของฉันออกจากกระดานออนไลน์"
-	_update_delete_button()
-	wipe.pressed.connect(_delete_scores)
-	online[1].add_child(wipe)
-	online_status = UITheme.wrap(UITheme.label("", "Small", UITheme.MUTED))
-	online_status.visible = false
-	online[1].add_child(online_status)
+	if OnlineBoard.available():
+		online[1].add_child(UITheme.header("satellite", "กระดานออนไลน์ (เบตา)", UITheme.MUTED))
+		online[1].add_child(_toggle_row("ส่งผลการเล่นขึ้นกระดานออนไลน์", GameSettings.online_board, func(on):
+			GameSettings.online_board = on
+			if on:
+				OnlineBoard.ensure_identity()
+			_update_delete_button()))
+		var online_note = UITheme.label("ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ", "Small", UITheme.MUTED)
+		online_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		online[1].add_child(online_note)
+		var wipe = Button.new()
+		delete_scores_button = wipe
+		wipe.text = "ลบคะแนนของฉันออกจากกระดานออนไลน์"
+		_update_delete_button()
+		wipe.pressed.connect(_delete_scores)
+		online[1].add_child(wipe)
+		online_status = UITheme.wrap(UITheme.label("", "Small", UITheme.MUTED))
+		online_status.visible = false
+		online[1].add_child(online_status)
+	else:
+		_build_offline_help(online[1])
 
 	online[2].add_child(UITheme.header("hammer", "สำหรับผู้ทดสอบ", UITheme.MUTED))
 	online[2].add_child(_toggle_row("เครื่องมือทดสอบ (F3 ข้อมูล · F5–F10 ข้ามเวลา/บังคับเหตุการณ์)", GameSettings.debug_tools, func(on):
@@ -235,7 +238,7 @@ func _build_touch_panes() -> void:
 
 func _board_name_row() -> HBoxContainer:
 	var name_row = UITheme.hbox(10)
-	var name_label = UITheme.label("ชื่อบนกระดาน", "Small", UITheme.CREAM)
+	var name_label = UITheme.label("ชื่อบนกระดาน" if OnlineBoard.available() else "ชื่อในสถิติในเครื่อง", "Small", UITheme.CREAM)
 	name_label.custom_minimum_size = Vector2(170, 0)
 	name_row.add_child(name_label)
 	var name_edit = LineEdit.new()
@@ -289,24 +292,27 @@ func _build_desktop_body() -> void:
 	howto.pressed.connect(func(): how_to_play_requested.emit())
 	right.add_child(howto)
 
-	right.add_child(UITheme.header("satellite", "กระดานออนไลน์ (เบตา)", UITheme.MUTED))
-	right.add_child(_toggle_row("ส่งผลการเล่นขึ้นกระดานออนไลน์", GameSettings.online_board, func(on):
-		GameSettings.online_board = on
-		if on:
-			OnlineBoard.ensure_identity()
-		_update_delete_button()))
-	var online_note = UITheme.label("ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ", "Small", UITheme.MUTED)
-	online_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	right.add_child(online_note)
-	var wipe = Button.new()
-	delete_scores_button = wipe
-	wipe.text = "ลบคะแนนของฉันออกจากกระดานออนไลน์"
-	_update_delete_button()
-	wipe.pressed.connect(_delete_scores)
-	right.add_child(wipe)
-	online_status = UITheme.wrap(UITheme.label("", "Small", UITheme.MUTED))
-	online_status.visible = false
-	right.add_child(online_status)
+	if OnlineBoard.available():
+		right.add_child(UITheme.header("satellite", "กระดานออนไลน์ (เบตา)", UITheme.MUTED))
+		right.add_child(_toggle_row("ส่งผลการเล่นขึ้นกระดานออนไลน์", GameSettings.online_board, func(on):
+			GameSettings.online_board = on
+			if on:
+				OnlineBoard.ensure_identity()
+			_update_delete_button()))
+		var online_note = UITheme.label("ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ", "Small", UITheme.MUTED)
+		online_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		right.add_child(online_note)
+		var wipe = Button.new()
+		delete_scores_button = wipe
+		wipe.text = "ลบคะแนนของฉันออกจากกระดานออนไลน์"
+		_update_delete_button()
+		wipe.pressed.connect(_delete_scores)
+		right.add_child(wipe)
+		online_status = UITheme.wrap(UITheme.label("", "Small", UITheme.MUTED))
+		online_status.visible = false
+		right.add_child(online_status)
+	else:
+		_build_offline_help(right)
 
 	right.add_child(UITheme.header("hammer", "สำหรับผู้ทดสอบ", UITheme.MUTED))
 	right.add_child(_toggle_row("เครื่องมือทดสอบ (F3 ข้อมูล · F5–F10 ข้ามเวลา/บังคับเหตุการณ์)", GameSettings.debug_tools, func(on):
@@ -315,6 +321,20 @@ func _build_desktop_body() -> void:
 	logs.text = "เปิดโฟลเดอร์บันทึกการเล่น"
 	logs.pressed.connect(func(): OS.shell_open(ProjectSettings.globalize_path("user://")))
 	right.add_child(logs)
+
+func _build_offline_help(parent: Node) -> void:
+	parent.add_child(UITheme.header("satellite", "ข้อมูล · ช่วยเหลือ", UITheme.MUTED))
+	parent.add_child(UITheme.wrap(UITheme.label("เวอร์ชันนี้เล่นแบบออฟไลน์ ไม่มีการส่งคะแนนออนไลน์", "Small", UITheme.MUTED)))
+	var policy := Button.new()
+	policy.name = "PrivacyPolicyButton"
+	policy.text = "นโยบายความเป็นส่วนตัว"
+	policy.pressed.connect(func(): OS.shell_open("https://undertwoskies-ios-support.undertwoskies-game.workers.dev/privacy/"))
+	parent.add_child(policy)
+	var help := Button.new()
+	help.name = "SupportButton"
+	help.text = "ติดต่อผู้พัฒนา"
+	help.pressed.connect(func(): OS.shell_open("https://undertwoskies-ios-support.undertwoskies-game.workers.dev/support/"))
+	parent.add_child(help)
 
 func _update_delete_button() -> void:
 	if is_instance_valid(delete_scores_button):

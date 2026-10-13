@@ -25,7 +25,7 @@ for a in "$@"; do
     *) echo "unknown option $a" >&2; exit 1 ;;
   esac
 done
-SOURCE_PATHS=(project.godot export_presets.cfg scripts ui scenes assets localization tools/build.sh tools/build_ios.sh)
+SOURCE_PATHS=(project.godot export_presets.cfg scripts ui scenes assets localization ios tools/build.sh tools/build_ios.sh)
 if ! git diff --quiet -- "${SOURCE_PATHS[@]}" || ! git diff --cached --quiet -- "${SOURCE_PATHS[@]}" \
   || [ -n "$(git ls-files --others --exclude-standard -- "${SOURCE_PATHS[@]}")" ]; then
   echo "Commit the release source and assets before building (uncommitted runtime files found)." >&2
