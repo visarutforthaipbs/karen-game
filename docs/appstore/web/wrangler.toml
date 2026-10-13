@@ -1,0 +1,7 @@
+name = "undertwoskies-ios-support"
+compatibility_date = "2026-10-13"
+account_id = "37985e3dbd0d5cc809f4740dec81dbfc"
+workers_dev = true
+
+[assets]
+directory = "./public"

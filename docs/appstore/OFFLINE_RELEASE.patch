@@ -1,0 +1,264 @@
+--- a/export_presets.cfg
++++ b/export_presets.cfg
+@@ -95,7 +95,7 @@
+ platform="iOS"
+ runnable=false
+ dedicated_server=false
+-custom_features=""
++custom_features="appstore_offline"
+ export_filter="all_resources"
+ include_filter="localization/*.json, assets/fonts/OFL-*.txt"
+ exclude_filter="tests/*, tools/*, artifacts/*, docs/*, build/*, server/*, assets/audio/v11_candidates/*, assets/concept_art/*, assets/reference/*, screenshot_chibi_gameplay.png, *.md"
+@@ -124,7 +124,7 @@
+ application/bundle_identifier="io.github.visarutforthaipbs.undertwoskies"
+ application/signature=""
+ application/short_version="0.3"
+-application/version="0.3.1"
++application/version="0.3.2"
+ application/min_ios_version="17.0"
+ application/targeted_device_family=2
+ application/additional_plist_content=""
+--- a/tools/build_ios.sh
++++ b/tools/build_ios.sh
+@@ -25,7 +25,7 @@
+     *) echo "unknown option $a" >&2; exit 1 ;;
+   esac
+ done
+-SOURCE_PATHS=(project.godot export_presets.cfg scripts ui scenes assets localization tools/build.sh tools/build_ios.sh)
++SOURCE_PATHS=(project.godot export_presets.cfg scripts ui scenes assets localization ios tools/build.sh tools/build_ios.sh)
+ if ! git diff --quiet -- "${SOURCE_PATHS[@]}" || ! git diff --cached --quiet -- "${SOURCE_PATHS[@]}" \
+   || [ -n "$(git ls-files --others --exclude-standard -- "${SOURCE_PATHS[@]}")" ]; then
+   echo "Commit the release source and assets before building (uncommitted runtime files found)." >&2
+--- a/scripts/OnlineBoard.gd
++++ b/scripts/OnlineBoard.gd
+@@ -10,7 +10,12 @@
+ const GAME_VERSION = "beta3"
+ const TIMEOUT = 10.0
+ 
++static func available() -> bool:
++	return not OS.has_feature("appstore_offline") and not OS.get_cmdline_user_args().has("--appstore-offline")
++
+ static func enabled() -> bool:
++	if not available():
++		return false
+ 	GameSettings.ensure_loaded()
+ 	return GameSettings.online_board
+ 
+@@ -38,6 +43,8 @@
+ 
+ ## Creates (once) a random anonymous id and secret and saves them
+ static func ensure_identity() -> void:
++	if not available():
++		return
+ 	GameSettings.ensure_loaded()
+ 	if GameSettings.client_id != "" and GameSettings.client_secret != "":
+ 		return
+@@ -48,6 +55,8 @@
+ 	GameSettings.save_settings()
+ 
+ static func _make_request(parent: Node) -> HTTPRequest:
++	if not available():
++		return null
+ 	if parent == null or not is_instance_valid(parent) or not parent.is_inside_tree():
+ 		return null
+ 	var http = HTTPRequest.new()
+--- a/ui/SettingsPanel.gd
++++ b/ui/SettingsPanel.gd
+@@ -118,7 +118,7 @@
+ 	for i in TAB_TITLES.size():
+ 		var tab = Button.new()
+ 		tab.name = "Tab%d" % (i + 1)
+-		tab.text = TAB_TITLES[i]
++		tab.text = "ข้อมูล · ช่วยเหลือ" if i == 3 and not OnlineBoard.available() else TAB_TITLES[i]
+ 		tab.toggle_mode = true
+ 		tab.button_group = group
+ 		tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+@@ -204,24 +204,27 @@
+ 	# tools right (the score-removal action lives on this last tab).
+ 	var online = _touch_columns()
+ 	tab_panes[3].add_child(online[0])
+-	online[1].add_child(UITheme.header("satellite", "กระดานออนไลน์ (เบตา)", UITheme.MUTED))
+-	online[1].add_child(_toggle_row("ส่งผลการเล่นขึ้นกระดานออนไลน์", GameSettings.online_board, func(on):
+-		GameSettings.online_board = on
+-		if on:
+-			OnlineBoard.ensure_identity()
+-		_update_delete_button()))
+-	var online_note = UITheme.label("ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ", "Small", UITheme.MUTED)
+-	online_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+-	online[1].add_child(online_note)
+-	var wipe = Button.new()
+-	delete_scores_button = wipe
+-	wipe.text = "ลบคะแนนของฉันออกจากกระดานออนไลน์"
+-	_update_delete_button()
+-	wipe.pressed.connect(_delete_scores)
+-	online[1].add_child(wipe)
+-	online_status = UITheme.wrap(UITheme.label("", "Small", UITheme.MUTED))
+-	online_status.visible = false
+-	online[1].add_child(online_status)
++	if OnlineBoard.available():
++		online[1].add_child(UITheme.header("satellite", "กระดานออนไลน์ (เบตา)", UITheme.MUTED))
++		online[1].add_child(_toggle_row("ส่งผลการเล่นขึ้นกระดานออนไลน์", GameSettings.online_board, func(on):
++			GameSettings.online_board = on
++			if on:
++				OnlineBoard.ensure_identity()
++			_update_delete_button()))
++		var online_note = UITheme.label("ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ", "Small", UITheme.MUTED)
++		online_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
++		online[1].add_child(online_note)
++		var wipe = Button.new()
++		delete_scores_button = wipe
++		wipe.text = "ลบคะแนนของฉันออกจากกระดานออนไลน์"
++		_update_delete_button()
++		wipe.pressed.connect(_delete_scores)
++		online[1].add_child(wipe)
++		online_status = UITheme.wrap(UITheme.label("", "Small", UITheme.MUTED))
++		online_status.visible = false
++		online[1].add_child(online_status)
++	else:
++		_build_offline_help(online[1])
+ 
+ 	online[2].add_child(UITheme.header("hammer", "สำหรับผู้ทดสอบ", UITheme.MUTED))
+ 	online[2].add_child(_toggle_row("เครื่องมือทดสอบ (F3 ข้อมูล · F5–F10 ข้ามเวลา/บังคับเหตุการณ์)", GameSettings.debug_tools, func(on):
+@@ -235,7 +238,7 @@
+ 
+ func _board_name_row() -> HBoxContainer:
+ 	var name_row = UITheme.hbox(10)
+-	var name_label = UITheme.label("ชื่อบนกระดาน", "Small", UITheme.CREAM)
++	var name_label = UITheme.label("ชื่อบนกระดาน" if OnlineBoard.available() else "ชื่อในสถิติในเครื่อง", "Small", UITheme.CREAM)
+ 	name_label.custom_minimum_size = Vector2(170, 0)
+ 	name_row.add_child(name_label)
+ 	var name_edit = LineEdit.new()
+@@ -289,24 +292,27 @@
+ 	howto.pressed.connect(func(): how_to_play_requested.emit())
+ 	right.add_child(howto)
+ 
+-	right.add_child(UITheme.header("satellite", "กระดานออนไลน์ (เบตา)", UITheme.MUTED))
+-	right.add_child(_toggle_row("ส่งผลการเล่นขึ้นกระดานออนไลน์", GameSettings.online_board, func(on):
+-		GameSettings.online_board = on
+-		if on:
+-			OnlineBoard.ensure_identity()
+-		_update_delete_button()))
+-	var online_note = UITheme.label("ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ", "Small", UITheme.MUTED)
+-	online_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+-	right.add_child(online_note)
+-	var wipe = Button.new()
+-	delete_scores_button = wipe
+-	wipe.text = "ลบคะแนนของฉันออกจากกระดานออนไลน์"
+-	_update_delete_button()
+-	wipe.pressed.connect(_delete_scores)
+-	right.add_child(wipe)
+-	online_status = UITheme.wrap(UITheme.label("", "Small", UITheme.MUTED))
+-	online_status.visible = false
+-	right.add_child(online_status)
++	if OnlineBoard.available():
++		right.add_child(UITheme.header("satellite", "กระดานออนไลน์ (เบตา)", UITheme.MUTED))
++		right.add_child(_toggle_row("ส่งผลการเล่นขึ้นกระดานออนไลน์", GameSettings.online_board, func(on):
++			GameSettings.online_board = on
++			if on:
++				OnlineBoard.ensure_identity()
++			_update_delete_button()))
++		var online_note = UITheme.label("ส่งเฉพาะชื่อบนกระดานและคะแนน ไม่มีอีเมลหรือข้อมูลส่วนตัว กระดานเบตาใช้ระบบเกียรติยศ ลบคะแนนของคุณได้ทุกเมื่อ", "Small", UITheme.MUTED)
++		online_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
++		right.add_child(online_note)
++		var wipe = Button.new()
++		delete_scores_button = wipe
++		wipe.text = "ลบคะแนนของฉันออกจากกระดานออนไลน์"
++		_update_delete_button()
++		wipe.pressed.connect(_delete_scores)
++		right.add_child(wipe)
++		online_status = UITheme.wrap(UITheme.label("", "Small", UITheme.MUTED))
++		online_status.visible = false
++		right.add_child(online_status)
++	else:
++		_build_offline_help(right)
+ 
+ 	right.add_child(UITheme.header("hammer", "สำหรับผู้ทดสอบ", UITheme.MUTED))
+ 	right.add_child(_toggle_row("เครื่องมือทดสอบ (F3 ข้อมูล · F5–F10 ข้ามเวลา/บังคับเหตุการณ์)", GameSettings.debug_tools, func(on):
+@@ -315,6 +321,20 @@
+ 	logs.text = "เปิดโฟลเดอร์บันทึกการเล่น"
+ 	logs.pressed.connect(func(): OS.shell_open(ProjectSettings.globalize_path("user://")))
+ 	right.add_child(logs)
++
++func _build_offline_help(parent: Node) -> void:
++	parent.add_child(UITheme.header("satellite", "ข้อมูล · ช่วยเหลือ", UITheme.MUTED))
++	parent.add_child(UITheme.wrap(UITheme.label("เวอร์ชันนี้เล่นแบบออฟไลน์ ไม่มีการส่งคะแนนออนไลน์", "Small", UITheme.MUTED)))
++	var policy := Button.new()
++	policy.name = "PrivacyPolicyButton"
++	policy.text = "นโยบายความเป็นส่วนตัว"
++	policy.pressed.connect(func(): OS.shell_open("https://undertwoskies-ios-support.undertwoskies-game.workers.dev/privacy/"))
++	parent.add_child(policy)
++	var help := Button.new()
++	help.name = "SupportButton"
++	help.text = "ติดต่อผู้พัฒนา"
++	help.pressed.connect(func(): OS.shell_open("https://undertwoskies-ios-support.undertwoskies-game.workers.dev/support/"))
++	parent.add_child(help)
+ 
+ func _update_delete_button() -> void:
+ 	if is_instance_valid(delete_scores_button):
+--- a/localization/messages.json
++++ b/localization/messages.json
+@@ -2223,5 +2223,30 @@
+     "id": "ui_hearth_tab_workshop",
+     "th": "โรงซ่อม · เอาแรง",
+     "en": "Workshop · Mutual aid"
++  },
++  {
++    "id": "appstore_offline_0",
++    "th": "ข้อมูล · ช่วยเหลือ",
++    "en": "Data · Help"
++  },
++  {
++    "id": "appstore_offline_1",
++    "th": "ชื่อในสถิติในเครื่อง",
++    "en": "Name in local records"
++  },
++  {
++    "id": "appstore_offline_2",
++    "th": "เวอร์ชันนี้เล่นแบบออฟไลน์ ไม่มีการส่งคะแนนออนไลน์",
++    "en": "This version is offline-only. Scores are not sent online."
++  },
++  {
++    "id": "appstore_offline_3",
++    "th": "นโยบายความเป็นส่วนตัว",
++    "en": "Privacy policy"
++  },
++  {
++    "id": "appstore_offline_4",
++    "th": "ติดต่อผู้พัฒนา",
++    "en": "Contact support"
+   }
+ ]
+--- /dev/null
++++ b/tests/test_appstore_offline.gd
+@@ -0,0 +1,31 @@
++extends SceneTree
++var failures := 0
++func _initialize() -> void:
++	call_deferred("run")
++func check(ok: bool, message: String) -> void:
++	print("PASS " if ok else "FAIL ", message)
++	if not ok: failures += 1
++func run() -> void:
++	SaveGame.dir = "/tmp/uts-appstore-offline-fixture"
++	GameSettings.dir = SaveGame.dir
++	DirAccess.make_dir_recursive_absolute(SaveGame.dir)
++	GameSettings.load_settings()
++	check(not OnlineBoard.available(), "offline release feature active")
++	GameSettings.online_board = true
++	GameSettings.client_id = ""
++	GameSettings.client_secret = ""
++	check(not OnlineBoard.enabled(), "legacy opt-in cannot enable networking")
++	OnlineBoard.ensure_identity()
++	check(GameSettings.client_id == "" and GameSettings.client_secret == "", "offline build creates no board identity")
++	check(OnlineBoard._make_request(root) == null, "request factory cannot create an HTTP request")
++	var panel = load("res://ui/SettingsPanel.gd").new()
++	root.add_child(panel)
++	for i in 8: await process_frame
++	check(panel.delete_scores_button == null, "no online deletion control is built")
++	check(panel.find_child("PrivacyPolicyButton", true, false) != null, "privacy policy action exists")
++	check(panel.find_child("SupportButton", true, false) != null, "support action exists")
++	panel.queue_free()
++	root.get_node("AudioManager").stop_all_loops()
++	for i in 8: await process_frame
++	print("OFFLINE RESULT: ", failures)
++	quit(1 if failures else 0)

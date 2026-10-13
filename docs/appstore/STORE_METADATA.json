@@ -1,0 +1,41 @@
+{
+  "status": "prepared draft; not entered or submitted to App Store Connect",
+  "app_id": "6822175255",
+  "bundle_id": "io.github.visarutforthaipbs.undertwoskies",
+  "recommended_public_version": "0.3",
+  "version_decision": "Owner confirmed public version 0.3 on 2026-10-13. Change the live 1.0 draft to 0.3; create a NEW offline-only build, recommended build 0.3.2. Existing TestFlight 0.3.1 retains the optional online feature and does not satisfy this decision.",
+  "price": {
+    "type": "free",
+    "amount": 0,
+    "owner_confirmed": "2026-10-13"
+  },
+  "territories": null,
+  "primary_category": "Games",
+  "game_subcategories": [
+    "Strategy",
+    "Simulation"
+  ],
+  "release_mode": "MANUAL recommended; live draft currently automatic",
+  "copyright_draft": "2026 Visarut Sankham",
+  "support_url": "https://undertwoskies-ios-support.undertwoskies-game.workers.dev/support/",
+  "privacy_policy_url": "https://undertwoskies-ios-support.undertwoskies-game.workers.dev/privacy/",
+  "marketing_url_candidate": "https://undertwoskies-website-promote.undertwoskies-game.workers.dev",
+  "localizations": {
+    "th": {
+      "name": "Under Two Skies",
+      "subtitle": "ไร่หมุนเวียนใต้เงาดาวเทียม",
+      "promotional_text": "ดูทิศลม เตรียมแนวกันไฟ และร่วมแรงกับทีมชาวบ้าน เผาแปลงให้ทันฤดูกาล แล้วดับถ่านคุก่อนดาวเทียมผ่านเวลา 20:00",
+      "keywords": "ไร่หมุนเวียน,วางแผน,เอาตัวรอด",
+      "description": "ระหว่างข้าวในยุ้งกับสายตาบนท้องฟ้า ทุกการตัดสินใจมีราคา\n\nUnder Two Skies: ไร่หมุนเวียนใต้เงาดาวเทียม เป็นเกมวางแผนและเอาตัวรอดสำหรับผู้เล่นคนเดียว ว่าด้วยการทำไร่หมุนเวียนบนพื้นที่สูง ผ่านภูมิประเทศสามมิติแบบโลว์โพลีและการทำงานร่วมกันของทีมชาวบ้าน\n\nวันเผาไร่เริ่มเวลา 14:00 และสิ้นสุดเมื่อดาวเทียมผ่านเวลา 20:00 ถางแนวกันไฟ อ่านทิศลม เลือกจังหวะจุดไฟ และใช้น้ำดับถ่านคุให้เย็นพอ การเผาน้อยเกินไปทำให้ข้าวไม่พอ แต่ความร้อนที่หลงเหลือและไฟที่ลามออกนอกแปลงเพิ่มความเสี่ยงให้หมู่บ้าน\n\nร่วมแรงกับตาโพและมูนอ\nเพื่อนร่วมทีมช่วยถางแนวและดับจุดร้อน ส่งสัญญาณให้ช่วยงานหรือใช้นกหวีดเรียกรวมทีมเมื่อสถานการณ์เปลี่ยน\n\nเตรียมตัวระหว่างวันทำงาน\nกลับหมู่บ้านเพื่อฟังวิทยุ จัดเสบียง ซ่อมเครื่องมือ และแลกแรงกับชุมชนใกล้เคียง ก่อนรับมือแปลงถัดไปและเงื่อนไขที่เข้มข้นขึ้นในแต่ละปี\n\nเล่นด้วยระบบสัมผัส\nใช้จอยเสมือนด้านซ้ายเพื่อเดิน แตะแปลงเพื่อใช้เครื่องมือ และเลือกเครื่องมือ สั่งทีม ซูม หรือหมุนกล้องจากปุ่มบนหน้าจอ\n\n• ภาษาไทยและอังกฤษ ทั้งหน้าจอเกม คำบรรยาย และเสียงพูด\n• เล่นเกมหลักได้โดยไม่ต้องลงชื่อเข้าใช้หรือเชื่อมต่ออินเทอร์เน็ต\n• รุ่น App Store นี้เล่นแบบออฟไลน์ ไม่มีกระดานคะแนนออนไลน์\n\nเกมจำลองการทำไร่ ไฟ และการเฝ้าระวังอย่างเรียบง่ายเพื่อการเล่น เป็นเรื่องแต่งที่ได้รับแรงบันดาลใจจากบริบทชุมชนปกาเกอะญอ ไม่ใช่คู่มือเผาไร่หรือข้อมูลเวลาผ่านจริงของดาวเทียม"
+    },
+    "en-US": {
+      "name": "Under Two Skies",
+      "subtitle": "Prepare. Burn. Cool. Survive.",
+      "promotional_text": "Read the wind, build firebreaks and work with your crew. Prepare the next harvest, then cool every ember before the satellite passes at 20:00.",
+      "keywords": "strategy,survival,simulation,farming,fire,forest,village,tactical,isometric,crew,highlands",
+      "description": "Between the rice barn and the watching sky, every decision matters.\n\nUnder Two Skies is a single-player strategy and survival game about rotational upland farming under surveillance, told through faceted 3D landscapes and the shared work of a village crew.\n\nYour burn day begins at 14:00 and ends with the 20:00 satellite pass. Cut firebreaks, read the wind, choose where to ignite, and use water to cool the remaining embers. Burn too little and the village loses food. Leave too much heat, or let fire escape the plot, and scrutiny rises.\n\nWORK TOGETHER\nTa-poh and Mu-naw help clear the perimeter and hunt hotspots. Direct their work or sound the rally whistle when smoke and fire disrupt your plan.\n\nPREPARE FOR THE NEXT SEASON\nReturn to the village to listen to radio forecasts, allocate rations, repair tools and exchange labour with neighbouring communities. Each year brings changing conditions and growing pressure.\n\nCONTROL THE HILLSIDE BY TOUCH\nMove with the left-side virtual joystick, touch the plot to use your tool, and select tools, direct the crew, zoom or rotate using onscreen buttons.\n\n• Thai and English interface, subtitles and recorded speech\n• Core gameplay works offline without an account\n• This App Store release is offline-only, without an online leaderboard\n\nThis fictional game draws inspiration from Pgakenyaw upland communities. Farming, fire and surveillance are simplified for play. It is not a practical burning guide or a source of real satellite pass times."
+    }
+  },
+  "support_email": "visarutsankham@gmail.com",
+  "release_scope": "offline-only; no leaderboard requests, opt-in controls, identity creation or public names in the public build"
+}
