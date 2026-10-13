@@ -120,8 +120,13 @@ just re-run it.
   physical device is the only test target.
 - Hover-only HUD affordances (panel fade under pointer) do nothing on touch; panels fade on
   player position instead. Settings "F3/F5–F10" tester note still keyboard-worded.
-- No App Store Connect app record, no TestFlight build, no store metadata/screenshots in
-  iPhone/iPad sizes, no age rating / privacy label answered yet.
+- **TestFlight (2026-10-13):** App Store Connect app record created by the owner (Apple ID
+  `6822175255`, bundle `io.github.visarutforthaipbs.undertwoskies`, primary language Thai).
+  Build `0.3.0` from `e2fa4d5` (IPA sha256 `aaf7aaf7…c50c37d`) uploaded via
+  `xcodebuild -exportArchive` destination=upload with the Xcode-signed-in Apple ID (the ASC API
+  key is pending owner rotation, not used): "Upload succeeded", EXPORT SUCCEEDED.
+  Still missing: store metadata, iPhone 6.9"/iPad screenshots, age rating, privacy label
+  (OnlineBoard opt-in sends name + score), privacy policy URL, `ITSAppUsesNonExemptEncryption`.
 
 ## Release gate for this port
 
