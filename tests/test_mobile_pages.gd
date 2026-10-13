@@ -228,6 +228,29 @@ func run() -> void:
 	guide.close()
 	await settle()
 
+	# --- Opening film inside a safe-area-inset parent (owner playtest: the top bar
+	# and the third button ran off the right edge on the iPhone) ------------------
+	var host := Control.new()
+	host.set_anchors_preset(Control.PRESET_FULL_RECT)
+	host.offset_left = 59.0
+	host.offset_right = -59.0
+	host.offset_bottom = -21.0
+	root.add_child(host)
+	var film = load("res://ui/OpeningFilm.gd").new()
+	host.add_child(film)
+	await settle()
+	var host_rect: Rect2 = host.get_global_rect()
+	var top_rect: Rect2 = film.top_panel.get_global_rect()
+	var cap_rect: Rect2 = film.caption_card.get_global_rect()
+	var skip_rect: Rect2 = film.skip_button.get_global_rect()
+	check(host_rect.grow(1.0).encloses(top_rect), "opening film top bar stays inside its inset parent (%s in %s)" % [top_rect, host_rect])
+	check(host_rect.grow(1.0).encloses(skip_rect), "opening film skip button stays inside its inset parent")
+	check(host_rect.grow(1.0).encloses(cap_rect), "opening film caption stays inside its inset parent")
+	film.close()
+	await settle()
+	host.queue_free()
+	await settle()
+
 	finish(original, scratch)
 
 func finish(original: Dictionary, scratch: String) -> void:

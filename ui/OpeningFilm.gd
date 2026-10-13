@@ -66,6 +66,7 @@ func _ready() -> void:
 	_language = GameSettings.locale
 	get_node("/root/Localization").language_changed.connect(_on_language_changed)
 	get_viewport().size_changed.connect(_fit_layout)
+	resized.connect(_fit_layout)   # own rect follows the (safe-area inset) parent
 	_fit_layout()
 	_start_cue(0)
 	skip_button.grab_focus()
@@ -146,7 +147,10 @@ func _build_controls() -> void:
 func _fit_layout() -> void:
 	if not is_instance_valid(caption_card):
 		return
-	var area = get_viewport().get_visible_rect().size
+	# Lay out against the film's own rect, not the viewport: on phones the film's
+	# parent is already inset by the notch / home indicator, so viewport-sized bars
+	# ran off the right edge (owner playtest 2026-10-13).
+	var area = size if size.x > 0.0 and size.y > 0.0 else get_viewport().get_visible_rect().size
 	var width = maxf(300.0, minf(1040.0, area.x - 32.0))
 	top_panel.size = Vector2(area.x - 32, top_panel.get_combined_minimum_size().y)
 	top_panel.position = Vector2(16, 16)
