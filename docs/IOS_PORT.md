@@ -81,7 +81,7 @@ observation that depends on them — **owner's finger check required** (see Rele
 CI failed on `c77dda4` (pre-existing `test_ui_navigation` flake: a radio caption shrinking
 the preparation body re-clamped the scroll under a focused choice) — fixed in `aef3780`
 (12/12 clean), CI run 38320516977 success.
-**Candidate for TestFlight: `aef3780`**, `UnderTwoSkies.ipa` 264,827,760 bytes,
+**Current TestFlight candidate: `e2fa4d5`** (2026-10-13: V1 tabbed mobile layouts, opening-film crop fix, text-only animated DOISAKET GAME LAB studio ident; `build/20261013-130815-e2fa4d5-ios-VK1amT/`, IPA 264,828,534 B, sha256 `aaf7aaf7dfc64bc1ee53af74afaf925adc909fde462ba9f6ea9459bf5c50c37d`, CI success; clean-installed on the paired iPhone and approved by the owner on device). Previous candidate: `aef3780`, `UnderTwoSkies.ipa` 264,827,760 bytes,
 sha256 `3b7452f44d02f2a804d67c1f616bafaaef714244ddf9ddaacbcc7da8ac72e879`
 (`build/20261013-061708-aef3780-ios-mdVGbp/`); the matching Debug app is installed on the
 paired iPhone 14 Pro.

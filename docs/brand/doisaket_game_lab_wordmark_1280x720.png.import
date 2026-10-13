@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2jjdl5ggackn"
-path="res://.godot/imported/doisaket_game_lab_white_1280x720.png-f89400292cdcd535c120bc7a56aef730.ctex"
+uid="uid://bldukpmhgp2hs"
+path="res://.godot/imported/doisaket_game_lab_wordmark_1280x720.png-d09703f5e0817ee99459bc457ac7b264.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://docs/brand/doisaket_game_lab_white_1280x720.png"
-dest_files=["res://.godot/imported/doisaket_game_lab_white_1280x720.png-f89400292cdcd535c120bc7a56aef730.ctex"]
+source_file="res://docs/brand/doisaket_game_lab_wordmark_1280x720.png"
+dest_files=["res://.godot/imported/doisaket_game_lab_wordmark_1280x720.png-d09703f5e0817ee99459bc457ac7b264.ctex"]
 
 [params]
 
