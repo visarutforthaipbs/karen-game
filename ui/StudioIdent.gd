@@ -88,13 +88,19 @@ func _ready() -> void:
 		_finish()
 
 ## Fixed-size slot for an animated label: the container positions the slot, the
-## label moves inside it.
+## label moves inside it. A Label only knows its size once it is in the tree with
+## a theme, so the slot follows the label's minimum size from then on (sizing it
+## at construction gave 0 px and every letter piled onto one spot).
 static func _slot(label: Label) -> Control:
 	var slot := Control.new()
-	slot.custom_minimum_size = label.get_combined_minimum_size()
 	slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	slot.add_child(label)
 	label.position = Vector2.ZERO
+	var fit := func() -> void:
+		slot.custom_minimum_size = label.get_combined_minimum_size()
+	label.minimum_size_changed.connect(fit)
+	label.tree_entered.connect(fit)
+	label.ready.connect(fit)
 	return slot
 
 static func _ease_out(x: float) -> float:
