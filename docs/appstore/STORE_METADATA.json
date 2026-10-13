@@ -1,21 +1,33 @@
 {
-  "status": "prepared draft; not entered or submitted to App Store Connect",
+  "status": "Submitted to Apple App Review 2026-10-13 20:45 Asia/Bangkok; Waiting for Review",
   "app_id": "6822175255",
   "bundle_id": "io.github.visarutforthaipbs.undertwoskies",
   "recommended_public_version": "0.3",
-  "version_decision": "Owner confirmed public version 0.3 on 2026-10-13. Change the live 1.0 draft to 0.3; create a NEW offline-only build, recommended build 0.3.2. Existing TestFlight 0.3.1 retains the optional online feature and does not satisfy this decision.",
+  "version_decision": "Public version 0.3, offline-only build 0.3.2 selected and submitted.",
   "price": {
     "type": "free",
     "amount": 0,
     "owner_confirmed": "2026-10-13"
   },
-  "territories": {"decision": "all available territories (owner, 2026-10-13)", "excluded_pending_licence": ["China mainland (games need a government game approval/ISBN number Apple requires before availability)"], "check_before_submit": ["Vietnam (game licence notice in App Store Connect)", "South Korea (game rating requirement)"], "price": "free"},
+  "territories": {
+    "decision": "all available territories (owner, 2026-10-13)",
+    "excluded_pending_licence": [
+      "China mainland (games need a government game approval/ISBN number Apple requires before availability)"
+    ],
+    "check_before_submit": [
+      "Vietnam (game licence notice in App Store Connect)",
+      "South Korea (game rating requirement)"
+    ],
+    "price": "free",
+    "saved_count": 174,
+    "future_territories_automatic": false
+  },
   "primary_category": "Games",
   "game_subcategories": [
     "Strategy",
     "Simulation"
   ],
-  "release_mode": "MANUAL recommended; live draft currently automatic",
+  "release_mode": "MANUAL",
   "copyright_draft": "2026 Visarut Sankham",
   "support_url": "https://undertwoskies-ios-support.undertwoskies-game.workers.dev/support/",
   "privacy_policy_url": "https://undertwoskies-ios-support.undertwoskies-game.workers.dev/privacy/",
@@ -37,5 +49,12 @@
     }
   },
   "support_email": "visarutsankham@gmail.com",
-  "release_scope": "offline-only; no leaderboard requests, opt-in controls, identity creation or public names in the public build"
+  "release_scope": "offline-only; no leaderboard requests, opt-in controls, identity creation or public names in the public build",
+  "submitted_build": "0.3.2",
+  "age_rating": "13+ (regional equivalents: Vietnam 16+, Republic of Korea 12+; legacy worldwide 9+)",
+  "privacy_label": "Data Not Collected; owner confirmed final privacy declaration",
+  "additional_platforms": {
+    "apple_silicon_mac": false,
+    "apple_vision_pro": false
+  }
 }

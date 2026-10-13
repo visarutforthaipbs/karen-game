@@ -179,3 +179,13 @@ $GODOT --headless --path . --script res://tests/test_mobile_ui.gd
 
 Engineering notes and Xcode pitfalls: `godot-game-development` skill,
 `references/ios-port-playbook.md` (uts-ops profile).
+
+## First public App Store submission — 2026-10-13 20:45
+
+Version **0.3**, build **0.3.2** (`c8a43ad`) submitted through App Store Connect.
+Verified status **Waiting for Review / กำลังรอการตรวจดู**, submission
+`88f51f8e-61f7-43be-ae47-e94991e46070`. Free, offline-only, 174 territories
+(China mainland excluded), iPhone/iPad only, Data Not Collected, calculated age
+13+ with regional equivalents. Thai/English metadata and 20 screenshots uploaded.
+**Manual release**: submission is not approval or public availability.
+Details and remaining hardware-QA limits: `docs/appstore/SUBMISSION_20261013.md`.

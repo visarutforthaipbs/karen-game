@@ -1,6 +1,6 @@
 # App Store release preparation — Under Two Skies
 
-Prepared 2026-10-13. **Preparation package, not submission-ready.**
+Prepared 2026-10-13. **Update: version 0.3 (0.3.2) submitted at 20:45 Asia/Bangkok; Waiting for Review.** See [submission receipt and saved configuration](SUBMISSION_20261013.md). The sections below preserve the earlier preparation audit and may describe superseded draft state.
 
 **Owner decisions confirmed:** free, offline-only, public version **0.3**, support **visarutsankham@gmail.com**. See `OFFLINE_HANDOFF.md` and the independently tested `OFFLINE_RELEASE.patch`. The patch is not applied to the working game; TestFlight 0.3.1 still contains the online feature. No App Store Connect fields were changed, no review was requested, and the app was not published. Support/privacy web pages are now live. Game runtime source is unchanged; new tooling only renders isolated screenshot candidates and validates this package. Existing README/SKU edits and Steam preparation files were preserved.
 
