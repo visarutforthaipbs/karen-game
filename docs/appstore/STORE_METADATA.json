@@ -9,7 +9,7 @@
     "amount": 0,
     "owner_confirmed": "2026-10-13"
   },
-  "territories": null,
+  "territories": {"decision": "all available territories (owner, 2026-10-13)", "excluded_pending_licence": ["China mainland (games need a government game approval/ISBN number Apple requires before availability)"], "check_before_submit": ["Vietnam (game licence notice in App Store Connect)", "South Korea (game rating requirement)"], "price": "free"},
   "primary_category": "Games",
   "game_subcategories": [
     "Strategy",
