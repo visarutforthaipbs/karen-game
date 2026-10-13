@@ -1,28 +1,28 @@
 extends Control
 
-## Doisaket Game Lab studio ident: text only, white on the UI ink.
-## "DOISAKET" settles in letter by letter, "GAME LAB" follows, the lockup holds
-## long enough to read, then fades to the title. Any tap / key skips.
-## Boot scene; tests load Title.tscn directly. `--no-ident` skips.
-
+## Manually measured text lockup: no containers own animated positions.
 const NEXT := "res://scenes/Title.tscn"
 const NAME_TEXT := "DOISAKET"
 const SUB_TEXT := "GAME LAB"
-const LETTER_STEP := 0.11     # seconds between letters of DOISAKET
-const LETTER_RISE := 0.55     # seconds for one letter to settle
-const SUB_DELAY := 1.25       # when GAME LAB starts
-const SUB_RISE := 0.7
-const RULE_DELAY := 1.9       # thin rule between the two lines
-const HOLD_UNTIL := 5.2       # lockup fully readable until here
-const FADE := 0.6
+const LETTER_STEP := 0.10
+const LETTER_RISE := 0.55
+const RULE_DELAY := 1.30
+const SUB_DELAY := 1.65
+const SUB_RISE := 0.55
+const HOLD_UNTIL := 5.50
+const FADE := 0.60
 
 var _t := 0.0
 var _done := false
 var _letters: Array[Label] = []
-var _sub: Label
+var _sub: Control
+var _sub_letters: Array[Label] = []
 var _rule: ColorRect
 var _veil: ColorRect
-var _name_row: HBoxContainer
+var _name_origins: Array[Vector2] = []
+var _sub_origin := Vector2.ZERO
+var _scale := 1.0
+var _name_width := 0.0
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -32,96 +32,94 @@ func _ready() -> void:
 	bg.color = UITheme.INK
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
-
-	var column := VBoxContainer.new()
-	column.set_anchors_preset(Control.PRESET_CENTER)
-	column.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	column.grow_vertical = Control.GROW_DIRECTION_BOTH
-	column.alignment = BoxContainer.ALIGNMENT_CENTER
-	column.add_theme_constant_override("separation", 14)
-	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(column)
-
-	_name_row = HBoxContainer.new()
-	_name_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	_name_row.add_theme_constant_override("separation", 6)
-	_name_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	column.add_child(_name_row)
 	for ch in NAME_TEXT:
-		var l := Label.new()
-		l.text = ch
-		l.add_theme_font_override("font", UITheme.font("state_bold"))
-		l.add_theme_font_size_override("font_size", 92)
-		l.add_theme_color_override("font_color", UITheme.CREAM)
-		l.modulate.a = 0.0
-		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		# Containers own their children's positions, so the animated label sits
-		# inside a fixed-size slot and moves within it (animating a container
-		# child's position directly made the text jump every frame).
-		_name_row.add_child(_slot(l))
-		_letters.append(l)
-
+		_letters.append(_glyph(ch, UITheme.font("state_bold"), self))
 	_rule = ColorRect.new()
 	_rule.color = Color(UITheme.CREAM, 0.55)
-	_rule.custom_minimum_size = Vector2(0, 2)
-	_rule.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	column.add_child(_rule)
-
-	_sub = Label.new()
-	_sub.text = SUB_TEXT
-	_sub.add_theme_font_override("font", UITheme.font("state"))
-	_sub.add_theme_font_size_override("font_size", 34)
-	_sub.add_theme_color_override("font_color", Color(UITheme.CREAM, 0.85))
-	_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_sub.modulate.a = 0.0
+	add_child(_rule)
+	_sub = Control.new()
 	_sub.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	column.add_child(_slot(_sub))
-
+	add_child(_sub)
+	for ch in SUB_TEXT:
+		_sub_letters.append(_glyph(ch, UITheme.font("state"), _sub))
 	_veil = ColorRect.new()
 	_veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_veil.color = UITheme.INK
-	_veil.modulate.a = 0.0
 	_veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_veil)
+	resized.connect(_layout)
+	_layout()
 	if OS.get_cmdline_user_args().has("--no-ident"):
 		_finish()
 
-## Fixed-size slot for an animated label: the container positions the slot, the
-## label moves inside it. A Label only knows its size once it is in the tree with
-## a theme, so the slot follows the label's minimum size from then on (sizing it
-## at construction gave 0 px and every letter piled onto one spot).
-static func _slot(label: Label) -> Control:
-	var slot := Control.new()
-	slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	slot.add_child(label)
-	label.position = Vector2.ZERO
-	var fit := func() -> void:
-		slot.custom_minimum_size = label.get_combined_minimum_size()
-	label.minimum_size_changed.connect(fit)
-	label.tree_entered.connect(fit)
-	label.ready.connect(fit)
-	return slot
+func _glyph(ch: String, font: Font, parent: Node) -> Label:
+	var label := Label.new()
+	label.text = ch
+	label.add_theme_font_override("font", font)
+	label.add_theme_color_override("font_color", UITheme.CREAM)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(label)
+	return label
+
+func _layout() -> void:
+	if _sub == null:
+		return
+	_scale = minf(size.x / 1280.0, size.y / 720.0)
+	var name_size := maxi(1, roundi(92.0 * _scale))
+	var sub_size := maxi(1, roundi(28.0 * _scale))
+	var name_font := UITheme.font("state_bold")
+	var sub_font := UITheme.font("state")
+	var widths: Array[float] = []
+	_name_width = 0.0
+	for l in _letters:
+		l.add_theme_font_size_override("font_size", name_size)
+		var w := name_font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, name_size).x
+		widths.append(w)
+		l.size = Vector2(w, l.get_combined_minimum_size().y)
+		_name_width += w
+	_name_width += (_letters.size() - 1) * 2.0 * _scale
+	_name_origins.clear()
+	var x := (size.x - _name_width) * 0.5
+	var y := size.y * 0.5 - 76.0 * _scale
+	for i in _letters.size():
+		_name_origins.append(Vector2(x, y))
+		x += widths[i] + 2.0 * _scale
+	var sub_width := 0.0
+	for l in _sub_letters:
+		l.add_theme_font_size_override("font_size", sub_size)
+		var w := sub_font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, sub_size).x
+		l.size = Vector2(w, l.get_combined_minimum_size().y)
+		l.position = Vector2(sub_width, 0.0)
+		sub_width += w + sub_size * 0.25
+	sub_width -= sub_size * 0.25
+	_sub.size = Vector2(sub_width, _sub_letters[0].size.y)
+	_sub_origin = Vector2((size.x - sub_width) * 0.5, size.y * 0.5 + 43.0 * _scale)
+	_apply_motion()
 
 static func _ease_out(x: float) -> float:
 	return 1.0 - pow(1.0 - clampf(x, 0.0, 1.0), 3.0)
+
+func _apply_motion() -> void:
+	var tracking := (1.0 - _ease_out(_t / 1.25)) * 92.0 * 0.06 * _scale
+	for i in _letters.size():
+		var a := _ease_out((_t - i * LETTER_STEP) / LETTER_RISE)
+		_letters[i].modulate.a = a
+		_letters[i].position = _name_origins[i] + Vector2((i - 3.5) * tracking, -(1.0 - a) * 27.6 * _scale)
+	var r := _ease_out((_t - RULE_DELAY) / 0.35)
+	_rule.size = Vector2(220.0 * _scale * r, maxf(1.0, _scale))
+	_rule.position = Vector2((size.x - _rule.size.x) * 0.5, size.y * 0.5 + 25.0 * _scale)
+	_rule.modulate.a = r
+	var s := _ease_out((_t - SUB_DELAY) / SUB_RISE)
+	_sub.modulate.a = s
+	_sub.position = _sub_origin + Vector2(0, -(1.0 - s) * 8.0 * _scale)
+	_veil.modulate.a = clampf((_t - HOLD_UNTIL) / FADE, 0.0, 1.0)
 
 func _process(delta: float) -> void:
 	if _done:
 		return
 	_t += delta
-	for i in _letters.size():
-		var a := _ease_out((_t - i * LETTER_STEP) / LETTER_RISE)
-		var l := _letters[i]
-		l.modulate.a = a
-		l.position.y = (1.0 - a) * 28.0   # settles down into place
-	var s := _ease_out((_t - SUB_DELAY) / SUB_RISE)
-	_sub.modulate.a = s
-	_sub.position.y = (1.0 - s) * 14.0
-	var r := _ease_out((_t - RULE_DELAY) / 0.6)
-	_rule.custom_minimum_size.x = r * 220.0
-	_rule.modulate.a = r
-	_veil.modulate.a = clampf((_t - HOLD_UNTIL) / FADE, 0.0, 1.0)
+	_apply_motion()
 	if _t >= HOLD_UNTIL + FADE:
 		_finish()
 
