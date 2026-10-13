@@ -140,6 +140,15 @@ just re-run it.
   hang needs uncached first-launch Metal compiles in flight); TestFlight crash stats on
   0.3.1 are the real-world check.
 
+- **Build 0.3.2 — App Store offline variant (`c8a43ad`), uploaded to TestFlight 2026-10-13 19:50**
+  ("Upload succeeded"; IPA 264,831,794 B, sha256 `25175276…e93747ff`). Owner decision:
+  offline-only first release. Packaged-binary proof: `project.binary` in the pck carries
+  `_custom_features = appstore_offline` (absent in 0.3.1); Info.plist CFBundleVersion 0.3.2,
+  `ITSAppUsesNonExemptEncryption=false`; QuickExit present in the release binary.
+  Leaderboard: every network path goes through `OnlineBoard._make_request`, gated off.
+  Not yet done: on-device check of Settings → ข้อมูล · ช่วยเหลือ links (phone was locked),
+  TestFlight install of 0.3.2, iPad hardware QA.
+
 ## Release gate for this port
 
 0. **Owner finger check (3 minutes, the only thing Mirroring can't do):** on the installed
