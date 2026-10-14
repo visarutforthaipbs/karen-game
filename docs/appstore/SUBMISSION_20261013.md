@@ -34,3 +34,23 @@
 Apple's validation accepted the submission. Physical thumb checks, privacy/support link checks on the new device build, TestFlight-versus-cable installation confirmation and iPad hardware qualification were not newly completed by this submitting agent. Existing build-agent report confirms a running cable-installed iPhone build and CI; those remain separate from broad hardware QA. Respond to any App Review issue before release. After approval, inspect status and choose manual public release deliberately.
 
 Apple's submission-success dialog said review may take up to 48 hours and email will follow. That is Apple's displayed guidance, not a completion guarantee.
+
+## Later owner-approved pricing update — 13 October 2026
+
+After submission, the owner approved seven free public launch days followed by a
+one-time price of ฿99 / US$2.99 and delegated date selection. Public launch is
+planned for **20 October 2026**, subject to approval and manual release. A global
+paid price change was saved for **27 October 2026** and verified after reload.
+Current free price ends on that date; new price has no end date. If launch moves,
+move the paid date too. Paid agreement, bank and tax forms showed Active.
+See `LAUNCH_PRICING.md`; the initial free submission record above is historical.
+
+## Approval and public release verified — 14 October 2026
+
+The owner clicked public release. App Store Connect shows **Ready for Distribution**
+for version 0.3, build 0.3.2. Both Thai and U.S. public product pages load and show
+Free, 13+, Strategy, iPhone/iPad, iOS 17+ / A12+ and Data Not Collected. Thai and
+English store copy render correctly. This is verified public listing availability,
+not a fresh installation/full gameplay test of the App Store-delivered binary.
+At the owner's request, the 27 October paid change was replaced with **21 October**,
+฿99 / US$2.99. See `RELEASE_CHECK_20261014.md` and `LAUNCH_PRICING.md`.

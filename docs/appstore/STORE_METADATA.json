@@ -1,13 +1,26 @@
 {
-  "status": "Submitted to Apple App Review 2026-10-13 20:45 Asia/Bangkok; Waiting for Review",
+  "status": "Publicly released 2026-10-14; Ready for Distribution in App Store Connect; Thailand and US public pages verified",
   "app_id": "6822175255",
   "bundle_id": "io.github.visarutforthaipbs.undertwoskies",
   "recommended_public_version": "0.3",
   "version_decision": "Public version 0.3, offline-only build 0.3.2 selected and submitted.",
   "price": {
-    "type": "free",
-    "amount": 0,
-    "owner_confirmed": "2026-10-13"
+    "type": "free_launch_then_paid",
+    "current_app_store_price": 0,
+    "launch_offer_days": 7,
+    "regular_price_targets": {
+      "THB": 99,
+      "USD": 2.99
+    },
+    "purchase_model": "one-time paid download",
+    "owner_confirmed": "2026-10-14",
+    "launch_date": "2026-10-14",
+    "paid_effective_date": "2026-10-21",
+    "app_store_paid_change_saved": true,
+    "scheduling_status": "Replaced 27 October schedule at owner request. Current free price ends 21 October 2026; permanent global paid change starts 21 October 2026. Verified after reload.",
+    "regional_prices": "Apple equivalents previewed; Thailand THB 99.00 and United States USD 2.99 confirmed in final change review.",
+    "launch_date_status": "Owner released; public Thailand and US pages show Free.",
+    "delay_rule": "Superseded: actual public release verified on 14 October; paid date adjusted to 21 October."
   },
   "territories": {
     "decision": "all available territories (owner, 2026-10-13)",
@@ -18,7 +31,7 @@
       "Vietnam (game licence notice in App Store Connect)",
       "South Korea (game rating requirement)"
     ],
-    "price": "free",
+    "price": "Free launch offer 14–20 October 2026; one-time paid download THB 99 / USD 2.99 and Apple regional equivalents from 21 October.",
     "saved_count": 174,
     "future_territories_automatic": false
   },
@@ -27,7 +40,7 @@
     "Strategy",
     "Simulation"
   ],
-  "release_mode": "MANUAL",
+  "release_mode": "MANUAL; owner clicked public release on 2026-10-14",
   "copyright_draft": "2026 Visarut Sankham",
   "support_url": "https://undertwoskies-ios-support.undertwoskies-game.workers.dev/support/",
   "privacy_policy_url": "https://undertwoskies-ios-support.undertwoskies-game.workers.dev/privacy/",
@@ -56,5 +69,9 @@
   "additional_platforms": {
     "apple_silicon_mac": false,
     "apple_vision_pro": false
+  },
+  "public_urls": {
+    "th": "https://apps.apple.com/th/app/under-two-skies/id6822175255?l=th",
+    "us": "https://apps.apple.com/us/app/under-two-skies/id6822175255"
   }
 }
