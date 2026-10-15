@@ -33,14 +33,24 @@ func _ready() -> void:
 	style.content_margin_bottom = 10
 	card.add_theme_stylebox_override("panel", style)
 	surface.add_child(card)
-	var box = UITheme.vbox(2)
+	# Phones: one compact row (speaker beside the line) instead of a tall slab
+	# across the field (iPhone playtest: the caption covered the play area).
+	var box: BoxContainer = UITheme.hbox(12) if UITheme.is_mobile() else UITheme.vbox(2)
+	if UITheme.is_mobile():
+		style.content_margin_left = 14
+		style.content_margin_right = 14
+		style.content_margin_top = 6
+		style.content_margin_bottom = 7
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(box)
 	speaker_label = UITheme.label("", "Small", UITheme.STRAW)
 	speaker_label.add_theme_font_size_override("font_size", UITheme.fs(14))
 	box.add_child(speaker_label)
 	line_label = UITheme.wrap(UITheme.label("", "Body", UITheme.CREAM))
-	line_label.add_theme_font_size_override("font_size", UITheme.fs(18))
+	line_label.add_theme_font_size_override("font_size", UITheme.fs(18) if not UITheme.is_mobile() else UITheme.fs(15))
+	if UITheme.is_mobile():
+		line_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		speaker_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	box.add_child(line_label)
 	card.hide()
 	card.minimum_size_changed.connect(_layout_card.call_deferred)
@@ -51,7 +61,7 @@ func _ready() -> void:
 func _resize() -> void:
 	# Keep the caption above the bottom tool bar; wrap on narrow screens. On touch
 	# devices the right-edge control stack reserves a symmetric side inset.
-	var width = minf(1050.0, get_viewport().get_visible_rect().size.x - 48.0 - 2.0 * _side_inset)
+	var width = minf(760.0 if UITheme.is_mobile() else 1050.0, get_viewport().get_visible_rect().size.x - 48.0 - 2.0 * _side_inset)
 	card.offset_left = -width * 0.5
 	card.offset_right = width * 0.5
 	card.offset_top = -142.0
@@ -92,7 +102,7 @@ func _layout_card() -> void:
 	var bottom = area.y - 62.0 - float(UITheme.safe_area_insets().bottom)
 	if _gameplay_bottom_limit >= 0.0:
 		bottom = minf(bottom, _gameplay_bottom_limit)
-	card.size.y = maxf(80.0, card.get_combined_minimum_size().y)
+	card.size.y = maxf(48.0 if UITheme.is_mobile() else 80.0, card.get_combined_minimum_size().y)
 	card.position.y = bottom - card.size.y
 
 func _caption_changed(speaker: String, text: String, _duration: float) -> void:

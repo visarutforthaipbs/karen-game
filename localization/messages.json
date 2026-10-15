@@ -2323,5 +2323,15 @@
     "id": "mobile033_keys_camera_meaning",
     "th": "ซูมกล้อง · หมุนกล้องทีละ 90° · หยุดเกมชั่วคราว",
     "en": "Zoom the camera · rotate it 90° · pause the game"
+  },
+  {
+    "id": "mobile034_hud_hide",
+    "th": "ซ่อนแผง",
+    "en": "Hide"
+  },
+  {
+    "id": "mobile034_hud_show",
+    "th": "แสดงแผง",
+    "en": "Show"
   }
 ]

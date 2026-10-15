@@ -260,9 +260,19 @@ func _fit_tip_layout() -> void:
 	if AudioManager.instance and is_instance_valid(AudioManager.instance.subtitle_overlay):
 		var captions = AudioManager.instance.subtitle_overlay
 		var clearance = -1.0
+		# Only cards under the caption's own width push it up: on phones the
+		# narrower caption clears the right-edge vitals card, which grows tall
+		# mid-burn and used to lift the caption into the middle of the field.
+		var span := Vector2(-INF, INF)
+		if captions.get("card") is Control and captions.card.size.x > 0.0:
+			var cr: Rect2 = captions.card.get_global_rect()
+			span = Vector2(cr.position.x, cr.end.x)
 		for control in [tool_col, crew_row, vitals_card]:
 			if control.is_visible_in_tree():
-				var top = control.get_global_rect().position.y - 12.0
+				var r: Rect2 = control.get_global_rect()
+				if r.end.x < span.x or r.position.x > span.y:
+					continue
+				var top = r.position.y - 12.0
 				clearance = top if clearance < 0.0 else minf(clearance, top)
 		captions.set_gameplay_bottom_limit(clearance)
 		var caption = captions.card
@@ -564,7 +574,8 @@ func _crew_card(who: String) -> Label:
 	name.add_theme_font_override("font", UITheme.font("semibold"))
 	row.add_child(name)
 	var status = _small()
-	status.custom_minimum_size = Vector2(130, 0)
+	# Phones: the label grows with the larger text so "สำลักควัน" stays whole
+	status.custom_minimum_size = Vector2(130.0 * UITheme.text_scale(), 0)
 	status.clip_text = true
 	status.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	row.add_child(status)

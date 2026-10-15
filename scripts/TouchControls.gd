@@ -72,6 +72,13 @@ var _last_tool: int = -1
 var _button_side: float = BUTTON_SIZE.x
 var _stack_rect: Rect2 = Rect2()
 var _layout_frames: int = 0            # HUD cards settle a few frames after _ready
+var _hud_signature: String = ""        # re-fit whenever a HUD card moves/grows/hides
+
+## Hide / show the HUD panels (the desktop Tab "minimal" mode) - sits beside the
+## clock card, outside the right-edge stack (iPhone playtest: panels covered play).
+const HUD_BUTTON = {"id": "hud", "action": &"toggle_hud", "icon": "eye", "label": "ซ่อนแผง"}
+const HUD_SHOWN_LABEL = "ซ่อนแผง"
+const HUD_HIDDEN_LABEL = "แสดงแผง"
 
 func _ready() -> void:
 	layer = LAYER
@@ -161,25 +168,31 @@ func _layout() -> void:
 	if hud != null:
 		var state_card = hud.get("state_card")
 		var vitals_card = hud.get("vitals_card")
-		if state_card is Control and state_card.is_inside_tree():
+		if state_card is Control and state_card.is_visible_in_tree():
 			band_top = maxf(band_top, state_card.get_global_rect().end.y + BUTTON_GAP)
-		if vitals_card is Control and vitals_card.is_inside_tree():
+		if vitals_card is Control and vitals_card.is_visible_in_tree():
 			band_bottom = minf(band_bottom, vitals_card.get_global_rect().position.y - BUTTON_GAP)
-	var rows: int = ceili(float(BUTTON_DEFS.size()) / BUTTON_COLS)
 	var band: float = band_bottom - band_top
+	# 2 x 4 normally; when the band is too short even at the 88 px floor (a tall
+	# vitals card mid-burn, 4:3 iPad) go 3 x 3 rather than cover the HUD cards.
+	var cols: int = BUTTON_COLS
+	var rows: int = ceili(float(BUTTON_DEFS.size()) / cols)
+	if rows * BUTTON_MIN + (rows - 1) * BUTTON_GAP > band:
+		cols = BUTTON_COLS + 1
+		rows = ceili(float(BUTTON_DEFS.size()) / cols)
 	var side: float = BUTTON_SIZE.y
 	if rows * side + (rows - 1) * BUTTON_GAP > band:
 		side = maxf(BUTTON_MIN, (band - (rows - 1) * BUTTON_GAP) / rows)
 	_button_side = side
-	var stack_w: float = BUTTON_COLS * side + (BUTTON_COLS - 1) * BUTTON_GAP
+	var stack_w: float = cols * side + (cols - 1) * BUTTON_GAP
 	var stack_h: float = rows * side + (rows - 1) * BUTTON_GAP
 	var start_x: float = _field.end.x - BUTTON_MARGIN - stack_w
 	var stack_top: float = band_top + maxf(0.0, (band - stack_h) * 0.5)
 	var base_y: float = stack_top + stack_h - side   # bottom row first (thumb rest)
 	var i: int = 0
 	for def in BUTTON_DEFS:
-		var col: int = i % BUTTON_COLS
-		var row: int = i / BUTTON_COLS
+		var col: int = i % cols
+		var row: int = i / cols
 		var rect := Rect2(
 				Vector2(start_x + col * (side + BUTTON_GAP), base_y - row * (side + BUTTON_GAP)),
 				Vector2(side, side))
@@ -189,6 +202,7 @@ func _layout() -> void:
 		panel.size = rect.size
 		i += 1
 	_stack_rect = Rect2(Vector2(start_x, stack_top), Vector2(stack_w, stack_h))
+	_place_hud_button(hud, side)
 	_arrange_button_children()
 	_update_joystick_visual()
 	# Voice captions are centred on the full viewport (not the safe field), so
@@ -196,6 +210,35 @@ func _layout() -> void:
 	# with a notch inset the stack sits left of the field edge (playtest cycle 3).
 	var vp_w: float = get_viewport().get_visible_rect().size.x
 	_set_caption_inset(vp_w - start_x + BUTTON_MARGIN)
+
+## The hide-panels button sits under the clock card (top-left), which stays
+## visible in minimal mode; under it rather than beside it keeps it clear of the
+## centred warning banners. A little wider than tall so its caption fits.
+func _place_hud_button(hud: Node, side: float) -> void:
+	var pos := _field.position + Vector2(BUTTON_MARGIN, BUTTON_MARGIN)
+	if hud != null:
+		var status = hud.get("status_card")
+		if status is Control and status.is_visible_in_tree():
+			var r: Rect2 = status.get_global_rect()
+			pos = Vector2(r.position.x, r.end.y + BUTTON_GAP)
+	var rect := Rect2(pos, Vector2(roundf(side * 1.35), side))
+	_buttons["hud"]["rect"] = rect
+	var panel: Panel = _buttons["hud"]["panel"]
+	panel.position = rect.position
+	panel.size = rect.size
+
+## Cheap per-frame check: HUD cards resize after the first frames (breath and
+## water hints appear mid-burn), and minimal mode hides them.
+func _hud_layout_signature() -> String:
+	var hud = _resolve_hud()
+	if hud == null:
+		return ""
+	var sig := ""
+	for key in ["state_card", "vitals_card", "status_card"]:
+		var c = hud.get(key)
+		if c is Control:
+			sig += "%s|%s;" % [c.is_visible_in_tree(), c.get_global_rect()]
+	return sig
 
 func get_stack_rect() -> Rect2:
 	return _stack_rect
@@ -243,7 +286,7 @@ func _build_joystick_visual() -> void:
 	_root.add_child(_joy_knob)
 
 func _build_buttons() -> void:
-	for def in BUTTON_DEFS:
+	for def in BUTTON_DEFS + [HUD_BUTTON]:
 		var panel := Panel.new()
 		panel.name = "Btn_%s" % def.id
 		panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -262,12 +305,17 @@ func _arrange_button_children() -> void:
 	for id in _buttons:
 		var b: Dictionary = _buttons[id]
 		var w: float = _button_side
+		var h: float = _button_side
+		var panel: Panel = b["panel"]
+		if panel.size.x > 0.0:
+			w = panel.size.x
+			h = panel.size.y
 		var icon: Control = b["icon"]
 		icon.position = Vector2((w - 30.0) / 2.0, 10.0)
 		icon.size = Vector2(30.0, 30.0)
 		var caption: Label = b["caption"]
 		var ch: float = caption.get_minimum_size().y
-		caption.position = Vector2(0, w - ch - 6.0)
+		caption.position = Vector2(0, h - ch - 6.0)
 		caption.size = Vector2(w, ch)
 
 func _refresh_button_visuals() -> void:
@@ -279,6 +327,12 @@ func _refresh_button_visuals() -> void:
 		var sb: StyleBoxFlat = _buttons[id]["style"]
 		sb.border_color = UITheme.STRAW if i == tool_idx else Color(UITheme.CREAM, 0.25)
 		sb.set_border_width_all(2 if i == tool_idx else 1)
+	var hud = _resolve_hud()
+	var hidden: bool = hud != null and bool(hud.get("minimal"))
+	(_buttons["hud"]["caption"] as Label).text = HUD_HIDDEN_LABEL if hidden else HUD_SHOWN_LABEL
+	var hud_sb: StyleBoxFlat = _buttons["hud"]["style"]
+	hud_sb.border_color = UITheme.STRAW if hidden else Color(UITheme.CREAM, 0.25)
+	hud_sb.set_border_width_all(2 if hidden else 1)
 	var ping_sb: StyleBoxFlat = _buttons["ping"]["style"]
 	ping_sb.border_color = UITheme.EMERALD if _ping_armed else Color(UITheme.CREAM, 0.25)
 	ping_sb.set_border_width_all(3 if _ping_armed else 1)
@@ -363,6 +417,12 @@ func _press_button(id: String) -> void:
 		_refresh_button_visuals()
 		if _ping_armed:
 			_explain_ping()
+		return
+	if id == "hud":
+		var hud = _resolve_hud()
+		if hud != null and hud.has_method("set_minimal"):
+			hud.set_minimal(not bool(hud.get("minimal")))
+		_refresh_button_visuals()
 		return
 	_fire_action(_buttons[id]["action"])
 
@@ -464,6 +524,11 @@ func _process(_delta: float) -> void:
 	if _layout_frames < 3:
 		_layout_frames += 1
 		_layout()
+	else:
+		var sig := _hud_layout_signature()
+		if sig != _hud_signature:
+			_hud_signature = sig
+			_layout()
 	var wanted := gameplay_controls_wanted()
 	if wanted != visible:
 		visible = wanted

@@ -112,6 +112,28 @@ func run() -> void:
 		check(tc.is_ping_armed() and game.hud.alert_label.text == tc.PING_HELP, "arming Orders shows what the next tap does")
 		tc._press_button("ping")
 
+		# 0.3.4 playtest: the stack covered the vitals card once it grew mid-burn
+		game.hud.vitals_card.custom_minimum_size.y = 260.0
+		for i in 8:
+			await process_frame
+		var vit: Rect2 = game.hud.vitals_card.get_global_rect()
+		check(not tc.get_stack_rect().intersects(vit), "button stack re-fits above a vitals card that grew mid-burn (%s vs %s)" % [tc.get_stack_rect(), vit])
+		game.hud.vitals_card.custom_minimum_size.y = 0.0
+
+		# Hide-panels button: the desktop Tab "minimal" mode on touch
+		var hud_rect: Rect2 = tc._buttons["hud"]["rect"]
+		check(hud_rect.size.y >= UITheme.TOUCH_MIN and not hud_rect.intersects(game.hud.status_card.get_global_rect()), "hide-panels button is a full touch target beside the clock card")
+		tc._press_button("hud")
+		for i in 4:
+			await process_frame
+		check(game.hud.minimal and not game.hud.vitals_card.visible and not game.hud.crew_row.visible, "hide-panels button hides the HUD panels")
+		check((tc._buttons["hud"]["caption"] as Label).text == tc.HUD_HIDDEN_LABEL, "button then reads แสดงแผง")
+		check(not tc.get_stack_rect().intersects(tc._buttons["hud"]["rect"]), "hide button never overlaps the action stack")
+		tc._press_button("hud")
+		for i in 4:
+			await process_frame
+		check(not game.hud.minimal and game.hud.vitals_card.visible, "pressing again restores the panels")
+
 	# G · phone Settings: no F-keys, no dead log-folder button
 	var settings = load("res://ui/SettingsPanel.gd").new()
 	root.add_child(settings)
