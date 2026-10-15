@@ -149,6 +149,18 @@ just re-run it.
   Not yet done: on-device check of Settings → ข้อมูล · ช่วยเหลือ links (phone was locked),
   TestFlight install of 0.3.2, iPad hardware QA.
 
+- **0.3.3 — phone UX update (`e971194` fixes, `431cbd7` version), uploaded to TestFlight
+  2026-10-15 22:46** ("Upload succeeded"; IPA 264,836,320 B, sha256 `34f022e5…dded94374`).
+  0.3 (build 0.3.2) is already public (since 14 Oct, see docs/appstore) and its train is
+  closed, so this ships as version 0.3.3. Fixes from the 2026-10-13 iPhone playtest audit:
+  touch-worded first-burn tips + phase-1 goal; outlined, always-on-top target marker;
+  "too far" / "no brush here" / "no work for the crew here" alerts; tap skips checkpoint
+  and ending; Orders button สั่งงาน explains itself; phone Settings hides F-key tester
+  tools + log-folder button. Gate 18/18 incl. new test_mobile_feedback (25 checks).
+  Packaged proof: CFBundleShortVersionString/CFBundleVersion 0.3.3, appstore_offline in
+  project.binary, QuickExit in the binary, touch tips in the pck. NOT yet: owner finger
+  check on device; App Review submission of the 0.3.3 update (owner decision).
+
 ## Release gate for this port
 
 0. **Owner finger check (3 minutes, the only thing Mirroring can't do):** on the installed
