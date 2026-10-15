@@ -111,7 +111,7 @@ func _build_head() -> HBoxContainer:
 	var head = UITheme.hbox(14)
 	var title = UITheme.label("วิธีเล่น", "Title", UITheme.STRAW)
 	title.add_theme_font_override("font", UITheme.font("bold"))
-	title.add_theme_font_size_override("font_size", 30)
+	title.add_theme_font_size_override("font_size", UITheme.fs(30))
 	head.add_child(title)
 	var lead = UITheme.wrap(UITheme.label("เผาไร่ให้เป็นเถ้าระหว่าง 14:00–20:00 แล้วดับถ่านให้หมด ก่อนดาวเทียม VIIRS โคจรผ่านตอน 20:00 ทุกแปลงถูกตัดสินจากสองอย่างนี้เท่านั้น", "Body"))
 	lead.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -292,15 +292,14 @@ func _build_keys_card() -> FacetCard:
 	kb.add_child(grid)
 	# Touch has no keyboard: left thumb walks, the field takes the tool, the
 	# right-hand buttons arm the rest (one arm-then-tap pair for ping orders).
+	# Names match the right-hand button captions exactly (0.3.3).
 	var rows: Array = [[
 		"จอยสัมผัสฝั่งซ้าย", "เดิน"], [
 		"แตะ / ลากบนแปลง", "ใช้เครื่องมือที่ถืออยู่ · แตะเพื่อตัดหนึ่งช่อง ลากเพื่อถางเป็นแนว"], [
-		"ปุ่มขวา · ถังหยดไฟ / มีดพร้า / ถังพ่นน้ำ", "เลือกเครื่องมือที่จะใช้"], [
-		"ปุ่มขวา · นกหวีด", "เป่านกหวีดเรียกทีมหนีควัน"], [
-		"ปุ่มขวา · สั่งงาน", "เลือกคำสั่งก่อน แล้วแตะช่อง: ถางแนวกันไฟ หรือ ดับถ่าน"], [
-		"ปุ่มขวา · ซูม", "ซูมกล้อง (ซูมออกสุดเห็นทั้งแปลงและหุบเขา)"], [
-		"ปุ่มขวา · หมุน", "หมุนกล้องทีละ 90°"], [
-		"ปุ่มขวา · หยุด", "หยุดเกมชั่วคราว"],
+		"ปุ่ม จุดไฟ · ถางแนว · พ่นน้ำ", "เลือกเครื่องมือที่จะใช้"], [
+		"ปุ่ม สั่งงาน", "แตะปุ่มก่อน แล้วแตะช่อง: พุ่มไม้ = ส่งตาโพถาง · ถ่านแดง = ส่งมูนอดับ"], [
+		"ปุ่ม นกหวีด", "เป่านกหวีดเรียกทีมหนีควัน"], [
+		"ปุ่ม ซูม · หมุน · หยุด", "ซูมกล้อง · หมุนกล้องทีละ 90° · หยุดเกมชั่วคราว"],
 	] if UITheme.is_mobile() else [
 		["WASD / สติ๊กซ้าย", "เดิน"],
 		["เมาส์ / สติ๊กขวา", "เล็งช่องที่จะทำงาน"],
@@ -315,7 +314,7 @@ func _build_keys_card() -> FacetCard:
 	]
 	for row in rows:
 		var key = UITheme.wrap(UITheme.label(row[0], "Small", UITheme.STRAW))
-		key.custom_minimum_size.x = 140
+		key.custom_minimum_size.x = 270 if UITheme.is_mobile() else 140
 		grid.add_child(key)
 		var meaning = UITheme.wrap(UITheme.label(row[1], "Small", UITheme.CREAM))
 		meaning.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -330,7 +329,7 @@ func _goal_tile(kind: String, tint: Color, kicker: String, goal: String, detail:
 	tile.add_child(b)
 	b.add_child(UITheme.header(kind, kicker, tint))
 	var g = UITheme.wrap(UITheme.label(goal, "Title", tint))
-	g.add_theme_font_size_override("font_size", 18)
+	g.add_theme_font_size_override("font_size", UITheme.fs(18))
 	b.add_child(g)
 	b.add_child(UITheme.wrap(UITheme.label(detail, "Small", UITheme.CREAM)))
 	return tile

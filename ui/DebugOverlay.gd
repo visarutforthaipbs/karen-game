@@ -23,7 +23,7 @@ func _ready() -> void:
 	card.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	add_child(card)
 	_label = UITheme.label("", "StateText")
-	_label.add_theme_font_size_override("font_size", 12)
+	_label.add_theme_font_size_override("font_size", UITheme.fs(12))
 	card.add_child(_label)
 	card.visible = false
 

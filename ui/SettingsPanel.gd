@@ -50,8 +50,16 @@ func _ready() -> void:
 	card.add_child(page)
 	var title = UITheme.label("ตั้งค่า", "Title", UITheme.STRAW)
 	title.add_theme_font_override("font", UITheme.font("bold"))
-	title.add_theme_font_size_override("font_size", 28)
-	page.add_child(title)
+	title.add_theme_font_size_override("font_size", UITheme.fs(28))
+	# Touch: title and language share one row so the larger phone text still
+	# leaves the tab body room on a 720-px-tall canvas.
+	var header: BoxContainer = page
+	if UITheme.is_mobile():
+		header = UITheme.hbox(14)
+		header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		page.add_child(header)
+	header.add_child(title)
 
 	var language_row = UITheme.hbox(14)
 	language_row.add_child(UITheme.label("ภาษา / Language", "Body", UITheme.CREAM))
@@ -66,7 +74,8 @@ func _ready() -> void:
 	language_picker.item_selected.connect(func(index: int):
 		Localization.set_language("en" if index == 1 else "th"))
 	language_row.add_child(language_picker)
-	page.add_child(language_row)
+	language_row.alignment = BoxContainer.ALIGNMENT_END
+	header.add_child(language_row)
 
 	# Touch: the tab bar sits directly under the language row, above the body.
 	if UITheme.is_mobile():
@@ -396,7 +405,7 @@ func _toggle_row(text: String, on: bool, on_change: Callable) -> Control:
 	b.button_pressed = on
 	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	b.add_theme_font_override("font", UITheme.font("regular"))
-	b.add_theme_font_size_override("font_size", 14)
+	b.add_theme_font_size_override("font_size", UITheme.fs(14))
 	b.toggled.connect(func(v): on_change.call(v))
 	return b
 

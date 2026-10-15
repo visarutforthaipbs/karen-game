@@ -37,10 +37,10 @@ func _ready() -> void:
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(box)
 	speaker_label = UITheme.label("", "Small", UITheme.STRAW)
-	speaker_label.add_theme_font_size_override("font_size", 14)
+	speaker_label.add_theme_font_size_override("font_size", UITheme.fs(14))
 	box.add_child(speaker_label)
 	line_label = UITheme.wrap(UITheme.label("", "Body", UITheme.CREAM))
-	line_label.add_theme_font_size_override("font_size", 18)
+	line_label.add_theme_font_size_override("font_size", UITheme.fs(18))
 	box.add_child(line_label)
 	card.hide()
 	card.minimum_size_changed.connect(_layout_card.call_deferred)

@@ -2293,5 +2293,35 @@
     "id": "mobile033_ping_help",
     "th": "แตะพุ่มไม้ = ส่งตาโพถางแนว · แตะถ่านแดง = ส่งมูนอดับ",
     "en": "Tap brush = send Ta-poh to cut · tap red embers = send Mu-naw to douse"
+  },
+  {
+    "id": "mobile033_keys_tools",
+    "th": "ปุ่ม จุดไฟ · ถางแนว · พ่นน้ำ",
+    "en": "Ignite · Firebreak · Spray buttons"
+  },
+  {
+    "id": "mobile033_keys_orders",
+    "th": "ปุ่ม สั่งงาน",
+    "en": "Orders button"
+  },
+  {
+    "id": "mobile033_keys_orders_meaning",
+    "th": "แตะปุ่มก่อน แล้วแตะช่อง: พุ่มไม้ = ส่งตาโพถาง · ถ่านแดง = ส่งมูนอดับ",
+    "en": "Tap the button, then a cell: brush = send Ta-poh to cut · red embers = send Mu-naw to douse"
+  },
+  {
+    "id": "mobile033_keys_whistle",
+    "th": "ปุ่ม นกหวีด",
+    "en": "Whistle button"
+  },
+  {
+    "id": "mobile033_keys_camera",
+    "th": "ปุ่ม ซูม · หมุน · หยุด",
+    "en": "Zoom · Rotate · Pause buttons"
+  },
+  {
+    "id": "mobile033_keys_camera_meaning",
+    "th": "ซูมกล้อง · หมุนกล้องทีละ 90° · หยุดเกมชั่วคราว",
+    "en": "Zoom the camera · rotate it 90° · pause the game"
   }
 ]

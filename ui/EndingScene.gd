@@ -322,7 +322,7 @@ func _build_overlay() -> void:
 	captions.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(captions)
 	_caption = UITheme.wrap(UITheme.outlined(UITheme.label("", "Title", UITheme.CREAM), 8))
-	_caption.add_theme_font_size_override("font_size", 30)
+	_caption.add_theme_font_size_override("font_size", UITheme.fs(30))
 	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_caption.anchor_left = 0.1
 	_caption.anchor_right = 0.9
@@ -425,7 +425,7 @@ func show_summary() -> void:
 	box.add_child(UITheme.header("eye" if cause == "crackdown" else "rice", "สรุปการเดินทาง", UITheme.MUTED))
 	var title = UITheme.wrap(UITheme.label("รัฐปราบปรามหมู่บ้าน" if cause == "crackdown" else "หมู่บ้านอดอยาก ต้องทิ้งดอย", "Title", UITheme.RUBY if cause == "crackdown" else UITheme.STRAW))
 	title.add_theme_font_override("font", UITheme.font("bold"))
-	title.add_theme_font_size_override("font_size", 30)
+	title.add_theme_font_size_override("font_size", UITheme.fs(30))
 	box.add_child(title)
 	box.add_child(UITheme.wrap(UITheme.label(L10n.format("หมู่บ้านอยู่รอดมาได้ %d แปลง ถึงปีที่ %d ของการเผาใต้เงาดาวเทียม", [plots, state.current_year]), "Body")))
 
@@ -564,7 +564,7 @@ func _tile(title: String, value: String, color: Color) -> Control:
 	t.add_child(b)
 	b.add_child(UITheme.wrap(UITheme.label(title, "Small")))
 	var v = UITheme.label(value, "Title", color)
-	v.add_theme_font_size_override("font_size", 22)
+	v.add_theme_font_size_override("font_size", UITheme.fs(22))
 	b.add_child(v)
 	return t
 

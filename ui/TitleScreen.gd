@@ -349,7 +349,7 @@ func _menu_button(text: String, action: Callable, variation: String = "Button") 
 	b.theme_type_variation = variation
 	b.custom_minimum_size = Vector2(340, 44 if get_viewport().get_visible_rect().size.y < 680.0 else 48)
 	b.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	b.add_theme_font_size_override("font_size", 19)
+	b.add_theme_font_size_override("font_size", UITheme.fs(19))
 	b.pressed.connect(action)
 	_menu.add_child(b)
 	return b

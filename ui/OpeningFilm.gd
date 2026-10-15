@@ -129,7 +129,7 @@ func _build_controls() -> void:
 	caption_card.add_child(captions)
 	captions.add_child(UITheme.label("ตาโพ · ผู้เฒ่าของหมู่บ้าน", "Kicker", UITheme.STRAW))
 	subtitle = UITheme.wrap(UITheme.label("", "Body", UITheme.CREAM))
-	subtitle.add_theme_font_size_override("font_size", 20)
+	subtitle.add_theme_font_size_override("font_size", UITheme.fs(20))
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	captions.add_child(subtitle)
 	summary = UITheme.vbox(8)

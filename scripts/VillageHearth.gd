@@ -42,7 +42,7 @@ var chatter_timer: Timer
 var plot_title_label: Label
 var plot_desc_label: Label
 var plot_stats: GridContainer
-var goal_rows: VBoxContainer
+var goal_rows: Container
 var workshop_label: Label
 var sharpen_button: Button
 var seal_button: Button
@@ -235,7 +235,7 @@ func _build_tab_bar() -> HBoxContainer:
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		b.custom_minimum_size = Vector2(0, UITheme.TOUCH_MIN)
-		b.add_theme_font_size_override("font_size", 20)
+		b.add_theme_font_size_override("font_size", UITheme.fs(20))
 		b.pressed.connect(_set_tab.bind(i))
 		bar.add_child(b)
 		_tab_buttons.append(b)
@@ -484,7 +484,7 @@ func _build_header() -> Control:
 	help_button = _button("วิธีเล่น")
 	help_button.custom_minimum_size = Vector2(110, 0)
 	help_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	help_button.add_theme_font_size_override("font_size", 17)
+	help_button.add_theme_font_size_override("font_size", UITheme.fs(17))
 	help_button.pressed.connect(show_how_to_play)
 	row.add_child(help_button)
 
@@ -492,7 +492,7 @@ func _build_header() -> Control:
 	settings_button = _button("ตั้งค่า")
 	settings_button.custom_minimum_size = Vector2(96, 0)
 	settings_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	settings_button.add_theme_font_size_override("font_size", 17)
+	settings_button.add_theme_font_size_override("font_size", UITheme.fs(17))
 	settings_button.pressed.connect(show_settings)
 	row.add_child(settings_button)
 	return header
@@ -512,7 +512,7 @@ func _header_stat(kind: String, title: String, tint: Color, seed_value: int) -> 
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(t)
 	var v = UITheme.label("", "Title", tint)
-	v.add_theme_font_size_override("font_size", 17)
+	v.add_theme_font_size_override("font_size", UITheme.fs(17))
 	top.add_child(v)
 	var bar = SegmentBar.new()
 	bar.segments = 20
@@ -544,8 +544,12 @@ func _build_radio() -> Control:
 
 func _build_plot_brief() -> Control:
 	var box = _card("mountain", "แปลงที่จะเผาพรุ่งนี้", UITheme.EMERALD, 221)
+	if UITheme.is_mobile():
+		# Phones: the แปลง tab and the plot title already say what this is; the
+		# kicker row is the space the larger Thai text needs (fits notch phones).
+		box.get_child(0).visible = false
 	plot_title_label = UITheme.wrap(UITheme.label("", "Title", UITheme.EMERALD))
-	plot_title_label.add_theme_font_size_override("font_size", 22)
+	plot_title_label.add_theme_font_size_override("font_size", UITheme.fs(22))
 	box.add_child(plot_title_label)
 	plot_desc_label = UITheme.wrap(UITheme.label("", "Body"))
 	box.add_child(plot_desc_label)
@@ -563,17 +567,27 @@ func _build_plot_brief() -> Control:
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	box.add_child(spacer)
 	var goals = UITheme.card(Color(UITheme.INK, 0.6), UITheme.STRAW, 222)
-	goals.padding = Vector4(12, 6, 12, 8) if UITheme.is_mobile() else Vector4(14, 10, 14, 12)
+	goals.padding = Vector4(12, 4, 12, 5) if UITheme.is_mobile() else Vector4(14, 10, 14, 12)
 	box.add_child(goals)
-	var gb = UITheme.vbox(4 if UITheme.is_mobile() else 6)
+	var gb = UITheme.vbox(2 if UITheme.is_mobile() else 6)
 	goals.add_child(gb)
 	gb.add_child(UITheme.label("เป้าหมายพรุ่งนี้", "Kicker"))
-	goal_rows = UITheme.vbox(1 if UITheme.is_mobile() else 2)
+	if UITheme.is_mobile():
+		# Phones: two goal columns so the plot tab fits without scrolling at
+		# the larger Thai text size
+		var grid := GridContainer.new()
+		grid.columns = 2
+		grid.add_theme_constant_override("h_separation", 18)
+		grid.add_theme_constant_override("v_separation", 2)
+		goal_rows = grid
+	else:
+		goal_rows = UITheme.vbox(2)
 	gb.add_child(goal_rows)
 	return box.get_parent()
 
 func _goal(kind: String, color: Color, text: String) -> void:
 	var row = UITheme.hbox(10)
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var ic = UITheme.icon(kind, color, 20.0)
 	ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(ic)
@@ -631,7 +645,7 @@ func _build_exchange() -> Control:
 		var b = _button(FAVOUR_BUTTONS[f], true)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.add_theme_font_override("font", UITheme.font("regular"))
-		b.add_theme_font_size_override("font_size", 14)
+		b.add_theme_font_size_override("font_size", UITheme.fs(14))
 		b.pressed.connect(_on_favour_pressed.bind(f))
 		box.add_child(b)
 		favour_buttons[f] = b
@@ -876,7 +890,7 @@ func _show_harvest(h: Dictionary) -> void:
 	var famine = GameState.instance.end_cause() == "famine"
 	box.add_child(UITheme.header("rice", L10n.format("เก็บเกี่ยวหน้ามรสุม · ปีที่ %d", h.year), UITheme.EMERALD))
 	var title = UITheme.wrap(UITheme.label("ฝนมาแล้ว แต่ข้าวที่ได้ไม่พอกินถึงปีหน้า" if famine else "ฝนมาแล้ว ข้าวไร่งอกงามในแปลงเถ้า", "Title"))
-	title.add_theme_font_size_override("font_size", 26)
+	title.add_theme_font_size_override("font_size", UITheme.fs(26))
 	box.add_child(title)
 
 	var yields = UITheme.hbox(8)
@@ -909,7 +923,7 @@ func _show_harvest(h: Dictionary) -> void:
 
 	if over:
 		var warn = UITheme.wrap(UITheme.label((L10n.format("ข้าวในยุ้งเหลือ %.0f%% หลังเก็บเกี่ยว เกณฑ์อดอยากคือ %.0f%% หรือน้อยกว่า · หมู่บ้านอดอยาก", [GameState.instance.rice_barn, GameState.FAMINE_THRESHOLD])) if famine else "ความเพ่งเล็งถึง 100 · รัฐบุกหมู่บ้าน", "Title", UITheme.RUBY))
-		warn.add_theme_font_size_override("font_size", 20)
+		warn.add_theme_font_size_override("font_size", UITheme.fs(20))
 		box.add_child(warn)
 	var close = Button.new()
 	close.theme_type_variation = "PrimaryButton"

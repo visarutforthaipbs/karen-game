@@ -86,6 +86,55 @@ const SAFE_AREA_META := "_uts_safe_area"
 const TOUCH_MIN := 88.0
 
 ## Touch device? `--touch` lets headless tests force the mobile UI path.
+## Thai text on phones (owner feedback 0.3.3: "text too small for mobile").
+## A landscape iPhone shrinks the 1280x720 canvas to ~393 pt tall, about 0.55 pt
+## per canvas px, so 13 px Small text was 7 pt and 15 px body 8 pt (Apple's floor
+## is 11 pt; Thai stacked vowels/tone marks need more than Latin). On a phone the
+## text, not the layout, grows so body text lands near 12.6 pt and Small near
+## 11 pt. Tablets and desktop compute <= 1.0 and keep their sizes exactly.
+const PHONE_TEXT_SCALE := 1.55
+const BODY_TARGET_PT := 12.6
+static var _text_scale: float = -1.0
+
+static func text_scale() -> float:
+	if _text_scale > 0.0:
+		return _text_scale
+	_text_scale = 1.0
+	if is_mobile():
+		_text_scale = PHONE_TEXT_SCALE
+		var pt := _points_per_canvas_px()
+		if pt > 0.0:
+			_text_scale = clampf(BODY_TARGET_PT / (15.0 * pt), 1.0, PHONE_TEXT_SCALE)
+	return _text_scale
+
+## Thai typesetting: never strand a unit on its own line ("196 / น.)"). Joins a
+## number and the short unit after it with a no-break space (U+00A0).
+static var _unit_re: RegEx = null
+
+static func keep_units(text: String) -> String:
+	if _unit_re == null:
+		# units (escaped so the catalog check does not read the pattern as UI text):
+		# น. ล. ม. นาย ลำ จุด ตัว TU
+		_unit_re = RegEx.create_from_string("(\\d) (\u0e19\\.|\u0e25\\.|\u0e21\\.|\u0e19\u0e32\u0e22|\u0e25\u0e33|\u0e08\u0e38\u0e14|\u0e15\u0e31\u0e27|TU)")
+	return _unit_re.sub(text, "$1\u00a0$2", true)
+
+## Font size for the current device: desktop/tablet unchanged, phones scaled.
+static func fs(size: float) -> int:
+	return int(round(size * text_scale()))
+
+## Points per canvas pixel on a real touch screen (0 when unknown, e.g. headless:
+## tests then get the phone scale, the case that matters for layout).
+static func _points_per_canvas_px() -> float:
+	if DisplayServer.get_name() == "headless" or OS.get_cmdline_user_args().has("--touch"):
+		return 0.0   # tests / captures simulate a phone
+	var px := DisplayServer.screen_get_size()
+	var scale := DisplayServer.screen_get_scale()
+	if px.x <= 0 or px.y <= 0 or scale <= 0.0:
+		return 0.0
+	var long_pt := float(maxi(px.x, px.y)) / scale
+	var short_pt := float(mini(px.x, px.y)) / scale
+	return minf(long_pt / 1280.0, short_pt / 720.0)
+
 static func is_mobile() -> bool:
 	return OS.has_feature("mobile") or DisplayServer.is_touchscreen_available() or OS.get_cmdline_user_args().has("--touch")
 
@@ -199,24 +248,24 @@ static func get_theme() -> Theme:
 		return _theme
 	var t = Theme.new()
 	t.default_font = font("regular")
-	t.default_font_size = 16
+	t.default_font_size = fs(16)
 
 	t.set_color("font_color", "Label", CREAM)
 	t.set_color("font_outline_color", "Label", Color(0, 0, 0, 0.7))
 	t.set_constant("line_spacing", "Label", 1)
 
-	_label_variation(t, "Title", "semibold", 19, CREAM)
-	_label_variation(t, "Kicker", "medium", 13, STRAW)
-	_label_variation(t, "Body", "regular", 15, CREAM)
-	_label_variation(t, "Small", "regular", 13, MUTED)
-	_label_variation(t, "BigNumber", "bold", 36, CREAM)
-	_label_variation(t, "StateText", "state", 15, STATE)
-	_label_variation(t, "StateBig", "state_bold", 30, RUBY)
+	_label_variation(t, "Title", "semibold", fs(19), CREAM)
+	_label_variation(t, "Kicker", "medium", fs(13), STRAW)
+	_label_variation(t, "Body", "regular", fs(15), CREAM)
+	_label_variation(t, "Small", "regular", fs(13), MUTED)
+	_label_variation(t, "BigNumber", "bold", fs(36), CREAM)
+	_label_variation(t, "StateText", "state", fs(15), STATE)
+	_label_variation(t, "StateBig", "state_bold", fs(30), RUBY)
 
 	# Buttons: slabs that press down into the panel
 	_button_styles(t, "Button", PANEL_HI, EMERALD_DEEP)
 	t.set_font("font", "Button", font("medium"))
-	t.set_font_size("font_size", "Button", 15)
+	t.set_font_size("font_size", "Button", fs(15))
 	for c in ["font_color", "font_hover_color", "font_focus_color", "font_hover_pressed_color"]:
 		t.set_color(c, "Button", CREAM)
 	t.set_color("font_pressed_color", "Button", Color.WHITE)
@@ -225,7 +274,7 @@ static func get_theme() -> Theme:
 	t.set_type_variation("PrimaryButton", "Button")
 	_button_styles(t, "PrimaryButton", CLAY.lerp(EMBER, 0.35), EMBER, 6)
 	t.set_font("font", "PrimaryButton", font("semibold"))
-	t.set_font_size("font_size", "PrimaryButton", 20)
+	t.set_font_size("font_size", "PrimaryButton", fs(20))
 	for c in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
 		t.set_color(c, "PrimaryButton", INK)
 

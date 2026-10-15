@@ -325,7 +325,7 @@ func _chip(base: Color, accent: Color, seed_value: int) -> FacetCard:
 
 func _small(text: String = "", color: Color = UITheme.CREAM) -> Label:
 	var l = UITheme.label(text, "Small", color)
-	l.add_theme_font_size_override("font_size", 13)
+	l.add_theme_font_size_override("font_size", UITheme.fs(13))
 	return l
 
 # ---------------------------------------------------------------------------
@@ -353,7 +353,8 @@ func _build_inversion_overlay() -> void:
 func _build_status_card() -> void:
 	status_card = _chip(UITheme.PANEL, UITheme.STRAW, 11)
 	status_card.padding = Vector4(12, 8, 12, 10)
-	_pin(status_card, Vector2(0, 0), Vector2(12, 12), 236)
+	# Phones: wider so the larger Thai text keeps the phase name and goals whole
+	_pin(status_card, Vector2(0, 0), Vector2(12, 12), 320 if UITheme.is_mobile() else 236)
 	root.add_child(status_card)
 	var box = UITheme.vbox(4)
 	status_card.add_child(box)
@@ -361,7 +362,7 @@ func _build_status_card() -> void:
 	var top = UITheme.hbox(10)
 	box.add_child(top)
 	clock_label = UITheme.label("14:00", "BigNumber")
-	clock_label.add_theme_font_size_override("font_size", 28)
+	clock_label.add_theme_font_size_override("font_size", UITheme.fs(28))
 	top.add_child(clock_label)
 	var side = UITheme.vbox(-2)
 	side.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -375,7 +376,7 @@ func _build_status_card() -> void:
 	side.add_child(phase_kicker)
 
 	countdown_label = UITheme.label("", "StateBig")
-	countdown_label.add_theme_font_size_override("font_size", 20)
+	countdown_label.add_theme_font_size_override("font_size", UITheme.fs(20))
 	countdown_label.visible = false
 	box.add_child(countdown_label)
 
@@ -407,6 +408,13 @@ func _build_status_card() -> void:
 	goal_cool_value = c[1]
 	_refresh_goals(WINDOW_START_MIN)
 
+func _place_banners() -> void:
+	if not is_instance_valid(wind_card) or not is_instance_valid(banner_stack):
+		return
+	var y := maxf(56.0, wind_card.offset_top + wind_card.size.y + 6.0)
+	banner_stack.offset_top = y
+	banner_stack.offset_bottom = y
+
 func _goal_row(box: VBoxContainer) -> Array:
 	var row = UITheme.hbox(7)
 	box.add_child(row)
@@ -415,8 +423,13 @@ func _goal_row(box: VBoxContainer) -> Array:
 	row.add_child(mark)
 	var value = _small()
 	value.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	value.clip_text = true
-	value.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	if UITheme.is_mobile():
+		# Never cut a Thai goal mid-word with "…" on a phone: wrap instead
+		value.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		mark.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	else:
+		value.clip_text = true
+		value.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	row.add_child(value)
 	return [mark, value]
 
@@ -431,14 +444,14 @@ func _refresh_goals(now: int) -> void:
 	_set_mark(goal_ash_mark, ash_ok, UITheme.STRAW if _yield >= 60.0 else UITheme.RUBY)
 
 	var heat_ok = _hotspots == 0
-	goal_heat_value.text = "ไม่มีถ่านร้อน · ปลอดภัย" if heat_ok else L10n.format("ถ่านร้อน %d จุด · ต้องเป็น 0", _hotspots)
+	goal_heat_value.text = "ไม่มีถ่านร้อน · ปลอดภัย" if heat_ok else UITheme.keep_units(L10n.format("ถ่านร้อน %d จุด · ต้องเป็น 0", _hotspots))
 	goal_heat_value.add_theme_color_override("font_color", UITheme.EMERALD if heat_ok else UITheme.EMBER)
 	_set_mark(goal_heat_mark, heat_ok, UITheme.EMBER)
 
 	var left = self_cool_minute - now
 	var deadline = "%d:%02d" % [self_cool_minute / 60, self_cool_minute % 60]
 	if left > 0:
-		goal_cool_value.text = L10n.format("จุดไฟก่อน %s ถ่านเย็นเอง (%d น.)", [deadline, left])
+		goal_cool_value.text = UITheme.keep_units(L10n.format("จุดไฟก่อน %s ถ่านเย็นเอง (%d น.)", [deadline, left]))
 		goal_cool_value.add_theme_color_override("font_color", UITheme.CREAM)
 		_set_mark(goal_cool_mark, true, UITheme.STRAW)
 	else:
@@ -473,7 +486,7 @@ func _build_wind_card() -> void:
 	wind_label.add_theme_font_override("font", UITheme.font("medium"))
 	col.add_child(wind_label)
 	fuel_label = _small("", UITheme.MUTED)
-	fuel_label.add_theme_font_size_override("font_size", 12)
+	fuel_label.add_theme_font_size_override("font_size", UITheme.fs(12))
 	col.add_child(fuel_label)
 	update_fuel(FireGrid.dryness_at_minute(WINDOW_START_MIN))
 
@@ -492,7 +505,7 @@ func _build_state_card() -> void:
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(t)
 	scrutiny_value = UITheme.label("", "StateText")
-	scrutiny_value.add_theme_font_size_override("font_size", 14)
+	scrutiny_value.add_theme_font_size_override("font_size", UITheme.fs(14))
 	row.add_child(scrutiny_value)
 	scrutiny_bar = _bar(20, UITheme.STATE, 6)
 	scrutiny_bar.set_markers([{"at": 75.0, "color": UITheme.RUBY}])
@@ -520,7 +533,7 @@ func _build_tool_bar() -> void:
 		var box = UITheme.vbox(0)
 		card.add_child(box)
 		var key = _small(slot.key, UITheme.MUTED)
-		key.add_theme_font_size_override("font_size", 11)
+		key.add_theme_font_size_override("font_size", UITheme.fs(11))
 		box.add_child(key)
 		var ic = UITheme.icon(slot.icon, [UITheme.EMBER, UITheme.CREAM, UITheme.WATER][i], 26.0)
 		ic.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -588,10 +601,10 @@ func _build_vitals_card() -> void:
 	water_bar = w[0]
 	water_value = w[1]
 	breath_hint = UITheme.wrap(_small())
-	breath_hint.add_theme_font_size_override("font_size", 12)
+	breath_hint.add_theme_font_size_override("font_size", UITheme.fs(12))
 	box.add_child(breath_hint)
 	refill_hint = UITheme.wrap(_small())
-	refill_hint.add_theme_font_size_override("font_size", 12)
+	refill_hint.add_theme_font_size_override("font_size", UITheme.fs(12))
 	box.add_child(refill_hint)
 	refill_marker = UITheme.hbox(5)
 	refill_marker.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -605,8 +618,12 @@ func _build_vitals_card() -> void:
 
 func _build_banners() -> void:
 	banner_stack = UITheme.vbox(5)
-	_pin(banner_stack, Vector2(0.5, 0), Vector2(0, 56), 460)
+	_pin(banner_stack, Vector2(0.5, 0), Vector2(0, 56), 600 if UITheme.is_mobile() else 460)
 	root.add_child(banner_stack)
+	# Phones: the wind card grows with the larger text; keep banners below it
+	if UITheme.is_mobile() and wind_card:
+		wind_card.resized.connect(_place_banners)
+		_place_banners.call_deferred()
 
 	elder_warning_banner = _chip(UITheme.PANEL, UITheme.STRAW, 17)
 	elder_warning_banner.visible = false
@@ -620,7 +637,7 @@ func _build_banners() -> void:
 	wi.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	er.add_child(wi)
 	elder_warning_text = UITheme.wrap(_small())
-	elder_warning_text.add_theme_font_size_override("font_size", 14)
+	elder_warning_text.add_theme_font_size_override("font_size", UITheme.fs(14))
 	elder_warning_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	er.add_child(elder_warning_text)
 
@@ -637,7 +654,7 @@ func _build_banners() -> void:
 	_ranger_face.visible = false
 	dr.add_child(_ranger_face)
 	drone_text = UITheme.wrap(UITheme.label("", "StateText"))
-	drone_text.add_theme_font_size_override("font_size", 14)
+	drone_text.add_theme_font_size_override("font_size", UITheme.fs(14))
 	drone_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	dr.add_child(drone_text)
 
@@ -665,7 +682,7 @@ func _build_banners() -> void:
 	tip_row.add_child(tip_col)
 	tip_col.add_child(_small("เคล็ดลับเผาครั้งแรก", UITheme.STRAW))
 	tip_label = UITheme.wrap(UITheme.label("", "Body"))
-	tip_label.add_theme_font_size_override("font_size", 15)
+	tip_label.add_theme_font_size_override("font_size", UITheme.fs(15))
 	tip_col.add_child(tip_label)
 
 func _build_satellite_screen() -> void:
@@ -741,7 +758,7 @@ func _build_report() -> void:
 	box.add_child(UITheme.header("satellite", "รายงานดาวเทียมโคจรผ่าน 20:00 · NOAA-20 / S-NPP VIIRS", UITheme.STATE))
 	report_title = UITheme.wrap(UITheme.label("", "Title"))
 	report_title.add_theme_font_override("font", UITheme.font("bold"))
-	report_title.add_theme_font_size_override("font_size", 28)
+	report_title.add_theme_font_size_override("font_size", UITheme.fs(28))
 	box.add_child(report_title)
 	report_body = UITheme.wrap(UITheme.label("", "Body"))
 	box.add_child(report_body)
@@ -755,7 +772,7 @@ func _build_report() -> void:
 	gis.padding = Vector4(14, 10, 14, 12)
 	box.add_child(gis)
 	report_text = UITheme.label("", "StateText")
-	report_text.add_theme_font_size_override("font_size", 13)
+	report_text.add_theme_font_size_override("font_size", UITheme.fs(13))
 	gis.add_child(report_text)
 
 	continue_button = Button.new()
@@ -813,7 +830,7 @@ func _report_tile(title: String, value: String, color: Color) -> FacetCard:
 	tile.add_child(b)
 	b.add_child(UITheme.wrap(UITheme.label(title, "Small")))
 	var v = UITheme.label(value, "Title", color)
-	v.add_theme_font_size_override("font_size", 22)
+	v.add_theme_font_size_override("font_size", UITheme.fs(22))
 	b.add_child(v)
 	return tile
 

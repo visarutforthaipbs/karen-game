@@ -170,7 +170,7 @@ func _build_overlay() -> void:
 	captions.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(captions)
 	_caption = UITheme.wrap(UITheme.outlined(UITheme.label("", "Title", UITheme.CREAM), 8))
-	_caption.add_theme_font_size_override("font_size", 28)
+	_caption.add_theme_font_size_override("font_size", UITheme.fs(28))
 	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_caption.anchor_left = 0.1
 	_caption.anchor_right = 0.9

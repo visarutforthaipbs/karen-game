@@ -102,7 +102,7 @@ func _build_panel() -> Control:
 	card.add_child(box)
 	var title = UITheme.label("หยุดเกมชั่วคราว", "Title", UITheme.STRAW)
 	title.add_theme_font_override("font", UITheme.font("bold"))
-	title.add_theme_font_size_override("font_size", 26)
+	title.add_theme_font_size_override("font_size", UITheme.fs(26))
 	box.add_child(title)
 	var clock = main.get("game_clock") if main else null
 	if clock:

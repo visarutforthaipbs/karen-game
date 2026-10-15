@@ -131,22 +131,23 @@ func _create_target_indicator() -> void:
 	if UITheme.is_mobile():
 		_style_touch_indicator(box, mat)
 
-## Phones: brighter fill, dark frame, drawn over brush and terrain so the cell
-## stays readable around the finger.
+## Phones: soft translucent fill with a light (cream) rim, drawn over brush and
+## terrain so the cell stays readable around the finger without shouting over
+## the low-poly palette (owner feedback on 0.3.3: dark frame too contrasty).
 func _style_touch_indicator(box: BoxMesh, mat: StandardMaterial3D) -> void:
-	_indicator_ok = Color(1.0, 0.86, 0.22, 0.78)
-	_indicator_far = Color(1.0, 0.24, 0.14, 0.78)
+	_indicator_ok = Color(1.0, 0.9, 0.45, 0.32)
+	_indicator_far = Color(1.0, 0.42, 0.32, 0.30)
 	mat.albedo_color = _indicator_ok
 	mat.no_depth_test = true
 	mat.render_priority = 2
 	box.size = Vector3(1.5, 0.04, 1.5)
 	var frame_mat := StandardMaterial3D.new()
-	frame_mat.albedo_color = Color(0.06, 0.07, 0.09, 0.92)
+	frame_mat.albedo_color = Color(0.96, 0.93, 0.84, 0.62)
 	frame_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	frame_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	frame_mat.no_depth_test = true
 	frame_mat.render_priority = 1
-	var w := 0.16
+	var w := 0.08
 	var half := 0.75 + w * 0.5
 	var side := 0
 	for spec in [[Vector3(0, 0, -half), Vector3(1.5 + 2 * w, 0.03, w)], [Vector3(0, 0, half), Vector3(1.5 + 2 * w, 0.03, w)],

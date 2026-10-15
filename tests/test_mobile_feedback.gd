@@ -52,9 +52,21 @@ func run() -> void:
 	var p = game.player
 	var ind: MeshInstance3D = p.target_indicator
 	var mat := (ind.mesh as BoxMesh).material as StandardMaterial3D
-	check(mat.albedo_color.a >= 0.7 and mat.no_depth_test, "touch marker is opaque enough and drawn over brush")
+	check(mat.albedo_color.a >= 0.2 and mat.albedo_color.a <= 0.45 and mat.no_depth_test,
+		"touch marker is a soft translucent fill drawn over brush")
 	var frames := ind.get_children().filter(func(n): return n.name.begins_with("IndicatorFrame"))
-	check(frames.size() == 4, "touch marker has a dark 4-sided frame (%d)" % frames.size())
+	var rim: StandardMaterial3D = (frames[0].mesh as BoxMesh).material if frames.size() > 0 else null
+	check(frames.size() == 4 and rim != null and rim.albedo_color.v > 0.8 and rim.albedo_color.a < 0.75,
+		"touch marker has a light translucent 4-sided rim (%d)" % frames.size())
+
+	# Thai text on phones: nothing below ~11 pt at the iPhone landscape scale (0.546 pt/px)
+	check(is_equal_approx(UITheme.text_scale(), UITheme.PHONE_TEXT_SCALE), "phone text scale active in touch tests")
+	var th: Theme = UITheme.get_theme()
+	for v in ["Small", "Kicker", "Body", "Title"]:
+		check(th.get_font_size("font_size", v) * 0.546 >= 10.9, "%s text >= 11 pt on iPhone (%d px)" % [v, th.get_font_size("font_size", v)])
+	check(th.get_font_size("font_size", "Button") * 0.546 >= 12.0, "button text >= 12 pt on iPhone")
+	check(UITheme.keep_units("ถ่านเย็นเอง (196 น.)") == "ถ่านเย็นเอง (196\u00a0น.)", "a number keeps its Thai unit on the same line")
+	check(UITheme.keep_units("15/15 ล. · 2 นาย") == "15/15\u00a0ล. · 2\u00a0นาย", "litres and people stay with their numbers")
 
 	# C · a tap that cannot act explains why
 	var fg = game.fire_grid
