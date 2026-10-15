@@ -161,6 +161,15 @@ just re-run it.
   project.binary, QuickExit in the binary, touch tips in the pck. NOT yet: owner finger
   check on device; App Review submission of the 0.3.3 update (owner decision).
 
+- **0.3.4 — readable Thai on phones (`ebe94d6`), uploaded to TestFlight 2026-10-15 23:13**
+  ("Upload succeeded"; IPA 264,839,483 B, sha256 `f39377e5…7066e30b9`). Owner feedback on
+  0.3.3: marker too contrasty, text too small. Measured 0.546 pt per canvas px on a landscape
+  iPhone (Small text was 7.1 pt). Device-aware `UITheme.text_scale()` (phones x1.55 max;
+  tablets/desktop unchanged) → Small 11 pt, body/buttons 12.6 pt; Thai number+unit kept
+  together (U+00A0); no "…" cuts on phone HUD; pages re-fitted and measured at 1280x720 and
+  iPhone 14 Pro 1561x720 + notch insets. Marker: soft fill + light cream rim. Gate 18/18.
+  0.3.3 superseded (never submitted). NOT yet: owner on-device look; App Review submission.
+
 ## Release gate for this port
 
 0. **Owner finger check (3 minutes, the only thing Mirroring can't do):** on the installed
