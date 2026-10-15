@@ -170,6 +170,14 @@ just re-run it.
   iPhone 14 Pro 1561x720 + notch insets. Marker: soft fill + light cream rim. Gate 18/18.
   0.3.3 superseded (never submitted). NOT yet: owner on-device look; App Review submission.
 
+- **0.3.5 — hide-panels button + HUD de-clutter (`a91e99e`), uploaded to TestFlight
+  2026-10-15 23:33** ("Upload succeeded"; IPA 264,843,061 B, sha256 `5fe23a60…0e914f7bb`).
+  Owner playtest IMG_3056: button stack covered the vitals card (it re-fitted only in its
+  first 3 frames; now re-fits on every HUD card change, 3x3 fallback), voice caption was a
+  mid-field slab (now one compact row, max 760 px, only lifted by cards under its width),
+  crew chips cut with "…" (width scales), and no way to hide panels (new ซ่อนแผง/แสดงแผง
+  button = desktop Tab minimal mode). Gate 18/18. 0.3.4 superseded (never submitted).
+
 ## Release gate for this port
 
 0. **Owner finger check (3 minutes, the only thing Mirroring can't do):** on the installed
