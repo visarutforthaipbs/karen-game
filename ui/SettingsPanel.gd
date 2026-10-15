@@ -226,15 +226,24 @@ func _build_touch_panes() -> void:
 	else:
 		_build_offline_help(online[1])
 
-	online[2].add_child(UITheme.header("hammer", "สำหรับผู้ทดสอบ", UITheme.MUTED))
-	online[2].add_child(_toggle_row("เครื่องมือทดสอบ (F3 ข้อมูล · F5–F10 ข้ามเวลา/บังคับเหตุการณ์)", GameSettings.debug_tools, func(on):
-		GameSettings.debug_tools = on))
-	var logs = Button.new()
-	logs.text = "เปิดโฟลเดอร์บันทึกการเล่น"
-	logs.pressed.connect(func(): OS.shell_open(ProjectSettings.globalize_path("user://")))
-	online[2].add_child(logs)
+	# Phones/tablets have no F-keys and no file browser for user://, so the
+	# tester tools and the log-folder button only appear on touch PCs.
+	if _handheld_os():
+		online[2].visible = false
+	else:
+		online[2].add_child(UITheme.header("hammer", "สำหรับผู้ทดสอบ", UITheme.MUTED))
+		online[2].add_child(_toggle_row("เครื่องมือทดสอบ (F3 ข้อมูล · F5–F10 ข้ามเวลา/บังคับเหตุการณ์)", GameSettings.debug_tools, func(on):
+			GameSettings.debug_tools = on))
+		var logs = Button.new()
+		logs.text = "เปิดโฟลเดอร์บันทึกการเล่น"
+		logs.pressed.connect(func(): OS.shell_open(ProjectSettings.globalize_path("user://")))
+		online[2].add_child(logs)
 
 	_show_tab(0)
+
+## A real phone / tablet OS (iOS, Android); `--handheld` simulates it in tests.
+static func _handheld_os() -> bool:
+	return OS.has_feature("mobile") or OS.get_cmdline_user_args().has("--handheld")
 
 func _board_name_row() -> HBoxContainer:
 	var name_row = UITheme.hbox(10)

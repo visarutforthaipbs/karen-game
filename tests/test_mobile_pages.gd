@@ -150,8 +150,8 @@ func run() -> void:
 		if OnlineBoard.available():
 			check(settings.delete_scores_button.is_visible_in_tree() and inside(settings.delete_scores_button),
 				"score removal is reachable on the last tab")
-			check(button_text_exists(settings, "ส่งผลการเล่นขึ้นกระดานออนไลน์") and has_label(settings, "สำหรับผู้ทดสอบ"),
-				"online board and tester tools live on the last tab")
+			check(button_text_exists(settings, "ส่งผลการเล่นขึ้นกระดานออนไลน์"),
+				"online board lives on the last tab")
 		else:
 			# App Store offline build: no leaderboard controls; Data / Help instead
 			var policy = settings.find_child("PrivacyPolicyButton", true, false)
@@ -161,7 +161,12 @@ func run() -> void:
 			check(policy != null and policy.is_visible_in_tree() and inside(policy)
 				and support != null and support.is_visible_in_tree() and inside(support),
 				"privacy and support actions are reachable on the last tab")
-			check(has_label(settings, "สำหรับผู้ทดสอบ"), "tester tools still live on the last tab")
+			pass
+		# Tester tools (F-keys, log folder) only on touch PCs; phones/tablets hide them (0.3.3)
+		if OS.get_cmdline_user_args().has("--handheld"):
+			check(not has_label(settings, "สำหรับผู้ทดสอบ"), "phone hides keyboard-only tester tools")
+		else:
+			check(has_label(settings, "สำหรับผู้ทดสอบ"), "tester tools live on the last tab")
 	else:
 		check(settings.tab_bar == null, "desktop settings has no tab bar")
 		check(settings.tab_buttons.is_empty() and settings.tab_panes.is_empty(), "desktop builds no tabs or panes")

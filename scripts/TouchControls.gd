@@ -38,7 +38,7 @@ const BUTTON_DEFS: Array = [
 	{"id": "blade", "action": &"tool_blade", "icon": "blade", "label": "ถางแนว"},
 	{"id": "sprayer", "action": &"tool_sprayer", "icon": "drop", "label": "พ่นน้ำ"},
 	{"id": "whistle", "action": &"rally_whistle", "icon": "whistle", "label": "นกหวีด"},
-	{"id": "ping", "action": &"", "icon": "crew", "label": "สั่งสหาย"},  # toggle: next world tap pings
+	{"id": "ping", "action": &"", "icon": "crew", "label": "สั่งงาน"},  # toggle: next world tap pings
 	{"id": "zoom", "action": &"cam_zoom_cycle", "icon": "eye", "label": "ซูม"},
 	{"id": "rotate", "action": &"cam_rotate_right", "icon": "mountain", "label": "หมุน"},
 	{"id": "pause", "action": &"pause", "icon": "clock", "label": "หยุด"},
@@ -361,6 +361,8 @@ func _press_button(id: String) -> void:
 	if id == "ping":
 		_ping_armed = not _ping_armed
 		_refresh_button_visuals()
+		if _ping_armed:
+			_explain_ping()
 		return
 	_fire_action(_buttons[id]["action"])
 
@@ -428,6 +430,18 @@ func _update_joystick_visual() -> void:
 	_joy_knob.position = _joy_origin + _joy_output() * JOY_RADIUS - _joy_knob.size * 0.5
 
 # -------------------------------------------------------------- housekeeping
+
+## Arming the order button says what the next tap does (the two-step order was
+## undiscoverable: "หาปุ่มกดให้พะตีทำงาน", iPhone playtest 2026-10-13).
+const PING_HELP = "แตะพุ่มไม้ = ส่งตาโพถางแนว · แตะถ่านแดง = ส่งมูนอดับ"
+
+func _explain_ping() -> void:
+	var scene := get_tree().current_scene
+	if scene == null:
+		return
+	var hud = scene.get("hud")
+	if hud != null and is_instance_valid(hud) and hud.has_method("show_alert"):
+		hud.show_alert(PING_HELP, 3.0)
 
 func _resolve_player() -> void:
 	if _player != null and is_instance_valid(_player):

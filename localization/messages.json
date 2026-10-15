@@ -2171,8 +2171,8 @@
   },
   {
     "id": "ui_touch_btn_ping",
-    "th": "สั่งสหาย",
-    "en": "Order crew"
+    "th": "สั่งงาน",
+    "en": "Orders"
   },
   {
     "id": "ui_touch_btn_zoom",
@@ -2248,5 +2248,50 @@
     "id": "appstore_offline_4",
     "th": "ติดต่อผู้พัฒนา",
     "en": "Contact support"
+  },
+  {
+    "id": "mobile033_tip_start",
+    "th": "ถางแนวกันไฟรอบแปลงก่อน · แตะปุ่ม ถางแนว แล้วแตะพุ่มไม้ข้างตัว ขะแนจะคราดจนเป็นดินโล่ง · ปุ่ม สั่งงาน แล้วแตะพุ่มไม้ = ส่งตาโพไปช่วยถาง",
+    "en": "Cut a firebreak around the plot first · Tap Firebreak, then tap brush next to you and Khanae rakes it to bare soil · Tap Orders, then brush = send Ta-poh to help cut"
+  },
+  {
+    "id": "mobile033_tip_dry",
+    "th": "เชื้อไฟแห้งแล้ว · แตะปุ่ม จุดไฟ แล้วลากนิ้วเป็นแนวยาวที่ตีนเนิน (ฝั่งล่างของแปลง) ไฟจะวิ่งขึ้นเนิน",
+    "en": "The fuel is dry now · Tap Ignite, then drag your finger in a long line at the foot of the slope (the low side of the plot); fire runs uphill"
+  },
+  {
+    "id": "mobile033_tip_spot",
+    "th": "ลูกไฟตกในป่า! แตะปุ่ม พ่นน้ำ แล้วแตะลูกไฟภายใน 8 วินาที (ถังพ่นน้ำเอื้อมได้ไกลกว่า)",
+    "en": "An ember landed in the forest! Tap Spray, then tap the ember within 8 seconds (the sprayer reaches further)"
+  },
+  {
+    "id": "mobile033_tip_spray",
+    "th": "ถึงเวลาดับถ่าน · แตะปุ่ม พ่นน้ำ แล้วแตะถ่านคุทุกจุดให้หมดก่อน 20:00 น้ำเติมที่ถังข้างเถียงนา · ลมหายใจฟื้นเมื่อออกจากควันและควันสะสมลดลง",
+    "en": "Time to put out the embers · Tap Spray, then tap every smouldering spot before 20:00. Refill at the tank by the field hut · Breath recovers once you leave the smoke and the build-up falls"
+  },
+  {
+    "id": "mobile033_phase1_goal",
+    "th": "เชื้อไฟยังชื้น: ถางแนวกันไฟรอบแปลง (แตะพุ่มไม้ทีละช่อง) อ่านทิศลมก่อนจุด",
+    "en": "The fuel is still damp: cut a firebreak around the plot (tap brush one cell at a time). Read the wind before lighting"
+  },
+  {
+    "id": "mobile033_too_far",
+    "th": "ไกลเกินไป · เดินเข้าไปใกล้อีกนิด",
+    "en": "Too far · walk a little closer"
+  },
+  {
+    "id": "mobile033_no_brush",
+    "th": "ตรงนี้ไม่มีพุ่มไม้ให้ถาง · แตะช่องที่ยังมีพุ่มไม้",
+    "en": "No brush to cut here · tap a cell that still has brush"
+  },
+  {
+    "id": "mobile033_no_order",
+    "th": "ตรงนี้ไม่มีงานให้ทีม · แตะพุ่มไม้ = ส่งตาโพถางแนว · แตะถ่านแดง = ส่งมูนอดับ",
+    "en": "Nothing for the crew here · tap brush = send Ta-poh to cut · tap red embers = send Mu-naw to douse"
+  },
+  {
+    "id": "mobile033_ping_help",
+    "th": "แตะพุ่มไม้ = ส่งตาโพถางแนว · แตะถ่านแดง = ส่งมูนอดับ",
+    "en": "Tap brush = send Ta-poh to cut · tap red embers = send Mu-naw to douse"
   }
 ]

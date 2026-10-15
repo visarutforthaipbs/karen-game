@@ -102,6 +102,10 @@ jobs:
           ~/godot/godot --headless --path . --script res://tests/test_mobile_pages.gd -- --touch --appstore-offline 2>&1 | tee mobile-pages-offline.log
           ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" mobile-pages-offline.log
           grep -q "MOBILE PAGES RESULT: 0" mobile-pages-offline.log
+          # 0.3.3 phone UX fixes (tutorial wording, target marker, tap feedback, tap-to-skip)
+          ~/godot/godot --headless --path . --script res://tests/test_mobile_feedback.gd -- --touch --handheld 2>&1 | tee mobile-feedback.log
+          ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" mobile-feedback.log
+          grep -q "MOBILE FEEDBACK RESULT: 0" mobile-feedback.log
 
       - name: Smoke run
         run: |

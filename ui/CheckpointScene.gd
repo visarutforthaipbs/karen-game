@@ -223,9 +223,10 @@ func _process(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if _done or _t < SKIP_AFTER:
 		return
-	if (event is InputEventKey and event.pressed) or (event is InputEventMouseButton and event.pressed) or (event is InputEventJoypadButton and event.pressed):
-		finish()
+	if (event is InputEventKey and event.pressed) or (event is InputEventMouseButton and event.pressed) or (event is InputEventScreenTouch and event.pressed) or (event is InputEventJoypadButton and event.pressed):
+		# Mark handled first: finish() swaps scenes, which removes us from the tree
 		get_viewport().set_input_as_handled()
+		finish()
 
 func finish() -> void:
 	if _done:

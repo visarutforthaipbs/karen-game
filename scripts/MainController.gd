@@ -35,6 +35,15 @@ const PHASES = [
 	{"start": 19 * 60 + 45, "title": "ระยะ 4 · นับถอยหลังดาวเทียม (19:45–20:00)", "goal": "ตามดับทุกจุดที่ร้อนตั้งแต่ %d TU ขึ้นไป!"},
 ]
 
+## Phase 1 goal without "hold the mouse" wording on phones / tablets
+const NO_ORDER_HERE = "ตรงนี้ไม่มีงานให้ทีม · แตะพุ่มไม้ = ส่งตาโพถางแนว · แตะถ่านแดง = ส่งมูนอดับ"
+const PHASE1_TOUCH_GOAL = "เชื้อไฟยังชื้น: ถางแนวกันไฟรอบแปลง (แตะพุ่มไม้ทีละช่อง) อ่านทิศลมก่อนจุด"
+
+static func phase_goal(idx: int) -> String:
+	if idx == 0 and UITheme.is_mobile():
+		return PHASE1_TOUCH_GOAL
+	return PHASES[idx].goal
+
 var escaped_to_forest: bool = false
 var latest_rice_yield: float = 0.0
 
@@ -183,6 +192,7 @@ func _ready() -> void:
 	# Connect Player signals
 	player.tool_changed.connect(_on_tool_changed)
 	player.order_pinged.connect(_on_order_pinged)
+	player.action_feedback.connect(func(message: String): hud.show_alert(message, 1.8))
 	player.whistle_blown.connect(_on_whistle_blown)
 	player.stamina_changed.connect(_on_stamina_changed)
 	player.smoke_exposure_changed.connect(_on_smoke_exposure_changed)
@@ -205,7 +215,7 @@ func _ready() -> void:
 	sky.apply_time(game_clock.get_hours())
 
 	# The status card shows only the phase title, so the first objective is announced here
-	var intro = L10n.format("%s · ปีที่ %d\n%s", [plot_cfg.name, state.current_year, PHASES[0].goal])
+	var intro = L10n.format("%s · ปีที่ %d\n%s", [plot_cfg.name, state.current_year, phase_goal(0)])
 	if delay > 0:
 		intro = L10n.concat([intro, L10n.format("\nเช้านี้ทีมไปเอาแรงช่วยหมู่บ้านอื่น เริ่มเผาช้าไป %d นาที", delay)])
 	hud.show_alert(intro, 5.0)
@@ -476,7 +486,7 @@ func _update_phase(now: int) -> void:
 	if idx == current_phase:
 		return
 	current_phase = idx
-	var goal: String = PHASES[idx].goal
+	var goal: String = phase_goal(idx)
 	if goal.contains("%d"):
 		goal = L10n.format(goal, roundi(rules.satellite_threshold))
 	hud.update_phase(PHASES[idx].title, goal)
@@ -693,3 +703,6 @@ func _on_order_pinged(coord: Vector2i, world_pos: Vector3) -> void:
 	elif type == FireGrid.CellType.SMOLDERING or type == FireGrid.CellType.BURNING:
 		youth.receive_ping_order(coord, world_pos)
 		hud.show_alert("ส่งมูนอไปดับจุดความร้อน", 2.0)
+	elif UITheme.is_mobile():
+		# A silent no-op read as "Ta-poh doesn't work" (iPhone playtest 2026-10-13)
+		hud.show_alert(NO_ORDER_HERE, 3.0)

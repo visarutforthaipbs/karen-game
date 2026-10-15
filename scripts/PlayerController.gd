@@ -8,6 +8,8 @@ signal stamina_changed(current: float, max_stamina: float)
 signal smoke_exposure_changed(exposure_level: float)
 signal water_changed(current: float, capacity: float)
 signal tank_empty()
+## Phone / tablet only: why a tap did nothing (out of reach, no brush to cut)
+signal action_feedback(message: String)
 
 enum ToolType {
 	DRIP_TORCH,      # 1: Ignites vegetation
@@ -79,6 +81,13 @@ var touch_aim_position: Vector2 = Vector2.ZERO
 
 # Visual indicator for targeted grid cell
 var target_indicator: MeshInstance3D
+# Target marker colours; phones get an opaque, outlined, always-on-top marker
+# because the aim point sits under the fingertip (iPhone playtest 2026-10-13).
+var _indicator_ok: Color = Color(1.0, 1.0, 0.0, 0.45)
+var _indicator_far: Color = Color(1.0, 0.3, 0.2, 0.3)
+var _feedback_cooldown: float = 0.0
+const TOO_FAR = "ไกลเกินไป · เดินเข้าไปใกล้อีกนิด"
+const NO_BRUSH = "ตรงนี้ไม่มีพุ่มไม้ให้ถาง · แตะช่องที่ยังมีพุ่มไม้"
 var animator: Node3D
 var _tool_rig: Node3D
 var _tool_prop: MeshInstance3D
@@ -119,6 +128,40 @@ func _create_target_indicator() -> void:
 	# Child of the player (so it is freed with the scene) but positioned in world space
 	target_indicator.top_level = true
 	add_child(target_indicator)
+	if UITheme.is_mobile():
+		_style_touch_indicator(box, mat)
+
+## Phones: brighter fill, dark frame, drawn over brush and terrain so the cell
+## stays readable around the finger.
+func _style_touch_indicator(box: BoxMesh, mat: StandardMaterial3D) -> void:
+	_indicator_ok = Color(1.0, 0.86, 0.22, 0.78)
+	_indicator_far = Color(1.0, 0.24, 0.14, 0.78)
+	mat.albedo_color = _indicator_ok
+	mat.no_depth_test = true
+	mat.render_priority = 2
+	box.size = Vector3(1.5, 0.04, 1.5)
+	var frame_mat := StandardMaterial3D.new()
+	frame_mat.albedo_color = Color(0.06, 0.07, 0.09, 0.92)
+	frame_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	frame_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	frame_mat.no_depth_test = true
+	frame_mat.render_priority = 1
+	var w := 0.16
+	var half := 0.75 + w * 0.5
+	var side := 0
+	for spec in [[Vector3(0, 0, -half), Vector3(1.5 + 2 * w, 0.03, w)], [Vector3(0, 0, half), Vector3(1.5 + 2 * w, 0.03, w)],
+			[Vector3(-half, 0, 0), Vector3(w, 0.03, 1.5)], [Vector3(half, 0, 0), Vector3(w, 0.03, 1.5)]]:
+		var bar := MeshInstance3D.new()
+		bar.name = "IndicatorFrame%d" % side
+		side += 1
+		var bar_mesh := BoxMesh.new()
+		bar_mesh.size = spec[1]
+		bar_mesh.material = frame_mat
+		bar.mesh = bar_mesh
+		bar.position = spec[0]
+		bar.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		target_indicator.add_child(bar)
+	target_indicator.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 ## Hand tool + backpack sprayer tank, turned to face where the player walks
 func _create_tool_rig() -> void:
@@ -337,7 +380,7 @@ func _update_mouse_targeting() -> void:
 			target_indicator.visible = true
 			target_indicator.global_position = target_cell_pos + Vector3(0, 0.25, 0)
 			var in_reach = _flat_distance_to(target_cell_pos) <= tool_reach()
-			(target_indicator.mesh.material as StandardMaterial3D).albedo_color = Color(1.0, 1.0, 0.0, 0.45) if in_reach else Color(1.0, 0.3, 0.2, 0.3)
+			(target_indicator.mesh.material as StandardMaterial3D).albedo_color = _indicator_ok if in_reach else _indicator_far
 	else:
 		is_targeting_valid_cell = false
 		if target_indicator:
@@ -383,6 +426,9 @@ func _flat_distance_to(pos: Vector3) -> float:
 
 ## Use tool (hold): rate-limited so dragging paints a line
 func _handle_held_actions(delta: float) -> void:
+	_feedback_cooldown = maxf(0.0, _feedback_cooldown - delta)
+	if UITheme.is_mobile() and Input.is_action_just_pressed("use_tool"):
+		_touch_tap_feedback()
 	if current_tool == ToolType.FIREBREAK_BLADE:
 		if not _cutting and Input.is_action_pressed("use_tool") and is_targeting_valid_cell and not _pointer_over_gui() \
 				and _flat_distance_to(target_cell_pos) <= tool_reach():
@@ -398,6 +444,21 @@ func _handle_held_actions(delta: float) -> void:
 		if _flat_distance_to(target_cell_pos) <= tool_reach():
 			_apply_tool_to_cell(target_cell_coord)
 			_tool_cooldown_left = tool_cooldown
+
+## Phones: a tap that cannot act says why instead of silently doing nothing
+func _touch_tap_feedback() -> void:
+	if _feedback_cooldown > 0.0 or not fire_grid or not is_targeting_valid_cell or _pointer_over_gui():
+		return
+	var message := ""
+	if _flat_distance_to(target_cell_pos) > tool_reach():
+		message = TOO_FAR
+	elif current_tool == ToolType.FIREBREAK_BLADE and fire_grid.is_valid_coord(target_cell_coord.x, target_cell_coord.y):
+		var t = fire_grid.cell_types[fire_grid._coord_to_index(target_cell_coord.x, target_cell_coord.y)]
+		if t != FireGrid.CellType.VEGETATION and t != FireGrid.CellType.BAMBOO:
+			message = NO_BRUSH
+	if message != "":
+		_feedback_cooldown = 1.5
+		action_feedback.emit(message)
 
 ## Start raking a brush cell (a click is enough; holding and dragging rakes a line)
 func _begin_cut(coord: Vector2i) -> void:

@@ -12,6 +12,20 @@ const TIPS = {
 	"spray": "ถึงเวลาดับถ่าน · กด 3 ฉีดน้ำถ่านคุทุกจุดให้หมดก่อน 20:00 น้ำเติมที่ถังข้างเถียงนา · ลมหายใจฟื้นเมื่อออกจากควันและควันสะสมลดลง",
 }
 
+## Phone / tablet wording: no number keys or mouse (iPhone playtest feedback
+## 2026-10-13: "Tutorial ยังเป็น keyboard"). Keys mirror the touch button captions.
+const TOUCH_TIPS = {
+	"start": "ถางแนวกันไฟรอบแปลงก่อน · แตะปุ่ม ถางแนว แล้วแตะพุ่มไม้ข้างตัว ขะแนจะคราดจนเป็นดินโล่ง · ปุ่ม สั่งงาน แล้วแตะพุ่มไม้ = ส่งตาโพไปช่วยถาง",
+	"dry": "เชื้อไฟแห้งแล้ว · แตะปุ่ม จุดไฟ แล้วลากนิ้วเป็นแนวยาวที่ตีนเนิน (ฝั่งล่างของแปลง) ไฟจะวิ่งขึ้นเนิน",
+	"spot": "ลูกไฟตกในป่า! แตะปุ่ม พ่นน้ำ แล้วแตะลูกไฟภายใน 8 วินาที (ถังพ่นน้ำเอื้อมได้ไกลกว่า)",
+	"spray": "ถึงเวลาดับถ่าน · แตะปุ่ม พ่นน้ำ แล้วแตะถ่านคุทุกจุดให้หมดก่อน 20:00 น้ำเติมที่ถังข้างเถียงนา · ลมหายใจฟื้นเมื่อออกจากควันและควันสะสมลดลง",
+}
+
+static func tip_text(key: String) -> String:
+	if UITheme.is_mobile() and TOUCH_TIPS.has(key):
+		return TOUCH_TIPS[key]
+	return TIPS[key]
+
 var main: Node
 var _shown: Dictionary = {}
 
@@ -39,4 +53,4 @@ func show_tip(key: String) -> void:
 	if _shown.has(key) or main.get("pass_started"):
 		return
 	_shown[key] = true
-	main.hud.show_tip(TIPS[key])
+	main.hud.show_tip(tip_text(key))
