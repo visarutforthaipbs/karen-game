@@ -178,6 +178,18 @@ just re-run it.
   crew chips cut with "…" (width scales), and no way to hide panels (new ซ่อนแผง/แสดงแผง
   button = desktop Tab minimal mode). Gate 18/18. 0.3.4 superseded (never submitted).
 
+### 0.3.7 — 2026-10-16 (hotfix for 0.3.6 title-screen crash)
+
+- **0.3.6 crashed at the title screen on device** (SIGSEGV, `PackedScene::instantiate`,
+  crash logs 10:42 and 10:43). The 0.3.6 export excluded `assets/ui/logo/island_0.jpg`
+  as unreferenced; it is the texture inside `island.glb` (title-logo island), so the
+  model failed to load. Reproduced on the Mac by running the exported **pack** headless
+  (`--main-pack`), not the project. Do not promote 0.3.6 — expire it in TestFlight.
+- Fix `33f17f0`: file re-included; new `tools/check_pack_loads.gd` loads every exported
+  resource from the pck (198) and `tools/build_ios.sh` fails the build on any null.
+- IPA 110,004,870 B, sha256 `57f17d0758e8d2a1404baf786dc6287c5ba0c329c47bc8b7170c8fe410a64822`;
+  device: alive 25 s after launch, no new crash logs; TestFlight upload 2026-10-16 10:50.
+
 ### 0.3.6 — 2026-10-16 (reviewer round 2 + mobile perf pass)
 
 - Source `d5f9765` (code in `018b136`). IPA 104,220,360 B, sha256
