@@ -50,6 +50,11 @@ echo "== iOS -> $XC/$SCHEME.xcodeproj"
 # project + .pck and we drive xcodebuild ourselves (reproducible, loggable).
 run_engine "$OUT/export-iOS.log" --headless --path "$SOURCE" --export-release "iOS" "$XC/$SCHEME.xcodeproj"
 [ -d "$XC/$SCHEME.xcodeproj" ] && [ -s "$XC/$SCHEME.pck" ] || { echo "Missing Xcode project or PCK" >&2; exit 1; }
+# Every exported resource must load from the pack itself (exclude_filter safety net).
+echo "== pack load check"
+( cd /tmp && "$GODOT" --headless --main-pack "$XC/$SCHEME.pck" --script "$SOURCE/tools/check_pack_loads.gd" >"$OUT/pack-loads.log" 2>&1 ) \
+  || { cat "$OUT/pack-loads.log" >&2; echo "Pack load check failed; see $OUT/pack-loads.log" >&2; exit 1; }
+grep LOADALL "$OUT/pack-loads.log"
 if [ "$PROJECT_ONLY" = 1 ]; then echo "Xcode project in $XC"; exit 0; fi
 
 # Xcode notes (verified 2026-10-12, Xcode 27.0):
