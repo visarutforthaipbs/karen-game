@@ -2,6 +2,11 @@
 
 Prepared 2026-10-13. **Update 14 October: version 0.3 (0.3.2) is publicly released. Thailand and US App Store pages verified live and Free.** See [submission receipt and saved configuration](SUBMISSION_20261013.md). The sections below preserve the earlier preparation audit and may describe superseded draft state.
 
+**Update 16 October:** version/build **0.3.7** is prepared in App Store Connect with
+Thai/English update notes and the existing processed build. The final submission
+is pending explicit owner delegation after an automatic approval-review block.
+The crashing TestFlight build 0.3.6 is expired. See [update record](SUBMISSION_20261016_0.3.7.md).
+
 **Owner decisions confirmed:** free launch week, then ฿99 / US$2.99 one-time purchase (see `LAUNCH_PRICING.md`; launched 14 October; paid schedule saved for 21 October), offline-only, public version **0.3**, support **visarutsankham@gmail.com**. See `OFFLINE_HANDOFF.md` and the independently tested `OFFLINE_RELEASE.patch`. The patch is not applied to the working game; TestFlight 0.3.1 still contains the online feature. No App Store Connect fields were changed, no review was requested, and the app was not published. Support/privacy web pages are now live. Game runtime source is unchanged; new tooling only renders isolated screenshot candidates and validates this package. Existing README/SKU edits and Steam preparation files were preserved.
 
 ## What is prepared
