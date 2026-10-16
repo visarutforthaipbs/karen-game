@@ -50,6 +50,30 @@ func _ready() -> void:
 		if cause == "crackdown":
 			AudioManager.instance.play_truck_arrive()
 		AudioManager.instance.set_ambience(0.35, 0.15 if cause == "famine" else 0.0, 0.0)
+	_start_lament()
+
+## Losing theme (reviewer request 0.3.6): a quiet tena-harp lament under the
+## vignette and the run summary. Owned by this scene, so it stops when the
+## player leaves; it does not loop (the track fades out on its own at ~86 s).
+const LAMENT := "res://assets/audio/music_lament.mp3"
+const LAMENT_DB := -7.0
+var lament_player: AudioStreamPlayer
+
+func _start_lament() -> void:
+	if not ResourceLoader.exists(LAMENT):
+		return
+	lament_player = AudioStreamPlayer.new()
+	lament_player.name = "Lament"
+	lament_player.stream = load(LAMENT)
+	lament_player.bus = AudioManager.MUSIC_BUS if AudioServer.get_bus_index(AudioManager.MUSIC_BUS) >= 0 else "Master"
+	lament_player.volume_db = -40.0
+	add_child(lament_player)
+	# Let the ending stinger land first, then fade the lament in
+	get_tree().create_timer(2.2).timeout.connect(func():
+		if not is_instance_valid(lament_player):
+			return
+		lament_player.play()
+		create_tween().tween_property(lament_player, "volume_db", LAMENT_DB, 4.0))
 
 # ---------------------------------------------------------------------------
 # Stage

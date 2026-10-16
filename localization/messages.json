@@ -2333,5 +2333,15 @@
     "id": "mobile034_hud_show",
     "th": "แสดงแผง",
     "en": "Show"
+  },
+  {
+    "id": "v036_park_fire_arrow",
+    "th": "ไฟเข้าป่า %d ม.",
+    "en": "Fire in forest %d m"
+  },
+  {
+    "id": "v036_loading_plot",
+    "th": "กำลังเตรียมแปลง…",
+    "en": "Preparing the plot…"
   }
 ]

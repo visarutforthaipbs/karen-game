@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d1wd5ns2uar38"
-path="res://.godot/imported/S5_checkpoint_a_Image_0.jpg-9a50d99704146f37288663c5b8dec51b.ctex"
+path.s3tc="res://.godot/imported/S5_checkpoint_a_Image_0.jpg-9a50d99704146f37288663c5b8dec51b.s3tc.ctex"
+path.etc2="res://.godot/imported/S5_checkpoint_a_Image_0.jpg-9a50d99704146f37288663c5b8dec51b.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "5d5bb1fe17dae5d66b73c1f804dfdbd7"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/S5_checkpoint_a_Image_0.jpg"
-dest_files=["res://.godot/imported/S5_checkpoint_a_Image_0.jpg-9a50d99704146f37288663c5b8dec51b.ctex"]
+dest_files=["res://.godot/imported/S5_checkpoint_a_Image_0.jpg-9a50d99704146f37288663c5b8dec51b.s3tc.ctex", "res://.godot/imported/S5_checkpoint_a_Image_0.jpg-9a50d99704146f37288663c5b8dec51b.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -39,5 +41,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
-detect_3d/compress_to=1
+process/size_limit=1024
+detect_3d/compress_to=0

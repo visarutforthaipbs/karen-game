@@ -355,6 +355,13 @@ func _setup_vegetation_multimeshes() -> void:
 	ember_brush_layers = _make_prop_layers(brush_stumps, ember_mat)
 	ash_bamboo_layers = _make_prop_layers(bamboo_stumps, ash_mat)
 	ash_brush_layers = _make_prop_layers(brush_stumps, ash_mat)
+	# Phones are vertex-bound (IOS_PORT cycle 5): with the single shadow cascade
+	# every caster is drawn twice. Knee-high understory throws no readable shadow
+	# at this camera distance, so on mobile only the pines cast. Desktop unchanged.
+	if UITheme.is_mobile():
+		for group in [bamboo_layers, brush_layers, ember_bamboo_layers, ember_brush_layers, ash_bamboo_layers, ash_brush_layers]:
+			for inst in group:
+				inst.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	
 	# Thermal Eye markers: tall glowing pillars that read through smoke
 	var pillar = BoxMesh.new()

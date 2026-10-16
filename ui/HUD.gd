@@ -126,6 +126,7 @@ const PANEL_ALPHA: float = 0.82
 const FADED_ALPHA: float = 0.16
 const HINT_SECONDS: float = 40.0
 var minimal: bool = false
+var fire_arrows: ForestFireArrows
 var _fade_targets: Array[Control] = []
 var _camera: Camera3D
 var _player: Node3D
@@ -165,6 +166,7 @@ func _ready() -> void:
 	_build_crew_row()
 	_build_vitals_card()
 	_build_banners()
+	_build_fire_arrows()
 	if AudioManager.instance and is_instance_valid(AudioManager.instance.subtitle_overlay):
 		var captions = AudioManager.instance.subtitle_overlay.card
 		captions.resized.connect(_queue_fit_tip_layout)
@@ -424,6 +426,44 @@ func _place_banners() -> void:
 	var y := maxf(56.0, wind_card.offset_top + wind_card.size.y + 6.0)
 	banner_stack.offset_top = y
 	banner_stack.offset_bottom = y
+
+## Arrows to fire that escaped into the park (reviewer request 0.3.6). They
+## stay on when the panels are hidden: a warning, not a panel.
+func _build_fire_arrows() -> void:
+	fire_arrows = ForestFireArrows.new()
+	fire_arrows.name = "ForestFireArrows"
+	fire_arrows.process_mode = Node.PROCESS_MODE_ALWAYS   # must hide itself while paused
+	add_child(fire_arrows)
+
+## MainController hands over the fire grid for the forest-fire arrows
+func attach_world(grid: FireGrid, _crew: Array = []) -> void:
+	if is_instance_valid(fire_arrows):
+		fire_arrows.setup(grid, _camera, _player)
+		fire_arrows.is_shown = func() -> bool:
+			return _in_play and not get_tree().paused and not (is_instance_valid(report_modal) and report_modal.visible)
+		fire_arrows.bounds_provider = _arrow_bounds
+
+## Free field the forest-fire arrows may use: inside the safe area and clear of
+## every HUD card (clock + map column, wind, banners, crew chips, vitals).
+func _arrow_bounds() -> Rect2:
+	var safe := UITheme.safe_area_rect()
+	var left := safe.position.x + 64.0
+	var top := safe.position.y + 96.0
+	var right := safe.end.x - 64.0
+	var bottom := safe.end.y - 120.0
+	if is_instance_valid(status_card) and status_card.is_visible_in_tree():
+		left = maxf(left, status_card.get_global_rect().end.x + 28.0)
+	for c in [wind_card, banner_stack, state_card]:
+		if is_instance_valid(c) and c.is_visible_in_tree() and c.size.y > 1.0:
+			top = maxf(top, c.get_global_rect().end.y + 52.0)
+	for c in [crew_row, vitals_card]:
+		if is_instance_valid(c) and c.is_visible_in_tree():
+			bottom = minf(bottom, c.get_global_rect().position.y - 30.0)
+	if is_instance_valid(vitals_card) and vitals_card.is_visible_in_tree():
+		right = minf(right, vitals_card.get_global_rect().position.x - 40.0)
+	if bottom - top < 120.0:
+		top = bottom - 120.0
+	return Rect2(left, top, maxf(80.0, right - left), bottom - top)
 
 func _goal_row(box: VBoxContainer) -> Array:
 	var row = UITheme.hbox(7)

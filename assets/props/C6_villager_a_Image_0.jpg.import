@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dug8fygl6v3bu"
-path="res://.godot/imported/C6_villager_a_Image_0.jpg-5d48dbbaafd2d186a490e59059abffd5.ctex"
+path.s3tc="res://.godot/imported/C6_villager_a_Image_0.jpg-5d48dbbaafd2d186a490e59059abffd5.s3tc.ctex"
+path.etc2="res://.godot/imported/C6_villager_a_Image_0.jpg-5d48dbbaafd2d186a490e59059abffd5.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "14fc3e0d3b157d3e4d3ce2b449ecd876"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/C6_villager_a_Image_0.jpg"
-dest_files=["res://.godot/imported/C6_villager_a_Image_0.jpg-5d48dbbaafd2d186a490e59059abffd5.ctex"]
+dest_files=["res://.godot/imported/C6_villager_a_Image_0.jpg-5d48dbbaafd2d186a490e59059abffd5.s3tc.ctex", "res://.godot/imported/C6_villager_a_Image_0.jpg-5d48dbbaafd2d186a490e59059abffd5.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -39,5 +41,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
-detect_3d/compress_to=1
+process/size_limit=1024
+detect_3d/compress_to=0

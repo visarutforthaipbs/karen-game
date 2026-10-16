@@ -134,6 +134,43 @@ func run() -> void:
 			await process_frame
 		check(not game.hud.minimal and game.hud.vitals_card.visible, "pressing again restores the panels")
 
+		# 0.3.6 forest-fire arrows
+		var arrows: ForestFireArrows = game.hud.fire_arrows
+		var park := Vector2i(fg.grid_width - 1, 1)
+		check(fg.is_border_coord(park.x, park.y), "test cell is in the park ring")
+		var pidx: int = fg._coord_to_index(park.x, park.y)
+		fg.cell_types[pidx] = FireGrid.CellType.BURNING
+		fg.active_burning_indices.append(pidx)
+		check(arrows.park_fire_cells().has(park), "a burning park cell is picked up")
+		arrows._refresh_left = 0.0
+		for i in 3:
+			await process_frame
+		check(arrows.targets.size() >= 1, "an arrow or ring targets the escaped fire")
+		var free: Rect2 = game.hud._arrow_bounds()
+		for c in [game.hud.status_card, game.hud.crew_row, game.hud.vitals_card]:
+			check(not free.intersects(c.get_global_rect()), "arrow field stays clear of %s" % c.name)
+		var button_before: Rect2 = tc._buttons["hud"]["rect"]
+		tc._press_button("hud")
+		for i in 6:
+			await process_frame
+		check(arrows.visible and arrows.targets.size() >= 1, "hidden panels keep the fire arrows")
+		check(tc._buttons["hud"]["rect"].position == button_before.position, "the hide button does not jump when panels hide")
+		# 0.3.6 loading hint: phones paint "กำลังเตรียมแปลง…" before the hillside builds
+		var hearth_scene: Node = load("res://scenes/VillageHearth.tscn").instantiate()
+		root.add_child(hearth_scene)
+		await process_frame
+		var hint_seen := false
+		hearth_scene._on_launch_pressed()
+		await process_frame
+		for layer in root.get_children():
+			if layer is CanvasLayer and layer.layer == 100:
+				hint_seen = true
+		check(hint_seen, "launch paints the loading hint on phones")
+		hearth_scene.queue_free()   # freed before the wait ends: the launcher must not swap scenes
+		tc._press_button("hud")
+		fg.cell_types[pidx] = FireGrid.CellType.FOREST_BORDER
+		fg.active_burning_indices.erase(pidx)
+
 	# G · phone Settings: no F-keys, no dead log-folder button
 	var settings = load("res://ui/SettingsPanel.gd").new()
 	root.add_child(settings)

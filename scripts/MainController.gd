@@ -210,6 +210,7 @@ func _ready() -> void:
 	hud.update_water(player.water, player.water_capacity)
 	hud.set_self_cool_minute(self_cool_deadline_minute())
 	hud.track(camera, player)
+	hud.attach_world(fire_grid, [[elder, UITheme.STRAW], [youth, UITheme.EMERALD]])
 	hud.update_crew_status("ตาโพ", "เดินตาม")
 	hud.update_crew_status("มูนอ", "เดินตาม")
 	sky.apply_time(game_clock.get_hours())

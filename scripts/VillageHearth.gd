@@ -842,7 +842,50 @@ func _on_launch_pressed() -> void:
 	# Change scene to Main hillside burn
 	# Year 4+: the march passes a military checkpoint first (CheckpointScene)
 	var scene = "res://scenes/Checkpoint.tscn" if GameState.instance.rules().checkpoints else "res://scenes/Main.tscn"
+	if UITheme.is_mobile():
+		if _launching:
+			return
+		_launching = true
+		var hint := _show_loading_hint()
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if not is_inside_tree():   # freed while waiting (tests, quick quit)
+			hint.queue_free()
+			return
 	get_tree().change_scene_to_file(scene)
+
+var _launching := false
+
+## The hillside takes a few seconds to build on a phone; a blank screen there reads
+## as a hang. Phones paint one frame of "loading" before the synchronous scene
+## change; desktop keeps its same-tick launch (test_preparation_captions pins it).
+## The layer sits on the root so it survives the scene swap, then removes itself
+## shortly after the new scene has drawn its first frame.
+func _show_loading_hint() -> CanvasLayer:
+	var layer := CanvasLayer.new()
+	layer.layer = 100
+	var dim := ColorRect.new()
+	dim.color = Color(UITheme.INK, 0.72)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(dim)
+	var label := Label.new()
+	label.text = "กำลังเตรียมแปลง…"
+	label.add_theme_font_override("font", UITheme.font("semibold"))
+	label.add_theme_font_size_override("font_size", UITheme.fs(26))
+	label.add_theme_color_override("font_color", UITheme.CREAM)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(label)
+	var timer := Timer.new()
+	timer.wait_time = 0.35
+	timer.one_shot = true
+	timer.autostart = true
+	timer.process_callback = Timer.TIMER_PROCESS_IDLE
+	timer.timeout.connect(layer.queue_free)
+	layer.add_child(timer)
+	get_tree().root.add_child(layer)
+	return layer
 
 # ---------------------------------------------------------------------------
 # Annual monsoon harvest

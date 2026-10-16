@@ -29,6 +29,7 @@ boot_splash/use_filter=true
 [autoload]
 
 Localization="*res://scripts/Localization.gd"
+MobileRuntime="*res://scripts/MobileRuntime.gd"
 InputBindings="*res://scripts/InputBindings.gd"
 GameState="*res://scripts/GameState.gd"
 AudioManager="*res://scripts/AudioManager.gd"

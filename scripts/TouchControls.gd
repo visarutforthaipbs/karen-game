@@ -213,7 +213,9 @@ func _layout() -> void:
 
 ## The hide-panels button sits under the clock card (top-left), which stays
 ## visible in minimal mode; under it rather than beside it keeps it clear of the
-## centred warning banners. A little wider than tall so its caption fits.
+## centred warning banners. The clock card shrinks when the panels hide, so the
+## button keeps its place then instead of jumping up under the thumb.
+## A little wider than tall so its caption fits.
 func _place_hud_button(hud: Node, side: float) -> void:
 	var pos := _field.position + Vector2(BUTTON_MARGIN, BUTTON_MARGIN)
 	if hud != null:
@@ -221,6 +223,9 @@ func _place_hud_button(hud: Node, side: float) -> void:
 		if status is Control and status.is_visible_in_tree():
 			var r: Rect2 = status.get_global_rect()
 			pos = Vector2(r.position.x, r.end.y + BUTTON_GAP)
+		var placed: Rect2 = _buttons["hud"]["rect"]
+		if bool(hud.get("minimal")) and placed.size.x > 0.0:
+			pos = placed.position
 	var rect := Rect2(pos, Vector2(roundf(side * 1.35), side))
 	_buttons["hud"]["rect"] = rect
 	var panel: Panel = _buttons["hud"]["panel"]

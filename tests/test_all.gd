@@ -695,6 +695,8 @@ func _flow_checks(gs: Node) -> void:
 		await process_frame
 		var ending = current_scene
 		check(ending.cause == cause and not SaveGame.exists(), "%s ending plays and the finished campaign can't be continued" % cause)
+		check(is_instance_valid(ending.lament_player) and ending.lament_player.stream is AudioStreamMP3 and ending.lament_player.stream.get_length() > 80.0,
+			"%s ending carries the lament theme" % cause)
 		await frames(10)
 		ending.show_summary()
 		check(ending.summary_card != null and ending.summary_card.visible, "%s ending shows the run summary" % cause)

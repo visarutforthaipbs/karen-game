@@ -1,0 +1,158 @@
+{
+ "date": "2026-10-16",
+ "decision": "Reviewer round 2 #6: Ta-poh should sound like an old man. Owner-approved; all 12 Ta-poh lines (6 TH + 6 EN) re-voiced.",
+ "voice": {
+  "id": "y74vFC5YdSq6NNCLpuam",
+  "name": "UTS Ta-poh Elder",
+  "origin": "ElevenLabs Voice Design (generated, account-owned; no clone)",
+  "design_prompt": "Elderly Thai man ~72, village elder and hill farmer, soft warm slightly hoarse, gentle age rasp and tremor, slow calm pacing"
+ },
+ "previous_voice": {
+  "id": "RJIgSLB4fDJZtYZRUxqo",
+  "name": "Toto - Warm Thai Storyteller",
+  "note": "still the opening narrator; no longer Ta-poh"
+ },
+ "model_id": "eleven_v4",
+ "settings": {
+  "stability": 0.6,
+  "similarity_boost": 0.65,
+  "style": 0.0,
+  "use_speaker_boost": false
+ },
+ "audio_format": "mono 44100 Hz PCM16, -19 dBFS RMS target, -3.1 dBFS peak cap, silence trimmed with 60 ms pad",
+ "review": "All 12 ElevenLabs Scribe transcripts match the subtitle text exactly (ignoring punctuation/spacing). ASR checks words, not acting.",
+ "clips": [
+  {
+   "id": "elder_th_ta_poh_call",
+   "file": "assets/audio/ta_poh_call.wav",
+   "source": "artifacts/audio_tapoh_elder_20261016/raw/th/ta_poh_call.mp3",
+   "text": "ระวังไฟ!",
+   "seconds": 1.16,
+   "rms_dbfs": -19.0,
+   "peak_dbfs": -6.0,
+   "sha256": "1fed146798616834c8dcfe35b190cdd00f409aaf642119cd41a4cda73e9726e6",
+   "asr_exact": true
+  },
+  {
+   "id": "elder_th_bark_rally_reply",
+   "file": "assets/audio/bark_rally_reply.wav",
+   "source": "artifacts/audio_tapoh_elder_20261016/raw/th/bark_rally_reply.mp3",
+   "text": "ได้ยินแล้ว กำลังไป",
+   "seconds": 1.853,
+   "rms_dbfs": -19.0,
+   "peak_dbfs": -5.27,
+   "sha256": "b6beeb1563197b920ffda3efe64ed82e0578a79d182cafb074f75c987470cccd",
+   "asr_exact": true
+  },
+  {
+   "id": "elder_th_bark_rally_reply_2",
+   "file": "assets/audio/bark_rally_reply_2.wav",
+   "source": "artifacts/audio_tapoh_elder_20261016/raw/th/bark_rally_reply_2.mp3",
+   "text": "มาแล้ว ระวังท้ายไฟด้วย",
+   "seconds": 2.26,
+   "rms_dbfs": -19.0,
+   "peak_dbfs": -4.23,
+   "sha256": "6f1cecc9e0b9186e7ee27b879e3b292e2037842b19ce84fa105a675f18cca77a",
+   "asr_exact": true
+  },
+  {
+   "id": "elder_th_tapoh_wind_warning",
+   "file": "assets/audio/tapoh_wind_warning.wav",
+   "source": "artifacts/audio_tapoh_elder_20261016/raw/th/tapoh_wind_warning.mp3",
+   "text": "ลมกำลังจะเปลี่ยนทิศ ระวังไฟลามกลับมาทางเรา",
+   "seconds": 3.447,
+   "rms_dbfs": -19.0,
+   "peak_dbfs": -4.55,
+   "sha256": "0e6e1cf84fa2c5ba1628830673aed8dce0bdb76635b54459dd8f599d1cf65d89",
+   "asr_exact": true
+  },
+  {
+   "id": "elder_th_tapoh_wind_warning_2",
+   "file": "assets/audio/tapoh_wind_warning_2.wav",
+   "source": "artifacts/audio_tapoh_elder_20261016/raw/th/tapoh_wind_warning_2.mp3",
+   "text": "ลมหุบเขาจะกลับทิศเร็ว ๆ นี้ เร่งทำแนวกันไฟก่อนเลย",
+   "seconds": 3.949,
+   "rms_dbfs": -19.0,
+   "peak_dbfs": -3.99,
+   "sha256": "454a6568280882bf2a1eaa3d78fa88ddd6e2ad2069b109cb04461b0d927241ab",
+   "asr_exact": true
+  },
+  {
+   "id": "elder_th_tapoh_wind_warning_3",
+   "file": "assets/audio/tapoh_wind_warning_3.wav",
+   "source": "artifacts/audio_tapoh_elder_20261016/raw/th/tapoh_wind_warning_3.mp3",
+   "text": "ลมกำลังเปลี่ยนทิศ ย้ายออกจากท้ายไฟก่อน",
+   "seconds": 3.037,
+   "rms_dbfs": -19.0,
+   "peak_dbfs": -4.04,
+   "sha256": "933c5a7359324593f7a41513d44d3d15532c47fc86402079e480f0c53b1ed84d",
+   "asr_exact": true
+  },
+  {
+   "id": "elder_en_ta_poh_call",
+   "file": "assets/audio/en/ta_poh_call.wav",
+   "source": "artifacts/audio_tapoh_elder_20261016/raw/en/ta_poh_call.mp3",
+   "text": "Watch the fire!",
+   "seconds": 1.27,
+   "rms_dbfs": -19.0,
+   "peak_dbfs": -4.81,
+   "sha256": "7977ad3a34d2aae6077b88e50a4827d55d0423549f6a4bb14a7df06eccb7c365",
+   "asr_exact": true
+  },
+  {
+   "id": "elder_en_bark_rally_reply",
+   "file": "assets/audio/en/bark_rally_reply.wav",
+   "source": "artifacts/audio_tapoh_elder_20261016/raw/en/bark_rally_reply.mp3",
+   "text": "Heard you. On my way.",
+   "seconds": 1.716,
+   "rms_dbfs": -19.0,
+   "peak_dbfs": -4.02,
+   "sha256": "5a89be77edb02f212ee3d01bfcd82b04b5de6b3136afe0186e008761762cf6b5",
+   "asr_exact": true
+  },
+  {
+   "id": "elder_en_bark_rally_reply_2",
+   "file": "assets/audio/en/bark_rally_reply_2.wav",
+   "source": "artifacts/audio_tapoh_elder_20261016/raw/en/bark_rally_reply_2.mp3",
+   "text": "Coming! Watch the back of the fire.",
+   "seconds": 2.127,
+   "rms_dbfs": -19.52,
+   "peak_dbfs": -3.1,
+   "sha256": "64bae0247ddae91dfa44a7f63576188b5dfbb4c009fc23682eb5691a11b17ee0",
+   "asr_exact": true
+  },
+  {
+   "id": "elder_en_tapoh_wind_warning",
+   "file": "assets/audio/en/tapoh_wind_warning.wav",
+   "source": "artifacts/audio_tapoh_elder_20261016/raw/en/tapoh_wind_warning.mp3",
+   "text": "Wind is about to turn. Watch for fire spreading back toward us.",
+   "seconds": 4.144,
+   "rms_dbfs": -19.52,
+   "peak_dbfs": -3.1,
+   "sha256": "f953faf6959ea59d5e8fa2be486136470d2833ad67805989061bd0631ab2048e",
+   "asr_exact": true
+  },
+  {
+   "id": "elder_en_tapoh_wind_warning_2",
+   "file": "assets/audio/en/tapoh_wind_warning_2.wav",
+   "source": "artifacts/audio_tapoh_elder_20261016/raw/en/tapoh_wind_warning_2.mp3",
+   "text": "The valley wind will reverse soon. Finish the firebreak first.",
+   "seconds": 3.869,
+   "rms_dbfs": -19.0,
+   "peak_dbfs": -3.88,
+   "sha256": "bd59049bba29f4c6f8e1c1c000a4b064d50dc4f33bff981d471ad10ab267b3cb",
+   "asr_exact": true
+  },
+  {
+   "id": "elder_en_tapoh_wind_warning_3",
+   "file": "assets/audio/en/tapoh_wind_warning_3.wav",
+   "source": "artifacts/audio_tapoh_elder_20261016/raw/en/tapoh_wind_warning_3.mp3",
+   "text": "The wind is turning. Move clear of the back of the fire.",
+   "seconds": 3.498,
+   "rms_dbfs": -19.0,
+   "peak_dbfs": -4.5,
+   "sha256": "4c6362754f024ae11a8d81936441803e037bdce86545abf2d6a6beba99549e01",
+   "asr_exact": true
+  }
+ ]
+}

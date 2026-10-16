@@ -94,33 +94,27 @@
     },
     {
       "path": "assets/audio/bark_rally_reply.wav",
-      "bytes": 169388,
-      "sha256": "334f53a6fe02ea6f10eb33d263d7c70a6e9daffc2e945d893c619101936a45ec",
-      "provider_hint": "mixed procedural / ElevenLabs; per-file confirmation needed",
-      "status": "needs rights review",
+      "bytes": 163542,
+      "sha256": "b6beeb1563197b920ffda3efe64ed82e0578a79d182cafb074f75c987470cccd",
+      "provider_hint": "ElevenLabs eleven_v4 TTS, voice 'UTS Ta-poh Elder' (Voice Design, account-owned, no clone)",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
       "evidence": [
-        "tools/audio_pipeline/README.md",
-        "tools/audio_pipeline/production_plan.json",
-        "tools/audio_pipeline/voice_plan.json",
-        "tools/audio_pipeline/revision_plan.json"
+        "tools/audio_pipeline/installed_tapoh_elder_20261016.json"
       ],
-      "commercial_rights_proof": null,
-      "shipped_in_release": "audit export contents"
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license) — see tools/audio_pipeline/installed_tapoh_elder_20261016.json",
+      "shipped_in_release": "0.3.6+"
     },
     {
       "path": "assets/audio/bark_rally_reply_2.wav",
-      "bytes": 183500,
-      "sha256": "0b12837d0212d653b109cfb65ea1a15fd44b05c5c602aadbd3f30dd1196599b0",
-      "provider_hint": "mixed procedural / ElevenLabs; per-file confirmation needed",
-      "status": "needs rights review",
+      "bytes": 199444,
+      "sha256": "6f1cecc9e0b9186e7ee27b879e3b292e2037842b19ce84fa105a675f18cca77a",
+      "provider_hint": "ElevenLabs eleven_v4 TTS, voice 'UTS Ta-poh Elder' (Voice Design, account-owned, no clone)",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
       "evidence": [
-        "tools/audio_pipeline/README.md",
-        "tools/audio_pipeline/production_plan.json",
-        "tools/audio_pipeline/voice_plan.json",
-        "tools/audio_pipeline/revision_plan.json"
+        "tools/audio_pipeline/installed_tapoh_elder_20261016.json"
       ],
-      "commercial_rights_proof": null,
-      "shipped_in_release": "audit export contents"
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license) — see tools/audio_pipeline/installed_tapoh_elder_20261016.json",
+      "shipped_in_release": "0.3.6+"
     },
     {
       "path": "assets/audio/bark_report_crew.wav",
@@ -1294,63 +1288,51 @@
     },
     {
       "path": "assets/audio/ta_poh_call.wav",
-      "bytes": 84716,
-      "sha256": "885fe00671de8b95f41692460f909e6655cd7b8b27fea6ec8daeb8ab8fdf85d9",
-      "provider_hint": "mixed procedural / ElevenLabs; per-file confirmation needed",
-      "status": "needs rights review",
+      "bytes": 102360,
+      "sha256": "1fed146798616834c8dcfe35b190cdd00f409aaf642119cd41a4cda73e9726e6",
+      "provider_hint": "ElevenLabs eleven_v4 TTS, voice 'UTS Ta-poh Elder' (Voice Design, account-owned, no clone)",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
       "evidence": [
-        "tools/audio_pipeline/README.md",
-        "tools/audio_pipeline/production_plan.json",
-        "tools/audio_pipeline/voice_plan.json",
-        "tools/audio_pipeline/revision_plan.json"
+        "tools/audio_pipeline/installed_tapoh_elder_20261016.json"
       ],
-      "commercial_rights_proof": null,
-      "shipped_in_release": "audit export contents"
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license) — see tools/audio_pipeline/installed_tapoh_elder_20261016.json",
+      "shipped_in_release": "0.3.6+"
     },
     {
       "path": "assets/audio/tapoh_wind_warning.wav",
-      "bytes": 310508,
-      "sha256": "c462a11660d7d1a760c35bfb2e577060238f529914081e0644cb1b8979350d98",
-      "provider_hint": "mixed procedural / ElevenLabs; per-file confirmation needed",
-      "status": "needs rights review",
+      "bytes": 304062,
+      "sha256": "0e6e1cf84fa2c5ba1628830673aed8dce0bdb76635b54459dd8f599d1cf65d89",
+      "provider_hint": "ElevenLabs eleven_v4 TTS, voice 'UTS Ta-poh Elder' (Voice Design, account-owned, no clone)",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
       "evidence": [
-        "tools/audio_pipeline/README.md",
-        "tools/audio_pipeline/production_plan.json",
-        "tools/audio_pipeline/voice_plan.json",
-        "tools/audio_pipeline/revision_plan.json"
+        "tools/audio_pipeline/installed_tapoh_elder_20261016.json"
       ],
-      "commercial_rights_proof": null,
-      "shipped_in_release": "audit export contents"
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license) — see tools/audio_pipeline/installed_tapoh_elder_20261016.json",
+      "shipped_in_release": "0.3.6+"
     },
     {
       "path": "assets/audio/tapoh_wind_warning_2.wav",
-      "bytes": 388124,
-      "sha256": "8641238cbbee22174d13a082ac6f7ea19fb86773521288125eadf970a6c064ad",
-      "provider_hint": "mixed procedural / ElevenLabs; per-file confirmation needed",
-      "status": "needs rights review",
+      "bytes": 348404,
+      "sha256": "454a6568280882bf2a1eaa3d78fa88ddd6e2ad2069b109cb04461b0d927241ab",
+      "provider_hint": "ElevenLabs eleven_v4 TTS, voice 'UTS Ta-poh Elder' (Voice Design, account-owned, no clone)",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
       "evidence": [
-        "tools/audio_pipeline/README.md",
-        "tools/audio_pipeline/production_plan.json",
-        "tools/audio_pipeline/voice_plan.json",
-        "tools/audio_pipeline/revision_plan.json"
+        "tools/audio_pipeline/installed_tapoh_elder_20261016.json"
       ],
-      "commercial_rights_proof": null,
-      "shipped_in_release": "audit export contents"
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license) — see tools/audio_pipeline/installed_tapoh_elder_20261016.json",
+      "shipped_in_release": "0.3.6+"
     },
     {
       "path": "assets/audio/tapoh_wind_warning_3.wav",
-      "bytes": 275228,
-      "sha256": "40bd38fda5adea4952366fa084c2f0517172538d8245002e062bf40f04ed487f",
-      "provider_hint": "mixed procedural / ElevenLabs; per-file confirmation needed",
-      "status": "needs rights review",
+      "bytes": 267910,
+      "sha256": "933c5a7359324593f7a41513d44d3d15532c47fc86402079e480f0c53b1ed84d",
+      "provider_hint": "ElevenLabs eleven_v4 TTS, voice 'UTS Ta-poh Elder' (Voice Design, account-owned, no clone)",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
       "evidence": [
-        "tools/audio_pipeline/README.md",
-        "tools/audio_pipeline/production_plan.json",
-        "tools/audio_pipeline/voice_plan.json",
-        "tools/audio_pipeline/revision_plan.json"
+        "tools/audio_pipeline/installed_tapoh_elder_20261016.json"
       ],
-      "commercial_rights_proof": null,
-      "shipped_in_release": "audit export contents"
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license) — see tools/audio_pipeline/installed_tapoh_elder_20261016.json",
+      "shipped_in_release": "0.3.6+"
     },
     {
       "path": "assets/audio/v11_candidates/README.md",
@@ -4902,6 +4884,90 @@
       ],
       "commercial_rights_proof": "first-party tooling output",
       "shipped_in_release": "no - internal QC artifact"
+    },
+    {
+      "path": "assets/audio/en/ta_poh_call.wav",
+      "bytes": 112104,
+      "sha256": "7977ad3a34d2aae6077b88e50a4827d55d0423549f6a4bb14a7df06eccb7c365",
+      "provider_hint": "ElevenLabs eleven_v4 TTS, voice 'UTS Ta-poh Elder' (Voice Design, account-owned, no clone)",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
+      "evidence": [
+        "tools/audio_pipeline/installed_tapoh_elder_20261016.json"
+      ],
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license) — see tools/audio_pipeline/installed_tapoh_elder_20261016.json",
+      "shipped_in_release": "0.3.6+"
+    },
+    {
+      "path": "assets/audio/en/bark_rally_reply.wav",
+      "bytes": 151438,
+      "sha256": "5a89be77edb02f212ee3d01bfcd82b04b5de6b3136afe0186e008761762cf6b5",
+      "provider_hint": "ElevenLabs eleven_v4 TTS, voice 'UTS Ta-poh Elder' (Voice Design, account-owned, no clone)",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
+      "evidence": [
+        "tools/audio_pipeline/installed_tapoh_elder_20261016.json"
+      ],
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license) — see tools/audio_pipeline/installed_tapoh_elder_20261016.json",
+      "shipped_in_release": "0.3.6+"
+    },
+    {
+      "path": "assets/audio/en/bark_rally_reply_2.wav",
+      "bytes": 187652,
+      "sha256": "64bae0247ddae91dfa44a7f63576188b5dfbb4c009fc23682eb5691a11b17ee0",
+      "provider_hint": "ElevenLabs eleven_v4 TTS, voice 'UTS Ta-poh Elder' (Voice Design, account-owned, no clone)",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
+      "evidence": [
+        "tools/audio_pipeline/installed_tapoh_elder_20261016.json"
+      ],
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license) — see tools/audio_pipeline/installed_tapoh_elder_20261016.json",
+      "shipped_in_release": "0.3.6+"
+    },
+    {
+      "path": "assets/audio/en/tapoh_wind_warning.wav",
+      "bytes": 365584,
+      "sha256": "f953faf6959ea59d5e8fa2be486136470d2833ad67805989061bd0631ab2048e",
+      "provider_hint": "ElevenLabs eleven_v4 TTS, voice 'UTS Ta-poh Elder' (Voice Design, account-owned, no clone)",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
+      "evidence": [
+        "tools/audio_pipeline/installed_tapoh_elder_20261016.json"
+      ],
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license) — see tools/audio_pipeline/installed_tapoh_elder_20261016.json",
+      "shipped_in_release": "0.3.6+"
+    },
+    {
+      "path": "assets/audio/en/tapoh_wind_warning_2.wav",
+      "bytes": 341310,
+      "sha256": "bd59049bba29f4c6f8e1c1c000a4b064d50dc4f33bff981d471ad10ab267b3cb",
+      "provider_hint": "ElevenLabs eleven_v4 TTS, voice 'UTS Ta-poh Elder' (Voice Design, account-owned, no clone)",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
+      "evidence": [
+        "tools/audio_pipeline/installed_tapoh_elder_20261016.json"
+      ],
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license) — see tools/audio_pipeline/installed_tapoh_elder_20261016.json",
+      "shipped_in_release": "0.3.6+"
+    },
+    {
+      "path": "assets/audio/en/tapoh_wind_warning_3.wav",
+      "bytes": 308584,
+      "sha256": "4c6362754f024ae11a8d81936441803e037bdce86545abf2d6a6beba99549e01",
+      "provider_hint": "ElevenLabs eleven_v4 TTS, voice 'UTS Ta-poh Elder' (Voice Design, account-owned, no clone)",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
+      "evidence": [
+        "tools/audio_pipeline/installed_tapoh_elder_20261016.json"
+      ],
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license) — see tools/audio_pipeline/installed_tapoh_elder_20261016.json",
+      "shipped_in_release": "0.3.6+"
+    },
+    {
+      "path": "assets/audio/music_lament.mp3",
+      "bytes": 1721325,
+      "sha256": "53c25d8493de1c0dbd9c6e5ec8eea1f8eefaa2afb792cd8309348fb7d6cc1ecf",
+      "provider_hint": "ElevenLabs Music (music_v2), instrumental, generated 2026-10-16 via MCP compose_music",
+      "status": "ElevenLabs paid plan, commercial use per ElevenLabs ToS",
+      "evidence": [
+        "ui/EndingScene.gd (lament)"
+      ],
+      "commercial_rights_proof": "ElevenLabs Starter subscription (commercial license)",
+      "shipped_in_release": "0.3.6+"
     }
   ],
   "press_caption": {

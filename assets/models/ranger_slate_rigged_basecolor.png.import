@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bb0xrserhwflb"
-path="res://.godot/imported/ranger_slate_rigged_basecolor.png-62ea68f28bd54f4aa2a7aebf8f0f61ac.ctex"
+path.s3tc="res://.godot/imported/ranger_slate_rigged_basecolor.png-62ea68f28bd54f4aa2a7aebf8f0f61ac.s3tc.ctex"
+path.etc2="res://.godot/imported/ranger_slate_rigged_basecolor.png-62ea68f28bd54f4aa2a7aebf8f0f61ac.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "2ef26f2020983dd29b8059c8f2ed388e"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/ranger_slate_rigged_basecolor.png"
-dest_files=["res://.godot/imported/ranger_slate_rigged_basecolor.png-62ea68f28bd54f4aa2a7aebf8f0f61ac.ctex"]
+dest_files=["res://.godot/imported/ranger_slate_rigged_basecolor.png-62ea68f28bd54f4aa2a7aebf8f0f61ac.s3tc.ctex", "res://.godot/imported/ranger_slate_rigged_basecolor.png-62ea68f28bd54f4aa2a7aebf8f0f61ac.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -39,5 +41,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
-detect_3d/compress_to=1
+process/size_limit=1024
+detect_3d/compress_to=0
