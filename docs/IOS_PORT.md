@@ -178,6 +178,25 @@ just re-run it.
   crew chips cut with "…" (width scales), and no way to hide panels (new ซ่อนแผง/แสดงแผง
   button = desktop Tab minimal mode). Gate 18/18. 0.3.4 superseded (never submitted).
 
+### 0.3.6 — 2026-10-16 (reviewer round 2 + mobile perf pass)
+
+- Source `d5f9765` (code in `018b136`). IPA 104,220,360 B, sha256
+  `a4f039944ec759bae12e7d8b3bad4e9930d3ef2e78ccc73a1d762d41d17e8994`; pck 93.8 MB
+  (0.3.5: 253 MB IPA / 239 MB pck). TestFlight upload 2026-10-16 10:38 ("Upload succeeded").
+- Reviewer items: #3 forest-fire edge arrows (`ui/ForestFireArrows.gd`), #5 lose theme
+  (`assets/audio/music_lament.mp3`, ElevenLabs Music), #6 Ta-poh re-voiced with the
+  Voice-Design elder voice (12 lines, `tools/audio_pipeline/installed_tapoh_elder_20261016.json`).
+  Declined by owner: #1 replay, #2 mid-campaign continue, #4 minimap.
+- Mobile perf (Mac, mobile renderer, `--touch`): 45 model/prop textures Lossless WebP ->
+  VRAM compressed @1024: GPU mem burn 295 -> 184 MB, village 98 -> 49 MB. Understory props
+  no shadow on mobile: prims/frame 998 k -> 794 k. Burn load 1094 -> 800 ms. `MobileRuntime`
+  autoload pins `max_fps` 60 on mobile. Export drops unreferenced `_textured`/`_lowpoly`
+  models, `island_0.jpg`, blue-hour title PNGs. Phones paint "กำลังเตรียมแปลง…" before the
+  hillside builds (desktop launch unchanged).
+- Still open: no fps measurement below the iPhone 14 Pro (iOS 17 floor = A12). Store copy
+  should say "best on iPhone 12 and newer" until a tester with an older phone reports.
+- Gate: `GATE: pass=18 fail=0`; `test_all RESULT: OK (0 failures)`; MOBILE FEEDBACK 46 checks.
+
 ## Release gate for this port
 
 0. **Owner finger check (3 minutes, the only thing Mirroring can't do):** on the installed
