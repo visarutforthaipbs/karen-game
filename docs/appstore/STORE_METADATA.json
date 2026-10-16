@@ -73,5 +73,16 @@
   "public_urls": {
     "th": "https://apps.apple.com/th/app/under-two-skies/id6822175255?l=th",
     "us": "https://apps.apple.com/us/app/under-two-skies/id6822175255"
+  },
+  "pending_update": {
+    "version": "0.3.7",
+    "build": "0.3.7",
+    "status": "Waiting for Review",
+    "submitted_at": "2026-10-16T11:16:00+07:00",
+    "submission_id": "e5abd173-0d78-418a-858f-8b96893775e5",
+    "build_id": "8050138c-cae8-405f-a867-c1cde31b74e1",
+    "release_mode": "MANUAL",
+    "receipt": "SUBMISSION_20261016_0.3.7.md",
+    "expired_testflight_build": "0.3.6"
   }
 }

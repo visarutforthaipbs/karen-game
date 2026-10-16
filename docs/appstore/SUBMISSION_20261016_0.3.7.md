@@ -1,8 +1,12 @@
 # App Store update 0.3.7 — 16 October 2026
 
-**Prepared in App Store Connect at 11:12 Asia/Bangkok; not yet submitted.**
-Apple's final draft lists iOS 0.3.7 with build 0.3.7 as ready to submit. Automatic
-approval review blocked the final click pending explicit delegation from the owner.
+**Submitted and verified at 11:16 Asia/Bangkok. Status: Waiting for Review /
+กำลังรอการตรวจดู.** The owner explicitly authorized the final Submit for Review
+click. Apple confirmed one item submitted and the receipt lists version/build
+0.3.7 (0.3.7). This is not approval or public release; manual release is selected.
+
+- Submission ID: `e5abd173-0d78-418a-858f-8b96893775e5`.
+- [Apple submission receipt](https://appstoreconnect.apple.com/apps/6822175255/distribution/reviewsubmissions/details/e5abd173-0d78-418a-858f-8b96893775e5).
 
 ## Verified build
 
@@ -58,14 +62,15 @@ Improved play on iPhone and iPad
 • Reduced download size and graphics memory use, with clearer loading feedback.
 • Fixed a startup issue found in some test builds.
 
-## Account notice and remaining action
+## Account notice and next state
 
 The apps dashboard showed an updated Paid Applications Schedule notice. No new
 agreement was accepted. Apple nevertheless allowed creation, saving and validation
-of the update into a ready-to-submit draft. Whether this agreement blocks the final
-submission has not yet been established; the final click was blocked by automatic
-approval review, not by an Apple validation error.
+of the update into a ready-to-submit draft, then accepted the final submission
+without an agreement error. No legal agreement was accepted in this workflow.
+The notice may still need owner attention separately.
 
-Next: after explicit owner delegation, click Submit for Review and record Apple's
-actual confirmation/status and submission identifier. Approval and manual public
-release are separate later steps.
+Apple's confirmation says review may take up to 48 hours and email will follow;
+this is displayed guidance, not a guaranteed completion time. Next: respond to
+App Review if requested and, after approval, deliberately release the update.
+The current public 0.3 release remains separate from the pending 0.3.7 update.
