@@ -178,6 +178,20 @@ just re-run it.
   crew chips cut with "…" (width scales), and no way to hide panels (new ซ่อนแผง/แสดงแผง
   button = desktop Tab minimal mode). Gate 18/18. 0.3.4 superseded (never submitted).
 
+### 0.3.9 — 2026-10-22 (player feedback: language switch stuck)
+
+- Source `180c6ab`. IPA 110,013,246 B, sha256
+  `5036aead7f4489a055a15761bf974cae6e0474fb2db4763758989062f6f236b8`; pack check 199/0.
+  TestFlight upload 2026-10-22 01:04 ("Upload succeeded"); iPhone 14 Pro: installed, alive 20 s.
+- "Switch to English and it's stuck": the language OptionButton's PopupMenu ignores raw
+  screen touches, so the open menu sat on top and swallowed every tap. Phones now show two
+  toggle buttons (ไทย / English) driving the same hidden `language_picker`; desktop keeps
+  the dropdown. The board-name field also now takes focus from a finger (iOS keyboard).
+- `tests/test_settings_touch.gd` grew to 48 checks (language switch live, page still usable,
+  name focus, every toggle on every tab); `test_mobile_pages` 71/71.
+- Known local-only gate noise: `test_voice_subtitles` "natural recording completion clears
+  caption" fails on this Mac at the untouched HEAD too (audio timing); CI on Linux passes it.
+
 ### 0.3.8 — 2026-10-22 (player feedback: Settings touch + 1/2/3 slots)
 
 - Source `50536da`. IPA 110,011,963 B, sha256
