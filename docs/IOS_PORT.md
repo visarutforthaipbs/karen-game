@@ -178,6 +178,21 @@ just re-run it.
   crew chips cut with "…" (width scales), and no way to hide panels (new ซ่อนแผง/แสดงแผง
   button = desktop Tab minimal mode). Gate 18/18. 0.3.4 superseded (never submitted).
 
+### 0.3.8 — 2026-10-22 (player feedback: Settings touch + 1/2/3 slots)
+
+- Source `50536da`. IPA 110,011,963 B, sha256
+  `2579b33cff2bf706c18c1f73f9f721de7d2b2db41cccedb375be4d181721f4de`; pack check 199/0.
+  TestFlight upload 2026-10-22 00:43 ("Upload succeeded"); iPhone 14 Pro: installed, alive 20 s.
+- "Settings ใช้ไม่ได้เลย": with `emulate_mouse_from_touch=false` the native HSlider ignored
+  finger input, so every slider was dead on phones while tabs worked. New
+  `ui/SettingsTouchSlider.gd` (mobile only), 88 px rows, volumes in two columns, fullscreen
+  toggle hidden on handheld OS. Desktop unchanged.
+- "ปุ่ม 1 2 3 ล่างซ้าย": `HUD.set_minimal(false)` re-showed the desktop key slots after
+  แสดงแผง; now gated on `is_mobile()`.
+- New CI suite `tests/test_settings_touch.gd` (real touch events, 3 runs incl. notch insets).
+- Open: Pgakenyaw music request ("เตกู่") — sound-engineer assessment delivered to the owner;
+  needs clarification from the reviewer and the pending Pgakenyaw cultural review.
+
 ### 0.3.7 — 2026-10-16 (hotfix for 0.3.6 title-screen crash)
 
 - **0.3.6 crashed at the title screen on device** (SIGSEGV, `PackedScene::instantiate`,
