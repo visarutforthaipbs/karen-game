@@ -178,6 +178,18 @@ just re-run it.
   crew chips cut with "…" (width scales), and no way to hide panels (new ซ่อนแผง/แสดงแผง
   button = desktop Tab minimal mode). Gate 18/18. 0.3.4 superseded (never submitted).
 
+### 0.3.10 — 2026-10-22 (player feedback: lose-ending figures slide)
+
+- Source `31a094a`. IPA 110,013,043 B, sha256
+  `b69114f86a3655f5822b74ceb9a1767c92dac4e7bd2d6138791fd711c551abb3`; pack check 199/0.
+  TestFlight upload 2026-10-22 01:22 ("Upload succeeded"); iPhone 14 Pro: installed, alive 20 s.
+- Crackdown ending: rangers r1/r3 and Ta-poh have two timed moves; `_process` animated per
+  entry, so the inactive entry reset the rig to Idle every frame and the clip never advanced
+  (probe: clip position 0.00 s while moving 7.5 m). Now each node is animated once per frame
+  from its active move; the Escort clip also plays during the lead-out.
+- `test_all` asserts every moving ending figure plays an advancing Walk/Run/Escort clip
+  (fails on 0.3.9 code with 5 of 6 figures listed, passes on 0.3.10).
+
 ### 0.3.9 — 2026-10-22 (player feedback: language switch stuck)
 
 - Source `180c6ab`. IPA 110,013,246 B, sha256
