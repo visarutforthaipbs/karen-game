@@ -379,21 +379,30 @@ func _process(delta: float) -> void:
 		if c.size() == 3 and _t >= c[0]:
 			RangerFigure.gesture(c[1], c[2])
 			c.append(true) # Played
+	# A node can have several timed moves (rangers walk in, later escort out).
+	# Animate each node ONCE per frame from the move that is active; driving it
+	# per entry made the idle entry restart Idle after the active one started
+	# Walk, so the clip never advanced and the figure slid in a frozen pose.
+	var node_vel := {}
 	for a in _actors:
 		var node: Node3D = a.node
 		var u = 0.0 if a.end <= a.start else clampf((_t - a.start) / (a.end - a.start), 0.0, 1.0)
 		var moving = _t > a.start and _t < a.end and a.from != a.to
 		if _t >= a.start and _t <= a.end + delta:
 			node.position = a.from.lerp(a.to, u)
-		var vel = (a.to - a.from) / maxf(a.end - a.start, 0.01) if moving else Vector3.ZERO
+		if not node_vel.has(node):
+			node_vel[node] = Vector3.ZERO
 		if moving:
+			var vel = (a.to - a.from) / maxf(a.end - a.start, 0.01)
+			node_vel[node] = vel
 			if AudioManager.instance:
 				AudioManager.instance.step_at("ending_%d" % node.get_instance_id(), node.global_position, false, false)
 			node.rotation.y = lerp_angle(node.rotation.y, atan2(vel.x, vel.z), delta * 6.0)
+	for node in node_vel:
 		if node.has_method("update_animation"):
-			node.update_animation(delta, vel)
+			node.update_animation(delta, node_vel[node])
 		else:
-			RangerFigure.animate(node, delta, vel)
+			RangerFigure.animate(node, delta, node_vel[node])
 	# Tools are lifted away by the rangers once they reach the hut
 	for i in _taken.size():
 		var tool: Node3D = _taken[i]

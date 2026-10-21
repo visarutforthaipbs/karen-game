@@ -698,6 +698,28 @@ func _flow_checks(gs: Node) -> void:
 		check(is_instance_valid(ending.lament_player) and ending.lament_player.stream is AudioStreamMP3 and ending.lament_player.stream.get_length() > 80.0,
 			"%s ending carries the lament theme" % cause)
 		await frames(10)
+		# Walking figures must actually walk: the clip advances while they move
+		# (a node with two timed moves used to restart Idle every frame and slide).
+		var moves: Array = ending._actors.filter(func(a): return a.from != a.to)
+		moves.sort_custom(func(a, b): return a.start < b.start)
+		var sliding: Array = []
+		var checked := 0
+		for a in moves:
+			var players: Array = a.node.find_children("*", "AnimationPlayer", true, false)
+			if players.is_empty():
+				continue
+			var player: AnimationPlayer = players[0]
+			if ending._t < a.start + 0.3:
+				ending._t = a.start + 0.3
+			await frames(6)
+			var clip := player.current_animation
+			var pos_a := player.current_animation_position
+			await frames(12)
+			var advanced := player.current_animation == clip and absf(player.current_animation_position - pos_a) > 0.05
+			checked += 1
+			if not (clip in ["Walk", "Run", "Escort"] and player.is_playing() and advanced):
+				sliding.append("%s@%.1f(%s)" % [a.node.name, a.start, clip])
+		check(checked > 0 and sliding.is_empty(), "%s ending: every moving figure plays a looping walk (%d checked) %s" % [cause, checked, sliding])
 		ending.show_summary()
 		check(ending.summary_card != null and ending.summary_card.visible, "%s ending shows the run summary" % cause)
 	check(int(SaveGame.best_record().get("plots_completed", 0)) >= 4, "the run is kept as a record")
