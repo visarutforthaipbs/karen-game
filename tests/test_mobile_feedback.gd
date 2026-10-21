@@ -133,6 +133,7 @@ func run() -> void:
 		for i in 4:
 			await process_frame
 		check(not game.hud.minimal and game.hud.vitals_card.visible, "pressing again restores the panels")
+		check(not game.hud.tool_col.visible, "mobile keyboard tool slots stay hidden after restoring panels")
 
 		# 0.3.6 forest-fire arrows
 		var arrows: ForestFireArrows = game.hud.fire_arrows

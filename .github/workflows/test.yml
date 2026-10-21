@@ -106,6 +106,12 @@ jobs:
           ~/godot/godot --headless --path . --script res://tests/test_mobile_feedback.gd -- --touch --handheld 2>&1 | tee mobile-feedback.log
           ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" mobile-feedback.log
           grep -q "MOBILE FEEDBACK RESULT: 0" mobile-feedback.log
+          # Raw touch slider input, persistence and desktop-only tool slots.
+          for flags in "--touch --handheld --appstore-offline" "--touch --handheld --appstore-offline --notch" ""; do
+            ~/godot/godot --headless --path . --script res://tests/test_settings_touch.gd -- $flags 2>&1 | tee settings-touch.log
+            ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" settings-touch.log
+            grep -q "SETTINGS TOUCH RESULT: 0" settings-touch.log
+          done
 
       - name: Smoke run
         run: |

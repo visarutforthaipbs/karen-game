@@ -116,7 +116,9 @@ func _ready() -> void:
 ## Touch body: four panes, one per tab, all built so each fits 1280x720.
 func _body_height() -> float:
 	if UITheme.is_mobile():
-		return maxf(200.0, UITheme.safe_area_rect().size.y - 400.0)
+		# Reserve enough height for three full 88-px slider rows plus the header,
+		# including the 21-px home-indicator inset on landscape iPhones.
+		return maxf(320.0, UITheme.safe_area_rect().size.y - 400.0)
 	return minf(440.0, maxf(160.0, UITheme.safe_area_rect().size.y - 220.0))
 
 func _build_tab_bar(page: VBoxContainer) -> void:
@@ -175,15 +177,19 @@ func _build_touch_panes() -> void:
 
 	# 1 · sound: every volume slider.
 	tab_panes[0].add_child(UITheme.header("radio", TAB_TITLES[0], UITheme.STRAW))
-	for b in GameSettings.VOLUME_BUSES:
+	# Five finger-sized sliders fit in two columns, rather than five thin rows.
+	var sound = _touch_columns()
+	tab_panes[0].add_child(sound[0])
+	for i in GameSettings.VOLUME_BUSES.size():
+		var b = GameSettings.VOLUME_BUSES[i]
 		var bus: String = b[0]
-		tab_panes[0].add_child(_slider_row(b[1], GameSettings.volumes.get(bus, 1.0), 0.0, 1.0, 0.05, func(v):
+		sound[1 if i < 3 else 2].add_child(_slider_row(b[1], GameSettings.volumes.get(bus, 1.0), 0.0, 1.0, 0.05, func(v):
 			GameSettings.volumes[bus] = v
 			GameSettings.apply(get_tree()), "%d%%", 100.0))
 
 	# 2 · display: fullscreen (meaningless on iOS), text/panel scale, detail.
 	tab_panes[1].add_child(UITheme.header("eye", TAB_TITLES[1], UITheme.STRAW))
-	if OS.get_name() != "iOS":
+	if not _handheld_os():
 		tab_panes[1].add_child(_toggle_row("เต็มจอ", GameSettings.fullscreen, func(on):
 			GameSettings.fullscreen = on
 			GameSettings.apply(get_tree())))
@@ -380,7 +386,9 @@ func _slider_row(text: String, value: float, lo: float, hi: float, step: float, 
 	l.custom_minimum_size = Vector2(170, 0)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	row.add_child(l)
-	var slider = HSlider.new()
+	var slider: HSlider = load("res://ui/SettingsTouchSlider.gd").new() if UITheme.is_mobile() else HSlider.new()
+	if UITheme.is_mobile():
+		slider.custom_minimum_size = Vector2(160, UITheme.TOUCH_MIN)
 	slider.scrollable = false
 	slider.min_value = lo
 	slider.max_value = hi

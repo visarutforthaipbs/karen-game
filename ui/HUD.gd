@@ -205,8 +205,10 @@ func _unhandled_input(event: InputEvent) -> void:
 func set_minimal(on: bool) -> void:
 	minimal = on
 	status_details.visible = not on
-	for c in [wind_card, state_card, tool_col, crew_row, vitals_card, refill_marker]:
+	for c in [wind_card, state_card, crew_row, vitals_card, refill_marker]:
 		c.visible = not on
+	# Restoring panels must not undo the mobile-only hide in _build_tool_bar().
+	tool_col.visible = not on and not UITheme.is_mobile()
 
 func _process(delta: float) -> void:
 	if not _in_play:
