@@ -27,6 +27,16 @@ var _delete_requester: Callable = OnlineBoard.delete_my_scores
 var tab_bar: HBoxContainer
 var tab_buttons: Array = []
 var tab_panes: Array = []
+var language_buttons: Array = []
+
+## Touch language buttons drive the (hidden) OptionButton so every existing
+## caller and test keeps working through language_picker.
+func _pick_language(index: int) -> void:
+	for i in language_buttons.size():
+		language_buttons[i].button_pressed = i == index
+	if language_picker.selected != index:
+		language_picker.select(index)
+		language_picker.item_selected.emit(index)
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -74,6 +84,24 @@ func _ready() -> void:
 	language_picker.item_selected.connect(func(index: int):
 		Localization.set_language("en" if index == 1 else "th"))
 	language_row.add_child(language_picker)
+	# Touch: PopupMenu items ignore raw screen touches (mouse emulation is off
+	# for two-thumb play), so the open dropdown blocked the whole page. Phones
+	# get two plain buttons that drive the same picker; desktop keeps the menu.
+	if UITheme.is_mobile():
+		language_picker.visible = false
+		language_buttons = []
+		for i in language_picker.item_count:
+			var pick := Button.new()
+			pick.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+			pick.text = language_picker.get_item_text(i)
+			pick.toggle_mode = true
+			pick.button_pressed = language_picker.selected == i
+			pick.custom_minimum_size = Vector2(120, UITheme.TOUCH_MIN)
+			pick.focus_mode = Control.FOCUS_ALL
+			pick.pressed.connect(func():
+				_pick_language(i))
+			language_row.add_child(pick)
+			language_buttons.append(pick)
 	language_row.alignment = BoxContainer.ALIGNMENT_END
 	header.add_child(language_row)
 
@@ -272,6 +300,15 @@ func _board_name_row() -> HBoxContainer:
 	name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	name_edit.focus_mode = Control.FOCUS_ALL
 	name_edit.text_changed.connect(func(t: String): GameSettings.player_name = t)
+	if UITheme.is_mobile():
+		# Raw touches do not focus a LineEdit when mouse emulation is off; a
+		# focused LineEdit is what raises the on-screen keyboard on iOS.
+		name_edit.custom_minimum_size.y = UITheme.TOUCH_MIN
+		name_edit.gui_input.connect(func(event: InputEvent):
+			if event is InputEventScreenTouch and event.pressed and name_edit.editable:
+				name_edit.grab_focus()
+				name_edit.caret_column = name_edit.text.length()
+				name_edit.accept_event())
 	name_row.add_child(name_edit)
 	return name_row
 

@@ -114,8 +114,12 @@ func run() -> void:
 	await settle()
 	check(is_instance_valid(settings.close_button) and settings.close_button.is_visible_in_tree() and inside(settings.close_button),
 		"settings save-and-close is visible inside the canvas")
-	check(settings.language_picker.is_visible_in_tree() and inside(settings.language_picker),
-		"language selector is visible above the tabs")
+	# Phones show two language buttons (the dropdown's popup ignores touches).
+	var language_controls: Array = settings.language_buttons if settings.language_buttons.size() > 0 else [settings.language_picker]
+	var selector_ok := true
+	for control in language_controls:
+		selector_ok = selector_ok and control.is_visible_in_tree() and inside(control)
+	check(selector_ok, "language selector is visible above the tabs")
 
 	if expect_touch:
 		check(settings.tab_bar != null and settings.tab_bar.is_visible_in_tree(), "touch settings builds a tab bar")
@@ -141,8 +145,10 @@ func run() -> void:
 			check(not others_shown, "tab %d hides the other panes" % (i + 1))
 			check(settings.tab_buttons[i].button_pressed,
 				"tab %d stays pressed while its pane shows" % (i + 1))
-			check(settings.language_picker.is_visible_in_tree() and inside(settings.language_picker),
-				"language selector visible on pane %d" % (i + 1))
+			selector_ok = true
+			for control in language_controls:
+				selector_ok = selector_ok and control.is_visible_in_tree() and inside(control)
+			check(selector_ok, "language selector visible on pane %d" % (i + 1))
 			check(settings.close_button.is_visible_in_tree() and inside(settings.close_button),
 				"save-and-close visible on pane %d" % (i + 1))
 			check(all_visible_inside(settings) and body_fits(settings._content_scroll),

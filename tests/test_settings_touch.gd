@@ -134,6 +134,38 @@ func run() -> void:
 		check(settings.ui_scale > 1.05 and is_equal_approx(settings.ui_scale, scale_slider.value), "UI scale changes by finger")
 		root.content_scale_factor = 1.0
 		await settle()
+		# Language: the reviewer's "switch to English and it's stuck". A finger
+		# must change the locale live and leave the page usable afterwards.
+		check(not panel.language_picker.visible and panel.language_buttons.size() == 2, "phone shows two language buttons instead of a dropdown")
+		var localization = root.get_node("Localization")
+		await tap(panel.language_buttons[1])
+		check(TranslationServer.get_locale().begins_with("en") and settings.locale == "en", "finger tap on English switches the locale live")
+		check(TranslationServer.translate("ตั้งค่า") == "Settings", "English translation is active after the tap")
+		await tap(panel.tab_buttons[3])
+		check(panel.tab_panes[3].visible, "page is still usable after switching language")
+		await tap(panel.language_buttons[0])
+		check(settings.locale == "th" and panel.language_buttons[0].button_pressed and not panel.language_buttons[1].button_pressed, "finger tap on ไทย switches back and highlights the choice")
+		check(localization != null, "localization autoload present")
+		# Name field: finger tap must focus it (focus raises the iOS keyboard).
+		await tap(panel.tab_buttons[2])
+		var edit: LineEdit = null
+		for cand in panel.tab_panes[2].find_children("*", "LineEdit", true, false):
+			if cand.is_visible_in_tree():
+				edit = cand
+		check(edit != null, "board-name field is on the play tab")
+		await tap(edit)
+		check(edit.has_focus() and edit.get_global_rect().size.y >= UITheme.TOUCH_MIN, "finger tap focuses the board-name field")
+		edit.release_focus()
+		# Every toggle on every tab flips under a finger.
+		for i in panel.tab_panes.size():
+			await tap(panel.tab_buttons[i])
+			for toggle in panel.tab_panes[i].find_children("*", "CheckButton", true, false):
+				if not toggle.is_visible_in_tree():
+					continue
+				var was: bool = toggle.button_pressed
+				await tap(toggle)
+				check(toggle.button_pressed != was, "toggle '%s' flips under a finger" % toggle.text.substr(0, 16))
+				await tap(toggle)
 	else:
 		check(rect.size.y < UITheme.TOUCH_MIN, "desktop slider keeps its compact height")
 		var event := InputEventMouseButton.new()
